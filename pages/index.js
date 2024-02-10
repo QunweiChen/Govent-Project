@@ -11,28 +11,128 @@ export default function Home() {
       </h1>
 
       <div className="px-4 pt-5 my-5 text-center border-bottom">
+        <div className='mb-4'>
         <h1 className="display-4 fw-bold text-body-emphasis">
-          Centered screenshot
+          UI 顏色與相對應命名
         </h1>
+        <h4>可直接配合bootstrap使用</h4>
+        <h6>ex: className="btn btn-primary-deep-50"</h6>
+        </div>
         <div className="col-lg-6 mx-auto">
-          <p className="lead mb-4">
-            Quickly design and customize responsive mobile-first sites with
-            Bootstrap, the world’s most popular front-end open source toolkit,
-            featuring Sass variables and mixins, responsive grid system,
-            extensive prebuilt components, and powerful JavaScript plugins.
-          </p>
-          <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+          <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mb-4">
             <button
               type="button"
               className="btn btn-primary btn-lg px-4 me-sm-3"
             >
-              Primary button
+              Primary
             </button>
             <button
               type="button"
-              className="btn btn-outline-secondary btn-lg px-4"
+              className="btn btn-primary-50 btn-lg px-4 me-sm-3"
             >
-              Secondary
+              Primary-50
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary-light btn-lg px-4 me-sm-3"
+            >
+              Primary-light
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary-deep btn-lg px-4 me-sm-3"
+            >
+              Primary-deep
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary-deep-50 btn-lg px-4 me-sm-3"
+            >
+              Primary-deep-50
+            </button>
+          </div>
+          <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mb-4">
+            <button
+              type="button"
+              className="btn btn-normal-black btn-lg px-4 me-sm-3"
+            >
+              normal-black
+            </button>
+            <button
+              type="button"
+              className="btn btn-normal-gray btn-lg px-4 me-sm-3"
+            >
+              normal-gray
+            </button>
+            <button
+              type="button"
+              className="btn btn-normal-gray-deep btn-lg px-4 me-sm-3"
+            >
+              normal-gray-deep
+            </button>
+            <button
+              type="button"
+              className="btn btn-normal-gray-light btn-lg px-4 me-sm-3"
+            >
+              normal-gray-light
+            </button>
+            <button
+              type="button"
+              className="btn btn-normal-white btn-lg px-4 me-sm-3"
+            >
+              normal-white
+            </button>
+          </div>
+          <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mb-4">
+            <button
+              type="button"
+              className="btn btn-secondary-01 btn-lg px-4 me-sm-3"
+            >
+              secondary-01
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary-02 btn-lg px-4 me-sm-3"
+            >
+              secondary-02
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary-03 btn-lg px-4 me-sm-3"
+            >
+              secondary-03
+            </button>
+          </div>
+          <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+            <button
+              type="button"
+              className="btn btn-bg-gray btn-lg px-4 me-sm-3"
+            >
+              bg-gray
+            </button>
+            <button
+              type="button"
+              className="btn btn-bg-gray-light btn-lg px-4 me-sm-3"
+            >
+              bg-gray-light
+            </button>
+            <button
+              type="button"
+              className="btn btn-bg-gray-secondary btn-lg px-4 me-sm-3"
+            >
+              bg-gray-secondary
+            </button>
+            <button
+              type="button"
+              className="btn btn-bg-dark btn-lg px-4 me-sm-3"
+            >
+              bg-dark
+            </button>
+            <button
+              type="button"
+              className="btn btn-bg-backend btn-lg px-4 me-sm-3"
+            >
+              bg-backend
             </button>
           </div>
         </div>

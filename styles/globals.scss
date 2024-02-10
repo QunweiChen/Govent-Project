@@ -19,7 +19,11 @@ $card-height: 100%;
 // 這裡導入所有 bootstrap 樣式
 // 最後營運階段(實務)可以用部份導入來進行最佳化
 // 參考: https://getbootstrap.com/docs/5.3/customize/sass/#importing
-@import '~bootstrap/scss/bootstrap';
+@import "../node_modules/bootstrap/scss/functions"; // 必要的方法
+@import "../styles/variables"; // 自行定義的變數路徑
+@import "../node_modules/bootstrap/scss/mixins";
+
+@import "../node_modules/bootstrap/scss/bootstrap"; // Bootstrap 完整原始碼
 // ↓↓↓  其它客製樣式要寫在這行的"下面" ↓↓↓
 
 // bs5內建圖示字體
