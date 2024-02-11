@@ -1,7 +1,7 @@
 // 檔案位置: styles/global.scss
 // 變數覆蓋用 (Variable overrides)
 // 全站配色 colors
-$primary: #F16E0F;
+$primary: #f16e0f;
 $secondary: rgba(41, 41, 40, 0.5);
 $success: #7eb4e6;
 $danger: #ff4136;
@@ -19,11 +19,11 @@ $card-height: 100%;
 // 這裡導入所有 bootstrap 樣式
 // 最後營運階段(實務)可以用部份導入來進行最佳化
 // 參考: https://getbootstrap.com/docs/5.3/customize/sass/#importing
-@import "../node_modules/bootstrap/scss/functions"; // 必要的方法
-@import "../styles/variables"; // 自行定義的變數路徑
-@import "../node_modules/bootstrap/scss/mixins";
+@import '../node_modules/bootstrap/scss/functions'; // 必要的方法
+@import '../styles/variables'; // 自行定義的變數路徑
+@import '../node_modules/bootstrap/scss/mixins';
 
-@import "../node_modules/bootstrap/scss/bootstrap"; // Bootstrap 完整原始碼
+@import '../node_modules/bootstrap/scss/bootstrap'; // Bootstrap 完整原始碼
 // ↓↓↓  其它客製樣式要寫在這行的"下面" ↓↓↓
 
 // bs5內建圖示字體
@@ -66,11 +66,20 @@ body {
     // Emoji fonts
     'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  background-color: #1e1e1e;
 }
 
 .form-member {
   max-width: 330px;
   padding: 1rem;
+}
+
+.width-1200 {
+  width: 1200px;
+}
+
+.custom-input-shadow-none:focus {
+  box-shadow: none;
 }
 
 // below is test only

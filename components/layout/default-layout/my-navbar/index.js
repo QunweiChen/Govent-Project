@@ -23,10 +23,10 @@ export default function MyNavbar() {
   return (
     <>
       <header>
-        <nav className="navbar navbar-expand-lg fixed-top navbar-light bg-light">
-          <div className="container-fluid">
+        <nav className="navbar navbar-expand-lg fixed-top navbar-light py-3" data-bs-theme="dark">
+          <div className="container width-1200">
             <Link className="navbar-brand" href="/">
-              <Image src="/next.svg" alt="" width={100} height={24} priority />
+              <Image src="/govent-logo.png" alt="" width={100} height={24} priority />
             </Link>
             <button
               className="navbar-toggler"

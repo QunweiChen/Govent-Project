@@ -9,39 +9,38 @@ import styles from './menubar.module.scss'
 const menuItems = [
   {
     id: 1,
-    label: '首頁',
+    label: '熱門活動',
     href: '/',
   },
   {
     id: 2,
-    label: '新聞',
+    label: '種類',
     href: '/news',
+    children: [
+      { id: 22, label: '演唱會', href: '/member/login' },
+      { id: 23, label: '展覽', href: '/member/register' },
+      { id: 24, label: '快閃活動', href: '/member/forget-password' },
+      { id: 25, label: '市集', href: '/member/forget-password' },
+      { id: 26, label: '粉絲見面會', href: '/member/forget-password' },
+      { id: 27, label: '課程講座', href: '/member/forget-password' },
+      { id: 28, label: '體育賽事', href: '/member/forget-password' },
+      { id: 29, label: '景點門票', href: '/member/forget-password' },
+    ],
   },
   {
     id: 3,
-    label: '會員',
+    label: '地區',
     href: '/member',
     children: [
-      { id: 32, label: '登入', href: '/member/login' },
-      { id: 33, label: '註冊', href: '/member/register' },
-      { id: 34, label: '忘記密碼', href: '/member/forget-password' },
+      { id: 32, label: '大台北地區', href: '/member/login' },
+      { id: 33, label: '桃園', href: '/member/register' },
+      { id: 34, label: '台中', href: '/member/forget-password' },
+      { id: 35, label: '高雄', href: '/member/forget-password' },
+      { id: 36, label: '台南', href: '/member/forget-password' },
+      { id: 37, label: '台東', href: '/member/forget-password' },
+      { id: 38, label: '全部列表', href: '/member/forget-password' },
     ],
-  },
-  {
-    id: 4,
-    label: '商品',
-    href: '/product',
-    children: [
-      { id: 41, label: '列表', href: '/product/list' },
-      { id: 42, label: '詳細', href: '/product/01' },
-      { id: 43, label: '購物車', href: '/cart' },
-    ],
-  },
-  {
-    id: 5,
-    label: '關於我們',
-    href: '/about',
-  },
+  }
 ]
 
 export default function MainMenu({ currentRoute = '/' }) {
@@ -89,7 +88,7 @@ export default function MainMenu({ currentRoute = '/' }) {
                 {v.label}
               </Link>
               <ul
-                className={`dropdown-menu ${styles['slideIn']} ${styles['dropdown-menu']}`}
+                className={`dropdown-menu bg-bg-gray-light ${styles['slideIn']} ${styles['dropdown-menu']}`}
               >
                 {v.children.map((v2) => {
                   return (
