@@ -2,13 +2,42 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import PlaceholderText from '@/components/common/placeholder-text'
+import styles from './index.module.scss'
+import Carousel from 'react-bootstrap/Carousel';
+import CarouselImage from '@/components/peter-test/index-image';
 
 export default function Home() {
   return (
     <>
-      <h1 className="mb-3 display-5 fw-bold text-body-emphasis">
-        Next + Bootstrap5 範例
-      </h1>
+      <Carousel>
+      <Carousel.Item>
+      <img
+          className="d-block w-100"
+          src={process.env.PUBLIC_URL + '/YOASOBI_A86%99_2021_12.webp'}
+          alt="First slide"
+        />
+        <Carousel.Caption>
+          <h3>First slide label</h3>
+          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <CarouselImage text="Second slide" />
+        <Carousel.Caption>
+          <h3>Second slide label</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <CarouselImage text="Third slide" />
+        <Carousel.Caption>
+          <h3>Third slide label</h3>
+          <p>
+            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+          </p>
+        </Carousel.Caption>
+      </Carousel.Item>
+    </Carousel>
 
       <div className="px-4 pt-5 my-5 text-center border-bottom">
         <div className='mb-4'>

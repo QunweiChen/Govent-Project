@@ -75,7 +75,11 @@ body {
 }
 
 .width-1200 {
-  width: 1200px;
+  max-width: 1200px;
+}
+
+.width-1440 {
+  max-width: 1440px;
 }
 
 .custom-input-shadow-none:focus {
