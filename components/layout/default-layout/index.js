@@ -15,9 +15,9 @@ export default function DefaultLayout({ title = '', children }) {
         <meta name="viewport" content="width=device-width" />
       </Head>
       <MyNavbarBS5 />
-      <main className="flex-shrink-0 mt-3">
-        <div className="container width-1440">
-          <NextBreadCrumb isHomeIcon isChevron bgClass="" />
+      <main className="flex-shrink-0">
+        <div className="container max-width-1440">
+          {/* <NextBreadCrumb isHomeIcon isChevron bgClass="" /> */}
           {children}
         </div>
         {/* 全域的載入動畫指示器 */}
