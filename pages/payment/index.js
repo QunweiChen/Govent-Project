@@ -170,10 +170,7 @@ export default function Payment() {
       </div>
       <style global jsx>
         {`
-          body {
-            background-color: #151515;
-            color: #fff;
-          }
+         
         `}
       </style>
     </>
