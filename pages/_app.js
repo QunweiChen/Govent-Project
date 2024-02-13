@@ -4,7 +4,6 @@ import '@/styles/globals.scss'
 import '@/styles/product.scss'
 import '@/styles/cart.scss'
 import '@/styles/loader.scss'
-// import '@/styles/payment.scss'
 
 
 // 載入購物車context
