@@ -4,7 +4,7 @@
  * Copyright 2011-2023 The Bootstrap Authors
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
-@import 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap';
+@import 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;200;300;400;500;600;700;800;900&display=swap';
 :root,
 [data-bs-theme=light] {
   --bs-blue: #0d6efd;
@@ -21900,13 +21900,69 @@ textarea.form-control-lg {
   display: flex;
 }
 
-main > .container {
-  padding: 60px 15px 0;
+body {
+  font-family: "Noto Sans TC", Helvetica, Arial, "PingFang TC", "苹方-繁", "Heiti TC", "黑體-繁", "Microsoft JhengHei", "微軟正黑體", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-body {
-  font-family: "Noto Sans TC Regular", Helvetica, Arial, "PingFang TC", "苹方-繁", "Heiti TC", "黑體-繁", "Microsoft JhengHei", "微軟正黑體", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  background-color: #1e1e1e;
+h1, .h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  letter-spacing: 0.1rem;
+}
+
+h1, .h1 {
+  font-size: 64px;
+  font-weight: 700;
+}
+
+h2, .h2 {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+h3, .h3 {
+  font-size: 36px;
+  font-weight: 600;
+}
+
+h4, .h4 {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+h5, .h5 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+h6, .h6 {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
+.sm-p {
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.xs-p {
+  font-size: 10px;
+  font-weight: 300;
 }
 
 .form-member {
@@ -21916,6 +21972,10 @@ body {
 
 .width-1200 {
   width: 1200px;
+}
+
+.max-width-1440 {
+  max-width: 1440px;
 }
 
 .custom-input-shadow-none:focus {
