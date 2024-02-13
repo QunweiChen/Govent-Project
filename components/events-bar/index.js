@@ -5,7 +5,7 @@ import Stack from 'react-bootstrap/Stack';
 export default function EventsBar() {
   return (
     <>
-      <div className="d-flex justify-content-center py-5">
+      <div className="d-flex justify-content-center ">
         <div className="width-1200">
           <h4>
             <i className="bi bi-fire text-primary pe-2"></i>熱門活動
@@ -60,7 +60,7 @@ export default function EventsBar() {
           .custom-card{
             border: none;
             background-color: #151515;
-            border-radius: 10px;
+            border-radius: 5px;
             overflow: hidden;
           }
         `}

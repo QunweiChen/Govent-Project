@@ -48,7 +48,7 @@ export default function Home() {
     </Carousel>
       <EventsBar/>
       <EventsTypeBar/>
-      <div className="px-4 pt-5 my-5 text-center border-bottom">
+      {/* <div className="px-4 pt-5 my-5 text-center border-bottom">
         <div className='mb-4'>
         <h1 className="display-4 fw-bold text-body-emphasis">
           UI 顏色與相對應命名
@@ -332,7 +332,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <style global jsx>
         {`
           body {

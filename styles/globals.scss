@@ -40,9 +40,9 @@ $card-height: 100%;
   display: flex;
 }
 
-main > .container {
-  padding: 0px 15px 0;
-}
+// main > .container {
+//   padding: 0px 15px 0;
+// }
 
 body {
   font-family: 'Noto Sans TC', Helvetica, Arial, 'PingFang TC', '苹方-繁',
@@ -105,13 +105,23 @@ h5 {
 h6 {
   font-size: 16px;
   font-weight: 500;
-  line-height: 1.5
+  line-height: 1.5;
 }
 
 p {
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: 0;
+}
+
+.sm-p {
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.xs-p {
+  font-size: 10px;
+  font-weight: 300;
 }
 
 .form-member {

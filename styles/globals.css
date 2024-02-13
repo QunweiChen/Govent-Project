@@ -21900,10 +21900,6 @@ textarea.form-control-lg {
   display: flex;
 }
 
-main > .container {
-  padding: 0px 15px 0;
-}
-
 body {
   font-family: "Noto Sans TC", Helvetica, Arial, "PingFang TC", "苹方-繁", "Heiti TC", "黑體-繁", "Microsoft JhengHei", "微軟正黑體", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
@@ -21955,8 +21951,18 @@ h6, .h6 {
 
 p {
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: 0;
+}
+
+.sm-p {
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.xs-p {
+  font-size: 10px;
+  font-weight: 300;
 }
 
 .form-member {
