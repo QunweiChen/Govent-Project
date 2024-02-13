@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './member.module.css'
+import styles from './member.module.scss'
 import Link from 'next/link'
 import LineLogo from '@/components/icons/line-logo'
 import GoogleLogo from '@/components/icons/google-logo'
