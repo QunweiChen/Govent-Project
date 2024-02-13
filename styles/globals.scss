@@ -19,7 +19,6 @@ $card-height: 100%;
 // 這裡導入所有 bootstrap 樣式
 // 最後營運階段(實務)可以用部份導入來進行最佳化
 // 參考: https://getbootstrap.com/docs/5.3/customize/sass/#importing
-
 @import '../node_modules/bootstrap/scss/functions'; // 必要的方法
 @import '../styles/variables'; // 自行定義的變數路徑
 @import '../node_modules/bootstrap/scss/mixins';
@@ -32,7 +31,7 @@ $card-height: 100%;
 @import '~bootstrap-icons/font/bootstrap-icons';
 
 // google Noto Sans TC 字體
-@import 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap';
+@import 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;200;300;400;500;600;700;800;900&display=swap';
 
 // fixed for __next root div
 #__next {
@@ -41,13 +40,13 @@ $card-height: 100%;
   display: flex;
 }
 
-main > .container {
-  padding: 60px 15px 0;
-}
+// main > .container {
+//   padding: 0px 15px 0;
+// }
 
 body {
-  font-family: 'Noto Sans TC Regular', Helvetica, Arial, 'PingFang TC',
-    '苹方-繁', 'Heiti TC', '黑體-繁', 'Microsoft JhengHei', '微軟正黑體',
+  font-family: 'Noto Sans TC', Helvetica, Arial, 'PingFang TC', '苹方-繁',
+    'Heiti TC', '黑體-繁', 'Microsoft JhengHei', '微軟正黑體',
     // Cross-platform generic font family (default user interface font)
     system-ui,
     // Safari for macOS and iOS (San Francisco)
@@ -69,9 +68,77 @@ body {
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: 0.1rem;
+}
+
+h1 {
+  font-size: 64px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 36px;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+h5 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+h6 {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
+.sm-p {
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.xs-p {
+  font-size: 10px;
+  font-weight: 300;
+}
+
 .form-member {
   max-width: 330px;
   padding: 1rem;
+}
+
+.width-1200 {
+  width: 1200px;
+}
+
+.max-width-1440 {
+  max-width: 1440px;
+}
+
+.custom-input-shadow-none:focus {
+  box-shadow: none;
 }
 
 // below is test only
