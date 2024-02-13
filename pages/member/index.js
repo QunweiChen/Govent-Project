@@ -81,7 +81,7 @@ export default function MemberIndex() {
                     controlId="exampleForm.ControlInput1"
                   >
                     <Form.Label>信箱</Form.Label>
-                    <Form.Control className='dark-input' type="email" placeholder="請輸入" />
+                    <Form.Control className='dark-input' type="email" placeholder="請輸入信箱" />
                   </Form.Group>
                 </Col>
               </Row>
