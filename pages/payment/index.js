@@ -8,13 +8,12 @@ export default function Payment() {
     <>
       <div className="row mt-5 mx-5 ">
         <div className="col-md-8 cart-area">
-          <h3 className="bg-bg-gray-secondary rounded-3">訂單明細</h3>
+          <h3 className="bg-bg-gray-secondary rounded-3 py-3 px-4">訂單明細</h3>
           {/* 商品詳情 */}
-          <ProductInfo/>
+          <ProductInfo />
           {/* 聯絡資料 */}
-          <ConnectionData/>
+          <ConnectionData />
           {/* 付款方式 */}
-          
         </div>
         <div className="col-md-4">
           <div className="d-flex justify-content-between align-items-center">

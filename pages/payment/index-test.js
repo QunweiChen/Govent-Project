@@ -156,7 +156,7 @@ export default function Payment() {
                 <i className="bi bi-wallet-fill"></i>付款方式
               </h5>
             </div>
-            <div className="points-coupons-container d-flex grid " >
+            <div className="points-coupons-container d-flex grid ">
               <div className="point bg-bg-gray-secondary rounded-3  g-col-md-6 ">
                 <div className="point-title d-flex">
                   <CheckboxInput />
@@ -177,7 +177,7 @@ export default function Payment() {
                 </div>
               </div>
               <div className="coupon bg-bg-gray-secondary rounded-3 g-col-md-6 ">
-              <div className="point-title d-flex">
+                <div className="point-title d-flex">
                   <CheckboxInput />
                   <p>我要使用點數折抵（目前尚餘 583 點）</p>
                 </div>

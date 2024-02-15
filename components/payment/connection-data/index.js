@@ -4,93 +4,67 @@ import Form from 'react-bootstrap/Form'
 export default function ConnectionData() {
   return (
     <>
-      {' '}
       <div className="connection-data">
         <div>
           <h5>
             <i className="bi bi-person-fill"></i>聯絡資料
           </h5>
         </div>
-        <form className="row bg-bg-gray-secondary rounded-3 ">
+        <Form className="row bg-bg-gray-secondary rounded-3 rounded-4 py-3 px-4">
+          {/* 姓名與性別 */}
           <div className="col-md-6 d-flex justify-content-between ">
-            <div className="col-md-6 pe-2">
-              <label htmlFor="validationDefault01" className="form-label">
-                姓名
-              </label>
-              <input
+            <Form.Group
+              className="mb-3 col-md-6 pe-2"
+              controlId="formGroupEmail"
+            >
+              <Form.Label>姓名</Form.Label>
+              <Form.Control
                 type="text"
-                className="form-control"
-                id="validationDefault01"
-                required
+                placeholder="姓名"
+                className="bg-bg-dark text-white"
+                style={{ color: 'blue' }}
               />
-            </div>
-            <div className="col-md-6 ps-2">
-              <label htmlFor="validationDefault02" className="form-label">
-                性別
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="validationDefault02"
-                required
-              />
-            </div>
+            </Form.Group>
+            <Form.Group
+              className="mb-3 col-md-6 ps-2"
+              controlId="formGroupEmail"
+            >
+              <Form.Label>性別</Form.Label>
+              <Form.Select aria-label="Default select example">
+                <option>選擇</option>
+                <option value="1">男</option>
+                <option value="2">女</option>
+              </Form.Select>
+            </Form.Group>
           </div>
+          {/* 生日 */}
           <div className="col-md-6">
-            <label htmlFor="validationDefault03" className="form-label">
-              生日
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="validationDefault03"
-              required
-            />
+            <Form.Group className="mb-3" controlId="formGroupEmail">
+              <Form.Label>生日</Form.Label>
+              <Form.Control type="date" placeholder="Enter email" />
+            </Form.Group>
           </div>
+          {/* 手機 */}
           <div className="col-md-6">
-            <label htmlFor="validationDefault03" className="form-label">
-              手機
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="validationDefault03"
-              required
-            />
+            <Form.Group className="mb-3" controlId="formGroupEmail">
+              <Form.Label>手機</Form.Label>
+              <Form.Control type="text" placeholder="09-XXXXXXXX" />
+            </Form.Group>
           </div>
+          {/* 信箱 */}
           <div className="col-md-6">
-            <label htmlFor="validationDefault05" className="form-label">
-              信箱
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="validationDefault05"
-              required
-            />
+            <Form.Group className="mb-3" controlId="formGroupEmail">
+              <Form.Label>信箱</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" />
+            </Form.Group>
           </div>
-          {/* <div className="d-flex">
-          <div>
-            <CheckboxInput />
-          </div>
-          <p>與會員註冊資料相同</p>
-        </div> */}
-          <Form>
-            <div className="mb-3">
-              <Form.Check type="checkbox">
-                <Form.Check.Input
-                  className="custom-checkbox"
-                  type="checkbox"
-                  isValid
-                />
-                <Form.Check.Label style={{ color: '#f16e0f' }}>
-                  1234
-                </Form.Check.Label>
-              </Form.Check>
-            </div>
-          </Form>
-        </form>
+          <Form.Group className="mb-3" id="formGridCheckbox">
+            <Form.Check type="checkbox" label="與會員註冊資料相同" />
+          </Form.Group>
+        </Form>
       </div>
+      <style>{`
+      Form.Control { color: crimson;}`}</style>
     </>
   )
 }
