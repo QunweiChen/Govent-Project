@@ -44,6 +44,29 @@ $card-height: 100%;
 //   padding: 0px 15px 0;
 // }
 
+:root {
+  --primary-color: #f16e0f;
+  --primary-50-color: #f16d0f83;
+  --primary-light-color: #e88741;
+  --primary-deep-color: #C55708;
+  --primary-deep-50-color: #c5570881;
+  --normal-black-color: #000;
+  --normal-gray-deep-color: #121212;
+  --normal-gray-color: #404040;
+  --normal-gray-light-color: #B4B4B4;
+  --normal-white-color: #fff;
+  --secondary-01-color: #F2DD72;
+  --secondary-02-color: #8C7F68;
+  --secondary-03-color: #BF9765;
+  --bg-gray-color: #1E1E1E;
+  --bg-gray-light-color: #232323;
+  --bg-gray-secondary-color: #282828;
+  --bg-dark-color: #151515;
+  --bg-backend-color: #EAEDF2;
+  --search-bar-color: #8282827e;
+  --none: rgba(0, 0, 0, 0);
+}
+
 body {
   font-family: 'Noto Sans TC', Helvetica, Arial, 'PingFang TC', '苹方-繁',
     'Heiti TC', '黑體-繁', 'Microsoft JhengHei', '微軟正黑體',
@@ -139,6 +162,14 @@ p {
 
 .custom-input-shadow-none:focus {
   box-shadow: none;
+}
+
+.navbar .navbar-nav .nav-item::after {
+  display: none;
+}
+
+.nav-link:hover {
+  color: #f16e0f;
 }
 
 // below is test only
