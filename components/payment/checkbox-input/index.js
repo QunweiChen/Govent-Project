@@ -20,11 +20,11 @@ export default function CheckboxInput() {
             border: 1px solid #ccc;
             border-radius: 50%;
             cursor: pointer;
-            height: 28px;
+            height: 24px;
             left: 0;
             position: absolute;
             top: 0;
-            width: 28px;
+            width: 24px;
           }
 
           .round label:after {
@@ -32,8 +32,8 @@ export default function CheckboxInput() {
             border-top: none;
             border-right: none;
             content: '';
-            height: 6px;
-            left: 7px;
+            height: 4px;
+            left: 5.5px;
             opacity: 0;
             position: absolute;
             top: 8px;
@@ -46,8 +46,8 @@ export default function CheckboxInput() {
           }
 
           .round input[type='checkbox']:checked + label {
-            background-color: #66bb6a;
-            border-color: #66bb6a;
+            background-color: #f16e0f;
+            border-color: #f16e0f;
           }
 
           .round input[type='checkbox']:checked + label:after {
