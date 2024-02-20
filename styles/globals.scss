@@ -91,6 +91,10 @@ body {
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+a{
+  text-decoration: none;
+}
+
 h1,
 h2,
 h3,
@@ -133,7 +137,7 @@ h6 {
 
 p {
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 300;
   margin-bottom: 0;
 }
 
@@ -171,5 +175,9 @@ p {
 .nav-link:hover {
   color: #f16e0f;
 }
+.bottom-line{
+  border-bottom: 1px solid var(--normal-gray-color);
+}
+
 
 // below is test only
