@@ -339,7 +339,6 @@ export default function Home() {
             background-color: #151515;
             color: #fff;
           }
-            
           .card-cover {
             background-repeat: no-repeat;
             background-position: center center;

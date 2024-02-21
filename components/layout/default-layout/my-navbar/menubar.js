@@ -88,7 +88,7 @@ export default function MainMenu({ currentRoute = '/' }) {
                 {v.label}
               </Link>
               <ul
-                className={`dropdown-menu bg-bg-gray-light border-0 ${styles['slideIn']} ${styles['dropdown-menu']}`}
+                className={`dropdown-menu bg-bg-gray-light border ${styles['slideIn']} ${styles['dropdown-menu']}`}
               >
                 {v.children.map((v2) => {
                   return (
