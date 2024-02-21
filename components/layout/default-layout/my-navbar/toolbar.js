@@ -7,7 +7,7 @@ export default function Toolbar({ handleShow }) {
     <ul className="navbar-nav pe-2 ms-auto">
       <li className="nav-item">
         <Link
-          className="nav-link  btn btn-outline-light"
+          className="nav-link"
           href="/cart"
           role="button"
           title="購物車"
@@ -21,7 +21,7 @@ export default function Toolbar({ handleShow }) {
         className={`nav-item dropdown ${styles['dropdown']}`}
       >
         <Link
-          className="nav-link dropdown-toggle btn btn-outline-light"
+          className="nav-link dropdown-toggle"
           href=""
           role="button"
           data-bs-toggle="dropdown"
@@ -67,7 +67,7 @@ export default function Toolbar({ handleShow }) {
       </li>
       <li className="nav-item">
         <span
-          className="nav-link  btn btn-outline-light"
+          className="nav-link"
           role="presentation"
           onClick={(e) => {
             e.preventDefault()
