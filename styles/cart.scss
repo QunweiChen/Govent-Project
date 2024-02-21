@@ -27,8 +27,11 @@
 .cart-top {
   border-radius: 10px;
 }
-.checkbox-large {
-  transform: scale(2); /* 放大两倍 */
+
+@media screen and (min-width: 576px) and (max-width: 1920px) {
+  .checkbox-large {
+    transform: scale(2); /* 放大两倍 */
+  }
 }
 
 @media screen and (max-width: 576px) {
@@ -44,8 +47,5 @@
   }
   .checkbox-large {
     transform: scale(1);
-  }
-  .hide {
-    display: none;
   }
 }
