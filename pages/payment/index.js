@@ -27,7 +27,7 @@ export default function Payment() {
           <PaymentButton />
         </div>
         <div className="col-md-4 ">
-          <div className="bg-bg-gray-secondary  rounded-4 py-3 px-4">
+          <div className="bg-bg-gray-secondary  rounded-4 py-3 px-4 sticky-top">
             <div className="d-flex justify-content-between align-items-center">
               <div className="text-truncate pe-2">
                 YOASOBI演唱會2024台北站｜YOASOBI ASIA TOUR 2023-2024 Solo

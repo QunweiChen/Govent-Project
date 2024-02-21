@@ -10,46 +10,46 @@ export default function PaymentType() {
           className="form-check-input"
           type="radio"
           name="flexRadioDefault"
-          id="flexRadioDefault"
+          id="creditCard"
         />
-        <label className="form-check-label" for="flexRadioDefault1">
+        <label className="form-check-label" htmlFor="creditCard">
           信用卡 / 簽帳金融卡
         </label>
-        <form action="" className='row g-3 needs-validation'>
+        <form action="" className="row g-3 needs-validation">
           <div className="col-md-4">
-            <label for="validationCustom01" className="form-label">
+            <label htmlFor="cardNumber" className="form-label">
               信用卡號碼
             </label>
             <input
               type="text"
               className="form-control"
-              id="validationCustom01"
+              id="cardNumber"
               value="Mark"
               required
             />
             <div className="valid-feedback">Looks good!</div>
           </div>
           <div className="col-md-4">
-            <label for="validationCustom01" className="form-label">
-            有效期限（月／年）
+            <label htmlFor="Validityperiod" className="form-label">
+              有效期限（月／年）
             </label>
             <input
               type="text"
               className="form-control"
-              id="validationCustom01"
+              id="Validityperiod"
               value="Mark"
               required
             />
             <div className="valid-feedback">Looks good!</div>
           </div>
           <div className="col-md-4">
-            <label for="validationCustom01" className="form-label">
-            安全碼
+            <label htmlFor="securityCode" className="form-label">
+              安全碼
             </label>
             <input
               type="text"
               className="form-control"
-              id="validationCustom01"
+              id="securityCode"
               value="Mark"
               required
             />
