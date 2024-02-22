@@ -1,83 +1,100 @@
-import React, { useRef } from 'react'
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useRef, useState } from 'react'
 import { Form } from 'react-bootstrap'
 
-export default function CheckboxInput() {
+export default function CheckboxInput({ Content = '' }) {
+  const inputRef = useRef(null)
+
   return (
-    // <>
-    //   <div className="">
-    //     <div className="round d-flex">
-    //       <input type="checkbox" id="checkbox" />
-    //       <label htmlFor="checkbox"></label>
-    //     </div>
-    //   </div>
-    //   <style global jsx>
-    //     {`
-    //       .round {
-    //         position: relative;
-    //       }
-
-    //       .round label {
-    //         background-color: #fff;
-    //         border: 1px solid #ccc;
-    //         border-radius: 50%;
-    //         cursor: pointer;
-    //         height: 24px;
-    //         left: 0;
-    //         position: absolute;
-    //         top: 0;
-    //         width: 24px;
-    //       }
-
-    //       .round label:after {
-    //         border: 2px solid #fff;
-    //         border-top: none;
-    //         border-right: none;
-    //         content: '';
-    //         height: 4px;
-    //         left: 5.5px;
-    //         opacity: 0;
-    //         position: absolute;
-    //         top: 8px;
-    //         transform: rotate(-45deg);
-    //         width: 12px;
-    //       }
-
-    //       .round input[type='checkbox'] {
-    //         visibility: hidden;
-    //       }
-
-    //       .round input[type='checkbox']:checked + label {
-    //         background-color: #f16e0f;
-    //         border-color: #f16e0f;
-    //       }
-
-    //       .round input[type='checkbox']:checked + label:after {
-    //         opacity: 1;
-    //       }
-
-    //       /* general styling */
-    //       html,
-    //       body {
-    //         height: 100%;
-    //         margin: 0;
-    //       }
-
-    //       body {
-    //         -webkit-box-align: center;
-    //         -ms-flex-align: center;
-    //         align-items: center;
-    //         background-color: #f1f2f3;
-    //         display: -webkit-box;
-    //         display: -ms-flexbox;
-    //         display: flex;
-    //       }
-    //     `}
-    //   </style>
-    // </>
     <>
-      <Form.Group className="mb-3" id="formGridCheckbox">
-        <Form.Check type="checkbox" label="與會員註冊資料相同" />
-      </Form.Group>
+      <div className="">
+        <div className="round d-flex">
+          <label htmlFor="checkbox" className="checkbox-container p">
+            {Content}
+            <input
+              type="checkbox"
+              id="checkbox"
+              ref={inputRef}
+              className="input-ref"
+              onChange={() => {
+                const value = inputRef.current.checked
+                console.log(value)
+              }}
+            />
+            <span className="checkmark"></span>
+          </label>
+        </div>
+      </div>
+      <style jsx>
+        {`
+          .checkbox-container {
+            display: block;
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+          }
+
+          /* Hide the browser's default checkbox */
+          .checkbox-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+          }
+
+          /* Create a custom checkbox */
+          .checkmark {
+            position: absolute;
+            border-radius: 30px;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #eee;
+          }
+
+          /* On mouse-over, add a grey background color */
+          .checkbox-container:hover input ~ .checkmark {
+            background-color: #ccc;
+          }
+
+          /* When the checkbox is checked, add a blue background */
+          .checkbox-container input:checked ~ .checkmark {
+            background-color: #f16e0f;
+          }
+
+          /* Create the checkmark/indicator (hidden when not checked) */
+          .checkmark:after {
+            content: '';
+            position: absolute;
+            display: none;
+          }
+
+          /* Show the checkmark when checked */
+          .checkbox-container input:checked ~ .checkmark:after {
+            display: block;
+          }
+
+          /* Style the checkmark/indicator */
+          .checkbox-container .checkmark:after {
+            left: 8px;
+            top: 3.5px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+          }
+        `}
+      </style>
     </>
   )
 }

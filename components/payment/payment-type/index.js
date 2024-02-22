@@ -1,11 +1,14 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
 import { Form } from 'react-bootstrap'
 import Image from 'react-bootstrap/Image'
 
 export default function PaymentType() {
   return (
-    <div className="payment-type bg-bg-gray-secondary py-3 px-4 rounded-4 mb-4">
-      <div className="form-check mb-2">
+    <div className="payment-type  py-3 px-4 rounded-4 mb-4 bg-bg-gray-secondary">
+      {/* 信用卡 */}
+      <div className="form-check mb-4">
         <input
           className="form-check-input"
           type="radio"
@@ -17,7 +20,10 @@ export default function PaymentType() {
         </label>
         <form action="" className="row g-3 needs-validation">
           <div className="col-md-4">
-            <label htmlFor="cardNumber" className="form-label">
+            <label
+              htmlFor="cardNumber"
+              className="form-label sm-p text-normal-gray-light"
+            >
               信用卡號碼
             </label>
             <input
@@ -30,7 +36,10 @@ export default function PaymentType() {
             <div className="valid-feedback">Looks good!</div>
           </div>
           <div className="col-md-4">
-            <label htmlFor="Validityperiod" className="form-label">
+            <label
+              htmlFor="Validityperiod"
+              className="form-label sm-p text-normal-gray-light"
+            >
               有效期限（月／年）
             </label>
             <input
@@ -43,7 +52,10 @@ export default function PaymentType() {
             <div className="valid-feedback">Looks good!</div>
           </div>
           <div className="col-md-4">
-            <label htmlFor="securityCode" className="form-label">
+            <label
+              htmlFor="securityCode"
+              className="form-label sm-p text-normal-gray-light"
+            >
               安全碼
             </label>
             <input
@@ -57,16 +69,16 @@ export default function PaymentType() {
           </div>
         </form>
       </div>
-      <div className="form-check mb-2">
+      {/* LINE PAY */}
+      <div className="form-check mb-4">
         <input
           className="form-check-input"
           type="radio"
           name="flexRadioDefault"
           id="flexRadioDefault2"
         />
-        <label className="form-check-label" for="flexRadioDefault2">
-          {/* <Image src='@/public/line-pay/LINE-Pay(h)_W74_n.png'/> */}
-          LINE PAY
+        <label className="form-check-label" htmlFor="flexRadioDefault2">
+          <Image src="/line-pay/LINE-Pay(h)_W98_n.png" />
         </label>
       </div>
     </div>

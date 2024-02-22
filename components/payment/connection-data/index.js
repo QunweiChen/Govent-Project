@@ -22,7 +22,6 @@ export default function ConnectionData() {
                 type="text"
                 placeholder="姓名"
                 className="bg-bg-dark text-white"
-                style={{ color: 'blue' }}
               />
             </Form.Group>
             <Form.Group
@@ -47,6 +46,7 @@ export default function ConnectionData() {
               <Form.Control
                 type="date"
                 placeholder="Enter email"
+                style={{ colorScheme: 'dark' }}
                 className="bg-bg-dark text-white"
               />
             </Form.Group>
@@ -78,8 +78,11 @@ export default function ConnectionData() {
           </Form.Group>
         </Form>
       </div>
-      <style>{`
-      Form.Control { color: crimson;}`}</style>
+      <style jsx>{`
+        input {
+          color-scheme: dark;
+        }
+      `}</style>
     </>
   )
 }

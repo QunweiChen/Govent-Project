@@ -12,11 +12,11 @@ export default function InfoData() {
         />
       </div>
       <div className="product-content col-md-8 d-flex flex-column justify-content-between">
-        <div className="product-title mb-1">
+        <div className="product-title mb-1 h6">
           YOASOBI演唱會2024台北站｜YOASOBI ASIA TOUR 2023-2024 Solo Concert in
           Taipei
         </div>
-        <div className="product-type mb-1">1F 站位</div>
+        <div className="product-type mb-1 p">1F 站位</div>
         <div className="product-date d-flex ">
           <div className="date-range d-flex me-2">
             <i className="bi bi-calendar-week text-primary me-1"></i>
