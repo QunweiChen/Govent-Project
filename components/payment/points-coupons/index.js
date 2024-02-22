@@ -4,7 +4,6 @@ import CheckboxInput from '../checkbox-input'
 export default function PointCoupons() {
   return (
     <>
-      {' '}
       <div className="points-coupons-container d-flex row mb-3">
         <div className="point bg-bg-gray-secondary rounded-4  col me-2 py-3 px-4">
           <div className="point-title  mb-1">

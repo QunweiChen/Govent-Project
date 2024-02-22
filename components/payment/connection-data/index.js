@@ -1,7 +1,11 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Form from 'react-bootstrap/Form'
 
 export default function ConnectionData() {
+  const [data, setDate] = useState({})
+  function formChange(e) {
+    console.log(e.target.name,e.target.value)
+  }
   return (
     <>
       <div className="connection-data mb-3">
@@ -10,7 +14,7 @@ export default function ConnectionData() {
             <i className="bi bi-person-fill"></i>聯絡資料
           </h5>
         </div>
-        <Form className="row bg-bg-gray-secondary  rounded-4 py-3 px-4">
+        <div className="row bg-bg-gray-secondary  rounded-4 py-3 px-4">
           {/* 姓名與性別 */}
           <div className="col-md-6 d-flex justify-content-between ">
             <Form.Group
@@ -22,6 +26,8 @@ export default function ConnectionData() {
                 type="text"
                 placeholder="姓名"
                 className="bg-bg-dark text-white"
+                name="userName"
+                onChange={formChange}
               />
             </Form.Group>
             <Form.Group
@@ -32,6 +38,7 @@ export default function ConnectionData() {
               <Form.Select
                 aria-label="Default select example"
                 className="bg-bg-dark text-white"
+                name="userGender"
               >
                 <option>選擇</option>
                 <option value="1">男</option>
@@ -48,6 +55,7 @@ export default function ConnectionData() {
                 placeholder="Enter email"
                 style={{ colorScheme: 'dark' }}
                 className="bg-bg-dark text-white"
+                name="birthday"
               />
             </Form.Group>
           </div>
@@ -59,6 +67,7 @@ export default function ConnectionData() {
                 type="text"
                 placeholder="09-XXXXXXXX"
                 className="bg-bg-dark text-white"
+                name="phoneNumber"
               />
             </Form.Group>
           </div>
@@ -70,13 +79,14 @@ export default function ConnectionData() {
                 type="email"
                 placeholder="Enter email"
                 className="bg-bg-dark text-white"
+                name="email"
               />
             </Form.Group>
           </div>
           <Form.Group className="mb-3" id="formGridCheckbox">
             <Form.Check type="checkbox" label="與會員註冊資料相同" />
           </Form.Group>
-        </Form>
+        </div>
       </div>
       <style jsx>{`
         input {
