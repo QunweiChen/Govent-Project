@@ -30,7 +30,10 @@ export default function ConnectionData() {
               controlId="formGroupEmail"
             >
               <Form.Label>性別</Form.Label>
-              <Form.Select aria-label="Default select example" className="bg-bg-dark text-white">
+              <Form.Select
+                aria-label="Default select example"
+                className="bg-bg-dark text-white"
+              >
                 <option>選擇</option>
                 <option value="1">男</option>
                 <option value="2">女</option>
@@ -41,21 +44,33 @@ export default function ConnectionData() {
           <div className="col-md-6">
             <Form.Group className="mb-3" controlId="formGroupEmail">
               <Form.Label>生日</Form.Label>
-              <Form.Control type="date" placeholder="Enter email" className="bg-bg-dark text-white"/>
+              <Form.Control
+                type="date"
+                placeholder="Enter email"
+                className="bg-bg-dark text-white"
+              />
             </Form.Group>
           </div>
           {/* 手機 */}
           <div className="col-md-6">
             <Form.Group className="mb-3" controlId="formGroupEmail">
               <Form.Label>手機</Form.Label>
-              <Form.Control type="text" placeholder="09-XXXXXXXX" className="bg-bg-dark text-white"/>
+              <Form.Control
+                type="text"
+                placeholder="09-XXXXXXXX"
+                className="bg-bg-dark text-white"
+              />
             </Form.Group>
           </div>
           {/* 信箱 */}
           <div className="col-md-6">
             <Form.Group className="mb-3" controlId="formGroupEmail">
               <Form.Label>信箱</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" className="bg-bg-dark text-white"/>
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                className="bg-bg-dark text-white"
+              />
             </Form.Group>
           </div>
           <Form.Group className="mb-3" id="formGridCheckbox">
