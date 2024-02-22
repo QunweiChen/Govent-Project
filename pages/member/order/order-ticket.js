@@ -2,7 +2,7 @@
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
-import TicketInfoLeft from '@/components/member/order-info-left'
+import TicketInfoLeft from '@/components/member/m-order-left-bar'
 import Link from 'next/link'
 
 // only redirect to member/login

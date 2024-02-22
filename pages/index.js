@@ -6,6 +6,7 @@ import styles from './index.module.scss'
 import Carousel from 'react-bootstrap/Carousel';
 import EventsBar from '@/components/events-bar';
 import EventsTypeBar from '@/components/events-type-bar';
+import NoBCLayout from '@/components/layout/nocb-default-layout';
 
 export default function Home() {
   return (
@@ -358,4 +359,8 @@ export default function Home() {
       </style>
     </>
   )
+}
+
+Home.getLayout = function (page) {
+  return <NoBCLayout>{page}</NoBCLayout>
 }

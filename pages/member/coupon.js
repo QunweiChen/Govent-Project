@@ -1,7 +1,7 @@
 // import { useRouter } from 'next/router'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Form from 'react-bootstrap/Form'
+import NoBCLayout from '@/components/layout/nocb-default-layout'
 import Memberleft from '@/components/member/member-left-bar'
 
 // only redirect to member/login
@@ -92,4 +92,8 @@ export default function MemberCoupon() {
       </style>
     </>
   )
+}
+
+MemberCoupon.getLayout = function (page) {
+  return <NoBCLayout>{page}</NoBCLayout>
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import Button from 'react-bootstrap/Button'
+import styles from './member.module.scss'
 import Link from 'next/link'
 import Badge from 'react-bootstrap/Badge';
 
@@ -9,7 +9,7 @@ export default function Memberleft() {
       <div className="py-2">
         <div className="py-3 d-flex justify-content-center">
           <img
-            className="avatar rounded-circle"
+            className={`${styles['avatar']} rounded-circle`}
             src="https://www.shutterstock.com/image-vector/cute-cartoon-rubber-duck-vector-600nw-2276837591.jpg"
           />
         </div>
@@ -19,11 +19,11 @@ export default function Memberleft() {
             黃金會員
           </Badge>
         </div>
-        <p className="text-center sm-p mt-2">duck.wang@gmail.com</p>
+        <p className={`text-center sm-p ${styles['sm-p']} mt-2`}>duck.wang@gmail.com</p>
       </div>
       <hr />
-      <div className="py-2 member-side-bar">
-        <div className="sm-p ps-4 pb-3">會員資料</div>
+      <div className={`py-2 ${styles['member-side-bar']}`}>
+        <div className={`${styles['sm-p']}sm-p ps-4 pb-3`}>會員資料</div>
         <h6>
           <Link href="/member/setting">
             <i className="bi bi-person text-primary pe-3"></i>
@@ -43,8 +43,8 @@ export default function Memberleft() {
           </Link>
         </h6>
       </div>
-      <div className="py-2 member-side-bar">
-        <div className="sm-p ps-4 pb-3">網站相關</div>
+      <div className={`py-2 ${styles['member-side-bar']}`}>
+        <div className={`${styles['sm-p']}sm-p ps-4 pb-3`}>網站相關</div>
         <h6>
           <Link href="/member/order">
             <i className="bi bi-calendar-minus text-primary pe-3"></i>
@@ -64,32 +64,6 @@ export default function Memberleft() {
           </Link>
         </h6>
       </div>
-      <style global jsx>
-      {`
-          .avatar {
-            width: 100px;
-            height: 100px;
-          }
-          .sm-p {
-            color: var(--normal-gray-light-color);
-          }
-          .member-side-bar {
-            a {
-              color: #fff;
-              text-decoration: none;
-            }
-            h6 {
-              padding: 0 20px;
-              margin-bottom: 20px;
-              border-left: 0px solid var(--primary-color);
-            }
-            h6:hover {
-              border-left: 4px solid var(--primary-color);
-              transition: 0.1s;
-            }
-          }
-        `}
-      </style>
     </div>
   )
 }
