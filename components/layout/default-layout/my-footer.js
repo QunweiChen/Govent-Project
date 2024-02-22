@@ -1,27 +1,26 @@
 export default function MyFooter() {
   return (
-    <footer className="footer mt-auto py-3 bg-light">
-      <div className="container">
-        <div className="text-muted">
-          <i className="bi bi-geo-alt-fill"></i> 台灣 © 2023 NextJS Inc.
-          版權所有
+    <footer className="footer mt-auto py-3 bg-primary">
+      <div className="container d-flex justify-content-between align-items-end my-4">
+        <div className="d-flex">
+          <div className="mx-5">
+            <h6 className="text-normal-black mb-3">認識GOVENT</h6>
+            <p className="text-normal-black">關於我們</p>
+          </div>
+          <div>
+            <h6 className="text-normal-black mb-3">服務條款</h6>
+            <p className="text-normal-black my-1">服務條款</p>
+            <p className="text-normal-black my-1">隱私權政策</p>
+            <p className="text-normal-black my-1">Cookie 政策</p>
+          </div>
         </div>
-        <div className="text-muted">
-          <span className="pe-2">
-            本網站使用之圖片與媒體素材，均遵守相關授權使用規定。來源列表:
-          </span>
-          <a href="https://unsplash.com/" className="pe-2">
-            Unsplash
-          </a>
-          <a href="https://icons.getbootstrap.com/" className="pe-2">
-            Bootstrap Icons
-          </a>
-          <a href="https://commons.wikimedia.org/" className="pe-2">
-            Wikimedia Commons
-          </a>
-          <a href="https://fonts.google.com/icons" className="pe-2">
-            Material Icons
-          </a>
+        <div>
+          <div className="mb-3 text-end">
+            <img src="./govent-logo-black.png" alt="" />
+          </div>
+          <p className="text-muted">
+            COPYRIGHT © 2024 GOVENT All right reserved
+          </p>
         </div>
       </div>
     </footer>

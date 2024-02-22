@@ -1,5 +1,6 @@
 import React from 'react'
 import EventsRecommend from '@/components/events-recommend'
+import NavbarBottomRwd from '@/components/layout/default-layout/navbar-bottom-rwd'
 
 export default function CartIndex() {
   return (
@@ -27,8 +28,11 @@ export default function CartIndex() {
                       <h4 className="ms-4">購物車</h4>
                     </div>
                     <div className="col-6 text-white d-flex align-items-center justify-content-end">
-                      <label className="me-4 d-flex align-items-center justify-content-end">
-                        <input type="checkbox" className="checkbox-large" />
+                      <label className="me-4 d-flex align-items-center justify-content-end form-check-label">
+                        <input
+                          type="checkbox"
+                          className="checkbox-large form-check-input"
+                        />
                         <p className="ms-2">全選</p>
                       </label>
                     </div>
@@ -49,7 +53,10 @@ export default function CartIndex() {
                   </div>
                   <div className="border-0 cart-card row g-0 border-bottom border-normal-gray event">
                     <div className="col-sm-2 col-4 d-flex align-items-center ms-4">
-                      <input type="checkbox" className="me-4 checkbox-large" />
+                      <input
+                        type="checkbox"
+                        className="me-4 checkbox-large form-check-input"
+                      />
                       <div className="bg-normal-white rounded-4 product-img">
                         <img
                           src="./images/cart/4-03.jpg"
@@ -98,7 +105,10 @@ export default function CartIndex() {
                   </div>
                   <div className="border-0 cart-card row g-0 border-bottom border-normal-gray event">
                     <div className="col-sm-2 col-4 d-flex align-items-center ms-4">
-                      <input type="checkbox" className="me-4 checkbox-large" />
+                      <input
+                        type="checkbox"
+                        className="me-4 checkbox-large form-check-input"
+                      />
                       <div className="bg-normal-white rounded-4 product-img">
                         <img
                           src="./images/cart/4-03.jpg"
@@ -161,7 +171,10 @@ export default function CartIndex() {
                   </div>
                   <div className="border-0 cart-card row g-0 border-bottom border-normal-gray event">
                     <div className="col-sm-2 col-4 d-flex align-items-center ms-4">
-                      <input type="checkbox" className="me-4 checkbox-large" />
+                      <input
+                        type="checkbox"
+                        className="me-4 checkbox-large form-check-input"
+                      />
                       <div className="bg-normal-white rounded-4 product-img">
                         <img
                           src="./images/cart/4-03.jpg"
@@ -225,6 +238,7 @@ export default function CartIndex() {
           </div>
         </div>
       </div>
+      <NavbarBottomRwd />
       <div className="border-0 cart-card d-block d-xxl-none border-top border-normal-gray bg-normal-gray-deep fixed-bottom">
         <div className="d-flex justify-content-between align-items-center m-2">
           <p className="text-primary-light ms-3">合計2件商品</p>
