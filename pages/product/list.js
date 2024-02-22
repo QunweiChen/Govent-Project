@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-// import { CiHeart } from 'react-icons/ci'
-// import { GoSortDesc } from 'react-icons/go'
+import { CiHeart } from 'react-icons/ci'
+import { GoSortDesc } from 'react-icons/go'
 
 export default function List() {
   // Toggle the side navigation
@@ -32,7 +32,7 @@ export default function List() {
   return (
     <>
       {/* hearder */}
-      <div className="header row mt-2 mb-3 ">
+      <div className="header row mt-2 mb-3 container width-1200">
         <h5 className="card-text d-flex justify-content-between align-items-center">
           <div className="bg-bg-gray-secondary text-white rounded-3">
             <p className="justify-content-between mx-4 my-2">
@@ -40,89 +40,89 @@ export default function List() {
             </p>
           </div>
 
-            <div className="d-flex p-2 justify-content-end align-items-center text-white">
-              <div className="dropdown">
-                <button
-                  className="btn btn-bg-gray dropdown-toggle"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  排序依據
-                </button>
-                {/* <GoSortDesc /> */}
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      最新
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      價格：由高至低
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      價格：由低至高
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <button className="btn px-4 btn-outline-primary-deep no-border text-white">
-                推薦
+          <div className="d-flex p-2 justify-content-end align-items-center text-white">
+            <div className="dropdown">
+              <button
+                className="btn btn-bg-gray dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                排序依據
               </button>
-              <button className="btn px-4 btn-outline-primary-deep no-border active text-white">
-                日期
-              </button>
-              <button className="btn px-4 btn-outline-primary-deep no-border text-white">
-                價格
-              </button>
-              <button className="btn px-4 btn-outline-primary-deep no-border text-white">
-                地區
-              </button>
+              {/* <GoSortDesc /> */}
+              <ul className="dropdown-menu">
+                <li>
+                  <a className="dropdown-item" href="#">
+                    最新
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item" href="#">
+                    價格：由高至低
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item" href="#">
+                    價格：由低至高
+                  </a>
+                </li>
+              </ul>
             </div>
-          </h5>
-        </div>
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="d-flex" id="wrapper">
-              {/* sidebar */}
-              <div className="text-white me-3" style={{}} id="sidebar-wrapper">
-                <div className="">
-                  {/* sidebar a */}
-                  <div className=" m-3 d-grid gap-3">
-                    <h6>活動種類</h6>
-                    <div className="form-group">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="flexCheckChecked"
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="flexCheckChecked"
-                        >
-                          所有類型
-                        </label>
-                      </div>
+            <button className="btn px-4 btn-outline-primary-deep no-border text-white">
+              推薦
+            </button>
+            <button className="btn px-4 btn-outline-primary-deep no-border active text-white">
+              日期
+            </button>
+            <button className="btn px-4 btn-outline-primary-deep no-border text-white">
+              價格
+            </button>
+            <button className="btn px-4 btn-outline-primary-deep no-border text-white">
+              地區
+            </button>
+          </div>
+        </h5>
+      </div>
+      <div className="row container width-1200">
+        <div className="col-sm-12">
+          <div className="d-flex" id="wrapper">
+            {/* sidebar */}
+            <div className="text-white me-3" style={{}} id="sidebar-wrapper">
+              <div className="">
+                {/* sidebar a */}
+                <div className=" m-3 d-grid gap-3">
+                  <h6>活動種類</h6>
+                  <div className="form-group">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckChecked"
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="flexCheckChecked"
+                      >
+                        所有類型
+                      </label>
+                    </div>
 
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="flexCheckChecked"
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="flexCheckChecked"
-                        >
-                          演唱會
-                        </label>
-                      </div>
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckChecked"
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="flexCheckChecked"
+                      >
+                        演唱會
+                      </label>
+                    </div>
 
                     <div className="form-check">
                       <input
@@ -618,14 +618,14 @@ export default function List() {
                 <div className="event_list p-sm-2 row row-cols-1 row-cols-md-3 g-4">
                   {/* card */}
                   <div className="col">
-                    <div className="card w-350 no-border f-16 rounded-4">
+                    <div className="card no-border f-16 rounded-4">
                       <div className="card_head position-relative">
                         <img
                           src="/images/product/list/product-ex.png"
                           className="card-img-top"
                           alt="..."
                         />
-                        <i className="position-absolute top-0 end-0 bg-light rounded-3">
+                        <i className="position-absolute top-0 end-0 rounded-3 text-white fs-5 fw-bold">
                           <CiHeart />
                         </i>
                       </div>
@@ -926,17 +926,28 @@ export default function List() {
             background-color: #151515;
             color: #fff;
           }
+          .width-1200 {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0;
+          }
           main > .container {
             padding: 60px 15px 0;
           }
+
           .card_head i {
-            background-color: #151515;
+            background-color: #404040;
+            opacity: 0.5;
+            padding: 3px 5px;
              {
-              /* padding: 10px; */
+              /* height: 35px;
+            width: 35px; */
             }
-            height: 35px;
-            width: 35px;
-            margin: 5px;
+            margin: 10px;
+          }
+
+          .card_head i :hover {
+            background-color: #404040;
           }
 
           @media screen and (max-width: 576px) {
