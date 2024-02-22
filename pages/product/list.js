@@ -32,7 +32,7 @@ export default function List() {
   return (
     <>
       {/* hearder */}
-      <div className="row mt-2 mb-3 ">
+      <div className="header row mt-2 mb-3 ">
         <h5 className="card-text d-flex justify-content-between align-items-center">
           <div className="bg-bg-gray-secondary text-white rounded-3">
             <p className="justify-content-between mx-4 my-2">
@@ -380,7 +380,7 @@ export default function List() {
                         id="panelsStayOpen-collapseOne"
                         className="accordion-collapse collapse"
                       >
-                        <div className="accordion-body px-1">
+                        <div className="accordion-body px-3">
                           <div className="form-check">
                             <input
                               className="form-check-input"
@@ -477,7 +477,7 @@ export default function List() {
                         id="panelsStayOpen-collapseOne"
                         className="accordion-collapse collapse"
                       >
-                        <div className="accordion-body px-1">
+                        <div className="accordion-body px-3">
                           <div className="form-check">
                             <input
                               className="form-check-input"
@@ -574,7 +574,7 @@ export default function List() {
                         id="panelsStayOpen-collapseOne"
                         className="accordion-collapse collapse"
                       >
-                        <div className="accordion-body px-1">
+                        <div className="accordion-body px-3">
                           <div className="form-check">
                             <input
                               className="form-check-input"
@@ -614,18 +614,18 @@ export default function List() {
             {/* main */}
             <div id="page-content-wrapper">
               <div className="container-fluid d-grid gap-3">
-                <div className="row row-cols-1 row-cols-md-3 g-4">
+                {/* event_list */}
+                <div className="event_list p-sm-2 row row-cols-1 row-cols-md-3 g-4">
                   {/* card */}
                   <div className="col">
                     <div className="card w-350 no-border f-16 rounded-4">
-                      <div className="img position-relative">
-                        <CiHeart className="position-absolute top-0 start-100" />
+                      <div className="card_head position-relative">
                         <img
                           src="/images/product/list/product-ex.png"
                           className="card-img-top"
                           alt="..."
                         />
-                        <i className="favorite position-absolute top-0 start-100">
+                        <i className="position-absolute top-0 end-0 bg-light rounded-3">
                           <CiHeart />
                         </i>
                       </div>
@@ -864,56 +864,93 @@ export default function List() {
                   </div>
                 </div>
                 {/* page-nav */}
-                <nav className="">
-                  <div
-                    class="btn-toolbar justify-content-center"
-                    role="toolbar"
-                    aria-label="Toolbar with button groups"
-                  >
-                    <div className="btn-group " role="group" aria-label="group">
-                      <button
-                        type="button"
-                        className="btn btn-normal-gray"
-                        aria-label="previous"
+                <div className="page_nav">
+                  <nav className=" d-flex justify-content-center">
+                    <div
+                      class="btn-toolbar"
+                      role="toolbar"
+                      aria-label="Toolbar with button groups"
+                    >
+                      <div
+                        className="btn-group "
+                        role="group"
+                        aria-label="group"
                       >
-                        &laquo;
-                      </button>
-                      <button type="button" className="btn btn-primary">
-                        1
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-secondary text-white"
-                      >
-                        2
-                      </button>
-                      <button type="button" className="btn btn-secondary">
-                        3
-                      </button>
-                      <button type="button" className="btn btn-secondary">
-                        4
-                      </button>
-                      <button type="button" className="btn btn-secondary">
-                        5
-                      </button>
-                      <button type="button" className="btn btn-secondary">
-                        6
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-normal-gray"
-                        aria-label="next"
-                      >
-                        &raquo;
-                      </button>
+                        <button
+                          type="button"
+                          className="btn btn-normal-gray"
+                          aria-label="previous"
+                        >
+                          &laquo;
+                        </button>
+                        <button type="button" className="btn btn-primary">
+                          1
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-secondary text-white"
+                        >
+                          2
+                        </button>
+                        <button type="button" className="btn btn-secondary">
+                          3
+                        </button>
+                        <button type="button" className="btn btn-secondary">
+                          4
+                        </button>
+                        <button type="button" className="btn btn-secondary">
+                          5
+                        </button>
+                        <button type="button" className="btn btn-secondary">
+                          6
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-normal-gray"
+                          aria-label="next"
+                        >
+                          &raquo;
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </nav>
+                  </nav>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <style global jsx>
+        {`
+          body {
+            background-color: #151515;
+            color: #fff;
+          }
+          main > .container {
+            padding: 60px 15px 0;
+          }
+          .card_head i {
+            background-color: #151515;
+             {
+              /* padding: 10px; */
+            }
+            height: 35px;
+            width: 35px;
+            margin: 5px;
+          }
+
+          @media screen and (max-width: 576px) {
+            .header {
+              display: none;
+            }
+            .event_list {
+            }
+            .page_nav {
+              display: none;
+            }
+          }
+        `}
+      </style>
     </>
   )
 }
