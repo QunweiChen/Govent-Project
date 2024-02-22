@@ -234,11 +234,11 @@ export default function CartIndex() {
                 </div>
               </div>
             </div>
-            <EventsRecommend />
           </div>
         </div>
       </div>
-      <NavbarBottomRwd />
+      <EventsRecommend />
+      {/* <NavbarBottomRwd /> */}
       <div className="border-0 cart-card d-block d-xxl-none border-top border-normal-gray bg-normal-gray-deep fixed-bottom">
         <div className="d-flex justify-content-between align-items-center m-2">
           <p className="text-primary-light ms-3">合計2件商品</p>

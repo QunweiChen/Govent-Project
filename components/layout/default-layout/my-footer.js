@@ -1,6 +1,6 @@
 export default function MyFooter() {
   return (
-    <footer className="footer mt-auto py-3 bg-primary">
+    <footer className="footer mt-auto py-3 bg-primary d-none d-xxl-block">
       <div className="container d-flex justify-content-between align-items-end my-4">
         <div className="d-flex">
           <div className="mx-5">
