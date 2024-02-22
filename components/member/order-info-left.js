@@ -7,7 +7,7 @@ export default function TicketInfoLeft() {
   return (
     <div className="member-bgc ">
       <div className="p-3 px-4 bottom-line">
-        <Link href="/member/ticket">
+        <Link href="/member/order">
         <h6 className="m-0 text-primary">
           <i className="bi bi-arrow-left pe-2"></i>返回票卷列表
         </h6></Link>

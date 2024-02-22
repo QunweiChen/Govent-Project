@@ -2,10 +2,10 @@
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
-import Memberleft from '@/components/member/member-left'
+import Memberleft from '@/components/member/member-left-bar'
 
 // only redirect to member/login
-export default function MemberIndex() {
+export default function MemberPayment() {
   // const router = useRouter()
   // // Make sure we're in the browser
   // if (typeof window !== 'undefined') {
@@ -26,7 +26,9 @@ export default function MemberIndex() {
                 <Row className="mt-4">
                   <Col sm={4}>
                     <div className="card d-flex justify-content-between p-3">
-                      <div className='text-end'>刪除<i className="ps-2 bi bi-x-square-fill"></i></div>
+                      <div className="text-end">
+                        刪除<i className="ps-2 bi bi-x-square-fill"></i>
+                      </div>
                       <div className="card-content d-flex justify-content-between">
                         <p>XXXX-1234</p>
                         <p>09/25</p>
@@ -35,7 +37,9 @@ export default function MemberIndex() {
                   </Col>
                   <Col sm={4}>
                     <div className="card d-flex justify-content-between p-3">
-                      <div className='text-end'>刪除<i className="ps-2 bi bi-x-square-fill"></i></div>
+                      <div className="text-end">
+                        刪除<i className="ps-2 bi bi-x-square-fill"></i>
+                      </div>
                       <div className="card-content d-flex justify-content-between">
                         <p>XXXX-1234</p>
                         <p>09/25</p>
@@ -44,7 +48,9 @@ export default function MemberIndex() {
                   </Col>
                   <Col sm={4}>
                     <div className="card d-flex justify-content-between p-3">
-                      <div className='text-end'>刪除<i className="ps-2 bi bi-x-square-fill"></i></div>
+                      <div className="text-end">
+                        刪除<i className="ps-2 bi bi-x-square-fill"></i>
+                      </div>
                       <div className="card-content d-flex justify-content-between">
                         <p>XXXX-1234</p>
                         <p>09/25</p>
@@ -52,7 +58,6 @@ export default function MemberIndex() {
                     </div>
                   </Col>
                 </Row>
-                
               </Form>
             </div>
           </Col>
@@ -84,7 +89,6 @@ export default function MemberIndex() {
             border-radius: 10px;
             background: linear-gradient(to bottom, #e88741, #f16e0f);
             .card-content {
-              
             }
           }
         `}

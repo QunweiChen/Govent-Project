@@ -2,11 +2,11 @@
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
-import Memberleft from '@/components/member/member-left'
+import Memberleft from '@/components/member/member-left-bar'
 import Link from 'next/link'
 
 // only redirect to member/login
-export default function MemberTicket() {
+export default function MemberOrder() {
   // const router = useRouter()
   // // Make sure we're in the browser
   // if (typeof window !== 'undefined') {
@@ -26,7 +26,7 @@ export default function MemberTicket() {
               <hr className="my-4" />
               <div className="event mt-2">
                 <div className="ticket-number sm-p">訂單編號 TX225633592</div>
-                <div className="p-4 mt-2 d-flex">
+                <div className="p-4 d-flex">
                   <div className="event-img me-4">
                     <img
                       src="https://www.shutterstock.com/image-vector/cute-cartoon-rubber-duck-vector-600nw-2276837591.jpg"
@@ -38,15 +38,18 @@ export default function MemberTicket() {
                       YOASOBI演唱會2024台北站｜YOASOBI ASIA TOUR 2023-2024 Solo
                       Concert in Taipei
                     </h6>
-                    
-                    <div className='d-flex justify-content-between align-items-end'>
-                    <h6 className="text-primary-deep m-0">總金額 $8000</h6>
-                    <Link href="/member/ticket/info"><button className='btn btn-primary text-white'>查看票卷</button></Link>
+
+                    <div className="d-flex justify-content-between align-items-end">
+                      <h6 className="text-primary-deep m-0">總金額 $8000</h6>
+                      <Link href="order/order-info">
+                        <button className="btn btn-primary text-white">
+                          查看票卷
+                        </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
-              
             </div>
           </Col>
         </Row>

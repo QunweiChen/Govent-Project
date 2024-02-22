@@ -2,10 +2,9 @@
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
-import Memberleft from '@/components/member/member-left'
+import Memberleft from '@/components/member/member-left-bar'
 
-// only redirect to member/login
-export default function MemberIndex() {
+export default function MemberSetting() {
   // const router = useRouter()
   // // Make sure we're in the browser
   // if (typeof window !== 'undefined') {
@@ -22,7 +21,7 @@ export default function MemberIndex() {
           <Col sm={9}>
             <div className="member-bgc contain">
               <Form>
-                <h4>訂單管理</h4>
+                <h4>帳戶設定</h4>
                 <Row className="mt-4">
                   <Col sm={3}>
                     <Form.Group

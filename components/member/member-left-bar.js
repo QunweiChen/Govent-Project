@@ -25,7 +25,7 @@ export default function Memberleft() {
       <div className="py-2 member-side-bar">
         <div className="sm-p ps-4 pb-3">會員資料</div>
         <h6>
-          <Link href="/member">
+          <Link href="/member/setting">
             <i className="bi bi-person text-primary pe-3"></i>
             <span>帳戶設定</span>
           </Link>
@@ -49,12 +49,6 @@ export default function Memberleft() {
           <Link href="/member/order">
             <i className="bi bi-calendar-minus text-primary pe-3"></i>
             <span>訂單管理</span>
-          </Link>
-        </h6>
-        <h6>
-          <Link href="/member/ticket">
-            <i className="bi bi-wallet2 text-primary pe-3"></i>
-            <span>我的票卷</span>
           </Link>
         </h6>
         <h6>
