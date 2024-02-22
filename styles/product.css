@@ -79,7 +79,7 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
   --bs-border-width: 0;
 }
 
-/*  card-body override */
+/*  -body override */
 .no-space-x {
   padding: var(--bs-card-spacer-y) 0;
 }
