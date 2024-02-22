@@ -8,7 +8,7 @@ export default function CartIndex() {
       <div className="container width-1200">
         <div className="row justify-content-center">
           <div className="col-sm-12">
-            <div className="d-flex align-items-center justify-content-start mb-3 mt-5 text-white">
+            {/* <div className="d-flex align-items-center justify-content-start mb-3 mt-5 text-white">
               <div className="text-primary-light">購物車 </div>
               <div>
                 <i className="bi bi-chevron-right text-white"></i>
@@ -18,7 +18,7 @@ export default function CartIndex() {
                 <i className="bi bi-chevron-right text-white"></i>
               </div>
               <div> 訂購完成</div>
-            </div>
+            </div> */}
 
             <div className="cart-top ">
               <div className="cart-area card bg-bg-gray-secondary">
@@ -256,7 +256,11 @@ export default function CartIndex() {
           body {
             background-color: #151515;
           }
-
+          main > .container {
+            padding: 60px 15px 0;
+            max-width: 1200px;
+            margin: 0 auto;
+          }
           .card-cover {
             background-repeat: no-repeat;
             background-position: center center;
