@@ -12,43 +12,43 @@ export default function Home() {
   return (
     <>
       <Carousel>
-      <Carousel.Item>
-      <div className={`${styles['image-container']}`}>
-      <img
-          className="d-block w-100"
-          src="https://media.vogue.com.tw/photos/658e6392dfffa70c3419002c/master/w_2560%2Cc_limit/YOASOBI_A%25E5%2586%2599_2021_12.jpg"
-          alt="First slide"
-        />
-      </div>
-        <Carousel.Caption className={`pb-5 ${styles['carousel-caption']}`}>
-        <h5 className={`ps-3 ${styles['secondary-title-start']}`}>YOASOBI</h5>
-          <h1>YOASOBI 演唱會2024台北站</h1>
-          <div className='mt-3'>
-            <button className='btn btn-primary-deep-50 text-white'>熱門排行</button>
-            <button className='btn btn-primary-deep-50 text-white ms-2'>演唱會</button>
+        <Carousel.Item>
+          <div className={`${styles['image-container']}`}>
+            <img
+              className="d-block w-100"
+              src="https://media.vogue.com.tw/photos/658e6392dfffa70c3419002c/master/w_2560%2Cc_limit/YOASOBI_A%25E5%2586%2599_2021_12.jpg"
+              alt="First slide"
+            />
           </div>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-      <div className={`${styles['image-container']}`}>
-      <img
-          className="d-block w-100"
-          src="https://media.vogue.com.tw/photos/658e6392dfffa70c3419002c/master/w_2560%2Cc_limit/YOASOBI_A%25E5%2586%2599_2021_12.jpg"
-          alt="First slide"
-        />
-      </div>
-        <Carousel.Caption className={`pb-5 ${styles['carousel-caption']}`}>
-        <h5 className={`ps-3 ${styles['secondary-title-start']}`}>YOASOBI</h5>
-          <h1>YOASOBI 演唱會2024台北站</h1>
-          <div className='mt-3'>
-            <button className='btn btn-primary-deep-50 text-white'>熱門排行</button>
-            <button className='btn btn-primary-deep-50 text-white ms-2'>演唱會</button>
+          <Carousel.Caption className={`pb-5 ${styles['carousel-caption']}`}>
+            <h5 className={`ps-3 ${styles['secondary-title-start']}`}>YOASOBI</h5>
+            <h1>YOASOBI 演唱會2024台北站</h1>
+            <div className='mt-3'>
+              <button className='btn btn-primary-deep-50 text-white'>熱門排行</button>
+              <button className='btn btn-primary-deep-50 text-white ms-2'>演唱會</button>
+            </div>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <div className={`${styles['image-container']}`}>
+            <img
+              className="d-block w-100"
+              src="https://media.vogue.com.tw/photos/658e6392dfffa70c3419002c/master/w_2560%2Cc_limit/YOASOBI_A%25E5%2586%2599_2021_12.jpg"
+              alt="First slide"
+            />
           </div>
-        </Carousel.Caption>
-      </Carousel.Item>
-    </Carousel>
-      <EventsBar/>
-      <EventsTypeBar/>
+          <Carousel.Caption className={`pb-5 ${styles['carousel-caption']}`}>
+            <h5 className={`ps-3 ${styles['secondary-title-start']}`}>YOASOBI</h5>
+            <h1>YOASOBI 演唱會2024台北站</h1>
+            <div className='mt-3'>
+              <button className='btn btn-primary-deep-50 text-white'>熱門排行</button>
+              <button className='btn btn-primary-deep-50 text-white ms-2'>演唱會</button>
+            </div>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
+      <EventsBar />
+      <EventsTypeBar />
       {/* <div className="px-4 pt-5 my-5 text-center border-bottom">
         <div className='mb-4'>
         <h1 className="display-4 fw-bold text-body-emphasis">
