@@ -24,7 +24,7 @@ export default function EventList() {
         <OrganizerSidebar />
         <div className="w-100 bg-bg-gray organizer-main d-flex flex-column">
           <div className="px-4 py-3 d-flex justify-content-between mb-3">
-            <h4 className="m-0">活動管理</h4>
+            <h4 className="m-0">活動清單</h4>
             <div>
               <button className="btn btn-outline-primary">
                 <i className="bi bi-caret-left-fill pe-2"></i>回首頁
