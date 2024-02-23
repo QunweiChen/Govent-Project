@@ -8,10 +8,7 @@ import PaymentButton from '@/components/payment/payment-button'
 import { Form } from 'react-bootstrap'
 
 export default function Payment() {
-
-  
-
-  function handleSubmit(){}
+  function handleSubmit() {}
 
   return (
     <>

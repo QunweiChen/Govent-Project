@@ -18,8 +18,9 @@ export default function PaymentType() {
         <label className="form-check-label" htmlFor="creditCard">
           信用卡 / 簽帳金融卡
         </label>
-        <form action="" className="row g-3 needs-validation">
-          <div className="col-md-4">
+        <div className="d-flex">
+          {' '}
+          <div className="col-md-4 px-2">
             <label
               htmlFor="cardNumber"
               className="form-label sm-p text-normal-gray-light"
@@ -35,7 +36,7 @@ export default function PaymentType() {
             />
             <div className="valid-feedback">Looks good!</div>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-4 px-2">
             <label
               htmlFor="Validityperiod"
               className="form-label sm-p text-normal-gray-light"
@@ -51,7 +52,7 @@ export default function PaymentType() {
             />
             <div className="valid-feedback">Looks good!</div>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-4 px-2">
             <label
               htmlFor="securityCode"
               className="form-label sm-p text-normal-gray-light"
@@ -67,7 +68,7 @@ export default function PaymentType() {
             />
             <div className="valid-feedback">Looks good!</div>
           </div>
-        </form>
+        </div>
       </div>
       {/* LINE PAY */}
       <div className="form-check mb-4">

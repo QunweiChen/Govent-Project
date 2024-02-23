@@ -1,25 +1,28 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useRef, useState } from 'react'
-import { Form } from 'react-bootstrap'
+import React, { useState, useRef } from 'react'
 
-export default function CheckboxInput({ Content = '' }) {
-  const inputRef = useRef(null)
-
+export default function CheckboxInput({ Content = '', inputID = '' }) {
+  const inputValue = useRef(null)
+  function inputChecked(e) {
+    console.log(e.target.name)
+    let checkedValue = inputValue.current.checked
+    if (inputID == 'point' && checkedValue == true) {
+      console.log('關閉')
+    }
+  }
   return (
     <>
       <div className="">
         <div className="round d-flex">
-          <label htmlFor="checkbox" className="checkbox-container p">
+          <label htmlFor={inputID} className="checkbox-container p">
             {Content}
             <input
               type="checkbox"
-              id="checkbox"
-              ref={inputRef}
+              id={inputID}
+              ref={inputValue}
               className="input-ref"
-              onChange={() => {
-                const value = inputRef.current.checked
-                console.log(value)
-              }}
+              onChange={inputChecked}
+              name={inputID}
             />
             <span className="checkmark"></span>
           </label>
@@ -30,7 +33,7 @@ export default function CheckboxInput({ Content = '' }) {
           .checkbox-container {
             display: block;
             position: relative;
-            padding-left: 35px;
+            padding-left: 25px;
             margin-bottom: 12px;
             cursor: pointer;
             -webkit-user-select: none;
@@ -52,7 +55,7 @@ export default function CheckboxInput({ Content = '' }) {
           .checkmark {
             position: absolute;
             border-radius: 30px;
-            top: 0;
+            top: 2px;
             left: 0;
             height: 20px;
             width: 20px;

@@ -5,7 +5,7 @@ export default function PaymentButton() {
   return (
     <>
       <div className="agree d-flex justify-content-center mb-2">
-        <CheckboxInput />
+        <CheckboxInput inputID="button" />
         <p className="p">
           我同意網站 <span className="text-warning">服務條款</span> 及{' '}
           <span className="text-warning">隱私權政策</span>{' '}
