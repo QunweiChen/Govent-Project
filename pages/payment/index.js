@@ -15,7 +15,7 @@ export default function Payment() {
       <div className="row mt-5 mx-5 ">
         <div className="col-md-8 cart-area">
           <h3 className="bg-bg-gray-secondary rounded-3 py-3 px-4">訂單明細</h3>
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} method="post">
             {/* 商品詳情 */}
             <ProductInfo />
             {/* 聯絡資料 */}

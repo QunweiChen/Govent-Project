@@ -1,14 +1,15 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useRef } from 'react'
 
-export default function CheckboxInput({ Content = '', inputID = '' }) {
-  const inputValue = useRef(null)
-  function inputChecked(e) {
-    console.log(e.target.name)
-    let checkedValue = inputValue.current.checked
-    if (inputID == 'point' && checkedValue == true) {
-      console.log('關閉')
-    }
+export default function CheckboxInput({
+  Content = '',
+  inputID = '',
+  change = () => {},
+}) {
+  function handleCheckboxChange(e) {
+    const checkedValue = e.target.checked
+    console.log('子元件', checkedValue)
+    change(checkedValue)
   }
   return (
     <>
@@ -19,9 +20,8 @@ export default function CheckboxInput({ Content = '', inputID = '' }) {
             <input
               type="checkbox"
               id={inputID}
-              ref={inputValue}
               className="input-ref"
-              onChange={inputChecked}
+              onChange={handleCheckboxChange}
               name={inputID}
             />
             <span className="checkmark"></span>
