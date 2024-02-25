@@ -1,4 +1,4 @@
-import { useCart } from '@/hooks/use-cart-state'
+import { useCart } from '@/hooks/use-cart/use-cart-state'
 import { useEffect, useState } from 'react'
 
 export default function CartList() {
