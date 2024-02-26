@@ -6,11 +6,8 @@ import EventsRecommend from '@/components/events-recommend'
 import Calendar from '@/components/product/date'
 
 export default function Detail() {
-  const [show, setShow] = useState(false)
-  const [startDate, setStartDate] = useState(new Date())
+  
 
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
   return (
     <>
       <section>
@@ -141,8 +138,9 @@ export default function Detail() {
                       src="/images/product/detail/info-1.png"
                       alt=""
                     /> */}
-                    <DatePicker />
-                  </div>
+                   <Calendar />
+                  </div>  
+                 
                 </div>
                 <div>
                   <h5 className="mb-5">選擇時間</h5>
@@ -564,53 +562,53 @@ export default function Detail() {
         </div>
         <div className="d-inline-flex d-xxl-none align-items-center col-12 bg-bg-gray-secondary p-3 rounded-3">
           <h5 className="col-9">NT$ 3,200 起</h5>
-          <button className="store fs-6 fw-bold p-2 btn btn-primary col-3">
+          <button className="store fs-6 fw-bold p-2 btn btn-primary col-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
             選擇規格<i className="bi bi-chevron-bar-up"></i>
           </button>
         </div>
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>選擇規格</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="row justify-content-center seat1 mt-3">
-              <h4 className="col-lg-9 col-sm-6">1F 站位</h4>
-              <h4 className="col-lg-2 col-sm-4">NT$ 3,200</h4>
-              <button className="store col-lg-1 col-sm-2 btn btn-primary-deep">
+
+
+<div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div className="modal-dialog">
+    <div className="modal-content bg-bg-gray-secondary">
+      <div className="modal-header">
+        <h5 className="modal-title" id="exampleModalLabel">選擇規格</h5>
+        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div className="modal-body">
+      <div className="d-flex justify-content-between seat1 mt-3">
+              <h5 className="">1F 站位</h5>
+              <h5 className="">NT$ 3,200</h5>
+              <button className="store col-2 btn btn-primary-deep">
                 選擇
               </button>
             </div>
-            <div className="row seat1 mt-3">
-              <h4 className="col-lg-9 col-sm-6">2F 座位</h4>
-              <h4 className="col-lg-2 col-sm-4">NT$ 3,200</h4>
-              <button className="store col-lg-1 col-sm-2 btn btn-primary-deep">
+            <div className="d-flex justify-content-between seat1 mt-3">
+              <h5 className="">2F 座位</h5>
+              <h5 className="">NT$ 3,200</h5>
+              <button className="store col-2 btn btn-primary-deep">
                 選擇
               </button>
             </div>
             <label>日期選擇</label>
             <br />
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-            />
-            <div className="row seat1 mt-3">
-              <h5 className="col-6">數量</h5>
-              <div className="d-flex align-items-center col-6">
-                <i className="bi bi-dash-circle me-2 icon" />
-                <h5 className="px-3 py-2">1</h5>
-                <i className="bi bi-plus-circle ms-2 icon" />
+            
+            <div className="d-flex align-items-center justify-content-between mt-3 border border-1 p-2 rounded-4">
+              <h5 className="ms-2 text-secondary-03">數量</h5>
+              <div className="d-flex align-items-center">
+                <i className="bi bi-dash-circle me-2 icon"/>
+                <h5 className="px-3">1</h5>
+                <i className="bi bi-plus-circle ms-2 icon me-2" />
               </div>
             </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="primary" onClick={handleClose}>
-              加入購物車
-            </Button>
-            <Button variant="primary" onClick={handleClose}>
-              立即訂購
-            </Button>
-          </Modal.Footer>
-        </Modal>
+      </div>
+      <div className="modal-footer">
+        <button type="button" className="btn btn-primary-deep text-white" data-bs-dismiss="modal">加入購物車</button>
+        <button type="button" className="btn btn-primary text-white">立即訂購</button>
+      </div>
+    </div>
+  </div>
+</div>
       </main>
       <footer>{/* place footer here */}</footer>
       <style global jsx>
