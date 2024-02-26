@@ -12,7 +12,7 @@ export default function PaymentType() {
         <input
           className="form-check-input"
           type="radio"
-          name="CreditCard"
+          name="paymentType"
           id="creditCard"
         />
         <label className="form-check-label" htmlFor="creditCard">
@@ -75,11 +75,11 @@ export default function PaymentType() {
         <input
           className="form-check-input"
           type="radio"
-          name="LinePay"
+          name="paymentType"
           id="flexRadioDefault2"
         />
         <label className="form-check-label" htmlFor="flexRadioDefault2">
-          <Image src="/line-pay/LINE-Pay(h)_W98_n.png" />
+          <Image src="/line-pay/LINE Pay_logo-02.png" />
         </label>
       </div>
     </div>
