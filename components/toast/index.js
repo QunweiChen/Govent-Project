@@ -1,28 +1,32 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Toast from 'react-bootstrap/Toast'
 
-export default function GoventToast() {
-  const [show, setShow] = useState(true)
+export default function GoventToast({ value = '', children }) {
+  const [show, setShow] = useState(false)
 
-  const toggleShow = () => setShow(!show)
+  const toggleShow = () => {
+    console.log(value, show)
+    if (value === 'creditCard') {
+      setShow(false)
+      setShow(!show)
+    } else if (value === 'LinePay') {
+      setShow(true)
+      setShow(!show)
+    }
+  }
+  useEffect(() => {
+    toggleShow()
+  }, [value])
+
   return (
     <>
       <Row>
-        <Col md={6} className="mb-2">
-          <Button onClick={toggleShow} className="mb-2">
-            Toggle Toast <strong>with</strong> Animation
-          </Button>
-          <Toast show={show} onClose={toggleShow}>
-            <Toast.Header>
-              <strong className="me-auto">Bootstrap</strong>
-              <small>11 mins ago</small>
-            </Toast.Header>
-            <Toast.Body>
-              Woohoo, you're reading this text in a Toast!
-            </Toast.Body>
+        <Col className="mb-2">
+          <Toast show={show}>
+            <Toast.Body md={12}>{children}</Toast.Body>
           </Toast>
         </Col>
       </Row>
