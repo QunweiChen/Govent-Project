@@ -15,7 +15,7 @@ export default function CartIndex() {
   //存放checkbox內容
   const [events, setEvents] = useState(newEventOptions)
   // console.log(events)
-  //全選
+  // 全選
   const [selectAll, setSelectAll] = useState(false)
 
   //判斷checked狀況
@@ -39,9 +39,12 @@ export default function CartIndex() {
   }
   //--------
   //引入勾子
-  const { items, addItem, one } = useCart()
+  const { items } = useCart()
+  useEffect(() => {
+    console.log(items);
+  }, [items]);
   console.log(items)
-  console.log(one)
+
   return (
     <>
       <div className="container width-1200">

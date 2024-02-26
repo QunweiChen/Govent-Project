@@ -19,14 +19,14 @@ export function CartProvider({ children }) {
   console.log(items)
 
   const addItem = (item) => {
-    // setItems((prevItems) => [...prevItems, item])
-    const newItems = [...items, item]
-    setItems(newItems)
+    setItems((prevItems) => [...prevItems, item]);
+    // const newItems = [...items, item]
+    // setItems(newItems)
   }
-  const one = [{ 1: '1' }]
+  // const one = [{ 1: '1' }]
   //最外(上)元件階層包裹提供者元件，讓⽗⺟元件可以提供它
   return (
-    <CartContext.Provider value={{ one, items, addItem }}>
+    <CartContext.Provider value={{ items, addItem }}>
       {children}
     </CartContext.Provider>
   )
