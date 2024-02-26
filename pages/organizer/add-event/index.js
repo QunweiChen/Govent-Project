@@ -3,6 +3,7 @@ import OrganizerLayout from '@/components/layout/organizer-layout'
 import OrganizerSidebar from '@/components/organizer/organizer-sidebar'
 import OrganizerTerms from '@/components/organizer/organizer-terms'
 import Form from 'react-bootstrap/Form'
+import Link from 'next/link'
 
 export default function OrganizerAddEvent() {
   return (
@@ -30,7 +31,7 @@ export default function OrganizerAddEvent() {
               label={`本人已詳細閱讀，並同意以上條款`}
             />
             <div>
-                <button className='btn btn-primary'>繼續</button>
+                <Link href="add-event/form"><button className='btn btn-primary'>繼續</button></Link>
             </div>
           </div>
         </div>

@@ -31,10 +31,10 @@ export default function OrganizerSidebar() {
               <Accordion.Body className="py-1">
                 <ul className="m-0">
                   <li>
-                    <Link href="event-list">活動清單</Link>
+                    <Link href="/organizer/event-list">活動清單</Link>
                   </li>
                   <li>
-                    <Link href="add-event">新增活動</Link>
+                    <Link href="/organizer/add-event">新增活動</Link>
                   </li>
                 </ul>
               </Accordion.Body>
@@ -67,6 +67,7 @@ export default function OrganizerSidebar() {
         {`
           .organizer-sidebar {
             width: 280px;
+
             .logo-bar {
               height: 120px;
             }
