@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import EventsRecommend from '@/components/events-recommend'
 import NavbarBottomRwd from '@/components/layout/default-layout/navbar-bottom-rwd'
 import Link from 'next/link'
 //勾子
-import { useCart } from '@/hooks/use-cart/use-cart'
+import { useCart } from '@/hooks/use-cart'
 
 export default function CartIndex() {
   const eventOptions = ['111', '222', '333']
@@ -39,7 +39,9 @@ export default function CartIndex() {
   }
   //--------
   //引入勾子
-  const { addItem } = useCart()
+  const { items, addItem, one } = useCart()
+  console.log(items)
+  console.log(one)
   return (
     <>
       <div className="container width-1200">
@@ -65,9 +67,9 @@ export default function CartIndex() {
                     </div>
                   </div>
                 </div>
-
                 <div className="rwd-text">
                   {/* 到時候return資料用這一層 */} {/* 第一 */}
+                  {/* {items.map} */}
                   <div className="border-0 cart-card border-bottom border-top border-normal-gray">
                     <div className="d-flex align-items-center justify-content-between my-3 text-center">
                       <div className="ms-4 text-primary-light">
@@ -136,7 +138,7 @@ export default function CartIndex() {
                       </div>
                     </div>
                   </div>
-                  <div className="border-0 cart-card row g-0 border-bottom border-normal-gray event">
+                  {/* <div className="border-0 cart-card row g-0 border-bottom border-normal-gray event">
                     <div className="col-sm-2 col-4 d-flex align-items-center ms-4">
                       <input
                         type="checkbox"
@@ -193,12 +195,11 @@ export default function CartIndex() {
                         <p className="text-white ms-2 hide">刪除</p>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
-
-                <div className="rwd-text">
-                  {/* 到時候return資料用這一層 */} {/* 第二 */}
-                  <div className="border-0 cart-card border-bottom border-top border-normal-gray">
+                {/* <div className="rwd-text"> */}
+                {/* 到時候return資料用這一層 */} {/* 第二 */}
+                {/* <div className="border-0 cart-card border-bottom border-top border-normal-gray">
                     <div className="d-flex align-items-center justify-content-between my-3 text-center">
                       <div className="ms-4 text-primary-light">
                         主辦單位 - 好玩國際文化
@@ -266,8 +267,7 @@ export default function CartIndex() {
                       </div>
                     </div>
                   </div>
-                </div>
-
+                </div> */}
                 <div className="border-0 cart-card d-none d-xxl-block border-top border-normal-gray">
                   <div className="d-flex justify-content-end align-items-center m-4">
                     <p className="text-primary-light ms-3">合計2件商品</p>

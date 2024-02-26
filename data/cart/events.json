@@ -46,7 +46,7 @@
   },
   {
     "id": 4,
-    "merchantId": 3,
+    "merchantId": 1,
     "eventTypeId": 1,
     "eventName": "TWICE 台北演唱會001",
     "startDate": "2024-05-15 19:00:00",
@@ -61,7 +61,7 @@
   },
   {
     "id": 5,
-    "merchantId": 4,
+    "merchantId": 2,
     "eventTypeId": 2,
     "eventName": "Billie Eilish 台北演唱會",
     "startDate": "2024-06-10 20:00:00",
