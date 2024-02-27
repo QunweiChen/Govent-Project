@@ -1,13 +1,14 @@
-import React from 'react'
+import BackToMainPage from '@/components/user/backToMainPage'
+import React, { useState } from 'react'
 
-export default function Register() {
+export default function Signup() {
+  const [email, setEmail] = useState('')
+
   return (
     <>
       <div className="background d-flex justify-content-center">
         <div className="component-all">
-          <div className="text-black mb-3 backToMainPage">
-            <i className="bi bi-caret-left-fill"></i>回首頁
-          </div>
+          <BackToMainPage />
           <div className="formBackground">
             <div className="px-5 py-5">
               <div className="text-white">
@@ -30,7 +31,12 @@ export default function Register() {
                       type="email"
                       className="form-control bg-normal-gray-light"
                       id="accountEmail"
+                      name="accountEmail"
                       placeholder="請輸入 email 帳號"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value)
+                      }}
                     />
                   </div>
                   <div className="mb-3 text-black col-sm-6 col-12">
@@ -45,6 +51,7 @@ export default function Register() {
                         type="passwordVisible"
                         className="form-control bg-normal-gray-light"
                         id="accountPassword"
+                        name="accountPassword"
                         placeholder="請輸入密碼"
                       />
                       <i className="bi bi-eye-fill passwordVisible btn text-normal-gray bg-normal-gray-light"></i>
@@ -218,7 +225,7 @@ export default function Register() {
           </div>
         </div>
       </div>
-      <style jsx global>
+      <style jsx>
         {`
           .background {
             background-image: url(/images/govent-angus/loginPage-BG.jpg);
@@ -244,11 +251,6 @@ export default function Register() {
                   cover no-repeat;
               height: 100vh;
               letter-spacing: 2px;
-            }
-            .backToMainPage {
-              @media screen and (max-width: 435px) {
-                display: none;
-              }
             }
           }
           .component-all {

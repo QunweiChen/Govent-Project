@@ -1,7 +1,7 @@
 import BackToMainPage from '@/components/user/backToMainPage'
 import React from 'react'
 
-export default function Signin() {
+export default function ForgetPassword() {
   return (
     <>
       <div className="background d-flex justify-content-center">
@@ -10,87 +10,60 @@ export default function Signin() {
           <div className="formBackground">
             <div className="px-5 py-5">
               <div className="text-white">
-                <h4 className="mainTitle-rwd">歡迎回來</h4>
-                <p className="subTitle-rwd">繼續下一趟美好旅程吧！</p>
+                <h4 className="mainTitle-rwd">忘記密碼</h4>
+                <p className="subTitle-rwd">
+                  回到<span className="text-primary">登入</span>或
+                  <span className="text-primary">註冊帳號</span>
+                </p>
               </div>
               <div className="text-black mt-4">
                 <div className="mb-3">
                   <label
-                    htmlFor="accountEmail"
+                    htmlFor="accountAuthEmail"
                     className="form-label sm-p text-normal-gray-light"
                   >
-                    帳號
+                    輸入你註冊會員的電子信箱
                   </label>
-                  <input
-                    type="email"
-                    className="form-control bg-normal-gray-light"
-                    id="accountEmail"
-                    placeholder="請輸入帳號"
-                  />
+                  <div className="input-group">
+                    <input
+                      type="email"
+                      className="form-control bg-normal-gray-light"
+                      id="accountAuthEmail"
+                      placeholder="請輸入 email"
+                    />
+                    <span className="btn btn-primary authButton text-white px-2 sm-p d-flex justify-content-center align-items-center">
+                      點選寄送驗證碼
+                    </span>
+                  </div>
                 </div>
                 <div className="mb-3 text-black">
                   <label
-                    htmlFor="accountPassword"
+                    htmlFor="accountAuthCode"
                     className="form-label sm-p text-normal-gray-light"
                   >
-                    密碼
+                    輸入驗證碼
                   </label>
                   <div className="input-group">
                     <input
                       type="passwordVisible"
                       className="form-control bg-normal-gray-light"
-                      id="accountPassword"
-                      placeholder="請輸入密碼"
+                      id="accountAuthCode"
+                      placeholder="請輸入驗證碼"
                     />
-                    <i className="bi bi-eye-fill passwordVisible btn text-normal-gray bg-normal-gray-light"></i>
                   </div>
-                </div>
-              </div>
-              <div className="mb-4 form-check d-flex justify-content-between align-items-center">
-                <div className="d-flex align-items-center">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="exampleCheck1"
-                  />
-                  <label
-                    className="form-check-label text-white sm-p px-2"
-                    htmlFor="exampleCheck1"
-                  >
-                    記住我的帳號
-                  </label>
-                </div>
-                <div className="text-primary sm-p d-flex align-items-center">
-                  忘記密碼
                 </div>
               </div>
               <div>
                 <button
                   type="submit"
-                  className="btn btn-primary text-white w-100"
+                  className="btn btn-primary text-white w-100 mt-3"
                 >
-                  登入
+                  重設密碼
                 </button>
-              </div>
-              <div className="text-center p-2">
-                <span className="text-white sm-p">
-                  還沒有帳號？
-                  <span className="text-primary sm-p">點擊註冊</span>
-                </span>
-              </div>
-              <div className="text-white text-center xs-p my-4">
-                <span>OR</span>
-              </div>
-              <div className="d-flex justify-content-between text-white row">
-                <div className="btn-lg btn btn-outline-light text-white col-5 googleLoginButton">
-                  <div className="sm-p py-1">
-                    <i className="bi bi-google me-2"></i>google 登入
-                  </div>
-                </div>
-                <div className="btn-lg btn btn-outline-light text-white col-5 xLoginButton">
-                  <div className="sm-p py-1">
-                    <i className="bi bi-twitter-x"></i> 登入
-                  </div>
+                <div className="text-center text-normal-gray-light sm-p mt-3">
+                  點選重設密碼將會跳轉到登入畫面
+                  <br />
+                  請使用新設密碼進行登入
                 </div>
               </div>
             </div>
@@ -130,7 +103,7 @@ export default function Signin() {
           .formBackground {
             border-radius: 10px;
             width: 420px;
-            height: 580px;
+            height: 480px;
             background: linear-gradient(
               180deg,
               rgba(18, 18, 18, 0.9) 0%,
