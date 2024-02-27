@@ -25,7 +25,7 @@ export default function GoventToast({ value = '', children }) {
     <>
       <Row>
         <Col className="mb-2">
-          <Toast show={show}>
+          <Toast bg="light" show={show} style={{ width: '100%' }}>
             <Toast.Body md={12}>{children}</Toast.Body>
           </Toast>
         </Col>

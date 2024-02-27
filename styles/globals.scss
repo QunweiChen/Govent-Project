@@ -5,6 +5,7 @@ $primary: #f16e0f;
 $secondary: rgba(41, 41, 40, 0.5);
 $success: #7eb4e6;
 $danger: #ff4136;
+$light: #282828;
 
 // 按鈕圓角邊 button radius
 $border-radius: 0.2em;
@@ -48,21 +49,21 @@ $card-height: 100%;
   --primary-color: #f16e0f;
   --primary-50-color: #f16d0f83;
   --primary-light-color: #e88741;
-  --primary-deep-color: #C55708;
+  --primary-deep-color: #c55708;
   --primary-deep-50-color: #c5570881;
   --normal-black-color: #000;
   --normal-gray-deep-color: #121212;
   --normal-gray-color: #404040;
-  --normal-gray-light-color: #B4B4B4;
+  --normal-gray-light-color: #b4b4b4;
   --normal-white-color: #fff;
-  --secondary-01-color: #F2DD72;
-  --secondary-02-color: #8C7F68;
-  --secondary-03-color: #BF9765;
-  --bg-gray-color: #1E1E1E;
+  --secondary-01-color: #f2dd72;
+  --secondary-02-color: #8c7f68;
+  --secondary-03-color: #bf9765;
+  --bg-gray-color: #1e1e1e;
   --bg-gray-light-color: #232323;
   --bg-gray-secondary-color: #282828;
   --bg-dark-color: #151515;
-  --bg-backend-color: #EAEDF2;
+  --bg-backend-color: #eaedf2;
   --search-bar-color: #8282827e;
   --none: rgba(0, 0, 0, 0);
 }
@@ -91,7 +92,7 @@ body {
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-a{
+a {
   text-decoration: none;
 }
 
@@ -175,9 +176,8 @@ p {
 .nav-link:hover {
   color: #f16e0f;
 }
-.bottom-line{
+.bottom-line {
   border-bottom: 1px solid var(--normal-gray-color);
 }
-
 
 // below is test only
