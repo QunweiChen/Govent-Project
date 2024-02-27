@@ -4,6 +4,7 @@ import OrganizerSidebar from '@/components/organizer/organizer-sidebar'
 import OrganizerTerms from '@/components/organizer/organizer-terms'
 import Form from 'react-bootstrap/Form'
 import Link from 'next/link'
+import OrganizerTopBar from '@/components/organizer/organizer-top-bar'
 
 export default function OrganizerAddEvent() {
   return (
@@ -11,14 +12,7 @@ export default function OrganizerAddEvent() {
       <div className="d-flex organizer-container">
         <OrganizerSidebar />
         <div className="w-100 bg-bg-gray organizer-main d-flex flex-column">
-          <div className="px-4 py-3 d-flex justify-content-between mb-3">
-            <h4 className="m-0">新增活動</h4>
-            <div>
-              <button className="btn btn-outline-primary">
-                <i className="bi bi-caret-left-fill pe-2"></i>回首頁
-              </button>
-            </div>
-          </div>
+        <OrganizerTopBar title="新增活動"/>
           <div className="d-flex flex-column align-items-center on-main justify-content-center">
             <h5 className="mb-4">活動上架規範同意書</h5>
             <div className="p-4 border border-normal-gray rounded-4 terms-container mb-3">

@@ -10,6 +10,7 @@ import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
+import OrganizerTopBar from '@/components/organizer/organizer-top-bar'
 
 export default function EventList() {
   const [selectedButton, setSelectedButton] = useState(1)
@@ -23,14 +24,7 @@ export default function EventList() {
       <div className="d-flex organizer-container">
         <OrganizerSidebar />
         <div className="w-100 bg-bg-gray organizer-main d-flex flex-column">
-          <div className="px-4 py-3 d-flex justify-content-between mb-3">
-            <h4 className="m-0">活動清單</h4>
-            <div>
-              <button className="btn btn-outline-primary">
-                <i className="bi bi-caret-left-fill pe-2"></i>回首頁
-              </button>
-            </div>
-          </div>
+          <OrganizerTopBar title="活動清單"/>
           <div className="event-nav flex-grow-1 d-flex flex-column">
             <Tabs
               id="uncontrolled-tab-example"

@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Quill from '@/components/organizer/react-quill'
+import OrganizerTopBar from '@/components/organizer/organizer-top-bar'
 
 export default function OrganizerForm() {
   return (
@@ -12,14 +13,7 @@ export default function OrganizerForm() {
       <div className="d-flex organizer-container">
         <OrganizerSidebar />
         <div className="w-100 bg-bg-gray organizer-main d-flex flex-column">
-          <div className="px-4 py-3 d-flex justify-content-between mb-3">
-            <h4 className="m-0">新增活動資訊</h4>
-            <div>
-              <button className="btn btn-outline-primary">
-                <i className="bi bi-caret-left-fill pe-2"></i>回首頁
-              </button>
-            </div>
-          </div>
+          <OrganizerTopBar title="新增活動資訊"/>
           <div className="d-flex flex-column align-items-center on-main justify-content-center">
             <h5 className="my-5">活動基本資料</h5>
             <div className="w-800">
@@ -105,14 +99,105 @@ export default function OrganizerForm() {
                   </Col>
                   <Col sm="12">
                     <Form.Group className="mb-3" controlId="event-place">
-                      <Form.Label>購票說明</Form.Label>
+                      <Form.Label>購票須知</Form.Label>
                       <Form.Control
                         as="textarea"
                         rows={5}
-                        placeholder="請填寫購票說明"
+                        placeholder="請填寫購票須知"
                       />
                     </Form.Group>
                   </Col>
+                  <Col sm="6">
+                    <Form.Group className="mb-3" controlId="event-city">
+                      <Form.Label>活動時間</Form.Label>
+                      <Form.Text id="event-address" muted>
+                        <div className="mb-2">活動開始時間</div>
+                      </Form.Text>
+                      <Form.Control type="datetime-local" />
+                    </Form.Group>
+                  </Col>
+                  <Col sm="6">
+                    <Form.Group className="mb-3" controlId="event-city">
+                      <Form.Text id="event-address" muted>
+                        <div className="mt-4 pt-2 mb-2">活動結束時間</div>
+                      </Form.Text>
+                      <Form.Control type="datetime-local" />
+                    </Form.Group>
+                  </Col>
+                  <Col sm="6">
+                    <Form.Group className="mb-3" controlId="event-city">
+                      <Form.Label>售票時間</Form.Label>
+                      <Form.Text id="event-address" muted>
+                        <div className="mb-2">開始售票時間</div>
+                      </Form.Text>
+                      <Form.Control type="datetime-local" />
+                    </Form.Group>
+                  </Col>
+                  <Col sm="6">
+                    <Form.Group className="mb-3" controlId="event-city">
+                      <Form.Text id="event-address" muted>
+                        <div className="mt-4 pt-2 mb-2">結束售票時間</div>
+                      </Form.Text>
+                      <Form.Control type="datetime-local" />
+                    </Form.Group>
+                  </Col>
+                  <h5 className="my-5 text-center">票卷規格</h5>
+                  <Col sm="12">
+                    <div className="ticket-format-01">
+                      <div className="bottom-line px-3 py-2">規格1</div>
+                      <Row className="px-3 py-2">
+                        <Col sm="12">
+                          <Form.Group className="mb-3" controlId="event-place">
+                            <Form.Label className="sm-p">
+                              票卷規格名稱
+                            </Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="請填寫規格名稱 EX:1F站票"
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col sm="6">
+                          <Form.Group className="mb-3" controlId="event-place">
+                            <Form.Label className="sm-p">
+                              最大販售數量
+                            </Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="最大販售數量"
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col sm="6">
+                          <Form.Group className="mb-3" controlId="event-place">
+                            <Form.Label className="sm-p">價格</Form.Label>
+                            <Form.Control type="text" placeholder="價格" />
+                          </Form.Group>
+                        </Col>
+                        <Col sm="12">
+                          <Form.Group className="mb-2" controlId="event-place">
+                            <Form.Label className="sm-p">
+                              規格說明（顯示於顧客票卷中）
+                            </Form.Label>
+                            <Form.Control
+                              as="textarea"
+                              rows={5}
+                              placeholder="請填寫規格說明"
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Col>
+                  <div className="mt-3">
+                    <button className="btn btn-outline-normal-gray text-white w-100">
+                      新增規格 ＋
+                    </button>
+                  </div>
+                  <div className='my-5 d-flex justify-content-between'>
+                    <button className='btn btn-outline-primary'>儲存草稿</button>
+                    <button className='btn btn-primary'>完成，送出審核</button>
+                  </div>
                 </Row>
               </Form>
             </div>
@@ -168,12 +253,17 @@ export default function OrganizerForm() {
               border-radius: 5px 5px 0 0;
             }
             .ql-container {
-                height: 300px;
-                border-radius: 0 0 5px 5px;
-                border: 1px solid var(--normal-gray-color);
-                background-color: var(--bg-gray-light-color);
-                margin-bottom: 16px;
+              height: 300px;
+              border-radius: 0 0 5px 5px;
+              border: 1px solid var(--normal-gray-color);
+              background-color: var(--bg-gray-light-color);
+              margin-bottom: 16px;
             }
+          }
+          .ticket-format-01 {
+            border: 1px solid var(--normal-gray-color);
+            border-radius: 5px;
+            background-color: var(--bg-gray-light-color);
           }
         `}
       </style>
