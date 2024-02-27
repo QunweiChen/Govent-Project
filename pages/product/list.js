@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-// import { CiHeart } from 'react-icons/ci'
-// import { GoSortDesc } from 'react-icons/go'
+ import { CiHeart } from 'react-icons/ci'
+ import { GoSortDesc } from 'react-icons/go'
 
 export default function List() {
   // Toggle the side navigation
