@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
-
 export default function ConnectionData() {
   const [data, setDate] = useState({
     userName: '',
@@ -28,7 +27,7 @@ export default function ConnectionData() {
             <Form.Control
               type="text"
               placeholder="姓名"
-              className="bg-bg-dark text-white"
+              className="bg-bg-dark text-white placeholder-text "
               name="userName"
               onChange={formChange}
             />
@@ -68,7 +67,7 @@ export default function ConnectionData() {
               <Form.Control
                 type="text"
                 placeholder="09-XXXXXXXX"
-                className="bg-bg-dark text-white"
+                className="bg-bg-dark text-white placeholder-text "
                 name="phoneNumber"
                 onChange={formChange}
               />
@@ -81,7 +80,7 @@ export default function ConnectionData() {
               <Form.Control
                 type="email"
                 placeholder="Enter email"
-                className="bg-bg-dark text-white"
+                className="bg-bg-dark text-white placeholder-text "
                 name="email"
                 onChange={formChange}
               />
@@ -92,9 +91,9 @@ export default function ConnectionData() {
           </Form.Group>
         </div>
       </div>
-      <style jsx>{`
-        input {
-          color-scheme: dark;
+      <style global jsx>{`
+        .placeholder-text::placeholder {
+          color: white;
         }
       `}</style>
     </>

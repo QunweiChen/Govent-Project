@@ -33,5 +33,6 @@ export const pathsLocaleMap = {
   'posts':'張貼文章',
   'test':'測試',
   'user':'會員',
+  'payment':'結帳頁面'
 }
 /* eslint-enable */

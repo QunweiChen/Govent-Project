@@ -1,12 +1,11 @@
 import React from 'react'
 import { Image } from 'react-bootstrap'
-
 export default function InfoData() {
   return (
     <div className="product-info d-flex mb-3 bg-bg-gray-secondary rounded-4 px-4 py-3 justify-content-around">
       <div className="product-image col-md-3 ">
         <Image
-          src="/images/product/detail/info-1.webp"
+          src="/images/product/detail/info-1.png"
           alt=""
           className="rounded-3 img-thumbnail"
         />

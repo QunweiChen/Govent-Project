@@ -40,7 +40,7 @@ export default function PaymentType() {
                 type="text"
                 className="form-control"
                 id="cardNumber"
-                value="Mark"
+                defaultValue="Mark"
                 required
               />
               <div className="valid-feedback">Looks good!</div>
@@ -56,7 +56,6 @@ export default function PaymentType() {
                 type="text"
                 className="form-control"
                 id="Validityperiod"
-                value="Mark"
                 required
               />
               <div className="valid-feedback">Looks good!</div>
@@ -72,7 +71,6 @@ export default function PaymentType() {
                 type="text"
                 className="form-control"
                 id="securityCode"
-                value="Mark"
                 required
               />
               <div className="valid-feedback">Looks good!</div>
