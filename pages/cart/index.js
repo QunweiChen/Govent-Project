@@ -1,24 +1,53 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import EventsRecommend from '@/components/events-recommend'
+import NavbarBottomRwd from '@/components/layout/default-layout/navbar-bottom-rwd'
+import Link from 'next/link'
+//勾子
+import { useCart } from '@/hooks/use-cart'
 
 export default function CartIndex() {
+  const eventOptions = ['111', '222', '333']
+  const newEventOptions = eventOptions.map((v, i) => {
+    return { id: i + 1, name: v, checked: false }
+  })
+  // console.log(newEventOptions)
+
+  //存放checkbox內容
+  const [events, setEvents] = useState(newEventOptions)
+  // console.log(events)
+  // 全選
+  const [selectAll, setSelectAll] = useState(false)
+
+  //判斷checked狀況
+  const toggleCheckbox = (events, id) => {
+    return events.map((v, i) => {
+      if (v.id === id) return { ...v, checked: !v.checked }
+      else return v
+    })
+  }
+
+  //全選功能的處理函式
+  const handleSelectAll = (e) => {
+    const isChecked = e.target.checked
+    console.log('isChecked:', isChecked) // 調試
+    setSelectAll(isChecked)
+    if (isChecked) {
+      setEvents(events.map((event) => ({ ...event, checked: true })))
+    } else {
+      setEvents(events.map((event) => ({ ...event, checked: false })))
+    }
+  }
+  //--------
+  //引入勾子
+  const { items, one } = useCart()
+  console.log(items)
+  console.log(one)
+
   return (
     <>
       <div className="container width-1200">
         <div className="row justify-content-center">
           <div className="col-sm-12">
-            <div className="d-flex align-items-center justify-content-start mb-3 mt-5 text-white">
-              <div className="text-primary-light">購物車 </div>
-              <div>
-                <i className="bi bi-chevron-right text-white"></i>
-              </div>
-              <div> 確認資料與付款 </div>
-              <div>
-                <i className="bi bi-chevron-right text-white"></i>
-              </div>
-              <div> 訂購完成</div>
-            </div>
-
             <div className="cart-top ">
               <div className="cart-area card bg-bg-gray-secondary">
                 <div className="border-0 cart-card border-bottom border-normal-gray">
@@ -27,16 +56,21 @@ export default function CartIndex() {
                       <h4 className="ms-4">購物車</h4>
                     </div>
                     <div className="col-6 text-white d-flex align-items-center justify-content-end">
-                      <label className="me-4 d-flex align-items-center justify-content-end">
-                        <input type="checkbox" className="checkbox-large" />
+                      <label className="me-4 d-flex align-items-center justify-content-end form-check-label">
+                        <input
+                          type="checkbox"
+                          checked={selectAll}
+                          onChange={handleSelectAll}
+                          className="checkbox-large form-check-input"
+                        />
                         <p className="ms-2">全選</p>
                       </label>
                     </div>
                   </div>
                 </div>
-
                 <div className="rwd-text">
-                  {/* 到時候return資料用這一層 */}{' '}
+                  {/* 到時候return資料用這一層 */} {/* 第一 */}
+                  {/* {items.map} */}
                   <div className="border-0 cart-card border-bottom border-top border-normal-gray">
                     <div className="d-flex align-items-center justify-content-between my-3 text-center">
                       <div className="ms-4 text-primary-light">
@@ -49,7 +83,16 @@ export default function CartIndex() {
                   </div>
                   <div className="border-0 cart-card row g-0 border-bottom border-normal-gray event">
                     <div className="col-sm-2 col-4 d-flex align-items-center ms-4">
-                      <input type="checkbox" className="me-4 checkbox-large" />
+                      <input
+                        type="checkbox"
+                        checked={events[0].checked}
+                        onChange={() => {
+                          setEvents(
+                            toggleCheckbox(events, newEventOptions[0].id)
+                          )
+                        }}
+                        className="me-4 checkbox-large form-check-input"
+                      />
                       <div className="bg-normal-white rounded-4 product-img">
                         <img
                           src="./images/cart/4-03.jpg"
@@ -96,9 +139,18 @@ export default function CartIndex() {
                       </div>
                     </div>
                   </div>
-                  <div className="border-0 cart-card row g-0 border-bottom border-normal-gray event">
+                  {/* <div className="border-0 cart-card row g-0 border-bottom border-normal-gray event">
                     <div className="col-sm-2 col-4 d-flex align-items-center ms-4">
-                      <input type="checkbox" className="me-4 checkbox-large" />
+                      <input
+                        type="checkbox"
+                        checked={events[1].checked}
+                        onChange={() => {
+                          setEvents(
+                            toggleCheckbox(events, newEventOptions[1].id)
+                          )
+                        }}
+                        className="me-4 checkbox-large form-check-input"
+                      />
                       <div className="bg-normal-white rounded-4 product-img">
                         <img
                           src="./images/cart/4-03.jpg"
@@ -144,12 +196,11 @@ export default function CartIndex() {
                         <p className="text-white ms-2 hide">刪除</p>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
-
-                <div className="rwd-text">
-                  {/* 到時候return資料用這一層 */}{' '}
-                  <div className="border-0 cart-card border-bottom border-top border-normal-gray">
+                {/* <div className="rwd-text"> */}
+                {/* 到時候return資料用這一層 */} {/* 第二 */}
+                {/* <div className="border-0 cart-card border-bottom border-top border-normal-gray">
                     <div className="d-flex align-items-center justify-content-between my-3 text-center">
                       <div className="ms-4 text-primary-light">
                         主辦單位 - 好玩國際文化
@@ -161,7 +212,16 @@ export default function CartIndex() {
                   </div>
                   <div className="border-0 cart-card row g-0 border-bottom border-normal-gray event">
                     <div className="col-sm-2 col-4 d-flex align-items-center ms-4">
-                      <input type="checkbox" className="me-4 checkbox-large" />
+                      <input
+                        type="checkbox"
+                        checked={events[2].checked}
+                        onChange={() => {
+                          setEvents(
+                            toggleCheckbox(events, newEventOptions[2].id)
+                          )
+                        }}
+                        className="me-4 checkbox-large form-check-input"
+                      />
                       <div className="bg-normal-white rounded-4 product-img">
                         <img
                           src="./images/cart/4-03.jpg"
@@ -208,23 +268,25 @@ export default function CartIndex() {
                       </div>
                     </div>
                   </div>
-                </div>
-
+                </div> */}
                 <div className="border-0 cart-card d-none d-xxl-block border-top border-normal-gray">
                   <div className="d-flex justify-content-end align-items-center m-4">
                     <p className="text-primary-light ms-3">合計2件商品</p>
                     <h5 className="text-white ms-3">總金額 NT 12,200</h5>
-                    <h6 className="btn btn-primary-deep text-white ms-4">
-                      前往結帳
+                    <h6 className="btn btn-primary-deep ms-4">
+                      <Link href="/payment" className="text-white">
+                        前往結帳
+                      </Link>
                     </h6>
                   </div>
                 </div>
               </div>
             </div>
-            <EventsRecommend />
           </div>
         </div>
       </div>
+      <EventsRecommend />
+      {/* <NavbarBottomRwd /> */}
       <div className="border-0 cart-card d-block d-xxl-none border-top border-normal-gray bg-normal-gray-deep fixed-bottom">
         <div className="d-flex justify-content-between align-items-center m-2">
           <p className="text-primary-light ms-3">合計2件商品</p>
@@ -242,7 +304,11 @@ export default function CartIndex() {
           body {
             background-color: #151515;
           }
-
+          main > .container {
+            padding: 60px 15px 0;
+            max-width: 1200px;
+            margin: 0 auto;
+          }
           .card-cover {
             background-repeat: no-repeat;
             background-position: center center;

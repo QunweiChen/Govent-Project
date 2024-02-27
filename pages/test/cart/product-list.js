@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { useCart } from '@/hooks/use-cart-state'
+import { useCart } from '@/hooks/use-cart/use-cart-state'
 import Image from 'next/image'
 
 // 商品範例

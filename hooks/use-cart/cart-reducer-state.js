@@ -8,24 +8,6 @@ export const initState = {
   totalItems: 0,
   cartTotal: 0,
 }
-
-// 置於上述items陣列中的每個項目的物件模型
-// id, quantity, price為必要屬性
-// const item = {
-//   id: '',
-//   quantity: 0,
-//   price: 0,
-// }
-//
-// 可自行定義擴充屬性例如: color, size, name, picture, description...
-// const item = {
-//   id: '',
-//   quantity: 0,
-//   name: '',
-//   price: 0,
-//   color: '',
-//   size: '',
-// }
 /**
  * `findOneById(items, id)` 依照某id找出項目。如果沒有找到，則返回空物件。
  */

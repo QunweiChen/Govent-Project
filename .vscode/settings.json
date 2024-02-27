@@ -22,7 +22,7 @@
   "emmet.syntaxProfiles": {
     "javascript": "jsx"
   },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  "cSpell.words": [
+    "Govent"
+  ]
 }
