@@ -39,11 +39,9 @@ export default function CartIndex() {
   }
   //--------
   //引入勾子
-  const { items } = useCart()
-  useEffect(() => {
-    console.log(items);
-  }, [items]);
+  const { items, one } = useCart()
   console.log(items)
+  console.log(one)
 
   return (
     <>
