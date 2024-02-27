@@ -1,74 +1,100 @@
-import React from 'react'
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useState, useRef } from 'react'
 
-export default function CheckboxInput() {
+export default function CheckboxInput({
+  Content = '',
+  inputID = '',
+  change = () => {},
+}) {
+  function handleCheckboxChange(e) {
+    const checkedValue = e.target.checked
+    console.log('子元件', checkedValue)
+    change(checkedValue)
+  }
   return (
     <>
       <div className="">
-        <div className="round">
-          <input type="checkbox"  id="checkbox" />
-          <label for="checkbox"></label>
+        <div className="round d-flex">
+          <label htmlFor={inputID} className="checkbox-container p">
+            {Content}
+            <input
+              type="checkbox"
+              id={inputID}
+              className="input-ref"
+              onChange={handleCheckboxChange}
+              name={inputID}
+            />
+            <span className="checkmark"></span>
+          </label>
         </div>
       </div>
-      <style global jsx>
+      <style jsx>
         {`
-          .round {
+          .checkbox-container {
+            display: block;
             position: relative;
-          }
-
-          .round label {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 50%;
+            padding-left: 25px;
+            margin-bottom: 12px;
             cursor: pointer;
-            height: 24px;
-            left: 0;
-            position: absolute;
-            top: 0;
-            width: 24px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
           }
 
-          .round label:after {
-            border: 2px solid #fff;
-            border-top: none;
-            border-right: none;
-            content: '';
-            height: 4px;
-            left: 5.5px;
+          /* Hide the browser's default checkbox */
+          .checkbox-container input {
+            position: absolute;
             opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+          }
+
+          /* Create a custom checkbox */
+          .checkmark {
             position: absolute;
-            top: 8px;
-            transform: rotate(-45deg);
-            width: 12px;
+            border-radius: 30px;
+            top: 2px;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #eee;
           }
 
-          .round input[type='checkbox'] {
-            visibility: hidden;
+          /* On mouse-over, add a grey background color */
+          .checkbox-container:hover input ~ .checkmark {
+            background-color: #ccc;
           }
 
-          .round input[type='checkbox']:checked + label {
+          /* When the checkbox is checked, add a blue background */
+          .checkbox-container input:checked ~ .checkmark {
             background-color: #f16e0f;
-            border-color: #f16e0f;
           }
 
-          .round input[type='checkbox']:checked + label:after {
-            opacity: 1;
+          /* Create the checkmark/indicator (hidden when not checked) */
+          .checkmark:after {
+            content: '';
+            position: absolute;
+            display: none;
           }
 
-          /* general styling */
-          html,
-          body {
-            height: 100%;
-            margin: 0;
+          /* Show the checkmark when checked */
+          .checkbox-container input:checked ~ .checkmark:after {
+            display: block;
           }
 
-          body {
-            -webkit-box-align: center;
-            -ms-flex-align: center;
-            align-items: center;
-            background-color: #f1f2f3;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
+          /* Style the checkmark/indicator */
+          .checkbox-container .checkmark:after {
+            left: 8px;
+            top: 3.5px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
           }
         `}
       </style>
