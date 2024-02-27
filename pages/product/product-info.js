@@ -153,15 +153,15 @@ export default function Detail() {
                     <h5 className="px-3 py-2 bg-dark rounded">1</h5>
                     <i className="bi bi-plus-circle ms-2 icon" />
                   </div>
-                  <div className="d-flex cost">
-                    <h5 className="pe-5 me-5">總金額</h5>
-                    <h4 className="ps-5 ms-5">NT$ 3,200</h4>
+                  <div className="d-flex my-5">
+                    <h5 className="">總金額</h5>
+                    <h4 className="dollar">NT$ 3,200</h4>
                   </div>
-                  <div className="cart mb-3">
-                    <button className="store fs-5 fw-bold me-2 p-2 btn btn-primary-deep">
+                  <div className="d-flex justify-content-end mb-3">
+                    <button className="store fs-5 me-2 p-2 btn btn-primary-deep">
                       加入購物車
                     </button>
-                    <button className="store fs-5 fw-bold p-2 btn btn-primary-deep">
+                    <button className="store fs-5 p-2 btn btn-primary-deep">
                       結帳
                     </button>
                   </div>
@@ -560,8 +560,8 @@ export default function Detail() {
             </div> */}
           </section>
         </div>
-        <div className="d-inline-flex d-xxl-none align-items-center col-12 bg-bg-gray-secondary p-3 rounded-3">
-          <h5 className="col-9">NT$ 3,200 起</h5>
+        <div className="d-inline-flex d-xxl-none align-items-center justify-content-center col-12 bg-bg-gray-secondary p-3 rounded-3">
+          <h5 className="col-8">NT$ 3,200 起</h5>
           <button className="store fs-6 fw-bold p-2 btn btn-primary col-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
             選擇規格<i className="bi bi-chevron-bar-up"></i>
           </button>
@@ -648,15 +648,19 @@ export default function Detail() {
             padding: 15px;
             border-radius: 10px;
           }
-          .cost {
-            padding-top: 250px;
+          {/* .cost {
+            padding-top: 100px;
             margin-bottom: 50px;
+          } */}
+
+          .dollar{
+            margin-left:430px;
           }
           .icon {
             font-size: 30px;
           }
           .cart {
-            margin-left: 190px;
+            margin-left: 300px;
           }
           .left {
              {
@@ -683,11 +687,17 @@ export default function Detail() {
 
           @media screen and (max-width: 576px) {
             .wrapper {
-              max-width: 100%;
+              max-width: 90%;
             }
-            .object-fit-cover {
-            height: 400px; 
+
+            main > .container {
+            padding:0;
           }
+
+            .object-fit-cover {
+            height: 300px; 
+          }
+          
             .nav-btn {
               width: 48px;
               height: 48px;
@@ -706,6 +716,9 @@ export default function Detail() {
                 margin-left: 0 !important;
                 margin-bottom: 20px;
               }
+            }
+            .seat1{
+              margin:0;
             }
             .btn-toolbar {
               display: none;

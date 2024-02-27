@@ -1,106 +1,218 @@
-import { useState } from 'react'
-
-// chunk - 依size分成子陣列，ex. chunk([1, 2, 3, 4, 5], 2) -> [[1,2],[3,4],[5]]
-const chunk = (arr, size) =>
-  Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
-    arr.slice(i * size, i * size + size)
-  )
+import { useState, useEffect } from 'react';
 
 export default function Calendar() {
-  // const [myYear, setMyYear] = useState(2022)
-  // const [myMonth, setMyMonth] = useState(2)
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [calendar, setCalendar] = useState([]);
 
-  // 一開始未選中日期
-  const [myDate, setMyDate] = useState(0)
+  const renderCalendar = () => {
+    // 这里是你的 renderCalendar 函数逻辑
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    
+    const firstDayOfMonth = new Date(year, month, 1);
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    
+    const startingDay = firstDayOfMonth.getDay();
+    const totalDays = lastDayOfMonth.getDate();
+    
+    const days = [];
+  
+    // 渲染上一个月的日期
+    for (let i = 0; i < startingDay; i++) {
+      const prevMonthDay = new Date(year, month, -startingDay + i + 1);
+      days.push(<div key={`prev${i}`} className="date otherMonth">{prevMonthDay.getDate()}</div>);
+    }
+  
+    // 渲染这个月的日期
+    for (let i = 1; i <= totalDays; i++) {
+      const currentDateObj = new Date(year, month, i);
+      const isCurrentDate = i === currentDate.getDate() && month === currentDate.getMonth();
+      days.push(
+        <div key={`current${i}`} className={`date ${isCurrentDate ? 'currentDate' : ''}`}>
+          {i}
+        </div>
+      );
+    }
+  
+    // 渲染下一个月的日期
+    const remainingDays = (7 - (days.length % 7)) % 7;
+    for (let i = 1; i <= remainingDays; i++) {
+      const nextMonthDay = new Date(year, month + 1, i);
+      days.push(<div key={`next${i}`} className="date otherMonth">{nextMonthDay.getDate()}</div>);
+    }
 
-  // 呈現yearAndMonth
-  const now = new Date()
+      // 渲染星期
+  const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
 
-  // 要得到今天的西元年使用Date物件的getFullYear()，要得到月份使用getMonth()(注意回傳為 0~11)
-  const nowY = now.getFullYear()
+  const weekdaysJSX = weekdays.map((weekday, index) => (
+    <div key={index} className="weekdays">{weekday}</div>
+  ));
+  
+    const weeks = [];
+    for (let i = 0; i < days.length; i += 7) {
+      weeks.push(
+        <div key={i} className="week">
+          {days.slice(i, i + 7)}
+        </div>
+      );
+    }
+  
+    setCalendar(weeks);
+  };
 
-  // nowM =1-12
-  const nowM = now.getMonth() + 1 //注意回傳為 0~11
+  const prevMonth = () => {
+    setCurrentDate(prevDate => {
+      const newDate = new Date(prevDate);
+      newDate.setMonth(newDate.getMonth() - 1);
+      return newDate;
+    });
+  };
 
-  // nowD
-  const nowD = now.getDate() //注意回傳為 0~11
+  const nextMonth = () => {
+    setCurrentDate(prevDate => {
+      const newDate = new Date(prevDate);
+      newDate.setMonth(newDate.getMonth() + 1);
+      return newDate;
+    });
+  };
 
-  // 呈現標題
-  const weekDayList = ['日', '一', '二', '三', '四', '五', '六']
-
-  // 本月有幾天
-  // (上個月的最後一天是幾號)
-  const days = new Date(nowY, nowM, 0).getDate()
-
-  // 這個月的第一天是星期幾(0-6) (月份為0-11)
-  const firstDay = new Date(nowY, nowM - 1, 1).getDay()
-
-  //------ 以下開始產生資料陣列
-  // 最前面塞入空白字串的陣列
-  const emptyData = Array(firstDay).fill('')
-
-  // 有值的陣列1 ~ days
-  // 如何建立一個陣列包含1...N數字
-  // https://stackoverflow.com/questions/3746725/how-to-create-an-array-containing-1-n
-  const valueData = Array(days)
-    .fill('')
-    .map((v, i) => i + 1)
-
-  // 合併兩陣列為一長陣列
-  const allData = [...emptyData, ...valueData]
-  //------ 以下準備呈現在網頁上
-  const allDataChunks = chunk(allData, 7)
+  useEffect(() => {
+    renderCalendar();
+  }, []);
 
   return (
-    <>
-      <h5 id="yearAndMonth">{`${nowY}/${nowM}/${myDate ? myDate : ''}`}</h5>
-      <table border="1">
-        <thead id="title">
-          <tr>
-            {weekDayList.map(function (v, i) {
-              return <th key={i}>{v}</th>
-            })}
-          </tr>
-        </thead>
-        <tbody id="data">
-          {allDataChunks.map((v, i) => {
-            return (
-              <tr key={i}>
-                {v.map((item, idx) => (
-                  <td
-                    key={idx}
-                    onClick={() => {
-                      if (item) setMyDate(item)
-                    }}
-                    className={`${nowD === item ? 'today' : ''} ${
-                      myDate === item ? 'chosen-date' : ''
-                    }`}
-                    style={{ cursor: 'pointer' }}
-                    role="presentation"
-                  >
-                    {item}
-                  </td>
-                ))}
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-      <style jsx>
-        {`
-        .table{
-            width:250px;
-            height:200px;
-        }
-          .today {
-            background-color: gold;
-          }
+    <div className="calendarContainer">
+      <div className="calendar">
+        <div className="nav">
+          <button className="leftBtn" onClick={prevMonth}>
+            <i className="bi bi-caret-left-fill"></i>
+          </button>
+          <div className="month"></div>
+          <button className="rightBtn" onClick={nextMonth}>
+            <i className="bi bi-caret-right-fill"></i>
+          </button>
+        </div>
+        <div className="week unit1">
+          {/* 这里是你的星期渲染 JSX 代码 */}
+            <div className="weekdays">日</div>
+          <div className="weekdays">一</div>
+          <div className="weekdays">二</div>
+          <div className="weekdays">三</div>
+          <div className="weekdays">四</div>
+          <div className="weekdays">五</div>
+          <div className="weekdays">六</div>
+       
+        </div>
+        <div className="dates unit1"></div>
+      </div>
+      <style jsx>{`
+      body {
+        max-height: 300px;
+        padding: 0;
+        margin: 0;
+      }
+      * {
+        box-sizing: border-box;
+        font-family: sans-serif;
+        color: white;
+      }
 
-          .chosen-date {
-            background-color: green;
-          }
-        `}
-      </style>
-    </>
-  )
+      :root {
+        --nav-height: 60px;
+        --week-height: 30px;
+        --date-height: 100px;
+      }
+
+      .calendarContainer {
+        width: 400px;
+        height: 300px;
+        background-color: #484848;
+        justify-content: center;
+        border-radius: 10px;
+      }
+
+      .calendar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #323232;
+        height: fit-content;
+        border-radius: 10px 10px 0 0;
+      }
+      .calendar .nav {
+        position: relative;
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        height: var(--nav-height);
+      }
+      .calendar .nav button {
+        position: absolute;
+        font-size: 14px;
+        scale: 2;
+        font-weight: bold;
+        cursor: pointer;
+        color: #fff;
+        border: none;
+        background: none;
+        border-radius: 5px;
+      }
+/* 
+      .calendar .nav button:hover {
+        background-color: #7e7e7e;
+      } */
+      .calendar .nav .leftBtn {
+        right: 50px;
+      }
+
+      .calendar .nav .rightBtn {
+        right: 20px;
+      }
+      .calendar .nav .month {
+        display: flex;
+        justify-content: center;
+        color: #fff;
+        font-size: 36px;
+      }
+      .calendar .unit1 {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        color: white;
+        font-weight: bold;
+        width: 100%;
+      }
+      .calendar .weekdays {
+        height: var(--week-height);
+        /* text-align: center; */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #323232;
+        color: white;
+        font-weight: bold;
+        border-top: 1px solid rgb(108, 107, 107);
+      }
+      .calendar .dates div {
+        text-align: center;
+        font-size: 20px;
+        padding: initial;
+        height: var(--date-height);
+        display: grid;
+        place-items: center;
+      }
+      .calendar .dates .currentDate {
+        background-color: #fe7f17;
+        border-radius: 5px;
+      }
+
+      .calendar .dates div:hover {
+        background-color: #ff7272;
+        border-radius: 5px;
+
+      `}</style>
+    </div>
+  );
 }
+
+
