@@ -1,5 +1,6 @@
 import React from 'react'
 import events from '@/data/cart/events.json'
+import Link from 'next/link'
 //勾子
 import { useCart } from '@/hooks/use-cart'
 
@@ -18,6 +19,7 @@ export default function EventList() {
               <div>商家ID : {v.merchantId}</div>
               <div>票卷價格 : ${v.price}</div>
               <div>活動時間 : {v.holdingTime}</div>
+              <div>票券規格 : {v.ticketName}</div>
               <div>數量 : {v.qty} 張</div>
               <div>
                 <button
@@ -33,6 +35,7 @@ export default function EventList() {
           )
         })}
       </ul>
+      <Link href="/cart">購物車</Link>
     </>
   )
 }

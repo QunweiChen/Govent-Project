@@ -23,10 +23,38 @@ export function CartProvider({ children }) {
     const newItems = [...items, item]
     setItems(newItems)
   }
-  const one = [{ 1: '1' }]
+  //移除
+  const remove = (items, id) => {
+    const newItems = items.filter((v, i) => {
+      return v.id !== id
+    })
+    setItems(newItems)
+  }
+  //計算數量
+  //數量
+  const calcTotalItems = () => {
+    let total = 0
+
+    for (let i = 0; i < items.length; i++) {
+      total += items[i].qty
+    }
+    return total
+  }
+
+  //總金額
+  const calcTotalPrice = () => {
+    let total = 0
+
+    for (let i = 0; i < items.length; i++) {
+      total += items[i].qty * items[i].price
+    }
+    return total
+  }
   //最外(上)元件階層包裹提供者元件，讓⽗⺟元件可以提供它
   return (
-    <CartContext.Provider value={{ one, items, addItem }}>
+    <CartContext.Provider
+      value={{ items, addItem, remove, calcTotalItems, calcTotalPrice }}
+    >
       {children}
     </CartContext.Provider>
   )
