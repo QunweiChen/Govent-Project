@@ -11,8 +11,9 @@ import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 import OrganizerTopBar from '@/components/organizer/organizer-top-bar'
+import Link from 'next/link'
 
-export default function EventList() {
+export default function OrganizerEvent() {
   const [selectedButton, setSelectedButton] = useState(1)
 
   const handleRadioChange = (value) => {
@@ -24,7 +25,7 @@ export default function EventList() {
       <div className="d-flex organizer-container">
         <OrganizerSidebar />
         <div className="w-100 bg-bg-gray organizer-main d-flex flex-column">
-          <OrganizerTopBar title="活動清單"/>
+          <OrganizerTopBar title="活動清單" />
           <div className="event-nav flex-grow-1 d-flex flex-column">
             <Tabs
               id="uncontrolled-tab-example"
@@ -105,9 +106,11 @@ export default function EventList() {
                       <div className="sm-p">2024/01/02</div>
                     </Col>
                     <Col sm="auto" className="text-center mx-3">
+                      <Link href="event/event-info" className='text-link'>
                       <i className="bi bi-three-dots"></i>
                       <br />
                       更多
+                      </Link>
                     </Col>
                   </Row>
                   <Row className="mx-3 on-list align-items-center gx-5 mt-2">
@@ -327,6 +330,6 @@ export default function EventList() {
   )
 }
 
-EventList.getLayout = function (page) {
+OrganizerEvent.getLayout = function (page) {
   return <OrganizerLayout>{page}</OrganizerLayout>
 }

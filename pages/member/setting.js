@@ -3,6 +3,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Memberleft from '@/components/member/member-left-bar'
+import NoBCLayout from '@/components/layout/nocb-default-layout'
 
 export default function MemberSetting() {
   // const router = useRouter()
@@ -120,4 +121,8 @@ export default function MemberSetting() {
       </style>
     </>
   )
+}
+
+MemberSetting.getLayout = function (page) {
+  return <NoBCLayout>{page}</NoBCLayout>
 }

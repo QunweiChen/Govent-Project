@@ -3,6 +3,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Memberleft from '@/components/member/member-left-bar'
+import NoBCLayout from '@/components/layout/nocb-default-layout'
 
 // only redirect to member/login
 export default function MemberPayment() {
@@ -95,4 +96,8 @@ export default function MemberPayment() {
       </style>
     </>
   )
+}
+
+MemberPayment.getLayout = function (page) {
+  return <NoBCLayout>{page}</NoBCLayout>
 }

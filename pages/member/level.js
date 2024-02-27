@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Memberleft from '@/components/member/member-left-bar'
 import ProgressBar from 'react-bootstrap/ProgressBar'
+import NoBCLayout from '@/components/layout/nocb-default-layout'
 
 // only redirect to member/login
 export default function MemberLevel() {
@@ -110,4 +111,8 @@ export default function MemberLevel() {
       </style>
     </>
   )
+}
+
+MemberLevel.getLayout = function (page) {
+  return <NoBCLayout>{page}</NoBCLayout>
 }

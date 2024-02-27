@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Accordion from 'react-bootstrap/Accordion'
 import Link from 'next/link'
 
-export default function OrganizerSidebar() {
+export default function OrganizerEventSidebar() {
   return (
     <>
       <div className="organizer-sidebar d-flex flex-column justify-content-between">
@@ -18,44 +18,25 @@ export default function OrganizerSidebar() {
             />
             <h6 className="m-0 ps-2">主辦中心</h6>
           </div>
-          <Accordion
-            defaultActiveKey="0"
-            className="on-nav px-2"
-            data-bs-theme="dark"
-          >
-            <Accordion.Item eventKey="0">
-              <Accordion.Header>
-                <i className="bi bi-calendar-fill pe-3 text-primary-light"></i>
-                活動管理
-              </Accordion.Header>
-              <Accordion.Body className="py-1">
-                <ul className="m-0">
-                  <li>
-                    <Link href="/organizer/event">活動清單</Link>
-                  </li>
-                  <li>
-                    <Link href="/organizer/add-event">新增活動</Link>
-                  </li>
-                </ul>
-              </Accordion.Body>
-            </Accordion.Item>
-            <Accordion.Item eventKey="1">
-              <Accordion.Header>
-                <i className="bi bi-gear-fill pe-3 text-primary-light"></i>
-                商家設定
-              </Accordion.Header>
-              <Accordion.Body className="py-1">
-                <ul className="m-0">
-                  <li>
-                    <Link href="event-list">前台資訊編輯</Link>
-                  </li>
-                  <li>
-                    <Link href="add-event">帳務資訊</Link>
-                  </li>
-                </ul>
-              </Accordion.Body>
-            </Accordion.Item>
-          </Accordion>
+          <div className='ms-4 ps-1 mb-4 mt-2'>
+            <Link href="/organizer/event" className="text-link">
+              <i className="bi bi-arrow-left pe-3 text-primary-light"></i>
+              返回列表
+            </Link>
+          </div>
+          <div className='ms-4 ps-1 mb-4'>
+            <Link href="/" className="text-link">
+              <i className="bi bi-speedometer pe-3 text-primary-light"></i>
+              活動資訊總覽
+            </Link>
+          </div>
+          <div className='ms-4 ps-1'>
+            <Link href="/" className="text-link">
+              <i className="bi bi-ticket-detailed-fill pe-3 text-primary-light"></i>
+              票卷管理
+            </Link>
+          </div>
+          
         </div>
         <div className="d-flex justify-content-center sm-p py-5">
           COPYRIGHT © 2024

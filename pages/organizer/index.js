@@ -6,7 +6,7 @@ export default function OrganizerIndex() {
 
   // 確認window(瀏覽器)開始運作
   if (typeof window !== 'undefined') {
-    router.push('/organizer/event-list')
+    router.push('/organizer/event')
   }
 
   return <></>

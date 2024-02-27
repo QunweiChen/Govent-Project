@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import TicketInfoLeft from '@/components/member/m-order-left-bar'
 import Link from 'next/link'
+import NoBCLayout from '@/components/layout/nocb-default-layout'
 
 // only redirect to member/login
 export default function MemberOrderTicket() {
@@ -44,19 +45,19 @@ export default function MemberOrderTicket() {
             </div>
             <div className="member-bgc mt-3">
               <div className="px-4 bottom-line d-flex">
-              <Link href="order-info">
-                  <div className='py-3 px-3'>
+                <Link href="order-info">
+                  <div className="py-3 px-3">
                     <h6 className="m-0">活動資訊</h6>
                   </div>
                 </Link>
                 <Link href="order-ticket">
-                  <div className='py-3 px-3'>
+                  <div className="py-3 px-3">
                     <h6 className="m-0">票卷資訊</h6>
                   </div>
                 </Link>
               </div>
               <div className="p-4">
-                <div className='event'>
+                <div className="event">
                   <div className="sm-p px-3 py-2">票卷編號 TX555689945132</div>
                   <hr className="my-0" />
                   <div className="p-3 d-flex">
@@ -71,18 +72,17 @@ export default function MemberOrderTicket() {
                         YOASOBI演唱會2024台北站｜YOASOBI ASIA TOUR 2023-2024
                         Solo Concert in Taipei
                       </h6>
-                      <div className='d-flex justify-content-between align-items-end'>
+                      <div className="d-flex justify-content-between align-items-end">
                         <div>
                           <p>2024/01/21</p>
                           <p>Zepp New Taipei</p>
                           <p>新北市新莊區新北大道四段3號8樓</p>
                         </div>
                         <div>
-                        <button className='btn btn-primary'>1F站票</button>
+                          <button className="btn btn-primary">1F站票</button>
                         </div>
                       </div>
                     </div>
-                     
                   </div>
                 </div>
               </div>
@@ -135,4 +135,8 @@ export default function MemberOrderTicket() {
       </style>
     </>
   )
+}
+
+MemberOrderTicket.getLayout = function (page) {
+  return <NoBCLayout>{page}</NoBCLayout>
 }

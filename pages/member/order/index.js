@@ -1,9 +1,9 @@
 // import { useRouter } from 'next/router'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Form from 'react-bootstrap/Form'
 import Memberleft from '@/components/member/member-left-bar'
 import Link from 'next/link'
+import NoBCLayout from '@/components/layout/nocb-default-layout'
 
 // only redirect to member/login
 export default function MemberOrder() {
@@ -100,4 +100,8 @@ export default function MemberOrder() {
       </style>
     </>
   )
+}
+
+MemberOrder.getLayout = function (page) {
+  return <NoBCLayout>{page}</NoBCLayout>
 }

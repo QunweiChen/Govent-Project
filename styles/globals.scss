@@ -185,4 +185,12 @@ p, .p {
   border-bottom: 1px solid var(--normal-gray-color);
 }
 
+.text-link {
+  color: white;
+  transition: 300ms;
+  &:hover {
+    color: var(--primary-light-color);
+  }
+}
+
 // below is test only
