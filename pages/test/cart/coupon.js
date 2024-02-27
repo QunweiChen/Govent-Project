@@ -1,4 +1,4 @@
-import { useCart } from '@/hooks/use-cart-state'
+import { useCart } from '@/hooks/use-cart/use-cart-state'
 import List from '@/components/cart/list'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'

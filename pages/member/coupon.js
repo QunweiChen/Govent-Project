@@ -1,12 +1,11 @@
 // import { useRouter } from 'next/router'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Form from 'react-bootstrap/Form'
-import Memberleft from '@/components/member/member-left'
-
+import NoBCLayout from '@/components/layout/nocb-default-layout'
+import Memberleft from '@/components/member/member-left-bar'
 
 // only redirect to member/login
-export default function MemberIndex() {
+export default function MemberCoupon() {
   // const router = useRouter()
   // // Make sure we're in the browser
   // if (typeof window !== 'undefined') {
@@ -23,35 +22,44 @@ export default function MemberIndex() {
           <Col sm={9}>
             <div className="member-bgc contain">
               <h4>可用優惠卷</h4>
-              <hr className='my-4'/>
+              <hr className="my-4" />
               <Row>
                 <Col sm={6}>
-                  <div className='card'>
-                    <div className='sm-p px-3 py-2'>折扣碼 govent300</div>
-                    <hr className='my-0'/>
-                    <div className='px-3 py-3'>
-                      <h3 className='text-primary'>NT$300</h3>
-                      <p className='pb-3'>最低消費金額3000</p>
-                      <p className='sm-p'>GOVENT x JCB 1月全站商品單筆消費滿NT$3,000元現折NT$300元優惠活動</p>
+                  <div className="card">
+                    <div className="sm-p px-3 py-2">折扣碼 govent300</div>
+                    <hr className="my-0" />
+                    <div className="px-3 py-3">
+                      <h3 className="text-primary">NT$300</h3>
+                      <p className="pb-3">最低消費金額3000</p>
+                      <p className="sm-p">
+                        GOVENT x JCB
+                        1月全站商品單筆消費滿NT$3,000元現折NT$300元優惠活動
+                      </p>
                     </div>
-                    <hr className='my-0'/>
-                    <p className='px-3 py-2'>使用期限：2024/01/01 - 2024/01/31</p>
+                    <hr className="my-0" />
+                    <p className="px-3 py-2">
+                      使用期限：2024/01/01 - 2024/01/31
+                    </p>
                   </div>
                 </Col>
                 <Col sm={6}>
-                  <div className='card'>
-                    <div className='sm-p px-3 py-2'>折扣碼 govent300</div>
-                    <hr className='my-0'/>
-                    <div className='px-3 py-3'>
-                      <h3 className='text-primary'>NT$300</h3>
-                      <p className='pb-3'>最低消費金額3000</p>
-                      <p className='sm-p'>GOVENT x JCB 1月全站商品單筆消費滿NT$3,000元現折NT$300元優惠活動</p>
+                  <div className="card">
+                    <div className="sm-p px-3 py-2">折扣碼 govent300</div>
+                    <hr className="my-0" />
+                    <div className="px-3 py-3">
+                      <h3 className="text-primary">NT$300</h3>
+                      <p className="pb-3">最低消費金額3000</p>
+                      <p className="sm-p">
+                        GOVENT x JCB
+                        1月全站商品單筆消費滿NT$3,000元現折NT$300元優惠活動
+                      </p>
                     </div>
-                    <hr className='my-0'/>
-                    <p className='px-3 py-2'>使用期限：2024/01/01 - 2024/01/31</p>
+                    <hr className="my-0" />
+                    <p className="px-3 py-2">
+                      使用期限：2024/01/01 - 2024/01/31
+                    </p>
                   </div>
                 </Col>
-                
               </Row>
             </div>
           </Col>
@@ -76,12 +84,16 @@ export default function MemberIndex() {
           .contain {
             padding: 30px 40px;
           }
-          .card{
+          .card {
             background-color: var(--bg-gray-light-color);
-            border-radius: 10px
+            border-radius: 10px;
           }
         `}
       </style>
     </>
   )
+}
+
+MemberCoupon.getLayout = function (page) {
+  return <NoBCLayout>{page}</NoBCLayout>
 }

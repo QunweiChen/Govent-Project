@@ -1,13 +1,12 @@
+import BackToMainPage from '@/components/user/backToMainPage'
 import React from 'react'
 
-export default function Login() {
+export default function Signin() {
   return (
     <>
       <div className="background d-flex justify-content-center">
         <div className="component-all">
-          <div className="text-black mb-3 backToMainPage">
-            <i className="bi bi-caret-left-fill"></i>回首頁
-          </div>
+          <BackToMainPage />
           <div className="formBackground">
             <div className="px-5 py-5">
               <div className="text-white">
@@ -101,7 +100,7 @@ export default function Login() {
           </div>
         </div>
       </div>
-      <style jsx global>
+      <style jsx>
         {`
           .background {
             background-image: url(/images/govent-angus/loginPage-BG.jpg);
@@ -123,11 +122,6 @@ export default function Login() {
                   cover no-repeat;
               height: 100vh;
               letter-spacing: 2px;
-            }
-            .backToMainPage {
-              @media screen and (max-width: 435px) {
-                display: none;
-              }
             }
           }
           .component-all {

@@ -5,9 +5,8 @@ import '@/styles/product.scss'
 import '@/styles/cart.scss'
 import '@/styles/loader.scss'
 
-
 // 載入購物車context
-import { CartProvider } from '@/hooks/use-cart-state'
+import { CartProvider } from '@/hooks/use-cart'
 // 載入認証用context
 import { AuthProvider } from '@/hooks/use-auth'
 // 載入動畫context
@@ -16,6 +15,8 @@ import { LoaderProvider } from '@/hooks/use-loader'
 import DefaultLayout from '@/components/layout/default-layout'
 // 自訂用載入動畫元件
 import { CatLoader, NoLoader } from '@/hooks/use-loader/components'
+// 載入Quill編輯器樣式
+import 'react-quill/dist/quill.snow.css';
 
 export default function MyApp({ Component, pageProps }) {
   // 導入bootstrap的JS函式庫

@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+
 import { CiHeart } from 'react-icons/ci'
 import { GoSortDesc } from 'react-icons/go'
 
@@ -848,11 +849,11 @@ export default function List() {
               <div className="col-md-4 col-sm-6 ">
                 <div className="card bg-bg-gray-secondary text-white px-0 no-border">
                   <figure>
-                  <img
-                    src="/images/product/list/product-ex.png"
-                    alt=""
-                    className="card-img-top"
-                  />
+                    <img
+                      src="/images/product/list/product-ex.png"
+                      alt=""
+                      className="card-img-top"
+                    />
                   </figure>
                   <i className="position-absolute top-0 end-0 rounded-3 text-white fs-5 fw-bold m-2 p-1">
                     <CiHeart />
