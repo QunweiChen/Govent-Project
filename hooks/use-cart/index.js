@@ -14,17 +14,35 @@ import React, { createContext, useState, useContext, useEffect } from 'react'
 const CartContext = createContext()
 
 export function CartProvider({ children }) {
+
   // 加入到購物車中的項目
   const [items, setItems] = useState([])
   // console.log(items)
-
   const addItem = (item) => {
     // console.log(item)
-    const newItems = [...items, item]
+    const foundIndex = items.findIndex((v, i) => {
+      return v.id === item.id
+    })
+    if (foundIndex > -1) {
+      increment(items, item.id)
+    } else {
+      const newItems = [...items, item]
+      setItems(newItems)
+    }
+  }
+  //遞增
+  const getItemById = (items, id) => {
+    return items.find((item) => item.id === id)
+  }
+  const increment = (items, id) => {
+    const newItems = items.map((v, i) => {
+      if (v.id === id) return { ...v, qty: v.qty + getItemById(items, id).qty }
+      else return v
+    })
     setItems(newItems)
   }
   //移除
-  const remove = (items, id) => {
+  const removeItem = (items, id) => {
     const newItems = items.filter((v, i) => {
       return v.id !== id
     })
@@ -50,10 +68,11 @@ export function CartProvider({ children }) {
     }
     return total
   }
+
   //最外(上)元件階層包裹提供者元件，讓⽗⺟元件可以提供它
   return (
     <CartContext.Provider
-      value={{ items, addItem, remove, calcTotalItems, calcTotalPrice }}
+      value={{ items, addItem, removeItem, calcTotalItems, calcTotalPrice }}
     >
       {children}
     </CartContext.Provider>

@@ -6,40 +6,9 @@ import Link from 'next/link'
 import { useCart } from '@/hooks/use-cart'
 
 export default function CartIndex() {
-  const eventOptions = ['111', '222', '333']
-  const newEventOptions = eventOptions.map((v, i) => {
-    return { id: i + 1, name: v, checked: false }
-  })
-  // console.log(newEventOptions)
-
-  //存放checkbox內容
-  const [events, setEvents] = useState(newEventOptions)
-  // console.log(events)
-  // 全選
-  const [selectAll, setSelectAll] = useState(false)
-
-  //判斷checked狀況
-  const toggleCheckbox = (events, id) => {
-    return events.map((v, i) => {
-      if (v.id === id) return { ...v, checked: !v.checked }
-      else return v
-    })
-  }
-
-  //全選功能的處理函式
-  const handleSelectAll = (e) => {
-    const isChecked = e.target.checked
-    console.log('isChecked:', isChecked) // 調試
-    setSelectAll(isChecked)
-    if (isChecked) {
-      setEvents(events.map((event) => ({ ...event, checked: true })))
-    } else {
-      setEvents(events.map((event) => ({ ...event, checked: false })))
-    }
-  }
   //--------
   //引入勾子
-  const { items, remove, calcTotalItems, calcTotalPrice } = useCart()
+  const { items, removeItem, calcTotalItems, calcTotalPrice } = useCart()
   // console.log(items)
   // -
   // {
@@ -52,6 +21,39 @@ export default function CartIndex() {
   //   "price": "3400",
   //   "qty":2
   // }
+
+  // ----checkbox內容---
+  const newitems = items.map((v, i) => {
+    return { ...v, checked: false }
+  })
+  // console.log(newitems)
+
+  //存放checkbox內容
+  const [events, setEvents] = useState(newitems)
+  // console.log(events)
+  // 全選
+  const [selectAll, setSelectAll] = useState(false)
+
+  //全選功能的處理函式
+  const handleSelectAll = (e) => {
+    const isChecked = e.target.checked
+    console.log('isChecked:', isChecked) // 調試
+    setSelectAll(isChecked)
+    toggleCheckbox(isChecked)
+  }
+  //判斷checked狀況
+  const toggleCheckbox = (isChecked) => {
+    setEvents(events.map((event) => ({ ...event, checked: isChecked })))
+  }
+  //單個事件的勾選處理函式
+  const handleCheckboxChange = (id) => {
+    setEvents(
+      events.map((event) =>
+        event.id === id ? { ...event, checked: !event.checked } : event
+      )
+    )
+  }
+
   return (
     <>
       <div className="container width-1200">
@@ -103,14 +105,9 @@ export default function CartIndex() {
                             <div className="col-sm-2 col-4 d-flex align-items-center ms-4">
                               <input
                                 type="checkbox"
-                                checked={events[0].checked}
+                                checked={events[i].checked}
                                 onChange={() => {
-                                  setEvents(
-                                    toggleCheckbox(
-                                      events,
-                                      newEventOptions[0].id
-                                    )
-                                  )
+                                  handleCheckboxChange(v.id)
                                 }}
                                 className="me-4 checkbox-large form-check-input"
                               />
@@ -167,7 +164,7 @@ export default function CartIndex() {
                                 <button
                                   className="btn"
                                   onClick={() => {
-                                    remove(items, v.id)
+                                    removeItem(items, v.id)
                                   }}
                                 >
                                   <p className="text-white ms-2 hide text-nowrap">
