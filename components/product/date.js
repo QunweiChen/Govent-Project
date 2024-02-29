@@ -33,6 +33,8 @@ export default function Calendar() {
         </div>
       );
     }
+
+    console.log(days);
   
     // 渲染下一个月的日期
     const remainingDays = (7 - (days.length % 7)) % 7;
@@ -94,16 +96,16 @@ export default function Calendar() {
         </div>
         <div className="week unit1">
           {/* 这里是你的星期渲染 JSX 代码 */}
-            <div className="weekdays">日</div>
+          <div className="weekdays">日</div>
           <div className="weekdays">一</div>
           <div className="weekdays">二</div>
           <div className="weekdays">三</div>
           <div className="weekdays">四</div>
           <div className="weekdays">五</div>
           <div className="weekdays">六</div>
-       
+      
         </div>
-        <div className="dates unit1"></div>
+        <div className="dates unit1">{calendar}</div>
       </div>
       <style jsx>{`
       body {
