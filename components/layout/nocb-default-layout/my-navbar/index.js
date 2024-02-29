@@ -8,9 +8,9 @@ import Toolbar from './toolbar'
 import ToturialPanel from './tutorial-panel'
 
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-export default function MyNavbar() {
+const MyNavbar = () => {
   // currentRoute是用來套用active樣式(目前區域對應選單項目)，需傳入MainMenu中
   const router = useRouter()
   const currentRoute = router.pathname
@@ -20,10 +20,33 @@ export default function MyNavbar() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
+  const [scrolled, setScrolled] = useState(false);
+
+  const handleScroll = () => {
+    // 監聽滾動事件，並根據捲動位置更新狀態
+    if (window.scrollY > 0) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  };
+
+  useEffect(() => {
+    // 添加滾動事件監聽
+    window.addEventListener('scroll', handleScroll);
+
+    // 清理工作
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []); // 空依賴數組表示僅在組件挂載和卸載時執行
+
+
+
   return (
     <>
       <header>
-        <nav className="navbar navbar-expand-lg fixed-top navbar-light py-3" data-bs-theme="dark">
+        <nav data-bs-theme="dark" className={`navbar navbar-expand-lg fixed-top navbar-light py-3 ${scrolled ? 'scrolled' : ''}`}>
           <div className="container width-1200">
             <Link className="navbar-brand" href="/">
               <Image src="/govent-logo.png" alt="" width={100} height={24} priority />
@@ -87,6 +110,13 @@ export default function MyNavbar() {
         .navbar .navbar-nav .nav-item {
           position: relative;
         }
+        .navbar{
+          background: linear-gradient(transparent, transparent);
+          transition: background-color 0.3s ease;
+        }
+        .navbar.scrolled{
+          background: linear-gradient(to bottom, #151515, #15151500);
+        }
 
         .navbar .navbar-nav .nav-item::after {
           position: absolute;
@@ -107,3 +137,5 @@ export default function MyNavbar() {
     </>
   )
 }
+
+export default MyNavbar;

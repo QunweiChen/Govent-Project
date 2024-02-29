@@ -15,8 +15,8 @@ export default function MemberFavorites() {
 
   return (
     <>
-      <div className="container width-1200">
-        <Row data-bs-theme="dark">
+      <div className="container width-1200" >
+        <Row data-bs-theme="dark" className='mb-5'>
           <Col sm={3}>
             <Memberleft />
           </Col>

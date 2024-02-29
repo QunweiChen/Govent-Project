@@ -16,7 +16,7 @@ export default function MemberPayment() {
   return (
     <>
       <div className="container width-1200">
-        <Row data-bs-theme="dark">
+        <Row data-bs-theme="dark" className='mb-5'>
           <Col sm={3}>
             <Memberleft />
           </Col>

@@ -4,7 +4,7 @@
 }
 
 .image-container::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -23,4 +23,4 @@
 .secondary-title-start {
   border-left: 10px solid #f16e0f;
   border-radius: 5px;
-}/*# sourceMappingURL=index.module.css.map */
+} /*# sourceMappingURL=index.module.css.map */
