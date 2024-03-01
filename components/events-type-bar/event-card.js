@@ -2,26 +2,32 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 
 const CustomEventCard = ({ backgroundImage, title, secondTitle }) => {
-    const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
 
-    return (
-        <div
-            className={`custom-events-type d-flex flex-column justify-content-end p-3 ${isHovered ? 'flex-2' : ''
-                }`}
-            style={{ backgroundImage: `url('${backgroundImage}')` }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-        >
-            <Link href="/" className='text-white'>
-            <h5 className="mb-0">{title}</h5>
-            <p className={`second-title ${isHovered ? '' : 'hide'}`}>{secondTitle}</p>
-            </Link>
-            <style global jsx>
-                {`
+  return (
+    <div
+      className={`custom-events-type d-flex  ${isHovered ? 'flex-2' : ''}`}
+      style={{ backgroundImage: `url('${backgroundImage}')` }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <Link
+        href="/"
+        className={`text-white d-flex flex-column p-3 justify-content-end`}
+      >
+        <h5 className="mb-0">{title}</h5>
+        <p className={`second-title ${isHovered ? '' : 'hide'}`}>
+          {secondTitle}
+        </p>
+      </Link>
+      <div className={`bg-linear ${isHovered ? 'active' : ''}`}></div>
+      <style global jsx>
+        {`
           .custom-events-type {
+            position: relative;
             transition: 300ms;
             flex: 1;
-            margin-inline: 5px;
+            margin-inline: 7px;
             height: 250px;
             background-repeat: no-repeat;
             background-position: center center;
@@ -32,9 +38,12 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle }) => {
               transform: translateY(20px);
               text-shadow: 2px 2px 4px #333;
             }
+            a{
+              width: 100%;
+            }
           }
           .custom-events-type.flex-2 {
-            transform: translateY(-10px);
+            
             flex: 2;
             h5 {
               transform: translateY(0px);
@@ -44,13 +53,29 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle }) => {
             transition: 300ms;
             opacity: 1;
           }
-          .second-title.hide{
+          .second-title.hide {
             opacity: 0;
           }
+          .bg-linear {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+              180deg,
+              rgba(21, 21, 21, 0) 50%,
+              rgba(21, 21, 21, 50)
+            );
+            opacity: 0;
+            transition: 400ms;
+            z-index: -1;
+          }
+          .bg-linear.active{
+            opacity: 1;
+          }
         `}
-            </style>
-        </div>
-    )
+      </style>
+    </div>
+  )
 }
 
-export default CustomEventCard;
+export default CustomEventCard

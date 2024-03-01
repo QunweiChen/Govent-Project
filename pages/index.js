@@ -1,76 +1,191 @@
-// pages/index.js
-import Link from 'next/link'
-import Image from 'next/image'
-import PlaceholderText from '@/components/common/placeholder-text'
+import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
-import Carousel from 'react-bootstrap/Carousel';
-import EventsBar from '@/components/events-bar';
-import EventsTypeBar from '@/components/events-type-bar';
-import IndexLayout from '@/components/layout/nocb-default-layout';
+import Carousel from 'react-bootstrap/Carousel'
+import EventsBar from '@/components/events-bar'
+import EventsTypeBar from '@/components/events-type-bar'
+import IndexLayout from '@/components/layout/nocb-default-layout'
+import { motion, useTime, useTransform } from 'framer-motion'
+import Link from 'next/link'
 
 export default function Home() {
+  const time = useTime()
+  const rotate = useTransform(time, [0, 4000], [0, 20], { clamp: false })
+
   return (
     <>
       <Carousel fade>
         <Carousel.Item>
           <div className={`${styles['image-container']} w-100`}>
-            <img
-              className="d-block w-100"
-              src="https://media.vogue.com.tw/photos/658e6392dfffa70c3419002c/master/w_2560%2Cc_limit/YOASOBI_A%25E5%2586%2599_2021_12.jpg"
+            <motion.img
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 0.4 }}
+              className="h-100"
+              src="/images/index-silder/img_pc_08.png"
               alt="First slide"
             />
+            <div className="w-100 h-100 silder-bg bg-normal-gray-light"></div>
+            <motion.div initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.1 }} className="govent-star">
+              <img src="/images/index-silder/govent-star.svg" alt="" />
+            </motion.div>
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.7 }}
+              style={{ rotate }}
+              className="bg-rotate"
+            >
+              <img src="/images/index-silder/bg-01.svg" />
+            </motion.div>
           </div>
-          <Carousel.Caption className={`pb-5 ${styles['carousel-caption']}`}>
-            <h5 className={`ps-3 ${styles['secondary-title-start']}`}>YOASOBI</h5>
-            <h1>YOASOBI 演唱會2024台北站</h1>
-            <div className='mt-3'>
-              <button className='btn btn-primary-deep-50 text-white'>熱門排行</button>
-              <button className='btn btn-primary-deep-50 text-white ms-2'>演唱會</button>
-            </div>
+          <Carousel.Caption
+            className={`mb-5 ${styles['carousel-caption']} d-flex flex-column align-items-center`}
+          >
+            <motion.h5
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className={`px-4 ${styles['secondary-title-start']}`}
+            >
+              YOASOBI
+            </motion.h5>
+            <motion.div
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+            >
+              <h1>YOASOBI 演唱會2024台北站</h1>
+            </motion.div>
+            <motion.div
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.6 }}
+              className="mt-3"
+            >
+              <button className="btn btn-primary-deep-50 text-white">
+                熱門排行
+              </button>
+              <button className="btn btn-primary-deep-50 text-white ms-2">
+                演唱會
+              </button>
+            </motion.div>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
           <div className={`${styles['image-container']} w-100`}>
-            <img
-              className="d-block w-100"
-              src="https://dynamicmedia.livenationinternational.com/p/r/s/747aadc5-1aa5-472c-b150-25a3ff96abe1.jpg"
+            <motion.img
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 0.4 }}
+              className="h-100"
+              src="/images/index-silder/psy.webp"
               alt="First slide"
             />
+            <div className="w-100 h-100 silder-bg bg-normal-gray-light"></div>
+            <motion.div initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.1 }} className="govent-star">
+              <img src="/images/index-silder/govent-star.svg" alt="" />
+            </motion.div>
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.7 }}
+              style={{ rotate }}
+              className="bg-rotate"
+            >
+              <img src="/images/index-silder/bg-02.svg" />
+            </motion.div>
           </div>
-          <Carousel.Caption className={`pb-5 ${styles['carousel-caption']}`}>
-            <h5 className={`ps-3 ${styles['secondary-title-start']}`}>YOASOBI</h5>
-            <h1>YOASOBI 演唱會2024台北站</h1>
-            <div className='mt-3'>
-              <button className='btn btn-primary-deep-50 text-white'>熱門排行</button>
-              <button className='btn btn-primary-deep-50 text-white ms-2'>演唱會</button>
-            </div>
+          <Carousel.Caption
+            className={`mb-5 ${styles['carousel-caption']} d-flex flex-column align-items-center`}
+          >
+            <motion.h5
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className={`px-4 ${styles['secondary-title-start']}`}
+            >
+              PSY.P
+            </motion.h5>
+            <motion.div
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+            >
+              <h1>PSY.P 2024 ULTRA．超 巡演｜台北站</h1>
+            </motion.div>
+            <motion.div
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.6 }}
+              className="mt-3"
+            >
+              <button className="btn btn-primary-deep-50 text-white">
+                熱門排行
+              </button>
+              <button className="btn btn-primary-deep-50 text-white ms-2">
+                演唱會
+              </button>
+            </motion.div>
           </Carousel.Caption>
         </Carousel.Item>
       </Carousel>
-      <EventsBar />
-      <EventsTypeBar />
+      <motion.div
+        initial={{ y: 30, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.7, delay: 0.3 }}
+      >
+        <EventsBar />
+      </motion.div>
+
+      <motion.div
+        initial={{ y: 30, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.7, delay: 0.3 }}
+      >
+        <EventsTypeBar />
+      </motion.div>
+
       <style global jsx>
         {`
           body {
             background-color: #151515;
             color: #fff;
           }
-          .card-cover {
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: cover;
+          .carousel-item {
+            height: 900px;
           }
-          .carousel-item{
-            height: 1000px;
+          .silder-bg {
+            position: absolute;
+            z-index: -4;
           }
-          .text-shadow-1 {
-            text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.25);
+          .bg-rotate {
+            width: 1500px;
+            height: 1500px;
+            position: absolute;
+            z-index: -3;
+            top: 10%;
+            left: 11%;
+            transform: translate(-50%, -50%);
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
           }
-          .text-shadow-2 {
-            text-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
-          }
-          .text-shadow-3 {
-            text-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
+          .govent-star {
+            width: 400px;
+            position: absolute;
+            z-index: -1;
+            top: 45%;
+            left: 50.5%;
+            transform: translate(-50%, -50%);
+            img {
+              width: 100%;
+            }
           }
         `}
       </style>
