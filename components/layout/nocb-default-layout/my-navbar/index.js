@@ -46,7 +46,8 @@ const MyNavbar = () => {
   return (
     <>
       <header>
-        <nav data-bs-theme="dark" className={`navbar navbar-expand-lg fixed-top navbar-light py-3 ${scrolled ? 'scrolled' : ''}`}>
+        <nav data-bs-theme="dark" className={`navbar navbar-expand-lg fixed-top navbar-light py-3`}>
+        <div className={`bg-change ${scrolled ? 'scrolled' : ''}`}></div>
           <div className="container width-1200">
             <Link className="navbar-brand" href="/">
               <Image src="/govent-logo.png" alt="" width={100} height={24} priority />
@@ -110,12 +111,17 @@ const MyNavbar = () => {
         .navbar .navbar-nav .nav-item {
           position: relative;
         }
-        .navbar{
-          background: linear-gradient(transparent, transparent);
-          transition: background-color 0.3s ease;
+        .bg-change{
+          position: absolute;
+          background: linear-gradient(180deg, rgba(21, 21, 21, 99), rgba(21, 21, 21, 0));
+          transition: all 0.5s;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+          opacity: 0;
         }
-        .navbar.scrolled{
-          background: linear-gradient(to bottom, #151515, #15151500);
+        .bg-change.scrolled{
+          opacity: 1;
         }
 
         .navbar .navbar-nav .nav-item::after {
