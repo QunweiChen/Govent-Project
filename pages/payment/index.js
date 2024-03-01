@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import ProductInfo from '@/components/payment/product-info/index.js'
 import PaymentButton from '@/components/payment/payment-button'
 import { Form } from 'react-bootstrap'
+import OrderSteps from '@/components/checkout'
 import DefaultLayout from '@/components/layout/default-layout'
 import PaymentForm from '@/components/payment/payment-Form'
 export default function Payment() {
@@ -9,6 +10,7 @@ export default function Payment() {
 
   return (
     <>
+      <OrderSteps />
       <div className="row m-5  ">
         <div className="col-md-8 cart-area">
           <h3 className="bg-bg-gray-secondary rounded-3 py-3 px-4">訂單明細</h3>

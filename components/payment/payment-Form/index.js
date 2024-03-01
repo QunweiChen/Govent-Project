@@ -5,12 +5,16 @@ import Form from 'react-bootstrap/Form'
 import CheckboxInput from '../checkbox-input'
 import Image from 'react-bootstrap/Image'
 import GoventToast from '@/components/toast'
+import { validate } from 'uuid'
 
 export default function PaymentForm() {
+  //確認是否有勾選與會員資料相同
   const numberValue = useRef(null)
   function changeNumberValue() {
-    console.log(numberValue.current.checked)
+    // console.log(numberValue.current.checked)
   }
+
+  //儲存聯絡資料
   const [data, setDate] = useState({
     userName: '',
     userGender: '',
@@ -18,11 +22,12 @@ export default function PaymentForm() {
     phoneNumber: '',
     email: '',
   })
+  //監聽使用者輸入表單欄位
   function formChange(e) {
-    console.log(e.target.name, e.target.value)
+    // console.log(e.target.name, e.target.value)
     setDate({ ...data, [e.target.name]: e.target.value })
   }
-
+  //監聽點數及優惠券是否被勾選
   const pointInputRef = useRef(null)
   const couponInputRef = useRef(null)
   //使用useState更改disabled的狀態，false為增加屬性true為關閉屬性
@@ -55,6 +60,43 @@ export default function PaymentForm() {
     let targetID = e.target.id
     setRadioValue(targetID)
   }
+
+  function validate(e) {
+    const target = e.target
+    const validityMessage = target.validity
+    console.log(target.name)
+    console.log(target.validity)
+    let msg = ''
+    switch (true) {
+      case validityMessage.valueMissing && target.name == 'userName':
+        msg = '請輸入姓名'
+        break
+      case target.value == 0 && target.name == 'gender':
+        msg = '請選擇性別'
+        break
+      case validityMessage.valueMissing && target.name == 'birthday':
+        msg = '請輸入生日'
+        break
+      case validityMessage.valueMissing && target.name == 'phoneNumber':
+        msg = '請輸入手機'
+        break
+      default:
+        break
+    }
+    target.setCustomValidity(msg)
+  }
+
+  useEffect(() => {
+    const Validate = document.querySelectorAll('.validate')
+    Validate.forEach((input) => {
+      input.addEventListener('blur', validate)
+    })
+    return () => {
+      Validate.forEach(function (input) {
+        input.removeEventListener('blur', validate)
+      })
+    }
+  }, [])
   return (
     <>
       {/* 聯絡資料 */}
@@ -71,9 +113,10 @@ export default function PaymentForm() {
             <Form.Control
               type="text"
               placeholder="輸入姓名"
-              className="bg-bg-gray  placeholder-text "
+              className="bg-bg-gray  placeholder-text text-white-50 validate"
               name="userName"
               onChange={formChange}
+              required
             />
           </Form.Group>
           {/* 性別 */}
@@ -81,9 +124,10 @@ export default function PaymentForm() {
             <Form.Label>性別</Form.Label>
             <Form.Select
               aria-label="Default select example"
-              className="bg-bg-gray text-white-50"
+              className="bg-bg-gray text-white-50 validate"
               name="userGender"
               onChange={formChange}
+              required
             >
               <option value="0">選擇</option>
               <option value="1">男</option>
@@ -96,9 +140,10 @@ export default function PaymentForm() {
               <Form.Label>生日</Form.Label>
               <Form.Control
                 type="date"
-                className="bg-bg-gray text-white-50"
+                className="bg-bg-gray text-white-50 validate"
                 name="birthday"
                 onChange={formChange}
+                required
               />
             </Form.Group>
           </div>
@@ -109,9 +154,11 @@ export default function PaymentForm() {
               <Form.Control
                 type="text"
                 placeholder="0912345678"
-                className="bg-bg-gray text-gray placeholder-text "
+                className="bg-bg-gray text-white-50 placeholder-text validate"
                 name="phoneNumber"
                 onChange={formChange}
+                pattern="^09\d{2}-?\d{3}-?\d{3}$"
+                required
               />
             </Form.Group>
           </div>
@@ -122,9 +169,11 @@ export default function PaymentForm() {
               <Form.Control
                 type="email"
                 placeholder="輸入email"
-                className="bg-bg-gray  placeholder-text"
+                className="bg-bg-gray  placeholder-text text-white-50 validate"
                 name="email"
                 onChange={formChange}
+                pattern="^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$"
+                required
               />
             </Form.Group>
           </div>
