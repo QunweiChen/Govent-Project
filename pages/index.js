@@ -4,8 +4,7 @@ import Carousel from 'react-bootstrap/Carousel'
 import EventsBar from '@/components/events-bar'
 import EventsTypeBar from '@/components/events-type-bar'
 import IndexLayout from '@/components/layout/nocb-default-layout'
-import { motion, useTime, useTransform } from 'framer-motion'
-import Link from 'next/link'
+import { color, motion, useTime, useTransform } from 'framer-motion'
 
 export default function Home() {
   const time = useTime()
@@ -26,8 +25,8 @@ export default function Home() {
             />
             <div className="w-100 h-100 silder-bg bg-normal-gray-light"></div>
             <motion.div initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.1 }} className="govent-star">
+              whileInView={{ opacity: 1  }}
+              transition={{ duration: 0.7, delay: 1 }} className="govent-star">
               <img src="/images/index-silder/govent-star.svg" alt="" />
             </motion.div>
             <motion.div
@@ -37,7 +36,7 @@ export default function Home() {
               style={{ rotate }}
               className="bg-rotate"
             >
-              <img src="/images/index-silder/bg-01.svg" />
+              <motion.img animate={{color: "red"}} src="/images/index-silder/bg-02.svg" />
             </motion.div>
           </div>
           <Carousel.Caption
@@ -80,13 +79,13 @@ export default function Home() {
               whileInView={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.4 }}
               className="h-100"
-              src="/images/index-silder/psy.webp"
+              src="/images/index-silder/ive.png"
               alt="First slide"
             />
             <div className="w-100 h-100 silder-bg bg-normal-gray-light"></div>
             <motion.div initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.1 }} className="govent-star">
+              transition={{ duration: 0.7, delay: 1 }} className="govent-star">
               <img src="/images/index-silder/govent-star.svg" alt="" />
             </motion.div>
             <motion.div
@@ -96,7 +95,7 @@ export default function Home() {
               style={{ rotate }}
               className="bg-rotate"
             >
-              <img src="/images/index-silder/bg-02.svg" />
+              <img src="/images/index-silder/bg-01.svg" />
             </motion.div>
           </div>
           <Carousel.Caption
@@ -108,14 +107,14 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.2 }}
               className={`px-4 ${styles['secondary-title-start']}`}
             >
-              PSY.P
+              IVE
             </motion.h5>
             <motion.div
               initial={{ y: 40, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.4 }}
             >
-              <h1>PSY.P 2024 ULTRA．超 巡演｜台北站</h1>
+              <h1>‘SHOW WHAT I HAVE’ IN TAIPEI</h1>
             </motion.div>
             <motion.div
               initial={{ y: 40, opacity: 0 }}
@@ -174,13 +173,14 @@ export default function Home() {
               width: 100%;
               height: 100%;
               object-fit: cover;
+
             }
           }
           .govent-star {
             width: 400px;
             position: absolute;
             z-index: -1;
-            top: 45%;
+            top: 58%;
             left: 50.5%;
             transform: translate(-50%, -50%);
             img {

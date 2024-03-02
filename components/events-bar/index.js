@@ -1,87 +1,92 @@
-import React from 'react'
-import Card from 'react-bootstrap/Card'
-import Stack from 'react-bootstrap/Stack'
+import React, {useState} from 'react'
+import { Container, Row, Col } from 'react-bootstrap'
 
 export default function EventsBar() {
+  const [isHovered, setIsHovered] = useState(false)
   return (
     <>
       <div className="d-flex justify-content-center ">
         <div className="width-1200">
-          <h4>
-            <i className="bi bi-fire text-primary pe-2"></i>熱門活動
-          </h4>
-
-          <div className="mt-4 d-flex justify-content-between">
-            <Card style={{ width: '280px' }} className="custom-card text-white">
-              <Card.Img
-                variant="top"
-                src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-              />
-              <Card.Body className="bg-bg-gray">
-                <Card.Title className="h6">
-                  Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                </Card.Title>
-                <div className="d-flex justify-content-between align-items-center mt-3">
-                  <p className="text-normal-gray-light">演唱會</p>
-                  <p className="text-primary-light">NT$800 起</p>
+          <h4 className="mb-5 text-center">熱門活動</h4>
+          <div className="d-flex events-bar">
+            <div className="show-control d-flex flex-column" onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}>
+              <div
+                className={`show-event d-flex flex-column justify-content-between ${isHovered ? 'active' : ''}`}
+              >
+                <div>
+                  <div className="secondary-title h6">Ed Sheeran</div>
                 </div>
-              </Card.Body>
-            </Card>
-            <Card style={{ width: '280px' }} className="custom-card text-white">
-              <Card.Img
-                variant="top"
-                src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-              />
-              <Card.Body className="bg-bg-gray">
-                <Card.Title className="h6">
-                  Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                </Card.Title>
-                <div className="d-flex justify-content-between align-items-center mt-3">
-                  <p className="text-normal-gray-light">演唱會</p>
-                  <p className="text-primary-light">NT$800 起</p>
+                <div className="event-content">
+                  <h3>Ed Sheeran 紅髮艾德 2024TOUR世界巡迴演唱會</h3>
+                  <p>
+                    紅髮艾德 Ed Sheeran
+                    擁有眾多膾炙人口金曲，各項登峰造極的紀錄，今年更是解鎖英國百億串流數，成為史上第一位榮獲「Gold
+                    BRIT Billion Award（全英百億級大賞）」殊榮肯定的歌手！
+                  </p>
                 </div>
-              </Card.Body>
-            </Card>
-            <Card style={{ width: '280px' }} className="custom-card text-white">
-              <Card.Img
-                variant="top"
-                src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-              />
-              <Card.Body className="bg-bg-gray">
-                <Card.Title className="h6">
-                  Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                </Card.Title>
-                <div className="d-flex justify-content-between align-items-center mt-3">
-                  <p className="text-normal-gray-light">演唱會</p>
-                  <p className="text-primary-light">NT$800 起</p>
-                </div>
-              </Card.Body>
-            </Card>
-            <Card style={{ width: '280px' }} className="custom-card text-white">
-              <Card.Img
-                variant="top"
-                src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-              />
-              <Card.Body className="bg-bg-gray">
-                <Card.Title className="h6">
-                  Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                </Card.Title>
-                <div className="d-flex justify-content-between align-items-center mt-3">
-                  <p className="text-normal-gray-light">演唱會</p>
-                  <p className="text-primary-light">NT$800 起</p>
-                </div>
-              </Card.Body>
-            </Card>
+              </div>
+              <div className={`event-link d-flex justify-content-between ${isHovered ? '' : 'hide'}`}>
+                <h6 className="m-0">前往詳情</h6>
+                <i className={`bi bi-arrow-right text-white icon h5 m-0`}></i>
+              </div>
+            </div>
+            <div className="other-events d-flex flex-column ms-3">
+              <div className="event-btn mb-3"></div>
+              <div className="event-btn mb-3"></div>
+              <div className="event-btn"></div>
+            </div>
           </div>
         </div>
       </div>
       <style global jsx>
         {`
-          .custom-card {
-            border: none;
-            background-color: #151515;
-            border-radius: 5px;
+          .events-bar {
+            height: 400px;
             overflow: hidden;
+            .show-control {
+              flex: 1;
+              .event-link {
+                border-radius: 0 0 10px 10px;
+                background-color: var(--primary-color);
+                padding: 10px 30px;
+                opacity: 1;
+                transition: 300ms;
+                height: 45px;
+              }
+              .event-link.hide {
+                height: 0;
+                padding: 0px 30px;
+                
+              }
+            }
+            .show-event {
+              flex: 1;
+              padding: 30px;
+              border-radius: 10px;
+              background: url('/images/index-silder/ed-sheeran.jpg');
+              background-size: cover;
+              background-position: center;
+              .secondary-title {
+                display: inline-block;
+                padding: 10px 20px;
+                border: 1px solid var(--normal-gray-light-color);
+                border-radius: 5px;
+              }
+              .event-content {
+              }
+            }
+            .show-event.active{
+              border-radius: 10px 10px 0 0;
+            }
+            .other-events {
+              width: 125px;
+              .event-btn {
+                flex: 1;
+                background-color: blue;
+                border-radius: 10px;
+              }
+            }
           }
         `}
       </style>

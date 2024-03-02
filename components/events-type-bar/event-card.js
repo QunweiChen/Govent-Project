@@ -6,14 +6,15 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle }) => {
 
   return (
     <div
-      className={`custom-events-type d-flex  ${isHovered ? 'flex-2' : ''}`}
+      className={`custom-events-type d-flex ${isHovered ? 'flex-2' : ''}`}
       style={{ backgroundImage: `url('${backgroundImage}')` }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      <i className={`bi bi-arrow-up-right-circle-fill text-white icon h4 ${isHovered ? '' : 'hide'}`}></i>
       <Link
         href="/"
-        className={`text-white d-flex flex-column p-3 justify-content-end`}
+        className={`text-white d-flex flex-column p-4 justify-content-end`}
       >
         <h5 className="mb-0">{title}</h5>
         <p className={`second-title ${isHovered ? '' : 'hide'}`}>
@@ -32,7 +33,7 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle }) => {
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover;
-            border-radius: 5px;
+            border-radius: 10px;
             h5 {
               transition: 300ms;
               transform: translateY(20px);
@@ -40,10 +41,20 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle }) => {
             }
             a{
               width: 100%;
+              z-index: 1;
+            }
+            .icon{
+              position: absolute;
+              right: 20px;
+              top: 15px;
+              opacity: 1;
+              transition: 300ms;
+            }
+            .icon.hide{
+              opacity: 0;
             }
           }
           .custom-events-type.flex-2 {
-            
             flex: 2;
             h5 {
               transform: translateY(0px);
@@ -62,12 +73,12 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle }) => {
             height: 100%;
             background: linear-gradient(
               180deg,
-              rgba(21, 21, 21, 0) 50%,
+              rgba(21, 21, 21, 0) 40%,
               rgba(21, 21, 21, 50)
             );
-            opacity: 0;
+            opacity: 0.7;
             transition: 400ms;
-            z-index: -1;
+            z-index: 0;
           }
           .bg-linear.active{
             opacity: 1;
