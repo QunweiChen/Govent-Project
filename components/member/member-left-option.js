@@ -12,7 +12,7 @@ export default function MemberleftOption({ link, icon, text }) {
       <motion.h6
         initial={{ borderLeftColor: 'transparent' }}
         animate={{ borderLeftColor: 'var(--primary-color)' }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
         className={`option-text active`}
       >
         <Link href={`${link}`} className="link">

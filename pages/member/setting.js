@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Memberleft from '@/components/member/member-left-bar'
 import NoBCLayout from '@/components/layout/nocb-default-layout'
+import { motion } from 'framer-motion'
 
 export default function MemberSetting() {
   // const router = useRouter()
@@ -20,7 +21,12 @@ export default function MemberSetting() {
             <Memberleft />
           </Col>
           <Col sm={9}>
-            <div className="member-bgc contain">
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="member-bgc contain"
+            >
               <Form>
                 <h4>帳戶設定</h4>
                 <Row className="mt-4">
@@ -94,7 +100,7 @@ export default function MemberSetting() {
                   <button className="btn btn-primary">儲存</button>
                 </div>
               </Form>
-            </div>
+            </motion.div>
           </Col>
         </Row>
       </div>
@@ -124,5 +130,5 @@ export default function MemberSetting() {
 }
 
 MemberSetting.getLayout = function (page) {
-  return <NoBCLayout>{page}</NoBCLayout>
+  return <NoBCLayout title="帳戶設定">{page}</NoBCLayout>
 }
