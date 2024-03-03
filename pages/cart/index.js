@@ -12,6 +12,7 @@ export default function CartIndex() {
   //引入勾子
   const { items, merchantItems, removeItem, calcTotalItems, calcTotalPrice } =
     useCart()
+
   // console.log(merchantItems)
   // -
   // {
@@ -80,6 +81,10 @@ export default function CartIndex() {
 
   //設定至狀態(下方跑map使用)
   const [newMerchantItems, setNewMerchantItems] = useState(merchantItems)
+  //測試區
+  console.log(newMerchantItems)
+  console.log(newMerchantItems.items)
+  // console.log(newMerchantItems.items.length)
   //即時更新
   useEffect(() => {
     setNewMerchantItems(merchantItems)
@@ -256,10 +261,9 @@ export default function CartIndex() {
                                     </div>
                                   </div>
                                   <div className="col-1 d-flex justify-content-center align-items-center">
-                                    <div className="btn d-flex justify-content-center align-items-center me-5 me-sm-0">
-                                      <i className="bi bi-trash-fill text-primary-light"></i>
+                                    <div className="btn me-5 me-sm-0">
                                       <button
-                                        className="btn"
+                                        className="btn d-flex justify-content-center align-items-center"
                                         onClick={() => {
                                           removeItem(
                                             newMerchantItems,
@@ -268,6 +272,7 @@ export default function CartIndex() {
                                           )
                                         }}
                                       >
+                                        <i className="bi bi-trash-fill text-primary-light"></i>
                                         <p className="text-white ms-2 hide text-nowrap">
                                           刪除
                                         </p>
@@ -283,21 +288,42 @@ export default function CartIndex() {
                     )
                   })}
                 </div>
-                <div className="border-0 cart-card d-none d-xxl-block border-top border-normal-gray">
-                  <div className="d-flex justify-content-end align-items-center m-4">
-                    <p className="text-primary-light ms-3">
-                      合計{calcTotalItems()}件商品
-                    </p>
-                    <h5 className="text-white ms-3">
-                      總金額 NT {parseInt(calcTotalPrice()).toLocaleString()}
-                    </h5>
-                    <h6 className="btn btn-primary-deep ms-4">
-                      <Link href="/payment" className="text-white">
-                        前往結帳
-                      </Link>
-                    </h6>
+                {/* 沒購物車內容 判斷*/}
+                {newMerchantItems && newMerchantItems.length > 0 ? (
+                  <div className="border-0 cart-card d-none d-xxl-block border-top border-normal-gray">
+                    <div className="d-flex justify-content-end align-items-center m-4">
+                      <p className="text-primary-light ms-3">
+                        合計{calcTotalItems()}件商品
+                      </p>
+                      <h5 className="text-white ms-3">
+                        總金額 NT {parseInt(calcTotalPrice()).toLocaleString()}
+                      </h5>
+                      <h6 className="btn btn-primary-deep ms-4">
+                        <Link href="/payment" className="text-white">
+                          前往結帳
+                        </Link>
+                      </h6>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="border-0 cart-card d-flex justify-content-center align-items-center">
+                    <div className="my-5 text-center d-flex flex-column align-items-center">
+                      <div className="cart-logo mb-3">
+                        <img
+                          src="\govent-logo.png"
+                          className="object-fit-cover img-fluid"
+                          alt="..."
+                        />
+                      </div>
+                      <h5 className="text-white mb-4">您的購物車還是空的</h5>
+                      <button className="btn btn-primary-deep d-flex d-none d-sm-block">
+                        <Link href="/product/list" className="text-white">
+                          去選票!
+                        </Link>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -305,20 +331,30 @@ export default function CartIndex() {
       </div>
       <EventsRecommend />
       {/* <NavbarBottomRwd /> */}
-      <div className="border-0 cart-card d-block d-xxl-none border-top border-normal-gray bg-normal-gray-deep fixed-bottom">
-        <div className="d-flex justify-content-between align-items-center m-2">
-          <p className="text-primary-light ms-3">
-            合計{calcTotalItems()}件商品
-          </p>
-          <div className="d-flex justify-content-center align-items-center">
-            <p className="text-white ms-3">
-              總金額 NT {parseInt(calcTotalPrice()).toLocaleString()}
+      <div className="border-0 cart-card d-block d-sm-none border-top border-normal-gray bg-normal-gray-deep fixed-bottom">
+        {newMerchantItems && newMerchantItems.length > 0 ? (
+          <div className="d-flex justify-content-between align-items-center m-2">
+            <p className="text-primary-light ms-3">
+              合計{calcTotalItems()}件商品
             </p>
-            <h6 className="btn btn-primary-deep text-white ms-4 m-0 ">
-              前往結帳
-            </h6>
+            <div className="d-flex justify-content-center align-items-center">
+              <p className="text-white ms-3">
+                總金額 NT {parseInt(calcTotalPrice()).toLocaleString()}
+              </p>
+              <h6 className="btn btn-primary-deep text-white ms-4 m-0">
+                <Link href="/payment" className="text-white">
+                  前往結帳
+                </Link>
+              </h6>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="container d-flex justify-content-center bg-primary-deep">
+            <Link href="/product/list" className="text-white my-2">
+              去選票!
+            </Link>
+          </div>
+        )}
       </div>
 
       <style global jsx>
@@ -345,6 +381,9 @@ export default function CartIndex() {
 
           .event:hover {
             background-color: #151515;
+          }
+          .cart-logo {
+            width: 160px;
           }
           @media screen and (max-width: 576px) {
             .truncatetext {
