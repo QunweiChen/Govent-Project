@@ -11,7 +11,7 @@ export default function PaymentForm() {
   //確認是否有勾選與會員資料相同
   const numberValue = useRef(null)
   function changeNumberValue() {
-    // console.log(numberValue.current.checked)
+    console.log(numberValue.current.checked)
   }
 
   //儲存聯絡資料
@@ -60,18 +60,18 @@ export default function PaymentForm() {
     let targetID = e.target.id
     setRadioValue(targetID)
   }
-
+  //檢查是否有輸入欄位
   function validate(e) {
     const target = e.target
     const validityMessage = target.validity
-    console.log(target.name)
+    console.log(target.value)
     console.log(target.validity)
     let msg = ''
     switch (true) {
       case validityMessage.valueMissing && target.name == 'userName':
         msg = '請輸入姓名'
         break
-      case target.value == 0 && target.name == 'gender':
+      case validityMessage.valueMissing && target.name == 'userGender':
         msg = '請選擇性別'
         break
       case validityMessage.valueMissing && target.name == 'birthday':
@@ -91,12 +91,14 @@ export default function PaymentForm() {
     Validate.forEach((input) => {
       input.addEventListener('blur', validate)
     })
+    // document.addEventListener('scroll', validate)
     return () => {
       Validate.forEach(function (input) {
         input.removeEventListener('blur', validate)
       })
     }
   }, [])
+
   return (
     <>
       {/* 聯絡資料 */}
@@ -118,6 +120,9 @@ export default function PaymentForm() {
               onChange={formChange}
               required
             />
+            <Form.Control.Feedback type="invalid">
+              請輸入姓名
+            </Form.Control.Feedback>
           </Form.Group>
           {/* 性別 */}
           <Form.Group className="mb-3 col-md-3 px-2" controlId="formGroupEmail">
@@ -129,10 +134,13 @@ export default function PaymentForm() {
               onChange={formChange}
               required
             >
-              <option value="0">選擇</option>
+              <option value="">選擇</option>
               <option value="1">男</option>
               <option value="2">女</option>
             </Form.Select>
+            <Form.Control.Feedback type="invalid">
+              請選擇性別
+            </Form.Control.Feedback>
           </Form.Group>
           {/* 生日 */}
           <div className="col-md-6 px-2">
@@ -145,6 +153,9 @@ export default function PaymentForm() {
                 onChange={formChange}
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                請選擇生日
+              </Form.Control.Feedback>
             </Form.Group>
           </div>
           {/* 手機 */}
@@ -160,6 +171,9 @@ export default function PaymentForm() {
                 pattern="^09\d{2}-?\d{3}-?\d{3}$"
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                請輸入手機
+              </Form.Control.Feedback>
             </Form.Group>
           </div>
           {/* 信箱 */}
@@ -175,16 +189,24 @@ export default function PaymentForm() {
                 pattern="^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$"
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                請輸入信箱
+              </Form.Control.Feedback>
             </Form.Group>
           </div>
-          <Form.Group className="mb-3 px-2" id="formGridCheckbox">
-            <Form.Check
+
+          <div class="form-check mb-3 mx-2">
+            <input
               ref={numberValue}
+              class="form-check-input"
               type="checkbox"
-              label="與會員註冊資料相同"
+              id="gridCheck"
               onChange={changeNumberValue}
             />
-          </Form.Group>
+            <label class="form-check-label" for="gridCheck">
+              與會員註冊資料相同
+            </label>
+          </div>
         </div>
       </div>
       {/* 付款方式 */}

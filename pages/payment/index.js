@@ -5,18 +5,36 @@ import { Form } from 'react-bootstrap'
 import OrderSteps from '@/components/checkout'
 import DefaultLayout from '@/components/layout/default-layout'
 import PaymentForm from '@/components/payment/payment-Form'
+import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
+import Row from 'react-bootstrap/Row'
+import InputGroup from 'react-bootstrap/InputGroup'
 export default function Payment() {
-  function handleSubmit() {}
+  const [validated, setValidated] = useState(false)
 
+  const handleSubmit = (event) => {
+    const form = event.currentTarget
+    if (form.checkValidity() === false) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+
+    setValidated(true)
+  }
   return (
     <>
-      <OrderSteps />
       <div className="row m-5  ">
         <div className="col-md-8 cart-area">
           <h3 className="bg-bg-gray-secondary rounded-3 py-3 px-4">訂單明細</h3>
-          <Form onSubmit={handleSubmit} method="post">
+          <Form
+            noValidate
+            onSubmit={handleSubmit}
+            method="post"
+            validated={validated}
+          >
             {/* 商品詳情 */}
             <ProductInfo />
+            {/* 會員資料&折抵&付款資訊 */}
             <PaymentForm />
             {/* 送出資料 */}
             <PaymentButton />
