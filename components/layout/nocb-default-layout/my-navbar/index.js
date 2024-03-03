@@ -123,6 +123,10 @@ const MyNavbar = () => {
           }
         }
 
+        .nav-link{
+          color: white;
+        }
+
         .navbar .navbar-nav .nav-item {
           position: relative;
         }

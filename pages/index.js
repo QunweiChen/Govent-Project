@@ -4,7 +4,7 @@ import Carousel from 'react-bootstrap/Carousel'
 import EventsBar from '@/components/events-bar'
 import EventsTypeBar from '@/components/events-type-bar'
 import IndexLayout from '@/components/layout/nocb-default-layout'
-import { color, motion, useTime, useTransform } from 'framer-motion'
+import { motion, useTime, useTransform } from 'framer-motion'
 
 export default function Home() {
   const time = useTime()
@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <>
-      <Carousel fade>
+      <Carousel fade className='mb-5'>
         <Carousel.Item>
           <div className={`${styles['image-container']} w-100`}>
             <motion.img
@@ -23,7 +23,7 @@ export default function Home() {
               src="/images/index-silder/img_pc_08.png"
               alt="First slide"
             />
-            <div className="w-100 h-100 silder-bg bg-normal-gray-light"></div>
+            <div className="w-100 h-100 silder-bg" style={{background: `#ffe4e1`}}></div>
             <motion.div initial={{ opacity: 0 }}
               whileInView={{ opacity: 1  }}
               transition={{ duration: 0.7, delay: 1 }} className="govent-star">
@@ -36,7 +36,7 @@ export default function Home() {
               style={{ rotate }}
               className="bg-rotate"
             >
-              <motion.img animate={{color: "red"}} src="/images/index-silder/bg-02.svg" />
+              <motion.img src="/images/index-silder/bg-02.svg" />
             </motion.div>
           </div>
           <Carousel.Caption
@@ -82,7 +82,7 @@ export default function Home() {
               src="/images/index-silder/ive.png"
               alt="First slide"
             />
-            <div className="w-100 h-100 silder-bg bg-normal-gray-light"></div>
+            <div className="w-100 h-100 silder-bg" style={{background: `#d8bfd8`}}></div>
             <motion.div initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.7, delay: 1 }} className="govent-star">
