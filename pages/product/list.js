@@ -20,10 +20,16 @@ import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import AlwaysOpenExample from '@/components/layout/list-layout/accordion'
 
+import ProductsProvider, { useProducts } from '@/hooks/use-products'
+
 import event from '@/data/event/event.json'
 // console.log(event)
 
 export default function List() {
+  const {
+    data,
+  } = useProducts()
+  console.log(data);
   // Toggle the side navigation
   // useEffect(() => {
   // fix next issue
@@ -51,6 +57,7 @@ export default function List() {
   // }, [])
   return (
     <>
+    <ProductsProvider>
       <nav className="header container navbar-expand mt-5 w-1200">
         <h5 className="d-flex justify-content-between">
           <div className="bg-bg-gray-secondary rounded-3">
@@ -956,6 +963,7 @@ export default function List() {
         </div>
       </main>
       <NavbarBottomRwdSm />
+      </ProductsProvider>
 
       <style global jsx>{`
         body {
