@@ -1,51 +1,66 @@
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
+import React, { useState } from 'react'
 
 import { CiHeart } from 'react-icons/ci'
 import { GoSortDesc } from 'react-icons/go'
 
-import { TbMap } from 'react-icons/tb'
-import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2'
-import { CiFilter } from 'react-icons/ci'
+// import { TbMap } from 'react-icons/tb'
+// import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2'
+// import { CiFilter } from 'react-icons/ci'
 
 import { FaHouse } from 'react-icons/fa6'
 import { FaRegStar } from 'react-icons/fa'
 import { FaTicket } from 'react-icons/fa6'
 import { RxPerson } from 'react-icons/rx'
 
+import MyFooter from '@/components/layout/default-layout/my-footer'
+import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
+import FavIcon from '@/components/layout/list-layout/fav-icon'
+import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
+import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
+import AlwaysOpenExample from '@/components/layout/list-layout/accordion'
+
+import event from '@/data/event/event.json'
+// console.log(event)
+
 export default function List() {
   // Toggle the side navigation
-  useEffect(() => {
-    // fix next issue
-    if (typeof window !== 'undefined') {
-      const sidebarToggle = document.body.querySelector('#sidebarToggle')
+  // useEffect(() => {
+  // fix next issue
+  // if (typeof window !== 'undefined') {
+  //   const sidebarToggle = document.body.querySelector('#sidebarToggle')
 
-      if (sidebarToggle) {
-        // 在localStorage中儲存目前sidebar情況
-        if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
-          document.body.classList.toggle('sb-sidenav-toggled')
-        }
+  //   if (sidebarToggle) {
+  //     // 在localStorage中儲存目前sidebar情況
+  //     if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+  //       document.body.classList.toggle('sb-sidenav-toggled')
+  //     }
 
-        sidebarToggle.addEventListener('click', (event) => {
-          event.preventDefault()
+  //     sidebarToggle.addEventListener('click', (event) => {
+  //       event.preventDefault()
 
-          document.body.classList.toggle('sb-sidenav-toggled')
+  //       document.body.classList.toggle('sb-sidenav-toggled')
 
-          localStorage.setItem(
-            'sb|sidebar-toggle',
-            document.body.classList.contains('sb-sidenav-toggled')
-          )
-        })
-      }
-    }
-  }, [])
+  //       localStorage.setItem(
+  //         'sb|sidebar-toggle',
+  //         document.body.classList.contains('sb-sidenav-toggled')
+  //       )
+  //     })
+  //   }
+  // }
+  // }, [])
   return (
     <>
       <nav className="header container navbar-expand mt-5 w-1200">
-        <h5 className="d-flex justify-content-between ">
+        <h5 className="d-flex justify-content-between">
           <div className="bg-bg-gray-secondary rounded-3">
             <p className="mx-4 my-2">目前共有 ${} 筆 結果</p>
           </div>
-          <selector className="d-flex ">
+          <section>
+            <NavbarTopRwd />
+          </section>
+
+          {/* <selector className="d-flex ">
             <div className="sort_icon">
               <button className="btn no-border rounded-0 text-white">
                 排序方式 <GoSortDesc className=" btn-primary-deep" />
@@ -72,10 +87,10 @@ export default function List() {
                 地區
               </button>
             </div>
-          </selector>
+          </selector> */}
         </h5>
       </nav>
-      <nav className="header-m container row">
+      {/* <nav className="header-m container row">
         <button className="col btn btn-outline-primary-deep no-border rounded-0 text-white">
           <TbMap />
           地區
@@ -92,6 +107,9 @@ export default function List() {
           <GoSortDesc />
           排序
         </button>
+      </nav> */}
+      <nav className="header-m">
+        <NavbarTopRwdSm />
       </nav>
       <main className="container w-1200">
         <div className="row">
@@ -232,7 +250,7 @@ export default function List() {
             <hr />
             <div className="downSidebar no-border">
               <h6>地區</h6>
-              <div className="accordion" id="accordionExample">
+              <div className=" d-none accordion" id="accordionExample">
                 {/* North */}
                 <div className="accordion-item bg-bg-gray text-white">
                   {/* title */}
@@ -626,38 +644,46 @@ export default function List() {
                   </div>
                 </div>
               </div>
+              <AlwaysOpenExample />
             </div>
           </div>
           <div className="col">
-            <div className="cardList row g-2">
-              <div className="col-md-4 col-sm-6 ">
-                <div className="card bg-bg-gray-secondary text-white px-0 no-border">
-                  <figure>
-                    <img
-                      src="/images/product/list/1-01.jpg"
-                      alt=""
-                      className="card-img-top"
-                    />
-                  </figure>
-                  <i className="position-absolute top-0 end-0 rounded-3 text-white fs-5 fw-bold m-2 p-1">
-                    <CiHeart />
-                  </i>
+            <div className="cardList row g-3">
+              {event.map((v, i) => {
+                return (
+                  <div key={v.id} className="col-md-4 col-sm-6 ">
+                    <div className="card  stretched-link bg-bg-gray-secondary text-white px-0 no-border">
+                      <figure>
+                        <img
+                          src={`/images/product/list/${v.image.split(','[0])}`}
+                          alt=""
+                          className="card-img-top"
+                        />
+                      </figure>
+                      <FavIcon />
 
-                  <div className="card-body p-">
-                    <p className=" text-normal-gray-light">演唱會</p>
-                    <h5 className="card-title">
-                      {' '}
-                      NOneRepublic 共和世代 高雄巨蛋
-                    </h5>
-                    <h6 className="text-primary-deep">$1200起</h6>
-                    <div className="d-flex justify-content-between">
-                      <p className="text-normal-gray-light mb-2">台北</p>
-                      <span className="text-normal-gray-light">2023-06-01</span>
+                      <div className="card-body p-">
+                        <p className=" text-normal-gray-light">
+                          {v.event_type_id} 演唱會
+                        </p>
+                        <h5 className="card-title">
+                          {/* NOneRepublic 共和世代 高雄巨蛋 */}
+                          {v.event_name}
+                        </h5>
+                        <h6 className="text-primary-deep">$1200起</h6>
+                        <div className="d-flex justify-content-between">
+                          <p className="text-normal-gray-light mb-2">{v.str}</p>
+                          <span className="text-normal-gray-light">
+                            {/* 2023-06-01 */}
+                            {v.start_date}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="col-md-4 col-sm-6 ">
+                )
+              })}
+              {/* <div className="col-md-4 col-sm-6 ">
                 <div className="card bg-bg-gray-secondary text-white px-0 no-border">
                   <figure>
                     <img
@@ -666,9 +692,7 @@ export default function List() {
                       className="card-img-top"
                     />
                   </figure>
-                  <i className="position-absolute top-0 end-0 rounded-3 text-white fs-5 fw-bold m-2 p-1">
-                    <CiHeart />
-                  </i>
+                  <FavIcon />
 
                   <div className="card-body p-">
                     <p className=" text-normal-gray-light">演唱會</p>
@@ -683,8 +707,8 @@ export default function List() {
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-md-4 col-sm-6 ">
+              </div> */}
+              {/* <div className="col-md-4 col-sm-6 ">
                 <div className="card bg-bg-gray-secondary text-white px-0 no-border">
                   <figure>
                     <img
@@ -693,9 +717,7 @@ export default function List() {
                       className="card-img-top"
                     />
                   </figure>
-                  <i className="position-absolute top-0 end-0 rounded-3 text-white fs-5 fw-bold m-2 p-1">
-                    <CiHeart />
-                  </i>
+                  <FavIcon />
 
                   <div className="card-body p-">
                     <p className=" text-normal-gray-light">演唱會</p>
@@ -720,9 +742,7 @@ export default function List() {
                       className="card-img-top"
                     />
                   </figure>
-                  <i className="position-absolute top-0 end-0 rounded-3 text-white fs-5 fw-bold m-2 p-1">
-                    <CiHeart />
-                  </i>
+                  <FavIcon />
 
                   <div className="card-body p-">
                     <p className=" text-normal-gray-light">演唱會</p>
@@ -747,9 +767,7 @@ export default function List() {
                       className="card-img-top"
                     />
                   </figure>
-                  <i className="position-absolute top-0 end-0 rounded-3 text-white fs-5 fw-bold m-2 p-1">
-                    <CiHeart />
-                  </i>
+                  <FavIcon />
 
                   <div className="card-body p-">
                     <p className=" text-normal-gray-light">演唱會</p>
@@ -774,9 +792,7 @@ export default function List() {
                       className="card-img-top"
                     />
                   </figure>
-                  <i className="position-absolute top-0 end-0 rounded-3 text-white fs-5 fw-bold m-2 p-1">
-                    <CiHeart />
-                  </i>
+                  <FavIcon />
 
                   <div className="card-body">
                     <p className=" text-normal-gray-light">演唱會</p>
@@ -801,9 +817,7 @@ export default function List() {
                       className="card-img-top"
                     />
                   </figure>
-                  <i className="position-absolute top-0 end-0 rounded-3 text-white fs-5 fw-bold m-2 p-1">
-                    <CiHeart />
-                  </i>
+                  <FavIcon />
 
                   <div className="card-body p-">
                     <p className=" text-normal-gray-light">演唱會</p>
@@ -828,9 +842,7 @@ export default function List() {
                       className="card-img-top"
                     />
                   </figure>
-                  <i className="position-absolute top-0 end-0 rounded-3 text-white fs-5 fw-bold m-2 p-1">
-                    <CiHeart />
-                  </i>
+                  <FavIcon />
 
                   <div className="card-body p-">
                     <p className=" text-normal-gray-light">演唱會</p>
@@ -855,9 +867,7 @@ export default function List() {
                       className="card-img-top"
                     />
                   </figure>
-                  <i className="position-absolute top-0 end-0 rounded-3 text-white fs-5 fw-bold m-2 p-1">
-                    <CiHeart />
-                  </i>
+                  <FavIcon />
 
                   <div className="card-body p-">
                     <p className=" text-normal-gray-light">演唱會</p>
@@ -872,8 +882,9 @@ export default function List() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
+
             <footer className="d-flex justify-content-center m-3">
               <div
                 className="page_nav btn-toolbar"
@@ -919,7 +930,7 @@ export default function List() {
                 </div>
               </div>
             </footer>
-            <footer className="footer-m container row sticky-bottom">
+            {/* <footer className="footer-m container row sticky-bottom">
               <button className="col btn btn-outline-primary-deep no-border rounded-0 text-white">
                 <FaHouse />
                 <br />
@@ -940,10 +951,11 @@ export default function List() {
                 <br />
                 帳戶設定
               </button>
-            </footer>
+            </footer> */}
           </div>
         </div>
       </main>
+      <NavbarBottomRwdSm />
 
       <style global jsx>{`
         body {
@@ -963,13 +975,6 @@ export default function List() {
            {
             /* width: 300px; */
           }
-        }
-        .cardList {
-           {
-            /* margin: -15px; */
-          }
-        }
-        figure {
         }
         figure img {
           width: 268px;
@@ -1014,6 +1019,9 @@ export default function List() {
           }
           .page_nav {
             display: none;
+          }
+          .cardList {
+            margin-bottom: 80px;
           }
           .footer_m {
              {
