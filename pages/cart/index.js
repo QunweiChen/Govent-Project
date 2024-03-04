@@ -6,13 +6,21 @@ import Link from 'next/link'
 import { useCart } from '@/hooks/use-cart'
 import { faL } from '@fortawesome/free-solid-svg-icons'
 import { setMinutes } from 'date-fns'
+import { forEach } from 'lodash'
 
 export default function CartIndex() {
   //--------
   //引入勾子
-  const { items, merchantItems, removeItem, calcTotalItems, calcTotalPrice } =
-    useCart()
-
+  const {
+    data,
+    items,
+    merchantItems,
+    removeItem,
+    calcTotalItems,
+    calcTotalPrice,
+  } = useCart()
+  // const [mt, setMt] = useState(data.data.posts)
+  // console.log(mt)
   // console.log(merchantItems)
   // -
   // {
@@ -78,17 +86,22 @@ export default function CartIndex() {
       v.checked = false
     })
   })
-
-  //設定至狀態(下方跑map使用)
-  const [newMerchantItems, setNewMerchantItems] = useState(merchantItems)
-  //測試區
-  console.log(newMerchantItems)
-  console.log(newMerchantItems.items)
-  // console.log(newMerchantItems.items.length)
   //即時更新
   useEffect(() => {
     setNewMerchantItems(merchantItems)
   }, [merchantItems])
+  //重新定義公司
+  const Mt = data.data?.posts
+  console.log(Mt)
+
+  // Mt.forEach((e) => [console.log(e)])
+  //設定至狀態(下方跑map使用)
+  const [newMerchantItems, setNewMerchantItems] = useState(merchantItems)
+  //測試區
+  // console.log(newMerchantItems)
+  // console.log(newMerchantItems.items)
+  // console.log(newMerchantItems.items.length)
+
   //checkbox內容
   //全選
   const [selectAll, setSelectAll] = useState(false)
@@ -139,7 +152,16 @@ export default function CartIndex() {
       }
     })
     setNewMerchantItems(updatedItems)
+    console.log(updatedItems)
   }
+  //用id尋找商家name
+  const foundMt = (MtId) => {
+    const foundItem = Mt.find((item) => item.id === MtId)
+    const bankName = foundItem.name
+    console.log(bankName)
+    return bankName
+  }
+
   return (
     <>
       <div className="container width-1200">
@@ -154,17 +176,21 @@ export default function CartIndex() {
                         <h4 className="ms-4 text-white">購物車</h4>
                       </Link>
                     </div>
-                    <div className="col-6 text-white d-flex align-items-center justify-content-end">
-                      <label className="me-4 d-flex align-items-center justify-content-end form-check-label">
-                        <input
-                          type="checkbox"
-                          checked={selectAll}
-                          onChange={handleSelectAll}
-                          className="checkbox-large form-check-input"
-                        />
-                        <p className="ms-2">全選票券</p>
-                      </label>
-                    </div>
+                    {newMerchantItems && newMerchantItems.length > 0 ? (
+                      <div className="col-6 text-white d-flex align-items-center justify-content-end">
+                        <label className="me-4 d-flex align-items-center justify-content-end form-check-label">
+                          <input
+                            type="checkbox"
+                            checked={selectAll}
+                            onChange={handleSelectAll}
+                            className="checkbox-large form-check-input"
+                          />
+                          <p className="ms-2">全選票券</p>
+                        </label>
+                      </div>
+                    ) : (
+                      ''
+                    )}
                   </div>
                 </div>
                 <div className="rwd-text">
@@ -185,7 +211,7 @@ export default function CartIndex() {
                                 className="ms-4 checkbox-large form-check-input"
                               />
                               <div className="ms-4 text-primary-light">
-                                {v.merchantId}
+                                {foundMt(v.merchantId)}
                               </div>
                             </div>
                             <div className="me-4">
@@ -318,7 +344,7 @@ export default function CartIndex() {
                       <h5 className="text-white mb-4">您的購物車還是空的</h5>
                       <button className="btn btn-primary-deep d-flex d-none d-sm-block">
                         <Link href="/product/list" className="text-white">
-                          去選票!
+                          瀏覽最新活動!
                         </Link>
                       </button>
                     </div>
@@ -351,7 +377,7 @@ export default function CartIndex() {
         ) : (
           <div className="container d-flex justify-content-center bg-primary-deep">
             <Link href="/product/list" className="text-white my-2">
-              去選票!
+              瀏覽最新活動!
             </Link>
           </div>
         )}

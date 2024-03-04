@@ -1,3 +1,4 @@
+import { result } from 'lodash'
 import React, { createContext, useState, useContext, useEffect } from 'react'
 // import {
 //   init,
@@ -14,6 +15,19 @@ import React, { createContext, useState, useContext, useEffect } from 'react'
 const CartContext = createContext()
 
 export function CartProvider({ children }) {
+  //連接資料庫
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    const getCartMt = async () => {
+      fetch('http://localhost:3005/api/cart')
+        .then((res) => res.json())
+        .then((text) => setData(text))
+    }
+
+    getCartMt()
+  }, [])
+  // console.log(data.data.posts)
   // 加入到購物車中的項目
   const [items, setItems] = useState([])
   // console.log(items)
@@ -86,7 +100,6 @@ export function CartProvider({ children }) {
     })
     setItems(newItems)
   }
-
   //移除(分類用)
   const removeItem = (items, id, merchantId) => {
     const newItems = items.map((merchant) => {
@@ -123,12 +136,6 @@ export function CartProvider({ children }) {
 
   //總金額
   const calcTotalPrice = () => {
-    // let total = 0
-
-    // for (let i = 0; i < items.length; i++) {
-    //   total += items[i].qty * items[i].price
-    // }
-    // return total
     let total = 0
 
     for (let i = 0; i < merchantItems.length; i++) {
@@ -141,11 +148,11 @@ export function CartProvider({ children }) {
     console.log(total)
     return total
   }
-
   //最外(上)元件階層包裹提供者元件，讓⽗⺟元件可以提供它
   return (
     <CartContext.Provider
       value={{
+        data,
         items,
         addItem,
         MerchantItem,
