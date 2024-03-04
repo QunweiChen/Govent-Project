@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import styles from './member.module.scss'
 import Badge from 'react-bootstrap/Badge'
 import MemberleftOption from './member-left-option'
-
-export default function Memberleft() {
+export default function Memberleft({name, level, email, avatar}) {
 
   return (
     <div
@@ -13,15 +12,15 @@ export default function Memberleft() {
         <div className="py-3 d-flex justify-content-center">
           <img
             className={`${styles['avatar']} rounded-circle`}
-            src="https://www.shutterstock.com/image-vector/cute-cartoon-rubber-duck-vector-600nw-2276837591.jpg"
+            src={avatar}
           />
         </div>
         <div className="d-flex justify-content-center align-items-center">
-          <h6 className="mb-0 me-2">王小鴨</h6>
-          <Badge bg="primary">黃金會員</Badge>
+          <h6 className="mb-0 me-2">{name}</h6>
+          <Badge bg="primary">{level}</Badge>
         </div>
         <p className={`text-center sm-p ${styles['sm-p']} mt-2`}>
-          duck.wang@gmail.com
+          {email}
         </p>
       </div>
       <hr />
@@ -61,6 +60,13 @@ export default function Memberleft() {
           text="我的收藏"
         />
       </div>
+      <style golbal jsx>
+        {`
+        .member-side-bar{
+          overflow: hidden;
+        }
+        `}
+      </style>
     </div>
   )
 }

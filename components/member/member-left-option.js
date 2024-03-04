@@ -10,9 +10,9 @@ export default function MemberleftOption({ link, icon, text }) {
   if (isActive) {
     return (
       <motion.h6
-        initial={{ borderLeftColor: 'transparent' }}
-        animate={{ borderLeftColor: 'var(--primary-color)' }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        initial={{ borderLeft: "6px solid #f16e0f00", x: -6 }}
+        animate={{ borderLeft: "6px solid var(--primary-color)", x: 0 }}
+        transition={{ duration: 0.2, delay: 0.1 }}
         className={`option-text active`}
       >
         <Link href={`${link}`} className="link">
@@ -37,13 +37,13 @@ export default function MemberleftOption({ link, icon, text }) {
           .option-text {
             padding: 0 20px;
             margin-bottom: 20px;
-            border-left: 4px solid transparent;
+            
             transition: 300ms;
           }
           .option-text.active {
             padding: 0 20px;
             margin-bottom: 20px;
-            border-left: 4px solid var(--primary-color);
+            
             transition: 300ms;
           }
         `}
