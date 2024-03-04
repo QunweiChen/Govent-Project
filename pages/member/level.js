@@ -2,7 +2,6 @@
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Memberleft from '@/components/member/member-left-bar'
-import ProgressBar from 'react-bootstrap/ProgressBar'
 import NoBCLayout from '@/components/layout/nocb-default-layout'
 import { motion } from 'framer-motion'
 import LevelType from '@/components/member/member-level-type'
