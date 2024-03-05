@@ -7,7 +7,7 @@ export function ProductsProvider({ children }){
 
     useEffect(()=>{
         const getProduct = async()=>{
-            (await fetch('http://localhost:3005/api/events'))
+             fetch('http://localhost:3005/api/events')
             .then((res) => res.json())
             .then((text) => setData(text))
         }
