@@ -34,7 +34,20 @@ export function CartProvider({ children }) {
   // 加入到各分類的項目
   const [merchantItems, setMerchantItems] = useState([])
   // console.log(merchantItems)
+  //送來資料多一個checked屬性
+  merchantItems.map((v, i) => {
+    const a = v.items
+    a.map((v, i) => {
+      v.checked = false
+    })
+  })
+  //即時更新
+  useEffect(() => {
+    setNewMerchantItems(merchantItems)
+  }, [merchantItems])
 
+  //設定至狀態(下方跑map使用)
+  const [newMerchantItems, setNewMerchantItems] = useState(merchantItems)
   // 添加分類
   const MerchantItem = (item, quantityToAdd) => {
     const merchantId = item.merchantId
@@ -157,6 +170,8 @@ export function CartProvider({ children }) {
         addItem,
         MerchantItem,
         merchantItems,
+        newMerchantItems,
+        setNewMerchantItems,
         removeItem,
         calcTotalItems,
         calcTotalPrice,

@@ -15,14 +15,12 @@ export default function CartIndex() {
     data,
     items,
     merchantItems,
+    newMerchantItems,
+    setNewMerchantItems,
     removeItem,
     calcTotalItems,
     calcTotalPrice,
   } = useCart()
-  // const [mt, setMt] = useState(data.data.posts)
-  // console.log(mt)
-  // console.log(merchantItems)
-  // -
   // {
   //   "id": 1,
   //   "merchantId": 1,
@@ -79,37 +77,17 @@ export default function CartIndex() {
   //   }
   // ]
 
-  //送來資料多一個checked屬性
-  merchantItems.map((v, i) => {
-    const a = v.items
-    a.map((v, i) => {
-      v.checked = false
-    })
-  })
-  //即時更新
-  useEffect(() => {
-    setNewMerchantItems(merchantItems)
-  }, [merchantItems])
   //重新定義公司
   const Mt = data.data?.posts
-  console.log(Mt)
-
-  // Mt.forEach((e) => [console.log(e)])
-  //設定至狀態(下方跑map使用)
-  const [newMerchantItems, setNewMerchantItems] = useState(merchantItems)
-  //測試區
-  // console.log(newMerchantItems)
-  // console.log(newMerchantItems.items)
-  // console.log(newMerchantItems.items.length)
+  // console.log(Mt)
 
   //checkbox內容
-  //全選
-  const [selectAll, setSelectAll] = useState(false)
   //商家全選
-  const [selectMt, setSelectMt] = useState(false)
+  const [todos, setTodos] = useState([])
   //切換
-  const toggleCheckbox = (merchantItems, id) => {
-    return merchantItems.map((merchant) => {
+  // 依傳入id進行切換completed屬性改變
+  const toggleCheckbox = (newmerchantItems, id) => {
+    const news = newmerchantItems.map((merchant) => {
       return {
         ...merchant,
         items: merchant.items.map((item) => {
@@ -121,40 +99,48 @@ export default function CartIndex() {
         }),
       }
     })
+    setNewMerchantItems(news)
+  }
+  const handleToggleCompleted = (id) => {
+    setTodos(toggleCheckbox(newMerchantItems, id))
   }
   //全選
-  const handleSelectAll = (e) => {
-    const isChecked = e.target.checked
-    setSelectAll(isChecked)
-    const updatedItems = newMerchantItems.map((merchant) => {
+  const toggleSelectedAll = (newMerchantItems, isSelectedAll) => {
+    const news = newMerchantItems.map((merchant) => {
       return {
         ...merchant,
         items: merchant.items.map((item) => {
-          return { ...item, checked: isChecked }
+          return { ...item, checked: isSelectedAll }
         }),
       }
     })
-    setNewMerchantItems(updatedItems)
+    setNewMerchantItems(news)
   }
+  const handleToggleSelectedAll = (isSelectedAll) => {
+    setTodos(toggleSelectedAll(merchantItems, isSelectedAll))
+  }
+
   //商家全選
-  const handleSelectMt = (isChecked, MtId) => {
-    setSelectMt(isChecked)
-    const updatedItems = newMerchantItems.map((merchant) => {
+  const toggleSelectedMt = (newmerchantItems, isSelectedMt, MtId) => {
+    const news = newMerchantItems.map((merchant) => {
       if (merchant.merchantId === MtId) {
         return {
           ...merchant,
           items: merchant.items.map((item) => {
-            return { ...item, checked: isChecked }
+            return { ...item, checked: isSelectedMt }
           }),
         }
       } else {
         return merchant
       }
     })
-    setNewMerchantItems(updatedItems)
-    console.log(updatedItems)
+    console.log(news)
+    setNewMerchantItems(news)
   }
-  //用id尋找商家name
+  const handleToggleSelectedMt = (isSelectedMt, MtId) => {
+    setTodos(toggleSelectedMt(merchantItems, isSelectedMt, MtId))
+  }
+  //資料庫-用id尋找商家name
   const foundMt = (MtId) => {
     const foundItem = Mt.find((item) => item.id === MtId)
     const bankName = foundItem.name
@@ -181,8 +167,11 @@ export default function CartIndex() {
                         <label className="me-4 d-flex align-items-center justify-content-end form-check-label">
                           <input
                             type="checkbox"
-                            checked={selectAll}
-                            onChange={handleSelectAll}
+                            // checked={selectAll}
+                            onChange={(e) => {
+                              // 切換所有的項目
+                              handleToggleSelectedAll(e.target.checked)
+                            }}
                             className="checkbox-large form-check-input"
                           />
                           <p className="ms-2">全選票券</p>
@@ -203,10 +192,11 @@ export default function CartIndex() {
                             <div className="d-flex align-items-center">
                               <input
                                 type="checkbox"
-                                checked={selectMt}
                                 onChange={(e) => {
-                                  const isChecked = e.target.checked
-                                  handleSelectMt(isChecked, v.merchantId)
+                                  handleToggleSelectedMt(
+                                    e.target.checked,
+                                    v.merchantId
+                                  )
                                 }}
                                 className="ms-4 checkbox-large form-check-input"
                               />
@@ -230,10 +220,9 @@ export default function CartIndex() {
                                     <input
                                       type="checkbox"
                                       checked={v.checked}
-                                      onChange={() => {
-                                        setNewMerchantItems(
-                                          toggleCheckbox(newMerchantItems, v.id)
-                                        )
+                                      onChange={(e) => {
+                                        // 這裡要作toggle completed狀態的動作
+                                        handleToggleCompleted(v.id)
                                       }}
                                       className="me-4 checkbox-large form-check-input"
                                     />
