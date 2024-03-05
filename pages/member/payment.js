@@ -1,9 +1,7 @@
-// import { useRouter } from 'next/router'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Form from 'react-bootstrap/Form'
+import { Row, Col, Form } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
 import NoBCLayout from '@/components/layout/nocb-default-layout'
+import { motion } from 'framer-motion'
 
 // only redirect to member/login
 export default function MemberPayment() {
@@ -21,7 +19,11 @@ export default function MemberPayment() {
             <Memberleft />
           </Col>
           <Col sm={9}>
-            <div className="member-bgc contain">
+            <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="member-bgc contain">
               <Form>
                 <h4>管理付款方式</h4>
                 <Row className="mt-4">
@@ -60,7 +62,7 @@ export default function MemberPayment() {
                   </Col>
                 </Row>
               </Form>
-            </div>
+            </motion.div>
           </Col>
         </Row>
       </div>

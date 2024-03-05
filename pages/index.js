@@ -6,13 +6,18 @@ import EventsTypeBar from '@/components/events-type-bar'
 import IndexLayout from '@/components/layout/nocb-default-layout'
 import { motion, useTime, useTransform } from 'framer-motion'
 
+// 載入svg
+import GoventStar from '@/public/images/index-silder/govent-star.svg'
+import BG01 from '@/public/images/index-silder/bg-01.svg'
+import BG02 from '@/public/images/index-silder/bg-02.svg'
+
 export default function Home() {
   const time = useTime()
   const rotate = useTransform(time, [0, 4000], [0, 20], { clamp: false })
 
   return (
     <>
-      <Carousel fade className='mb-5'>
+      <Carousel fade className="mb-5">
         <Carousel.Item>
           <div className={`${styles['image-container']} w-100`}>
             <motion.img
@@ -23,11 +28,17 @@ export default function Home() {
               src="/images/index-silder/img_pc_08.png"
               alt="First slide"
             />
-            <div className="w-100 h-100 silder-bg" style={{background: `#ffe4e1`}}></div>
-            <motion.div initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1  }}
-              transition={{ duration: 0.7, delay: 1 }} className="govent-star">
-              <img src="/images/index-silder/govent-star.svg" alt="" />
+            <div
+              className="w-100 h-100 silder-bg"
+              style={{ background: `#D5D8DC` }}
+            ></div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 1 }}
+              className="govent-star"
+            >
+              <GoventStar />
             </motion.div>
             <motion.div
               initial={{ y: 50, opacity: 0 }}
@@ -36,7 +47,7 @@ export default function Home() {
               style={{ rotate }}
               className="bg-rotate"
             >
-              <motion.img src="/images/index-silder/bg-02.svg" />
+              <BG01 className={`bg-01-color`} />
             </motion.div>
           </div>
           <Carousel.Caption
@@ -82,11 +93,17 @@ export default function Home() {
               src="/images/index-silder/ive.png"
               alt="First slide"
             />
-            <div className="w-100 h-100 silder-bg" style={{background: `#d8bfd8`}}></div>
-            <motion.div initial={{ opacity: 0 }}
+            <div
+              className="w-100 h-100 silder-bg"
+              style={{ background: `#d8bfd8` }}
+            ></div>
+            <motion.div
+              initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.7, delay: 1 }} className="govent-star">
-              <img src="/images/index-silder/govent-star.svg" alt="" />
+              transition={{ duration: 0.7, delay: 1 }}
+              className="govent-star"
+            >
+              <GoventStar />
             </motion.div>
             <motion.div
               initial={{ y: 50, opacity: 0 }}
@@ -95,7 +112,7 @@ export default function Home() {
               style={{ rotate }}
               className="bg-rotate"
             >
-              <img src="/images/index-silder/bg-01.svg" />
+              <BG02 className="bg-02-color"/>
             </motion.div>
           </div>
           <Carousel.Caption
@@ -173,7 +190,6 @@ export default function Home() {
               width: 100%;
               height: 100%;
               object-fit: cover;
-
             }
           }
           .govent-star {
@@ -187,6 +203,12 @@ export default function Home() {
               width: 100%;
             }
           }
+          .bg-01-color{
+            fill: #34495E;
+          }
+          .bg-02-color{
+            fill: #A569BD ;
+          }
         `}
       </style>
     </>
@@ -194,5 +216,5 @@ export default function Home() {
 }
 
 Home.getLayout = function (page) {
-  return <IndexLayout>{page}</IndexLayout>
+  return <IndexLayout title="GOVENT - 你的購票好夥伴">{page}</IndexLayout>
 }

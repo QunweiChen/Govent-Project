@@ -1,9 +1,6 @@
 // import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react';
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Form from 'react-bootstrap/Form'
-import { Button } from 'bootstrap';
+import React, { useEffect, useState } from 'react'
+import { Row, Col, Form } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
 import NoBCLayout from '@/components/layout/nocb-default-layout'
 import { motion } from 'framer-motion'
@@ -15,15 +12,15 @@ export default function MemberSetting() {
   //   router.push('/member/login')
   // }
 
-  const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState([])
   const [formData, setFormData] = useState({
     id: '',
     name: '',
     gender: '',
     birthday: '',
     phone: '',
-    username: ''
-  });
+    username: '',
+  })
 
   //---------------------------------------------------------------------------------
   // 處理後端api
@@ -31,27 +28,32 @@ export default function MemberSetting() {
 
   useEffect(() => {
     fetch('http://localhost:3005/api/member')
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         // 檢查是否有資料並設定到 state 中
-        if (data && data.data && data.data.posts && data.data.posts.length > 0) {
-          setUserData(data.data.posts[0]);
+        if (
+          data &&
+          data.data &&
+          data.data.posts &&
+          data.data.posts.length > 0
+        ) {
+          setUserData(data.data.posts[0])
         } else {
-          console.warn('No data received from the server.');
+          console.warn('No data received from the server.')
         }
       })
-      .catch(error => console.error('Error fetching data:', error));
-  }, []);
+      .catch((error) => console.error('Error fetching data:', error))
+  }, [])
 
   useEffect(() => {
-    setFormData(prevFormData => ({
+    setFormData((prevFormData) => ({
       ...prevFormData,
       id: userData.id,
       name: userData.name,
       gender: userData.gender,
       birthday: userData.birthday,
       phone: userData.phone,
-      username: userData.username
+      username: userData.username,
     }))
   }, [userData])
 
@@ -63,11 +65,11 @@ export default function MemberSetting() {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    });
-  };
+    })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     // 在這裡處理表單提交的邏輯
     try {
       const response = await fetch('http://localhost:3005/api/member/update', {
@@ -76,34 +78,36 @@ export default function MemberSetting() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
-      });
+      })
 
       if (response.ok) {
-        console.log('User updated successfully!');
+        console.log('User updated successfully!')
       } else {
-        console.error('Failed to update user.');
+        console.error('Failed to update user.')
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error:', error)
     }
-  };
-
-  const localstorge = () => {
-    const userObject = {
-      username: 'john_doe',
-      email: 'john@example.com',
-    };
-
-    // 將對象轉換為 JSON 字符串並存儲在 localStorage 中
-    localStorage.setItem('user', JSON.stringify(userObject));
   }
+
+  const setLocalStorage = () => {
+    const userObject = {
+      name: '我是localname',
+      level: '我是local會員',
+      email: '我是local email',
+      avatar: 'https://www.shutterstock.com/image-vector/cute-cartoon-rubber-duck-vector-600nw-2276837591.jpg'
+    }
+
+    // 将对象转换为 JSON 字符串并存储在 localStorage 中
+    localStorage.setItem('user', JSON.stringify(userObject))
+}
 
   return (
     <>
       <div className="container width-1200">
         <Row data-bs-theme="dark">
           <Col sm={3}>
-            <Memberleft name={userData.name} level="這個還要改" avatar={userData.avatar} email={userData.username} />
+            <Memberleft />
           </Col>
           <Col sm={9}>
             <motion.div
@@ -116,15 +120,12 @@ export default function MemberSetting() {
                 <h4>帳戶設定</h4>
                 <Row className="mt-4">
                   <Col sm={3}>
-                    <Form.Group
-                      className="mb-3"
-                      controlId="formName"
-                    >
+                    <Form.Group className="mb-3" controlId="formName">
                       <Form.Label>姓名</Form.Label>
                       <Form.Control
                         className="dark-input"
                         type="text"
-                        name='name'
+                        name="name"
                         defaultValue={formData.name}
                         onChange={handleChange}
                       />
@@ -138,7 +139,7 @@ export default function MemberSetting() {
                       <Form.Label>性別</Form.Label>
                       <Form.Select
                         className="dark-input"
-                        name='gender'
+                        name="gender"
                         onChange={handleChange}
                         defaultValue={formData.gender}
                       >
@@ -156,7 +157,7 @@ export default function MemberSetting() {
                       <Form.Control
                         className="dark-input"
                         type="date"
-                        name='birthday'
+                        name="birthday"
                         onChange={handleChange}
                         defaultValue={formData.birthday}
                       />
@@ -171,7 +172,7 @@ export default function MemberSetting() {
                       <Form.Control
                         className="dark-input"
                         type="text"
-                        name='phone'
+                        name="phone"
                         onChange={handleChange}
                         defaultValue={formData.phone}
                       />
@@ -186,7 +187,7 @@ export default function MemberSetting() {
                       <Form.Control
                         className="dark-input"
                         type="email"
-                        name='username'
+                        name="username"
                         onChange={handleChange}
                         defaultValue={formData.username}
                       />
@@ -194,10 +195,14 @@ export default function MemberSetting() {
                   </Col>
                 </Row>
                 <div className="d-flex justify-content-end mt-3">
-                  <button className="btn btn-primary" type='sumbit'>儲存</button>
+                  <button className="btn btn-primary" type="sumbit">
+                    儲存
+                  </button>
                 </div>
               </Form>
-              <button className="btn btn-primary" onClick={localstorge}>拿localstorge</button>
+              <button className="btn btn-primary" onClick={setLocalStorage}>
+                拿localstorge
+              </button>
             </motion.div>
           </Col>
         </Row>
