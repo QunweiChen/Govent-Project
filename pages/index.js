@@ -23,7 +23,7 @@ export default function Home() {
             <motion.img
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.4 }}
+              transition={{ duration: 1, delay: 0.1 }}
               className="h-100"
               src="/images/index-silder/img_pc_08.png"
               alt="First slide"
@@ -35,7 +35,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.7, delay: 1 }}
+              transition={{ duration: 0.7, delay: 0.8 }}
               className="govent-star"
             >
               <GoventStar />
@@ -43,7 +43,7 @@ export default function Home() {
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.7 }}
+              transition={{ duration: 0.7, delay: 1 }}
               style={{ rotate }}
               className="bg-rotate"
             >
@@ -88,7 +88,7 @@ export default function Home() {
             <motion.img
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.4 }}
+              transition={{ duration: 1, delay: 0.1 }}
               className="h-100"
               src="/images/index-silder/ive.png"
               alt="First slide"
@@ -100,7 +100,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.7, delay: 1 }}
+              transition={{ duration: 0.7, delay: 0.8 }}
               className="govent-star"
             >
               <GoventStar />
@@ -108,11 +108,11 @@ export default function Home() {
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.7 }}
+              transition={{ duration: 0.7, delay: 1 }}
               style={{ rotate }}
               className="bg-rotate"
             >
-              <BG02 className="bg-02-color"/>
+              <BG02 className="bg-02-color" />
             </motion.div>
           </div>
           <Carousel.Caption
@@ -157,13 +157,9 @@ export default function Home() {
         <EventsBar />
       </motion.div>
 
-      <motion.div
-        initial={{ y: 30, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.7, delay: 0.3 }}
-      >
+      <div>
         <EventsTypeBar />
-      </motion.div>
+      </div>
 
       <style global jsx>
         {`
@@ -179,18 +175,12 @@ export default function Home() {
             z-index: -4;
           }
           .bg-rotate {
-            width: 1500px;
-            height: 1500px;
             position: absolute;
-            z-index: -3;
-            top: 10%;
-            left: 11%;
-            transform: translate(-50%, -50%);
-            img {
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
-            }
+            width: 1500px;
+            z-index: -4;
+            top: 12%;
+            left: 50%;
+            margin-left: -750px;
           }
           .govent-star {
             width: 400px;
@@ -203,11 +193,11 @@ export default function Home() {
               width: 100%;
             }
           }
-          .bg-01-color{
-            fill: #34495E;
+          .bg-01-color {
+            fill: #34495e;
           }
-          .bg-02-color{
-            fill: #A569BD ;
+          .bg-02-color {
+            fill: #a569bd;
           }
         `}
       </style>

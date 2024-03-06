@@ -1,22 +1,37 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
-const CustomEventCard = ({ backgroundImage, title, secondTitle }) => {
+const CustomEventCard = ({ backgroundImage, title, secondTitle, delay }) => {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <div
+    <motion.div
       className={`custom-events-type d-flex ${isHovered ? 'flex-2' : ''}`}
       style={{ backgroundImage: `url('${backgroundImage}')` }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: delay }}
     >
-      <i className={`bi bi-arrow-up-right-circle-fill text-white icon h4 ${isHovered ? '' : 'hide'}`}></i>
+      <i
+        className={`bi bi-arrow-up-right-circle-fill text-white icon h4 ${
+          isHovered ? '' : 'hide'
+        }`}
+      ></i>
       <Link
         href="/"
         className={`text-white d-flex flex-column p-4 justify-content-end`}
       >
-        <h5 className="mb-0">{title}</h5>
+        <motion.h5
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 1 }}
+          className="mb-0"
+        >
+          {title}
+        </motion.h5>
         <p className={`second-title ${isHovered ? '' : 'hide'}`}>
           {secondTitle}
         </p>
@@ -29,7 +44,7 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle }) => {
             transition: 300ms;
             flex: 1;
             margin-inline: 7px;
-            height: 250px;
+            height: 200px;
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover;
@@ -39,18 +54,18 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle }) => {
               transform: translateY(20px);
               text-shadow: 2px 2px 4px #333;
             }
-            a{
+            a {
               width: 100%;
               z-index: 1;
             }
-            .icon{
+            .icon {
               position: absolute;
               right: 20px;
               top: 15px;
               opacity: 1;
               transition: 300ms;
             }
-            .icon.hide{
+            .icon.hide {
               opacity: 0;
             }
           }
@@ -80,12 +95,12 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle }) => {
             transition: 400ms;
             z-index: 0;
           }
-          .bg-linear.active{
+          .bg-linear.active {
             opacity: 1;
           }
         `}
       </style>
-    </div>
+    </motion.div>
   )
 }
 

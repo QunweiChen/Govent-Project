@@ -1,11 +1,10 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import OrganizerSidebar from '@/components/organizer/organizer-sidebar'
 import OrganizerLayout from '@/components/layout/organizer-layout'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Form from 'react-bootstrap/Form'
+import { Row, Col, Form } from 'react-bootstrap'
 import Quill from '@/components/organizer/react-quill'
 import OrganizerTopBar from '@/components/organizer/organizer-top-bar'
+
 
 export default function OrganizerForm() {
   return (

@@ -20,11 +20,11 @@ export default function LevelType() {
     };
 
     useEffect(() => {
-        const interval1 = setInterval(() => {
+        const interval = setInterval(() => {
             incrementNumber(progressNumber, setProgressNumber, incrementSpeed, maxProgressNumber);
         }, 10);
 
-        return () => clearInterval(interval1);
+        return () => clearInterval(interval);
     }, [progressNumber]);
 
     return (
