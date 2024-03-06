@@ -1,6 +1,5 @@
 import { result } from 'lodash'
 import React, { createContext, useState, useContext, useEffect } from 'react'
-import { init } from '@/hooks/use-cart/cart-reducer-state'
 import useLocalStorage from '@/hooks/use-localstorage'
 
 //建立context
@@ -62,27 +61,30 @@ export function CartProvider({
   const [cartItems, setCartItems] = useState(items)
   // 加入到各分類的項目
   const [merchantItems, setMerchantItems] = useState(MtItems)
-  const [cartState, setCartState] = useState(init(items))
-
-  // 初始化 setValue(localStoage), setValue用於存入localStorage中
-  const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
-  const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
-
+  console.log(merchantItems)
   //送來資料多一個checked屬性
-  merchantItems.map((v, i) => {
-    const a = v.items
-    a.map((v, i) => {
-      v.checked = false
-    })
-  })
+
+  // const updatedMerchantItems = merchantItems.map((merchant) => {
+  //   const updatedItems = merchant.items.map((item) => {
+  //     return { ...item, checked: false }
+  //   })
+  //   return { ...merchant, items: updatedItems }
+  // })
+  // setMerchantItems(updatedMerchantItems)
+
   //即時更新
   useEffect(() => {
-    setNewMerchantItems(merchantItems)
+    const news = merchantItems.map((v, i) => {
+      const a = v.items
+      a.map((v, i) => {
+        v.checked = false
+      })
+    })
+    setMerchantItems(news)
+  }, [])
+  useEffect(() => {
+    setMerchantItems(merchantItems)
   }, [merchantItems])
-
-  //設定至狀態(下方跑map使用)
-  const [newMerchantItems, setNewMerchantItems] = useState(merchantItems)
-  // console.log(newMerchantItems)
   // 當 cartItems 更動時 -> 更動 localStorage 中的值 -> 更動 cartState
   useEffect(() => {
     // 使用字串比較
@@ -100,7 +102,81 @@ export function CartProvider({
     // eslint-disable-next-line
 }, [merchantItems])
 
+  // 初始化 setValue(localStoage), setValue用於存入localStorage中
+  const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
+  const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
 
+  //重新定義公司
+  const Mt = data.data?.posts
+  // console.log(Mt)
+
+  //checkbox內容
+  //商家全選
+  //切換
+  // 依傳入id進行切換completed屬性改變
+  const toggleCheckbox = (newmerchantItems, id) => {
+    const news = newmerchantItems.map((merchant) => {
+      return {
+        ...merchant,
+        items: merchant.items.map((item) => {
+          if (item.id === id) {
+            return { ...item, checked: !item.checked }
+          } else {
+            return item
+          }
+        }),
+      }
+    })
+    // console.log(news)
+    setMerchantItems(news)
+  }
+  const handleToggleCompleted = (id) => {
+    toggleCheckbox(merchantItems, id)
+  }
+  //全選
+  const toggleSelectedAll = (MerchantItems, isSelectedAll) => {
+    const news = MerchantItems.map((merchant) => {
+      return {
+        ...merchant,
+        items: merchant.items.map((item) => {
+          return { ...item, checked: isSelectedAll }
+        }),
+      }
+    })
+    // console.log(news)
+    setMerchantItems(news)
+  }
+  const handleToggleSelectedAll = (isSelectedAll) => {
+    toggleSelectedAll(merchantItems, isSelectedAll)
+  }
+
+  //商家全選
+  const toggleSelectedMt = (merchantItems, isSelectedMt, MtId) => {
+    const news = merchantItems.map((merchant) => {
+      if (merchant.merchantId === MtId) {
+        return {
+          ...merchant,
+          items: merchant.items.map((item) => {
+            return { ...item, checked: isSelectedMt }
+          }),
+        }
+      } else {
+        return merchant
+      }
+    })
+    console.log(news)
+    setMerchantItems(news)
+  }
+  const handleToggleSelectedMt = (isSelectedMt, MtId) => {
+    toggleSelectedMt(merchantItems, isSelectedMt, MtId)
+  }
+  //資料庫-用id尋找商家name
+  const foundMt = (MtId) => {
+    const foundItem = Mt.find((item) => item.id === MtId)
+    const bankName = foundItem.name
+    // console.log(bankName)
+    return bankName
+  }
 
   // 添加分類
   const MerchantItem = (item, quantityToAdd) => {
@@ -218,11 +294,14 @@ export function CartProvider({
         addItem,
         MerchantItem,
         merchantItems,
-        newMerchantItems,
-        setNewMerchantItems,
+        setMerchantItems,
         removeItem,
         calcTotalItems,
         calcTotalPrice,
+        handleToggleCompleted,
+        handleToggleSelectedAll,
+        handleToggleSelectedMt,
+        foundMt,
       }}
     >
       {children}

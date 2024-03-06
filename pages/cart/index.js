@@ -14,14 +14,18 @@ export default function CartIndex() {
   const {
     data,
     cartItems,
+    addItem,
+    MerchantItem,
     merchantItems,
-    newMerchantItems,
-    setNewMerchantItems,
+    setMerchantItems,
     removeItem,
     calcTotalItems,
     calcTotalPrice,
+    handleToggleCompleted,
+    handleToggleSelectedAll,
+    handleToggleSelectedMt,
+    foundMt,
   } = useCart()
-  console.log(newMerchantItems)
   // {
   //   "id": 1,
   //   "merchantId": 1,
@@ -78,76 +82,6 @@ export default function CartIndex() {
   //   }
   // ]
   console.log(data)
-  //重新定義公司
-  const Mt = data.data?.posts
-  // console.log(Mt)
-
-  //checkbox內容
-  //商家全選
-  const [todos, setTodos] = useState([])
-  //切換
-  // 依傳入id進行切換completed屬性改變
-  const toggleCheckbox = (newmerchantItems, id) => {
-    const news = newmerchantItems.map((merchant) => {
-      return {
-        ...merchant,
-        items: merchant.items.map((item) => {
-          if (item.id === id) {
-            return { ...item, checked: !item.checked }
-          } else {
-            return item
-          }
-        }),
-      }
-    })
-    setNewMerchantItems(news)
-  }
-  const handleToggleCompleted = (id) => {
-    setTodos(toggleCheckbox(newMerchantItems, id))
-  }
-  //全選
-  const toggleSelectedAll = (newMerchantItems, isSelectedAll) => {
-    const news = newMerchantItems.map((merchant) => {
-      return {
-        ...merchant,
-        items: merchant.items.map((item) => {
-          return { ...item, checked: isSelectedAll }
-        }),
-      }
-    })
-    setNewMerchantItems(news)
-  }
-  const handleToggleSelectedAll = (isSelectedAll) => {
-    setTodos(toggleSelectedAll(merchantItems, isSelectedAll))
-  }
-
-  //商家全選
-  const toggleSelectedMt = (newmerchantItems, isSelectedMt, MtId) => {
-    const news = newMerchantItems.map((merchant) => {
-      if (merchant.merchantId === MtId) {
-        return {
-          ...merchant,
-          items: merchant.items.map((item) => {
-            return { ...item, checked: isSelectedMt }
-          }),
-        }
-      } else {
-        return merchant
-      }
-    })
-    console.log(news)
-    setNewMerchantItems(news)
-  }
-  const handleToggleSelectedMt = (isSelectedMt, MtId) => {
-    setTodos(toggleSelectedMt(merchantItems, isSelectedMt, MtId))
-  }
-  //資料庫-用id尋找商家name
-  const foundMt = (MtId) => {
-    const foundItem = Mt.find((item) => item.id === MtId)
-    const bankName = foundItem.name
-    // console.log(bankName)
-    return bankName
-  }
 
   return (
     <>
@@ -163,7 +97,7 @@ export default function CartIndex() {
                         <h4 className="ms-4 text-white">購物車</h4>
                       </Link>
                     </div>
-                    {newMerchantItems && newMerchantItems.length > 0 ? (
+                    {merchantItems && merchantItems.length > 0 ? (
                       <div className="col-6 text-white d-flex align-items-center justify-content-end">
                         <label className="me-4 d-flex align-items-center justify-content-end form-check-label">
                           <input
@@ -185,7 +119,7 @@ export default function CartIndex() {
                 </div>
                 <div className="rwd-text">
                   {/* 到時候return資料用這一層 */} {/* 第一 */}
-                  {newMerchantItems.map((v, i) => {
+                  {merchantItems.map((v, i) => {
                     return (
                       <div key={i}>
                         <div className="border-0 cart-card border-bottom border-top border-normal-gray">
@@ -282,7 +216,7 @@ export default function CartIndex() {
                                         className="btn d-flex justify-content-center align-items-center"
                                         onClick={() => {
                                           removeItem(
-                                            newMerchantItems,
+                                            merchantItems,
                                             v.id,
                                             v.merchantId
                                           )
@@ -305,7 +239,7 @@ export default function CartIndex() {
                   })}
                 </div>
                 {/* 沒購物車內容 判斷*/}
-                {newMerchantItems && newMerchantItems.length > 0 ? (
+                {merchantItems && merchantItems.length > 0 ? (
                   <div className="border-0 cart-card d-none d-sm-block border-top border-normal-gray">
                     <div className="d-flex justify-content-end align-items-center m-4">
                       <p className="text-primary-light ms-3">
@@ -348,7 +282,7 @@ export default function CartIndex() {
       <EventsRecommend />
       {/* <NavbarBottomRwd /> */}
       <div className="border-0 cart-card d-block d-sm-none border-top border-normal-gray bg-normal-gray-deep fixed-bottom">
-        {newMerchantItems && newMerchantItems.length > 0 ? (
+        {merchantItems && merchantItems.length > 0 ? (
           <div className="d-flex justify-content-between align-items-center m-2">
             <p className="text-primary-light ms-3">
               合計{calcTotalItems()}件商品
