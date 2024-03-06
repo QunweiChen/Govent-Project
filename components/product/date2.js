@@ -68,8 +68,7 @@ export default function Calendar() {
             </button>
           </div>
         </div>
-        {/* <h1>日曆</h1>
-      <h2 id="yearAndMonth">{`${nowY}/${nowM}/${myDate ? myDate : ''}`}</h2> */}
+        
         <table border="1">
           <thead id="title" >
             <tr>

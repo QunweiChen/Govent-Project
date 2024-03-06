@@ -1,13 +1,48 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal, Button } from 'react-bootstrap'
-import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import EventsRecommend from '@/components/events-recommend'
 import Calendar from '@/components/product/date2'
+import Link from 'next/link'
+import eventsData from '@/data/event.json'
 
 export default function Detail() {
+  // const [events, setEvents] = useState(eventsData)
+  const [qty, setQty] = useState(0)
+  const priceUnit = 3200
+  const totalAmount = qty * priceUnit
+
+  // console.log(eventsData)
+
+  const handleDecrease = () => {
+    if (qty > 0) {
+      setQty(qty - 1)
+    }
+  }
+  const handleIncrease = () => {
+    setQty(qty + 1)
+  }
+
+  const getDatas = async(params)=>{
+    const searchParams = new URLSearchParams(params)
+    try{
+      const res = await fetch(`http://localhost:3005/api/info?${searchParams}`);
+      return await res.json();
+    }catch(error){
+      console.log(error)
+    }
+  }
+
   return (
     <>
+    {/* {events.map((event,i) =>{return(<li key={event.id}>
+            <p>{event.event_name}</p>
+            <p>地點: {event.place}</p>
+            <p>票價: {event.price}</p>
+            <p>時間: {event.start_date}</p>
+            <p>內容: {event.content}</p>
+
+          </li>)})} */}
       <section>
         <div className=" d-flex p-4 d-none d-xxl-inline-flex">
           <p>
@@ -20,23 +55,32 @@ export default function Detail() {
             YOASOBI 演唱會 <i className="bi bi-chevron-right"></i>
           </p>
         </div>
+
         <div>
           <div className="position-relative">
             <div className="d-flex justify-content-between d-block d-xxl-none">
-              <button className="nav-btn opacity-50 position-absolute top-0 start-0">
-                <i className="bi bi-arrow-left text-normal-gray-light"></i>
-              </button>
+              <Link href="/product/list">
+                <button className="nav-btn opacity-50 position-absolute top-0 start-0">
+                  <i className="bi bi-arrow-left text-normal-gray-light"></i>
+                </button>
+              </Link>
+
               <div className="position-absolute top-0 end-0">
-                <button className="nav-btn opacity-50">
-                  <i className="bi bi-heart text-normal-gray-light"></i>
-                </button>
-                <button className="nav-btn opacity-50">
-                  <i className="bi bi-cart3 text-normal-gray-light"></i>
-                </button>
+                <Link href="">
+                  <button className="nav-btn opacity-50">
+                    <i className="bi bi-heart text-normal-gray-light"></i>
+                  </button>
+                </Link>
+                <Link href="/cart/">
+                  <button className="nav-btn opacity-50">
+                    <i className="bi bi-cart3 text-normal-gray-light"></i>
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
         </div>
+
         <div>
           <img
             src="/images/product/detail/slideshow.jpg"
@@ -141,26 +185,34 @@ export default function Detail() {
                   </button>
                   <h5 className="my-5">數量</h5>
                   <div className="d-flex align-items-center">
-                    <i type='button' className="bi bi-dash-circle me-2 icon" />
-                    <h5 className="px-3 py-2 bg-dark rounded">1</h5>
-                    <i type='button' className="bi bi-plus-circle ms-2 icon" />
+                    <i
+                      type="button"
+                      className="bi bi-dash-circle me-2 icon"
+                      onClick={handleDecrease}
+                    />
+                    <h5 className="px-3 py-2 bg-dark rounded">{qty}</h5>
+                    <i
+                      type="button"
+                      className="bi bi-plus-circle ms-2 icon"
+                      onClick={handleIncrease}
+                    />
                   </div>
                   <div className="d-flex my-5">
                     <h5 className="">總金額</h5>
-                    <h4 className="dollar">NT$ 3,200</h4>
+                    <h4 className="dollar">NT$ {totalAmount}</h4>
                   </div>
                   <div className="d-flex justify-content-end mb-3">
-                    <button className="store fs-5 me-2 p-2 btn btn-primary-deep">
-                      加入購物車
-                    </button>
-                    <button className="store fs-5 p-2 btn btn-primary-deep">
-                      結帳
-                    </button>
+                    <Link href={`/cart?totalAmount=${totalAmount}`}>
+                      <button className="store fs-5 me-2 p-2 btn btn-primary-deep">
+                        加入購物車
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>
             </div>
           </section>
+
           <section className="row">
             <div className="left col-lg-8 col-sm-12">
               <div className="d-flex align-items-center mt-5">
@@ -275,11 +327,33 @@ export default function Detail() {
                   <h6>1,273則評價</h6>
                 </div>
               </div>
-             
-              <button className="p-2 border-white btn btn-secondary text-white">
-                推薦
-                <i className="bi bi-caret-down-fill" />
-              </button>
+              <div className="dropdown">
+                <button
+                  className="btn btn-secondary p-2 border-white text-white dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  推薦
+                </button>
+                <ul className="dropdown-menu bg-normal-gray">
+                  <li>
+                    <a className="dropdown-item text-secondary-03" href="#">
+                      最新評分
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item text-secondary-03" href="#">
+                      最高評分
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item text-secondary-03" href="#">
+                      最低評分
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
             <hr className="d-none d-xxl-block" />
 
@@ -608,9 +682,17 @@ export default function Detail() {
                 <div className="d-flex align-items-center justify-content-between mt-3 border border-1 p-2 rounded-4">
                   <h5 className="ms-2 text-secondary-03">數量</h5>
                   <div className="d-flex align-items-center">
-                    <i className="bi bi-dash-circle me-2 icon" />
-                    <h5 className="px-3">1</h5>
-                    <i className="bi bi-plus-circle ms-2 icon me-2" />
+                    <i
+                      type="button"
+                      className="bi bi-dash-circle me-2 icon"
+                      onClick={handleDecrease}
+                    />
+                    <h5 className="px-3">{qty}</h5>
+                    <i
+                      type="button"
+                      className="bi bi-plus-circle ms-2 icon me-2"
+                      onClick={handleIncrease}
+                    />
                   </div>
                 </div>
               </div>
@@ -637,18 +719,9 @@ export default function Detail() {
             background-color: #151515;
             color: #fff;
           }
-           {
-            /* 
-          main > .container {
-            padding: 60px 15px 0;
-          } */
-          }
 
           .object-fit-cover {
             width: 100%;
-             {
-              /* height: 500px; */
-            }
             object-fit: cover;
           }
 
