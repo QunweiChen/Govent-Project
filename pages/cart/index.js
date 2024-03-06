@@ -13,7 +13,7 @@ export default function CartIndex() {
   //引入勾子
   const {
     data,
-    items,
+    cartItems,
     merchantItems,
     newMerchantItems,
     setNewMerchantItems,
@@ -21,6 +21,7 @@ export default function CartIndex() {
     calcTotalItems,
     calcTotalPrice,
   } = useCart()
+  console.log(newMerchantItems)
   // {
   //   "id": 1,
   //   "merchantId": 1,
@@ -76,7 +77,7 @@ export default function CartIndex() {
   //     ]
   //   }
   // ]
-
+  console.log(data)
   //重新定義公司
   const Mt = data.data?.posts
   // console.log(Mt)
@@ -144,7 +145,7 @@ export default function CartIndex() {
   const foundMt = (MtId) => {
     const foundItem = Mt.find((item) => item.id === MtId)
     const bankName = foundItem.name
-    console.log(bankName)
+    // console.log(bankName)
     return bankName
   }
 
@@ -305,7 +306,7 @@ export default function CartIndex() {
                 </div>
                 {/* 沒購物車內容 判斷*/}
                 {newMerchantItems && newMerchantItems.length > 0 ? (
-                  <div className="border-0 cart-card d-none d-xxl-block border-top border-normal-gray">
+                  <div className="border-0 cart-card d-none d-sm-block border-top border-normal-gray">
                     <div className="d-flex justify-content-end align-items-center m-4">
                       <p className="text-primary-light ms-3">
                         合計{calcTotalItems()}件商品

@@ -1,23 +1,21 @@
 import { result } from 'lodash'
 import React, { createContext, useState, useContext, useEffect } from 'react'
-// import {
-//   init,
-//   initState,
-//   addOne,
-//   findOneById,
-//   updateOne,
-//   removeOne,
-//   incrementOne,
-//   decrementOne,
-//   generateCartState,
-// } from '@/hooks/use-cart/cart-reducer-state'
+import { init } from '@/hooks/use-cart/cart-reducer-state'
+import useLocalStorage from '@/hooks/use-localstorage'
+
 //建立context
 const CartContext = createContext()
 
-export function CartProvider({ children }) {
+export function CartProvider({
+  children,
+  initialCartItems = [], //初始化購物車的加入項目
+  initialMtItems = [], //初始化購物車的加入項目
+  localStorageKey1 = 'cartItems', //初始化localStorage的鍵名
+  localStorageKey2 = 'MtItems', //初始化localStorage的鍵名
+}) {
   //連接資料庫
   const [data, setData] = useState([])
-
+  console.log(data)
   useEffect(() => {
     const getCartMt = async () => {
       fetch('http://localhost:3005/api/cart')
@@ -27,13 +25,49 @@ export function CartProvider({ children }) {
 
     getCartMt()
   }, [])
-  // console.log(data.data.posts)
+
+  // localStorage中儲存 items、MtItems。如果localStorage有此鍵中的值，則套入使用作為初始items、MtItems。
+  let items = initialCartItems
+  if (!items.length) {
+    try {
+      // 修正nextjs中window is undefined的問題
+      if (typeof window !== 'undefined') {
+        const item = window.localStorage.getItem(localStorageKey1)
+        // 剖析存儲的json，如果沒有則返回初始值
+        items = item ? JSON.parse(item) : []
+      }
+    } catch (error) {
+      items = []
+      console.log(error)
+    }
+  }
+
+  let MtItems = initialMtItems
+  if (!MtItems.length) {
+    try {
+      // 修正nextjs中window is undefined的問題
+      if (typeof window !== 'undefined') {
+        const item = window.localStorage.getItem(localStorageKey2)
+        // 剖析存儲的json，如果沒有則返回初始值
+        MtItems = item ? JSON.parse(item) : []
+      }
+    } catch (error) {
+      MtItems = []
+      console.log(error)
+    }
+  }
+
+  // 初始化 cartItems, cartState)($)
   // 加入到購物車中的項目
-  const [items, setItems] = useState([])
-  // console.log(items)
+  const [cartItems, setCartItems] = useState(items)
   // 加入到各分類的項目
-  const [merchantItems, setMerchantItems] = useState([])
-  // console.log(merchantItems)
+  const [merchantItems, setMerchantItems] = useState(MtItems)
+  const [cartState, setCartState] = useState(init(items))
+
+  // 初始化 setValue(localStoage), setValue用於存入localStorage中
+  const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
+  const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
+
   //送來資料多一個checked屬性
   merchantItems.map((v, i) => {
     const a = v.items
@@ -48,6 +82,26 @@ export function CartProvider({ children }) {
 
   //設定至狀態(下方跑map使用)
   const [newMerchantItems, setNewMerchantItems] = useState(merchantItems)
+  // console.log(newMerchantItems)
+  // 當 cartItems 更動時 -> 更動 localStorage 中的值 -> 更動 cartState
+  useEffect(() => {
+    // 使用字串比較
+    if (JSON.stringify(cartItems) !== storedValue) {
+      setValue(cartItems)
+    }
+    // eslint-disable-next-line
+}, [cartItems])
+
+  useEffect(() => {
+    // 使用字串比較
+    if (JSON.stringify(merchantItems) !== storedValueMt) {
+      setValueMt(merchantItems)
+    }
+    // eslint-disable-next-line
+}, [merchantItems])
+
+
+
   // 添加分類
   const MerchantItem = (item, quantityToAdd) => {
     const merchantId = item.merchantId
@@ -92,14 +146,14 @@ export function CartProvider({ children }) {
   //添加
   const addItem = (item) => {
     // console.log(item)
-    const foundIndex = items.findIndex((v, i) => {
+    const foundIndex = cartItems.findIndex((v, i) => {
       return v.id === item.id
     })
     if (foundIndex > -1) {
-      increment(items, item.id)
+      increment(cartItems, item.id)
     } else {
-      const newItems = [...items, item]
-      setItems(newItems)
+      const newItems = [...cartItems, item]
+      setCartItems(newItems)
     }
   }
   //遞增
@@ -111,7 +165,7 @@ export function CartProvider({ children }) {
       if (v.id === id) return { ...v, qty: v.qty + getItemById(items, id).qty }
       else return v
     })
-    setItems(newItems)
+    setCartItems(newItems)
   }
   //移除(分類用)
   const removeItem = (items, id, merchantId) => {
@@ -137,13 +191,10 @@ export function CartProvider({ children }) {
     let total = 0
 
     for (let i = 0; i < merchantItems.length; i++) {
-      console.log(merchantItems.length)
-      console.log(merchantItems)
       merchantItems[i].items.forEach((event) => {
         total += event.qty
       })
     }
-    console.log(total)
     return total
   }
 
@@ -152,13 +203,10 @@ export function CartProvider({ children }) {
     let total = 0
 
     for (let i = 0; i < merchantItems.length; i++) {
-      console.log(merchantItems.length)
-      console.log(merchantItems)
       merchantItems[i].items.forEach((event) => {
         total += event.qty * event.price
       })
     }
-    console.log(total)
     return total
   }
   //最外(上)元件階層包裹提供者元件，讓⽗⺟元件可以提供它
@@ -166,7 +214,7 @@ export function CartProvider({ children }) {
     <CartContext.Provider
       value={{
         data,
-        items,
+        cartItems,
         addItem,
         MerchantItem,
         merchantItems,
