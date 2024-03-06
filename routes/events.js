@@ -7,7 +7,7 @@ import { QueryTypes } from 'sequelize'
 
 router.get('/', async function (req, res) {
   // findAll是回傳所有資料
-  const posts = await sequelize.query('SELECT * FROM `organizer`', {
+  const posts = await sequelize.query('SELECT * FROM `event`', {
     type: QueryTypes.SELECT,
   })
 
