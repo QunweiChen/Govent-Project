@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/role-supports-aria-props */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useRef } from 'react'
@@ -5,9 +6,7 @@ import Form from 'react-bootstrap/Form'
 import CheckboxInput from '../checkbox-input'
 import Image from 'react-bootstrap/Image'
 import GoventToast from '@/components/toast'
-import PaymentButton from '@/components/payment/payment-button'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { MdDateRange } from 'react-icons/md'
 
 export default function PaymentForm() {
   //使用react-hook-form套件檢查form表單
@@ -15,10 +14,29 @@ export default function PaymentForm() {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm({
-    criteriaMode: 'all',
-  })
-  const onSubmit = (data) => console.log(data)
+  } = useForm()
+
+  const postSubmit = (data) => {
+    // console.log(data)
+    fetch('http://localhost:3005/api/payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then((response) => {
+        console.log(response)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  // include type check against field path with the name you have supplied.
 
   //確認是否有勾選與會員資料相同
   const numberValue = useRef(null)
@@ -27,24 +45,25 @@ export default function PaymentForm() {
   }
 
   //儲存傳送給後端資料
-  const [data, setDate] = useState({
-    userName: '',
-    userGender: '',
-    birthday: '',
-    phoneNumber: '',
-    email: '',
-    point: 0,
-    coupon: 0,
-    payType: false,
-  })
+  // const [data, setDate] = useState({
+  //   userName: '',
+  //   userGender: '',
+  //   birthday: '',
+  //   phoneNumber: '',
+  //   email: '',
+  //   point: 0,
+  //   coupon: 0,
+  //   payType: false,
+  // })
   //監聽使用者輸入表單欄位
-  function formChange(e) {
-    let setConnectionData = { ...data, [e.target.name]: e.target.value }
-    console.log(setConnectionData)
-    setDate(setConnectionData)
-  }
+  // function formChange(e) {
+  //   let setConnectionData = { ...data, [e.target.name]: e.target.value }
+  //   console.log(setConnectionData)
+  //   setDate(setConnectionData)
+  // }
   //監聽點數及優惠券是否被勾選
   const pointInputRef = useRef(null)
+
   const couponInputRef = useRef(null)
   //使用useState更改disabled的狀態，false為增加屬性true為關閉屬性
   const [pointDisabledValue, setPointDisabledValue] = useState(false)
@@ -57,11 +76,12 @@ export default function PaymentForm() {
   function handleCouponCheckboxChange(checkedValue) {
     setCouponDisabledValue(checkedValue)
   }
+
   //使用Effect監聽值，當input打勾時執行add或remove，disabled屬性
   useEffect(() => {
-    pointInputRef.current.removeAttribute('disabled', true)
+    pointInputRef.current?.removeAttribute('disabled', true)
     if (pointDisabledValue === false) {
-      pointInputRef.current.setAttribute('disabled', true)
+      pointInputRef.current?.setAttribute('disabled', true)
     }
     couponInputRef.current.removeAttribute('disabled', true)
     if (couponDisabledValue === false) {
@@ -105,7 +125,7 @@ export default function PaymentForm() {
 
   return (
     <>
-      <Form onSubmit={handleSubmit(onSubmit)} method="post">
+      <Form onSubmit={handleSubmit(postSubmit)} method="post">
         {/* 聯絡資料 */}
         <div className="connection-data mb-3 ">
           <div>
@@ -125,9 +145,9 @@ export default function PaymentForm() {
                 placeholder="輸入姓名"
                 className="bg-bg-gray  placeholder-text text-white-50 validate"
                 name="userName"
-                onChange={(e) => {
-                  formChange(e)
-                }}
+                // onChange={(e) => {
+                //   formChange(e)
+                // }}
                 {...register('userName', { required: true })}
                 aria-invalid={errors.userName ? 'true' : 'false'}
               />
@@ -144,9 +164,9 @@ export default function PaymentForm() {
                 aria-label="Default select example"
                 className="bg-bg-gray text-white-50 validate"
                 name="userGender"
-                onChange={(e) => {
-                  formChange(e)
-                }}
+                // onChange={(e) => {
+                //   formChange(e)
+                // }}
                 {...register('userGender', { required: true })}
                 aria-invalid={errors.userGender ? 'true' : 'false'}
               >
@@ -170,9 +190,9 @@ export default function PaymentForm() {
                 type="date"
                 className="bg-bg-gray text-white-50  validate"
                 name="birthday"
-                onChange={(e) => {
-                  formChange(e)
-                }}
+                // onChange={(e) => {
+                //   formChange(e)
+                // }}
                 {...register('birthday', { required: true })}
                 aria-invalid={errors.birthday ? 'true' : 'false'}
               />
@@ -194,9 +214,9 @@ export default function PaymentForm() {
                 placeholder="0912345678"
                 className="bg-bg-gray text-white-50 placeholder-text validate"
                 name="phoneNumber"
-                onChange={(e) => {
-                  formChange(e)
-                }}
+                // onChange={(e) => {
+                //   formChange(e)
+                // }}
                 {...register('phoneNumber', {
                   required: '請輸入手機',
                   pattern: {
@@ -222,9 +242,9 @@ export default function PaymentForm() {
                 placeholder="輸入email"
                 className="bg-bg-gray  placeholder-text text-white-50 validate"
                 name="email"
-                onChange={(e) => {
-                  formChange(e)
-                }}
+                // onChange={(e) => {
+                //   formChange(e)
+                // }}
                 {...register('email', {
                   required: '請輸入信箱',
                   pattern: {
@@ -254,7 +274,7 @@ export default function PaymentForm() {
             </div>
           </div>
         </div>
-        {/* 付款方式 */}
+        {/* 折抵方式 */}
         <div className="points-coupons-container d-flex row mb-3 gx-0">
           <div>
             <h5>
@@ -281,7 +301,7 @@ export default function PaymentForm() {
                   id="pointInput"
                   placeholder="輸入數量"
                   ref={pointInputRef}
-                  onChange={formChange}
+                  // onChange={formChange}
                 />
               </div>
             </div>
@@ -323,141 +343,142 @@ export default function PaymentForm() {
               type="radio"
               name="paymentType"
               id="creditCard"
-              onChange={changeValue}
-              required
+              value="creditCard"
+              {...register('paymentType', { onChange: changeValue })}
             />
             <label className="form-check-label" htmlFor="creditCard">
               信用卡 / 簽帳金融卡
             </label>
             {/* 輸入信用卡內容 */}
-            <GoventToast radioValue={radioValue}>
-              <div className="d-flex">
-                <div className="col-md-4 px-2">
-                  <label
-                    htmlFor="cardNumber"
-                    className="form-label sm-p text-normal-gray-light"
-                  >
-                    信用卡號碼
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control bg-bg-gray text-white-50  placeholder-text"
-                    id="cardNumber"
-                    name="cardNumber"
-                    value={cardValue}
-                    onChange={handleChange}
-                    onKeyDown={handleKeyDown}
-                    maxLength={19}
-                    //不能輸入bug
-                    // {...register('cardNumber', {
-                    //   required: '請輸入信用卡號碼',
-                    //   minLength: {
-                    //     value: 19,
-                    //     message: '請輸入16為號碼',
-                    //   },
-                    // })}
-                  />
-                  {errors.cardNumber && (
-                    <p role="alert" className="text-danger pt-1">
-                      {errors.cardNumber.message}
-                    </p>
-                  )}
-                </div>
-                <div className="col-md-4 px-2 ">
-                  <Form.Group
-                    className="mb-3 col-md-3 px-2 w-100"
-                    controlId="formGroup"
-                  >
-                    <Form.Label className="form-label sm-p text-normal-gray-light ">
-                      有效期限
+            {radioValue == 'creditCard' && (
+              <GoventToast radioValue={radioValue}>
+                <div className="d-flex">
+                  <div className="col-md-4 px-2">
+                    <label
+                      htmlFor="cardNumber"
+                      className="form-label sm-p text-normal-gray-light"
+                    >
+                      信用卡號碼
+                    </label>
+                    <Form.Control
+                      type="text"
+                      className="form-control bg-bg-gray text-white-50  placeholder-text"
+                      id="cardNumber"
+                      name="cardNumber"
+                      value={cardValue}
+                      onKeyDown={handleKeyDown}
+                      maxLength={19}
+                      {...register('cardNumber', {
+                        required: '請輸入信用卡號碼',
+                        minLength: {
+                          value: 19,
+                          message: '請輸入16為號碼',
+                        },
+                        onChange: handleChange,
+                      })}
+                    />
+                    {errors.cardNumber && (
+                      <p role="alert" className="text-danger pt-1">
+                        {errors.cardNumber.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="col-md-4 px-2 ">
+                    <Form.Group
+                      className="mb-3 col-md-3 px-2 w-100"
+                      controlId="formGroup"
+                    >
+                      <Form.Label className="form-label sm-p text-normal-gray-light ">
+                        有效期限
+                      </Form.Label>
+                      <div className="d-flex">
+                        <div className="col">
+                          <Form.Select
+                            className="me-1 bg-bg-gray text-white-50  placeholder-text"
+                            {...register('exDateMonth', {
+                              required: '請填入月',
+                            })}
+                          >
+                            <option value="">月</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                          </Form.Select>
+                          {errors.exDateMonth?.type === 'required' && (
+                            <p role="alert" className="text-danger pt-1 ">
+                              {errors.exDateMonth.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="col">
+                          <Form.Select
+                            className="ms-1 bg-bg-gray text-white-50  placeholder-text"
+                            {...register('exDateYear', {
+                              required: '請填入年份',
+                            })}
+                          >
+                            <option value="">年</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                            <option value="2031">2031</option>
+                            <option value="2032">2032</option>
+                            <option value="2033">2033</option>
+                            <option value="2034">2034</option>
+                            <option value="2035">2035</option>
+                          </Form.Select>
+                          {errors.exDateYear?.type === 'required' && (
+                            <p role="alert" className="text-danger pt-1 ms-1">
+                              {errors.exDateYear.message}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </Form.Group>
+                  </div>
+                  <div className="col-md-4 px-2">
+                    <Form.Label
+                      htmlFor="securityCode"
+                      className="form-label sm-p text-normal-gray-light"
+                    >
+                      安全碼
                     </Form.Label>
-                    <div className="d-flex">
-                      <div className="col">
-                        <Form.Select
-                          className="me-1 bg-bg-gray text-white-50  placeholder-text"
-                          {...register('exDateMonth', {
-                            required: '請填入月',
-                          })}
-                        >
-                          <option value="">月</option>
-                          <option value="01">01</option>
-                          <option value="02">02</option>
-                          <option value="03">03</option>
-                          <option value="04">04</option>
-                          <option value="05">05</option>
-                          <option value="06">06</option>
-                          <option value="07">07</option>
-                          <option value="08">08</option>
-                          <option value="09">09</option>
-                          <option value="10">10</option>
-                          <option value="11">11</option>
-                          <option value="12">12</option>
-                        </Form.Select>
-                        {errors.exDateMonth?.type === 'required' && (
-                          <p role="alert" className="text-danger pt-1 ">
-                            {errors.exDateMonth.message}
-                          </p>
-                        )}
-                      </div>
-                      <div className="col">
-                        <Form.Select
-                          className="ms-1 bg-bg-gray text-white-50  placeholder-text"
-                          {...register('exDateYear', {
-                            required: '請填入年份',
-                          })}
-                        >
-                          <option value="">年</option>
-                          <option value="2024">2024</option>
-                          <option value="2025">2025</option>
-                          <option value="2026">2026</option>
-                          <option value="2027">2027</option>
-                          <option value="2028">2028</option>
-                          <option value="2029">2029</option>
-                          <option value="2030">2030</option>
-                          <option value="2031">2031</option>
-                          <option value="2032">2032</option>
-                          <option value="2033">2033</option>
-                          <option value="2034">2034</option>
-                          <option value="2035">2035</option>
-                        </Form.Select>
-                        {errors.exDateYear?.type === 'required' && (
-                          <p role="alert" className="text-danger pt-1 ms-1">
-                            {errors.exDateYear.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </Form.Group>
+                    <Form.Control
+                      type="text"
+                      className="form-control bg-bg-gray text-white-50  placeholder-text"
+                      id="securityCode"
+                      name="securityCode"
+                      maxLength={3}
+                      {...register('securityCode', {
+                        required: '請輸入安全碼',
+                        minLength: {
+                          value: 3,
+                          message: '請輸入安全碼三位數',
+                        },
+                      })}
+                    />
+                    {errors.securityCode && (
+                      <p role="alert" className="text-danger pt-1">
+                        {errors.securityCode.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className="col-md-4 px-2">
-                  <Form.Label
-                    htmlFor="securityCode"
-                    className="form-label sm-p text-normal-gray-light"
-                  >
-                    安全碼
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    className="form-control bg-bg-gray text-white-50  placeholder-text"
-                    id="securityCode"
-                    name="securityCode"
-                    maxLength={3}
-                    {...register('securityCode', {
-                      required: '請輸入安全碼',
-                      minLength: {
-                        value: 3,
-                        message: '請輸入安全碼三位數',
-                      },
-                    })}
-                  />
-                  {errors.securityCode && (
-                    <p role="alert" className="text-danger pt-1">
-                      {errors.securityCode.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </GoventToast>
+              </GoventToast>
+            )}
           </div>
           {/* LINE PAY */}
           <div className="form-check mb-4">
@@ -466,8 +487,8 @@ export default function PaymentForm() {
               type="radio"
               name="paymentType"
               id="LinePay"
-              onChange={changeValue}
-              required
+              value="LinePay"
+              {...register('paymentType', { onChange: changeValue })}
             />
             <label className="form-check-label" htmlFor="LinePay">
               <Image src="/line-pay/LINE Pay_logo-02.png" />
@@ -500,6 +521,9 @@ export default function PaymentForm() {
             type="submit"
             className="btn btn-primary h6 fw-bolder text-white"
             style={{ width: '400px', height: '60px', borderRadius: '15px' }}
+            onClick={() => {
+              console.log('post')
+            }}
           >
             確認付款
           </button>

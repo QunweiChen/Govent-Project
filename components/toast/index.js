@@ -8,7 +8,6 @@ export default function GoventToast({ radioValue = '', children }) {
   const [show, setShow] = useState(false)
 
   const toggleShow = () => {
-    console.log(radioValue, show)
     if (radioValue == 'creditCard') {
       setShow(true)
     } else if (radioValue == 'LinePay') {
