@@ -1,38 +1,38 @@
 import { useState } from 'react'
 
 export default function useLocalStorage(key, initialValue) {
-  // State to store our value
-  // Pass initial state function to useState so logic is only executed once
+  // 用於存儲值的狀態
+  // 使用 useState 的初始狀態函數，以便邏輯僅執行一次
   const [storedValue, setStoredValue] = useState(() => {
     if (typeof window === 'undefined') {
       return initialValue
     }
     try {
-      // Get from local storage by key
+      // 透過鍵從本地存儲中獲取值
       const item = window.localStorage.getItem(key)
-      // Parse stored json or if none return initialValue
+      // 解析存儲的 JSON，如果不存在則返回初始值
       return item ? JSON.parse(item) : initialValue
     } catch (error) {
-      // If error also return initialValue
+      // 如果出現錯誤，也返回初始值
       console.log(error)
       return initialValue
     }
   })
-  // Return a wrapped version of useState's setter function that ...
-  // ... persists the new value to localStorage.
+  // 返回 useState 的 setter 函數的包裝版本，它...
+  // ... 將新值持久化到本地存儲中。
   const setValue = (value) => {
     try {
-      // Allow value to be a function so we have same API as useState
+      // 允許值為函數，以保持與 useState 相同的 API
       const valueToStore =
         value instanceof Function ? value(storedValue) : value
-      // Save state
+      // 更新狀態
       setStoredValue(valueToStore)
-      // Save to local storage
+      // 保存到本地存儲
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(key, JSON.stringify(valueToStore))
       }
     } catch (error) {
-      // A more advanced implementation would handle the error case
+      // 一個更高級的實現應該處理錯誤情況
       console.log(error)
     }
   }

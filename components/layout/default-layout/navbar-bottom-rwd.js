@@ -14,7 +14,7 @@ export default function NavbarBottomRwd() {
             className={`col-3 btn ${
               activeButton === 0
                 ? 'text-primary-deep'
-                : 'text-normal-gray-light-color'
+                : 'text-normal-gray-light'
             } text-center`}
             onClick={() => handleClick(0)}
           >
@@ -25,7 +25,7 @@ export default function NavbarBottomRwd() {
             className={`col-3 btn ${
               activeButton === 1
                 ? 'text-primary-deep'
-                : 'text-normal-gray-light-color'
+                : 'text-normal-gray-light'
             } text-center`}
             onClick={() => handleClick(1)}
           >
@@ -36,7 +36,7 @@ export default function NavbarBottomRwd() {
             className={`col-3 btn ${
               activeButton === 2
                 ? 'text-primary-deep'
-                : 'text-normal-gray-light-color'
+                : 'text-normal-gray-light'
             } text-center`}
             onClick={() => handleClick(2)}
           >
@@ -47,7 +47,7 @@ export default function NavbarBottomRwd() {
             className={`col-3 btn ${
               activeButton === 3
                 ? 'text-primary-deep'
-                : 'text-normal-gray-light-color'
+                : 'text-normal-gray-light'
             } text-center`}
             onClick={() => handleClick(3)}
           >
