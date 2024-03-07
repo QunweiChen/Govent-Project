@@ -1,5 +1,6 @@
 import React from 'react'
 import CartCard from '@/components/cart/cart-card'
+import TodoAll from '@/components/cart/todo-all'
 import NoCart from '@/components/cart/no-cart'
 import EventsRecommend from '@/components/events-recommend'
 import NavbarBottomRwd from '@/components/layout/default-layout/navbar-bottom-rwd'
@@ -82,62 +83,45 @@ export default function CartIndex() {
   return (
     <>
       <div className="container width-1200">
-        <div className="row justify-content-center">
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.4 }}
-            className=""
-          >
-            <div className="col-sm-12">
-              <div className="cart-area card bg-bg-gray-secondary">
-                <div className="border-0 cart-card border-bottom border-normal-gray">
-                  <div className="row g-0 my-4">
-                    <div className="col-6 text-white d-flex align-items-center">
-                      <a href="../cart/event-list">
-                        <h4 className="ms-4 text-white">購物車</h4>
-                      </a>
-                    </div>
-                    {merchantItems && merchantItems.length > 0 ? (
-                      <div className="col-6 text-white d-flex align-items-center justify-content-end">
-                        <label className="me-4 d-flex align-items-center justify-content-end form-check-label">
-                          <input
-                            type="checkbox"
-                            // checked={selectAll}
-                            onChange={(e) => {
-                              // 切換所有的項目
-                              handleToggleSelectedAll(e.target.checked)
-                            }}
-                            className="checkbox-large form-check-input"
-                          />
-                          <p className="ms-2">全選票券</p>
-                        </label>
-                      </div>
-                    ) : (
-                      ''
-                    )}
-                  </div>
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.4 }}
+          className=""
+        >
+          <div className="cart-area card bg-bg-gray-secondary">
+            <div className="border-0 cart-card border-bottom border-normal-gray">
+              <div className="row my-4">
+                <div className="col-6 text-white d-flex align-items-center">
+                  <Link href="../cart/event-list">
+                    <h4 className="ms-4 text-white">購物車</h4>
+                  </Link>
                 </div>
-                {/* 到時候return資料用這一層 */}
-                {/* 沒購物車內容 判斷*/}
-                {merchantItems && merchantItems.length > 0 ? (
-                  <CartCard
-                    merchantItems={merchantItems}
-                    handleToggleSelectedMt={handleToggleSelectedMt}
-                    foundMt={foundMt}
-                    handleToggleCompleted={handleToggleCompleted}
-                    removeItem={removeItem}
-                    calcTotalItems={calcTotalItems}
-                    calcTotalPrice={calcTotalPrice}
-                  />
-                ) : (
-                  <NoCart />
-                )}
+                <TodoAll
+                  merchantItems={merchantItems}
+                  handleToggleSelectedAll={handleToggleSelectedAll}
+                />
               </div>
             </div>
-          </motion.div>
-        </div>
+            {/* 到時候return資料用這一層 */}
+            {/* 沒購物車內容 判斷*/}
+            {merchantItems && merchantItems.length > 0 ? (
+              <CartCard
+                merchantItems={merchantItems}
+                handleToggleSelectedMt={handleToggleSelectedMt}
+                foundMt={foundMt}
+                handleToggleCompleted={handleToggleCompleted}
+                removeItem={removeItem}
+                calcTotalItems={calcTotalItems}
+                calcTotalPrice={calcTotalPrice}
+              />
+            ) : (
+              <NoCart />
+            )}
+          </div>
+        </motion.div>
       </div>
+
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}

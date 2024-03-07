@@ -48,7 +48,7 @@ export function CartProvider({
   const [cartItems, setCartItems] = useState(items)
   // 加入到各分類的項目
   const [merchantItems, setMerchantItems] = useState(MtItems)
-  console.log(merchantItems)
+  // console.log(merchantItems)
   //送來資料多一個checked屬性
   //即時更新
   useEffect(() => {
@@ -96,7 +96,6 @@ export function CartProvider({
           setMt(text.data ? text.data.posts : [])
         })
     }
-
     getCartMt()
   }, [])
   //重新定義公司
