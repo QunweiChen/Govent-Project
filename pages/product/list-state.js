@@ -18,6 +18,9 @@ export default function ProductStateList() {
     const [priceGte, setPriceGte] = useState(1500) //數字
     const [priceLte, setPriceLte] = useState(15000) //數字
 
+    // 主分類(只是方便呈現用，不會送至伺服器)
+    const [mainStrIds, setMainStrIds] = useState([]) // 數字陣列
+
 
     // 排序(前面為排序欄位，後面參數asc為從小到大，desc為從大到小排序)
   const [orderby, setOrderby] = useState({ sort: 'id', order: 'asc' })
@@ -199,7 +202,7 @@ export default function ProductStateList() {
             </label>
         </div>
         <div>
-            品牌:
+            分類:
             {ActivityCategory.map((v) => {
             return (
                 <label key={v.id} className="mx-1">
@@ -222,6 +225,98 @@ export default function ProductStateList() {
             )
             })}
         </div>
+        <div>
+        城市(主分類):
+        {StrList
+          .filter((v) => !v.parent_id)
+          .map((v) => {
+            return (
+              <label key={v.id} className="mx-1">
+                <input
+                  type="checkbox"
+                  value={v.id}
+                  checked={mainStrIds.includes(v.id)}
+                  onChange={(e) => {
+                    const targetId = Number(e.target.value)
+                    // 尋找第二層的id
+                    const subStrIds = StrList
+                      .filter((v2) => v2.parent_id === targetId)
+                      .map((v3) => v3.id)
+                    // 注意，要轉數字，為了保持數字陣列
+
+                    if (mainStrIds.includes(targetId)) {
+                      setMainStrIds(mainStrIds.filter((v2) => v2 !== targetId))
+                      // 從子陣列中移除
+                      const newStrIds = strIds.filter(
+                        (el) => !subStrIds.includes(el)
+                      )
+                      setStrIds(newStrIds)
+                    } else {
+                      setMainStrIds([...mainStrIds, targetId])
+                      // 從子陣列中加入
+                      setStrIds([...strIds, ...subStrIds])
+                    }
+                  }}
+                />
+                {v.name}({v.id})
+              </label>
+            )
+          })}
+        <br />
+        分類(子分類):
+        {StrList
+          .filter((v) => v.parent_id)
+          .map((v) => {
+            return (
+              <label key={v.id} className="mx-1">
+                <input
+                  type="checkbox"
+                  value={v.id}
+                  checked={strIds.includes(v.id)}
+                  onChange={(e) => {
+                    // 注意，要轉數字，為了保持數字陣列
+                    const targetValue = Number(e.target.value)
+                    if (strIds.includes(targetValue)) {
+                      setStrIds(strIds.filter((v2) => v2 !== targetValue))
+                    } else {
+                      setStrIds([...strIds, targetValue])
+                    }
+                  }}
+                />
+                {v.name}({v.id})
+              </label>
+            )
+          })}
+      </div>
+
+      <div>
+        價格(1500~10000)
+        <label>
+          從:{' '}
+          <input
+            type="number"
+            placeholder="1500"
+            value={priceGte}
+            onChange={(e) => {
+              setPriceGte(Number(e.target.value))
+            }}
+          />
+        </label>
+        <label>
+          到:{' '}
+          <input
+            type="number"
+            placeholder="15000"
+            value={priceLte}
+            onChange={(e) => {
+              setPriceLte(Number(e.target.value))
+            }}
+          />
+        </label>
+      </div>
+      <div>
+        <button onClick={handleLoadData}>從伺服器載入資料</button>
+      </div>
         </>
     )
 
@@ -231,7 +326,18 @@ export default function ProductStateList() {
           <NavbarTopRwd />
         </nav>
         <div className="container">
-
+            <h1>商品測試頁(state)</h1>
+            <hr />
+            {filterBlock}
+            <hr />
+            <p>
+                項目數量(itemTotal): {itemTotal} / 目前頁碼(page): {page} /
+                每頁多少項目(perpage):
+                {perpage} / 總頁數(pageCount): {pageCount}
+            </p>
+            <hr />
+            {displayList}
+            {pagination}
         </div>
       
       <style global jsx>{`
