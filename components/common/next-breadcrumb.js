@@ -61,7 +61,11 @@ export default function NextBreadCrumb({
       // 最後一個
       if (i === array.length - 1) {
         return (
-          <li key={i} className="breadcrumb-item active text-white  " aria-current="page">
+          <li
+            key={i}
+            className="breadcrumb-item active text-white  "
+            aria-current="page"
+          >
             {v}
           </li>
         )

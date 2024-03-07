@@ -89,6 +89,7 @@ body {
     // Emoji fonts
     'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  background-color: var(--bg-gray-color);
 }
 
 a {
@@ -141,7 +142,8 @@ h6 {
   line-height: 1.5;
 }
 
-p, .p {
+p,
+.p {
   font-size: 14px;
   font-weight: 300;
   margin-bottom: 0;

@@ -2,10 +2,9 @@
 import MyNavbarBS5 from './my-navbar'
 import MyFooter from './my-footer'
 import Head from 'next/head'
-import NextBreadCrumb from '@/components/common/next-breadcrumb'
 import { useLoader } from '@/hooks/use-loader'
 
-export default function NoBCLayout({ title = '', children }) {
+export default function IndexLayout({ title = '', children }) {
   const { loader } = useLoader()
 
   return (
@@ -16,8 +15,7 @@ export default function NoBCLayout({ title = '', children }) {
       </Head>
       <MyNavbarBS5 />
       <main className="flex-shrink-0">
-        <div className="container max-width-1440">
-          {/* <NextBreadCrumb isHomeIcon isChevron bgClass="" /> */}
+        <div>
           {children}
         </div>
         {/* 全域的載入動畫指示器 */}

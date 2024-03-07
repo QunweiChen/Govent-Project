@@ -7,7 +7,7 @@ export default function OrganizerSidebar() {
   return (
     <>
       <div className="organizer-sidebar d-flex flex-column justify-content-between">
-        <div>
+        <div className='sticky-top'>
           <div className="d-flex justify-content-center align-items-center logo-bar">
             <Image
               src="/govent-logo.png"
@@ -57,7 +57,7 @@ export default function OrganizerSidebar() {
             </Accordion.Item>
           </Accordion>
         </div>
-        <div className="d-flex justify-content-center sm-p py-5">
+        <div className="d-flex justify-content-center sm-p py-5 sticky-bottom">
           COPYRIGHT © 2024
           <br />
           GOVENT All rights reserved.
@@ -101,6 +101,14 @@ export default function OrganizerSidebar() {
               &:hover {
                 color: var(--primary-light-color);
               }
+            }
+            .sticky-top{
+              position: sticky;
+              top: 0;
+            }
+            .sticky-bottom{
+              position: sticky;
+              bottom: 0;
             }
           }
         `}

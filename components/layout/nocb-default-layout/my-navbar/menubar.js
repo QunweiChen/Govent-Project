@@ -88,7 +88,7 @@ export default function MainMenu({ currentRoute = '/' }) {
                 {v.label}
               </Link>
               <ul
-                className={`dropdown-menu bg-bg-gray-light border ${styles['slideIn']} ${styles['dropdown-menu']}`}
+                className={`dropdown-menu border ${styles['slideIn']} ${styles['dropdown-menu']}`}
               >
                 {v.children.map((v2) => {
                   return (
@@ -109,6 +109,21 @@ export default function MainMenu({ currentRoute = '/' }) {
           )
         })}
       </ul>
+      <style global jsx>
+        {`
+        .dropdown-menu{
+          background-color: #1a1a1a60;
+          backdrop-filter: blur(10px);
+          
+          li a{
+            color: white;
+            transition: 300ms;
+            &:hover{
+              background-color: var(--primary-50-color);
+            }
+        }
+        `}
+      </style>
     </>
   )
 }

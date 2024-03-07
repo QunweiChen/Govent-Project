@@ -4,28 +4,25 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Toast from 'react-bootstrap/Toast'
 
-export default function GoventToast({ value = '', children }) {
+export default function GoventToast({ radioValue = '', children }) {
   const [show, setShow] = useState(false)
 
   const toggleShow = () => {
-    console.log(value, show)
-    if (value === 'creditCard') {
-      setShow(false)
-      setShow(!show)
-    } else if (value === 'LinePay') {
+    if (radioValue == 'creditCard') {
       setShow(true)
-      setShow(!show)
+    } else if (radioValue == 'LinePay') {
+      setShow(false)
     }
   }
   useEffect(() => {
     toggleShow()
-  }, [value])
+  }, [radioValue])
 
   return (
     <>
       <Row>
-        <Col className="mb-2">
-          <Toast bg="light" show={show} style={{ width: '100%' }}>
+        <Col className="my-3">
+          <Toast bg="secondary" show={show} style={{ width: '100%' }}>
             <Toast.Body md={12}>{children}</Toast.Body>
           </Toast>
         </Col>

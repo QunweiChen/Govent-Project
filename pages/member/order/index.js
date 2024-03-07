@@ -1,9 +1,9 @@
 // import { useRouter } from 'next/router'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import { Row, Col } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
 import Link from 'next/link'
 import NoBCLayout from '@/components/layout/nocb-default-layout'
+import { motion } from 'framer-motion'
 
 // only redirect to member/login
 export default function MemberOrder() {
@@ -21,7 +21,11 @@ export default function MemberOrder() {
             <Memberleft />
           </Col>
           <Col sm={9}>
-            <div className="member-bgc contain">
+            <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="member-bgc contain">
               <h4>我的票卷</h4>
               <hr className="my-4" />
               <div className="event mt-2">
@@ -50,7 +54,7 @@ export default function MemberOrder() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Col>
         </Row>
       </div>

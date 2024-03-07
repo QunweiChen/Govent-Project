@@ -1,17 +1,21 @@
 import React, { useState } from 'react'
+import {
+  Row,
+  Col,
+  Tab,
+  Tabs,
+  ToggleButton,
+  ToggleButtonGroup,
+  Button,
+  ButtonGroup,
+  ButtonToolbar
+} from 'react-bootstrap'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+
 import OrganizerLayout from '@/components/layout/organizer-layout'
 import OrganizerSidebar from '@/components/organizer/organizer-sidebar'
-import Tab from 'react-bootstrap/Tab'
-import Tabs from 'react-bootstrap/Tabs'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import ToggleButton from 'react-bootstrap/ToggleButton'
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
-import Button from 'react-bootstrap/Button'
-import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 import OrganizerTopBar from '@/components/organizer/organizer-top-bar'
-import Link from 'next/link'
 
 export default function OrganizerEvent() {
   const [selectedButton, setSelectedButton] = useState(1)
@@ -26,7 +30,11 @@ export default function OrganizerEvent() {
         <OrganizerSidebar />
         <div className="w-100 bg-bg-gray organizer-main d-flex flex-column">
           <OrganizerTopBar title="活動清單" />
-          <div className="event-nav flex-grow-1 d-flex flex-column">
+          <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.4 }}
+          className="event-nav flex-grow-1 d-flex flex-column">
             <Tabs
               id="uncontrolled-tab-example"
               className="border-0"
@@ -106,10 +114,10 @@ export default function OrganizerEvent() {
                       <div className="sm-p">2024/01/02</div>
                     </Col>
                     <Col sm="auto" className="text-center mx-3">
-                      <Link href="event/event-info" className='text-link'>
-                      <i className="bi bi-three-dots"></i>
-                      <br />
-                      更多
+                      <Link href="event/event-info" className="text-link">
+                        <i className="bi bi-three-dots"></i>
+                        <br />
+                        更多
                       </Link>
                     </Col>
                   </Row>
@@ -247,7 +255,7 @@ export default function OrganizerEvent() {
                 Tab content for Contact
               </Tab>
             </Tabs>
-          </div>
+          </motion.div>
         </div>
       </div>
       <style global jsx>

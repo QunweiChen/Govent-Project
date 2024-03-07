@@ -25,13 +25,13 @@ export default function OrganizerEventSidebar() {
             </Link>
           </div>
           <div className='ms-4 ps-1 mb-4'>
-            <Link href="/" className="text-link">
+            <Link href="event-info" className="text-link">
               <i className="bi bi-speedometer pe-3 text-primary-light"></i>
               活動資訊總覽
             </Link>
           </div>
           <div className='ms-4 ps-1'>
-            <Link href="/" className="text-link">
+            <Link href="ticket" className="text-link">
               <i className="bi bi-ticket-detailed-fill pe-3 text-primary-light"></i>
               票卷管理
             </Link>
