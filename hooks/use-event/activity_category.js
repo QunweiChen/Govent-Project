@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
-export default function useEvents() {
-  const [data, setData] = useState()
-  const [error, setError] = useState()
-  const [loading, setLoading] = useState(true)
+const useCategory = () => {
+  const [category, setCategory] = useState([])
 
   useEffect(() => {
-    const uri = 'http://localhost:3005/api/activity_category'
-    if (!uri) return
-    fetch(uri)
-      .then((data) => data.json())
-      .then(setData)
-      .then(() => setLoading(false))
-      .catch(setError)
+    const fetchCategory = async () => {
+      try {
+        const response = await axios.get('http://localhost:3005/api/events')
+        setCategory(response.data)
+      } catch (error) {
+        console.error('Error fetching events:', error)
+      }
+    }
+
+    fetchCategory()
   }, [])
-  return {
-    loading,
-    data,
-    error,
-  }
+
+  return category.map((activity_category) => activity_category.activity_name)
 }
+
+export default useCategory
