@@ -1,16 +1,61 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal, Button } from 'react-bootstrap'
-import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import EventsRecommend from '@/components/events-recommend'
-import Calendar from '@/components/product/date'
+import Calendar from '@/components/product/date2'
+import Link from 'next/link'
+import EventsData from '@/hooks/use-info'
 
 export default function Detail() {
-  
+  // 假設初始狀態是未選擇
+  const [selected,setSelected] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null); 
+  const [qty, setQty] = useState(1)
+
+
+
+ const handleSelection = ()=>{
+    setSelected(!selected)  // 切換選擇狀態
+  }
+
+  const handleDate = (date) => {
+    setSelectedDate(date);
+  };
+
+  const handleTime = (time) => {
+    setSelectedTime(time);
+  };
+
+
+  const handleDecrease = () => {
+    if (qty > 1) {
+      setQty(qty - 1)
+    }
+  }
+  const handleIncrease = () => {
+    setQty(qty + 1)
+  }
+
+  const totalAmount = selected ? 3200 * qty : 0;
+
+  const addToCart = () => {
+    const cartData = {
+      selectedDate,
+      selectedTime,
+      qty,
+      totalAmount
+    };
+    
+  };
+ 
 
   return (
-    <>
-      <section>
+   <>
+    
+    {data?.data.posts.map((v) => (
+      <>
+    <section>
         <div className=" d-flex p-4 d-none d-xxl-inline-flex">
           <p>
             首頁 <i className="bi bi-chevron-right"></i>
@@ -22,23 +67,32 @@ export default function Detail() {
             YOASOBI 演唱會 <i className="bi bi-chevron-right"></i>
           </p>
         </div>
+
         <div>
-        <div className='position-relative'>
-        <div className="d-flex justify-content-between d-block d-xxl-none">
-          <button className="nav-btn opacity-50 position-absolute top-0 start-0">
-            <i className="bi bi-arrow-left text-normal-gray-light"></i>
-          </button>
-          <div className='position-absolute top-0 end-0'>
-            <button className="nav-btn opacity-50">
-              <i className="bi bi-heart text-normal-gray-light"></i>
-            </button>
-            <button className="nav-btn opacity-50">
-              <i className="bi bi-cart3 text-normal-gray-light"></i>
-            </button>
+          <div className="position-relative">
+            <div className="d-flex justify-content-between d-block d-xxl-none">
+              <Link href="/product/list">
+                <button className="nav-btn opacity-50 position-absolute top-0 start-0">
+                  <i className="bi bi-arrow-left text-normal-gray-light"></i>
+                </button>
+              </Link>
+
+              <div className="position-absolute top-0 end-0">
+                <Link href="">
+                  <button className="nav-btn opacity-50">
+                    <i className="bi bi-heart text-normal-gray-light"></i>
+                  </button>
+                </Link>
+                <Link href="/cart/">
+                  <button className="nav-btn opacity-50">
+                    <i className="bi bi-cart3 text-normal-gray-light"></i>
+                  </button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
-        </div>
-      </div>
+
         <div>
           <img
             src="/images/product/detail/slideshow.jpg"
@@ -51,7 +105,8 @@ export default function Detail() {
       <main>
         <div className="wrapper">
           <section className="title">
-            <div className="d-flex align-items-center justify-content-between mt-3">
+         
+            <div key={v.id} className="d-flex align-items-center justify-content-between mt-3">
               <h5 className="border-5 border-start border-primary px-2">
                 YOASOBI
               </h5>
@@ -59,27 +114,31 @@ export default function Detail() {
                 type="button"
                 className="store btn btn-primary-deep-50 d-none d-xxl-block"
               >
-                <i className="bi bi-heart me-2"/>
+                <i className="bi bi-heart me-2" />
                 收藏
               </button>
             </div>
             <div>
               <h3 className="my-4">
-                YOASOBI演唱會2024台北站
+                {/* YOASOBI演唱會2024台北站 */}
+                {v.event_name}
                 <span className="d-none d-xxl-inline-flex">
                   ｜YOASOBI ASIA TOUR 2023-2024 Solo Concert in Taipei
                 </span>
               </h3>
               <h6 className="text-normal-gray-light">
                 <i className="bi bi-calendar me-2 d-none d-xxl-inline-flex" />
-                2024/01/21 － 2024/01/22
+                {/* 2024/01/21 － 2024/01/22 */}
+                {v.start_date}-{v.end_date}
               </h6>
               <h6>
                 <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" />
-                Zepp New Taipei
+                {/* Zepp New Taipei */}
+                {v.place}
               </h6>
               <p className="mx-4 text-secondary-02">
-                新北市新莊區新北大道四段3號8樓
+                {/* 新北市新莊區新北大道四段3號8樓 */}
+                {v.address}
               </p>
               <hr className="d-none d-xxl-block" />
             </div>
@@ -111,8 +170,8 @@ export default function Detail() {
             <div className="row seat1 mt-3">
               <h4 className="col-lg-9 col-sm-6">2F 座位</h4>
               <h4 className="col-lg-2 col-sm-4">NT$ 3,200</h4>
-              <button className="store col-lg-1 col-sm-2 btn btn-primary-deep">
-                選擇
+              <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={handleSelection}>
+              {selected ? '已選擇' : '選擇'}
               </button>
               <div className="d-flex mt-4 d-none d-xxl-inline-flex">
                 <h5 className="me-5">憑證兌換期限</h5>
@@ -128,47 +187,52 @@ export default function Detail() {
                   供應商需2-5個工作天進行取消流程，依照您購買的商品取消政策收取手續費，並於取消流程完成後14個工作天內退款。
                 </p>
               </div>
-              <hr className="d-none d-xxl-block"/>
+              <hr className="d-none d-xxl-block" />
               <div className="d-flex d-none d-xxl-inline-flex">
                 <div className="me-5">
                   <h5 className="mb-5">選擇日期</h5>
-                  <div>
-                    {/* <img
-                      className="mt-3 object-fit-cover"
-                      src="/images/product/detail/info-1.png"
-                      alt=""
-                    /> */}
-                   <Calendar />
-                  </div>  
-                 
+                  <div className="text-center">
+                    <Calendar onChange={handleDate}/>
+                  </div>
                 </div>
                 <div>
                   <h5 className="mb-5">選擇時間</h5>
-                  <button className="store fs-5 p-2 btn btn-primary-deep">
+                  <button className="store fs-5 p-2 btn btn-primary-deep" onClick={() => handleTime('17:00')}>
                     17:00
                   </button>
                   <h5 className="my-5">數量</h5>
                   <div className="d-flex align-items-center">
-                    <i className="bi bi-dash-circle me-2 icon" />
-                    <h5 className="px-3 py-2 bg-dark rounded">1</h5>
-                    <i className="bi bi-plus-circle ms-2 icon" />
+                    <i
+                      type="button"
+                      className="bi bi-dash-circle me-2 icon"
+                      onClick={handleDecrease}
+                    />
+                    <h5 className="px-3 py-2 bg-dark rounded">{qty}</h5>
+                    <i
+                      type="button"
+                      className="bi bi-plus-circle ms-2 icon"
+                      onClick={handleIncrease}
+                    />
                   </div>
                   <div className="d-flex my-5">
                     <h5 className="">總金額</h5>
-                    <h4 className="dollar">NT$ 3,200</h4>
+                    <h4 className="dollar">NT$ {totalAmount}</h4>
                   </div>
                   <div className="d-flex justify-content-end mb-3">
-                    <button className="store fs-5 me-2 p-2 btn btn-primary-deep">
-                      加入購物車
-                    </button>
-                    <button className="store fs-5 p-2 btn btn-primary-deep">
-                      結帳
-                    </button>
+                    <Link href={`
+                    /cart`
+                    }>
+                      <button className="store fs-5 me-2 p-2 btn btn-primary-deep" onClick={addToCart}>
+                        加入購物車
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>
             </div>
           </section>
+        
+
           <section className="row">
             <div className="left col-lg-8 col-sm-12">
               <div className="d-flex align-items-center mt-5">
@@ -209,22 +273,22 @@ export default function Detail() {
                   立即購買
                 </button>
               </div>
-              <a className="d-flex align-items-center mt-5">
+              <a type="button" className="d-flex align-items-center mt-5">
                 <h5 className="border-5 border-start border-primary px-2 text-white">
                   活動介紹
                 </h5>
               </a>
-              <a className="d-flex align-items-center mt-3">
+              <a type="button" className="d-flex align-items-center mt-3">
                 <h5 className="border-5 border-start border-primary px-2 text-white">
                   購買須知
                 </h5>
               </a>
-              <a className="d-flex align-items-center mt-3">
+              <a type="button" className="d-flex align-items-center mt-3">
                 <h5 className="border-5 border-start border-primary px-2 text-white">
                   使用方式
                 </h5>
               </a>
-              <a className="d-flex align-items-center mt-3">
+              <a type="button" className="d-flex align-items-center mt-3">
                 <h5 className="border-5 border-start border-primary px-2 text-white">
                   活動評價
                 </h5>
@@ -283,10 +347,33 @@ export default function Detail() {
                   <h6>1,273則評價</h6>
                 </div>
               </div>
-              <button className="p-2 border-white btn btn-secondary text-white">
-                推薦
-                <i className="bi bi-caret-down-fill" />
-              </button>
+              <div className="dropdown">
+                <button
+                  className="btn btn-secondary p-2 border-white text-white dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  推薦
+                </button>
+                <ul className="dropdown-menu bg-normal-gray">
+                  <li>
+                    <a className="dropdown-item text-secondary-03" href="#">
+                      最新評分
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item text-secondary-03" href="#">
+                      最高評分
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item text-secondary-03" href="#">
+                      最低評分
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
             <hr className="d-none d-xxl-block" />
 
@@ -307,7 +394,7 @@ export default function Detail() {
                     </button>
                   </div>
                   <div className="d-flex align-items-center mt-2 ">
-                    <div className="mb-2 ">
+                    <div className="mb-2">
                       <i className="bi bi-star-fill text-primary"></i>
                       <i className="bi bi-star-fill text-primary ms-2"></i>
                       <i className="bi bi-star-fill text-primary ms-2"></i>
@@ -475,142 +562,96 @@ export default function Detail() {
 
           <section className="d-none d-xxl-inline-flex">
             <EventsRecommend />
-            {/* <div className="d-flex align-items-center mt-5">
-              <h4 className="border-5 border-start border-primary px-2">
-                為你推薦
-              </h4>
-            </div>
-            <div className="d-flex justify-content-center pb-5">
-              <div className="width-1200">
-                <div className="mt-4 d-flex justify-content-between">
-                  <Card
-                    style={{ width: '250px' }}
-                    className="custom-card text-white"
-                  >
-                    <Card.Img
-                      variant="top"
-                      src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-                    />
-                    <Card.Body className="bg-bg-gray">
-                      <Card.Title className="h6">
-                        Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                      </Card.Title>
-                      <div className="d-flex justify-content-between align-items-center mt-3">
-                        <p className="text-normal-gray-light">演唱會</p>
-                        <p className="text-primary-light">NT$800 起</p>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                  <Card
-                    style={{ width: '250px' }}
-                    className="custom-card text-white"
-                  >
-                    <Card.Img
-                      variant="top"
-                      src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-                    />
-                    <Card.Body className="bg-bg-gray">
-                      <Card.Title className="h6">
-                        Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                      </Card.Title>
-                      <div className="d-flex justify-content-between align-items-center mt-3">
-                        <p className="text-normal-gray-light">演唱會</p>
-                        <p className="text-primary-light">NT$800 起</p>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                  <Card
-                    style={{ width: '250px' }}
-                    className="custom-card text-white"
-                  >
-                    <Card.Img
-                      variant="top"
-                      src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-                    />
-                    <Card.Body className="bg-bg-gray">
-                      <Card.Title className="h6">
-                        Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                      </Card.Title>
-                      <div className="d-flex justify-content-between align-items-center mt-3">
-                        <p className="text-normal-gray-light">演唱會</p>
-                        <p className="text-primary-light">NT$800 起</p>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                  <Card
-                    style={{ width: '250px' }}
-                    className="custom-card text-white"
-                  >
-                    <Card.Img
-                      variant="top"
-                      src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-                    />
-                    <Card.Body className="bg-bg-gray">
-                      <Card.Title className="h6">
-                        Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                      </Card.Title>
-                      <div className="d-flex justify-content-between align-items-center mt-3">
-                        <p className="text-normal-gray-light">演唱會</p>
-                        <p className="text-primary-light">NT$800 起</p>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </div>
-              </div>
-            </div> */}
           </section>
         </div>
         <div className="d-inline-flex d-xxl-none align-items-center justify-content-center col-12 bg-bg-gray-secondary p-3 rounded-3">
           <h5 className="col-8">NT$ 3,200 起</h5>
-          <button className="store fs-6 fw-bold p-2 btn btn-primary col-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <button
+            className="store fs-6 fw-bold p-2 btn btn-primary col-3"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
             選擇規格<i className="bi bi-chevron-bar-up"></i>
           </button>
         </div>
 
+        <div
+          className="modal fade"
+          id="exampleModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog">
+            <div className="modal-content bg-bg-gray-secondary">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">
+                  選擇規格
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="d-flex justify-content-between seat1 mt-3">
+                  <h5 className="">1F 站位</h5>
+                  <h5 className="">NT$ 3,200</h5>
+                  <button className="store col-2 btn btn-primary-deep">
+                    選擇
+                  </button>
+                </div>
+                <div className="d-flex justify-content-between seat1 my-3">
+                  <h5 className="">2F 座位</h5>
+                  <h5 className="">NT$ 3,200</h5>
+                  <button className="store col-2 btn btn-primary-deep">
+                    選擇
+                  </button>
+                </div>
+                <div className="text-center mx-4">
+                  <Calendar />
+                </div>
 
-<div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div className="modal-dialog">
-    <div className="modal-content bg-bg-gray-secondary">
-      <div className="modal-header">
-        <h5 className="modal-title" id="exampleModalLabel">選擇規格</h5>
-        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div className="modal-body">
-      <div className="d-flex justify-content-between seat1 mt-3">
-              <h5 className="">1F 站位</h5>
-              <h5 className="">NT$ 3,200</h5>
-              <button className="store col-2 btn btn-primary-deep">
-                選擇
-              </button>
-            </div>
-            <div className="d-flex justify-content-between seat1 mt-3">
-              <h5 className="">2F 座位</h5>
-              <h5 className="">NT$ 3,200</h5>
-              <button className="store col-2 btn btn-primary-deep">
-                選擇
-              </button>
-            </div>
-            <label>日期選擇</label>
-            <br />
-            
-            <div className="d-flex align-items-center justify-content-between mt-3 border border-1 p-2 rounded-4">
-              <h5 className="ms-2 text-secondary-03">數量</h5>
-              <div className="d-flex align-items-center">
-                <i className="bi bi-dash-circle me-2 icon"/>
-                <h5 className="px-3">1</h5>
-                <i className="bi bi-plus-circle ms-2 icon me-2" />
+                <br />
+
+                <div className="d-flex align-items-center justify-content-between mt-3 border border-1 p-2 rounded-4">
+                  <h5 className="ms-2 text-secondary-03">數量</h5>
+                  <div className="d-flex align-items-center">
+                    <i
+                      type="button"
+                      className="bi bi-dash-circle me-2 icon"
+                      onClick={handleDecrease}
+                    />
+                    <h5 className="px-3">{qty}</h5>
+                    <i
+                      type="button"
+                      className="bi bi-plus-circle ms-2 icon me-2"
+                      onClick={handleIncrease}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-primary-deep text-white"
+                  data-bs-dismiss="modal"
+                >
+                  加入購物車
+                </button>
+                <button type="button" className="btn btn-primary text-white">
+                  立即訂購
+                </button>
               </div>
             </div>
-      </div>
-      <div className="modal-footer">
-        <button type="button" className="btn btn-primary-deep text-white" data-bs-dismiss="modal">加入購物車</button>
-        <button type="button" className="btn btn-primary text-white">立即訂購</button>
-      </div>
-    </div>
-  </div>
-</div>
+          </div>
+        </div>
       </main>
-      <footer>{/* place footer here */}</footer>
+</>
+    ))}   
+
       <style global jsx>
         {`
           body {
@@ -618,15 +659,8 @@ export default function Detail() {
             color: #fff;
           }
 
-          main > .container {
-            padding: 60px 15px 0;
-          }
-
           .object-fit-cover {
             width: 100%;
-             {
-              /* height: 500px; */
-            }
             object-fit: cover;
           }
 
@@ -648,13 +682,15 @@ export default function Detail() {
             padding: 15px;
             border-radius: 10px;
           }
-          {/* .cost {
+           {
+            /* .cost {
             padding-top: 100px;
             margin-bottom: 50px;
-          } */}
+          } */
+          }
 
-          .dollar{
-            margin-left:430px;
+          .dollar {
+            margin-left: 430px;
           }
           .icon {
             font-size: 30px;
@@ -691,13 +727,13 @@ export default function Detail() {
             }
 
             main > .container {
-            padding:0;
-          }
+              padding: 0;
+            }
 
             .object-fit-cover {
-            height: 300px; 
-          }
-          
+              height: 300px;
+            }
+
             .nav-btn {
               width: 48px;
               height: 48px;
@@ -717,8 +753,8 @@ export default function Detail() {
                 margin-bottom: 20px;
               }
             }
-            .seat1{
-              margin:0;
+            .seat1 {
+              margin: 0;
             }
             .btn-toolbar {
               display: none;
@@ -726,6 +762,6 @@ export default function Detail() {
           }
         `}
       </style>
-    </>
+    </> 
   )
 }
