@@ -22,7 +22,9 @@ export default function OrganizerAddEvent() {
         <div className="w-100 bg-bg-gray organizer-main d-flex flex-column">
           <OrganizerTopBar title="新增活動" />
           <div className='on-main d-flex flex-column align-items-center justify-content-center'>
-          <div className="d-flex flex-column align-items-center justify-content-center">
+          <motion.div initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }} className="d-flex flex-column align-items-center justify-content-center">
             <h5 className="mb-4">活動上架規範同意書</h5>
             <div className="p-4 border border-normal-gray rounded-4 terms-container mb-3">
               <OrganizerTerms />
@@ -45,7 +47,7 @@ export default function OrganizerAddEvent() {
                 className={`btn btn-primary next-step ${isChecked ? 'checked' : ''}`}><h6 className='m-0'>開始新增</h6></motion.button>
               </Link>
             </div>
-          </div>
+          </motion.div>
           </div>
         </div>
       </div>
@@ -73,7 +75,7 @@ export default function OrganizerAddEvent() {
             flex: 1;
           }
           .terms-container {
-            width: 900px;
+            width: 1000px;
             height: 500px;
             overflow: scroll;
           }
