@@ -15,10 +15,10 @@ export default function PayList() {
 
   // 將字串轉換為 JavaScript 物件
   var MtItems = JSON.parse(MtItemsString)
-  console.log(MtItems)
+  // console.log(MtItems)
   //存入狀態
   const [pay, setPay] = useState([])
-  console.log(pay)
+  // console.log(pay)
 
   // 過濾出所有符合條件的項目
   const news = MtItems.flatMap((merchant) => {
@@ -33,7 +33,7 @@ export default function PayList() {
 
     return total
   }
-  console.log(TotalPrice())
+  // console.log(TotalPrice())
 
   // 定義處理結帳的函式
   const handleCheckout = () => {
@@ -63,10 +63,10 @@ export default function PayList() {
 
   return (
     <>
-      <h2>結帳內容</h2>
+      <h2 className="text-white">結帳內容</h2>
       {pay.map((v, i) => {
         return (
-          <li className="" key={v.id}>
+          <li className="text-white" key={v.id}>
             <div className="">活動名稱 : {v.eventName}</div>
             <div>商家ID : {v.merchantId}</div>
             <div>票卷價格 : ${v.price}</div>
@@ -76,7 +76,7 @@ export default function PayList() {
           </li>
         )
       })}
-      <h3>總價:{TotalPrice()}</h3>
+      <h3 className="text-white">總價:{TotalPrice()}</h3>
 
       {/* <Link href="/cart">確認結帳</Link> */}
 
