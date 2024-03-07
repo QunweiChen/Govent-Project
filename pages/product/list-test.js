@@ -1,22 +1,24 @@
 import React, { useState } from 'react'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top-sm'
-import useEvents from '@/hooks/use-event/events'
+// import useEvents from '@/hooks/use-event/events'
+import ProductStateList from '@/pages/product/list-state'
 import FavIcon from '@/components/layout/list-layout/fav-icon'
 
+
 export default function List() {
-  const { data } = useEvents()
+  // const { data } = useEvents()
   // console.log(data.data?.posts)
-  console.log(data?.data.posts)
+  // console.log(data?.data.posts)
   return (
     <>
-      <useEvents>
+      {/* <useEvents> */}
         <nav>
           <NavbarTopRwd />
         </nav>
         <div className="container">
           <h1 className="text-white">
-            {data?.data.posts.map((post) => (
-              <div key={post.id} className="col-md-4 col-sm-6 ">
+            {/* {data?.data.posts.map((post) => ( */}
+              {/* <div key={post.id} className="col-md-4 col-sm-6 ">
                 <div className="card  stretched-link bg-bg-gray-secondary text-white px-0 no-border">
                   <figure>
                     <img
@@ -42,11 +44,15 @@ export default function List() {
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              </div> */}
+            {/* ))} */}
           </h1>
         </div>
-      </useEvents>
+      {/* </useEvents> */}
+
+      <div className="container">
+        
+      </div>
 
       <style global jsx>{`
         body {
