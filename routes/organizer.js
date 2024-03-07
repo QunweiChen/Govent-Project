@@ -1,26 +1,90 @@
-import express from 'express';
-import multer from 'multer'; // 用于处理文件上传
-import path from 'path';
+import express from 'express'
+import multer from 'multer'
+import path from 'path'
+import sequelize from '#configs/db.js'
+import { QueryTypes } from 'sequelize'
 
-const router = express.Router();
+const router = express.Router()
 
-// 配置 multer 中间件
+// 处理 quill 编辑器上传的图片
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/images/contain'); // 上传的图片将保存在 public/images/contain 目录下
+    cb(null, 'public/images/contain') // 上传的图片将保存在 public/images 目录下
   },
   filename: (req, file, cb) => {
-    // 使用当前时间戳作为文件名，确保文件名的唯一性
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-const upload = multer({ storage });
+    cb(null, 'ct_' + Date.now() + path.extname(file.originalname))
+  },
+})
+const upload = multer({ storage })
 
-// 处理图片上传的路由
+// 处理 banner 图片上传
+const bannerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images/banner') // 上传的 banner 图片将保存在 public/images/banner 目录下
+  },
+  filename: (req, file, cb) => {
+    cb(null, 'bn_' + Date.now() + path.extname(file.originalname))
+  },
+})
+const bannerUpload = multer({ storage: bannerStorage })
+
+// 处理 quill 编辑器上传的图片的路由
 router.post('/contain-image', upload.single('upload'), (req, res) => {
-  // 上传成功后返回图片的访问 URL，URL 格式应该是可以在客户端访问到图片的完整 URL
-  const imageUrl = `http://localhost:3005/images/contain/${req.file.filename}`; // 假设服务器运行在本地的端口 3005
-  res.status(201).json({ url: imageUrl });
-});
+  const imageUrl = `http://localhost:3005/images/contain/${req.file.filename}`
+  res.status(201).json({ url: imageUrl })
+})
 
-export default router;
+// 处理新增活动，包括处理 banner 文件
+router.post('/add-event', bannerUpload.single('banner'), async (req, res) => {
+  const {
+    merchat_id,
+    event_name,
+    event_type_id,
+    place,
+    str,
+    address,
+    ticket_ins,
+    start_date,
+    end_date,
+    sell_start_date,
+    sell_end_date,
+    content,
+  } = req.body
+
+  try {
+    // 处理上传的 banner 图片并保存
+    const bannerFileName = req.file ? req.file.filename : null
+
+    // 使用 Sequelize 或其他方式新增活动数据
+    const newEvent = await sequelize.query(
+      'INSERT INTO `event` (merchat_id, event_name, event_type_id, place, banner, str, address, ticket_ins, start_date, end_date, sell_start_date, sell_end_date, content, vaild) VALUES (:merchat_id, :event_name, :event_type_id, :place, :banner, :str, :address, :ticket_ins, :start_date, :end_date, :sell_start_date, :sell_end_date, :content, 0)',
+      {
+        replacements: {
+          merchat_id,
+          event_name,
+          event_type_id,
+          place,
+          banner: bannerFileName,
+          str,
+          address,
+          ticket_ins,
+          start_date,
+          end_date,
+          sell_start_date,
+          sell_end_date,
+          content,
+        },
+        type: QueryTypes.INSERT,
+      }
+    )
+
+    res.json({ status: 'success', data: { newEvent } })
+  } catch (error) {
+    console.error('Error creating event:', error)
+    res
+      .status(500)
+      .json({ status: 'error', message: 'Failed to create event.' })
+  }
+})
+
+export default router
