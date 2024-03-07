@@ -1,23 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import EventsRecommend from '@/components/events-recommend'
 import NavbarBottomRwd from '@/components/layout/default-layout/navbar-bottom-rwd'
 import Link from 'next/link'
 //勾子
 import { useCart } from '@/hooks/use-cart'
-import { faL } from '@fortawesome/free-solid-svg-icons'
-import { setMinutes } from 'date-fns'
-import { forEach } from 'lodash'
 
 export default function CartIndex() {
   //--------
   //引入勾子
   const {
     data,
-    cartItems,
-    addItem,
-    MerchantItem,
     merchantItems,
-    setMerchantItems,
     removeItem,
     calcTotalItems,
     calcTotalPrice,
@@ -93,9 +86,9 @@ export default function CartIndex() {
                 <div className="border-0 cart-card border-bottom border-normal-gray">
                   <div className="row g-0 my-4">
                     <div className="col-6 text-white d-flex align-items-center">
-                      <Link href="/cart/event-list">
+                      <a href="../cart/event-list">
                         <h4 className="ms-4 text-white">購物車</h4>
-                      </Link>
+                      </a>
                     </div>
                     {merchantItems && merchantItems.length > 0 ? (
                       <div className="col-6 text-white d-flex align-items-center justify-content-end">
@@ -249,7 +242,7 @@ export default function CartIndex() {
                         總金額 NT {parseInt(calcTotalPrice()).toLocaleString()}
                       </h5>
                       <h6 className="btn btn-primary-deep ms-4">
-                        <Link href="/payment" className="text-white">
+                        <Link href="/cart/pay-list" className="text-white">
                           前往結帳
                         </Link>
                       </h6>

@@ -12,19 +12,6 @@ export function CartProvider({
   localStorageKey1 = 'cartItems', //初始化localStorage的鍵名
   localStorageKey2 = 'MtItems', //初始化localStorage的鍵名
 }) {
-  //連接資料庫
-  const [data, setData] = useState([])
-  console.log(data)
-  useEffect(() => {
-    const getCartMt = async () => {
-      fetch('http://localhost:3005/api/cart')
-        .then((res) => res.json())
-        .then((text) => setData(text))
-    }
-
-    getCartMt()
-  }, [])
-
   // localStorage中儲存 items、MtItems。如果localStorage有此鍵中的值，則套入使用作為初始items、MtItems。
   let items = initialCartItems
   if (!items.length) {
@@ -63,15 +50,6 @@ export function CartProvider({
   const [merchantItems, setMerchantItems] = useState(MtItems)
   console.log(merchantItems)
   //送來資料多一個checked屬性
-
-  // const updatedMerchantItems = merchantItems.map((merchant) => {
-  //   const updatedItems = merchant.items.map((item) => {
-  //     return { ...item, checked: false }
-  //   })
-  //   return { ...merchant, items: updatedItems }
-  // })
-  // setMerchantItems(updatedMerchantItems)
-
   //即時更新
   useEffect(() => {
     const news = merchantItems.map((v, i) => {
@@ -93,7 +71,6 @@ export function CartProvider({
     }
     // eslint-disable-next-line
 }, [cartItems])
-
   useEffect(() => {
     // 使用字串比較
     if (JSON.stringify(merchantItems) !== storedValueMt) {
@@ -105,7 +82,18 @@ export function CartProvider({
   // 初始化 setValue(localStoage), setValue用於存入localStorage中
   const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
   const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
+  //連接資料庫
+  const [data, setData] = useState([])
+  console.log(data)
+  useEffect(() => {
+    const getCartMt = async () => {
+      fetch('http://localhost:3005/api/cart')
+        .then((res) => res.json())
+        .then((text) => setData(text))
+    }
 
+    getCartMt()
+  }, [])
   //重新定義公司
   const Mt = data.data?.posts
   // console.log(Mt)
