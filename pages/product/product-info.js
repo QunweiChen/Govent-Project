@@ -4,18 +4,32 @@ import 'react-datepicker/dist/react-datepicker.css'
 import EventsRecommend from '@/components/events-recommend'
 import Calendar from '@/components/product/date2'
 import Link from 'next/link'
-import eventsData from '@/data/event.json'
+import EventsData from '@/hooks/use-info'
 
 export default function Detail() {
-  // const [events, setEvents] = useState(eventsData)
-  const [qty, setQty] = useState(0)
-  const priceUnit = 3200
-  const totalAmount = qty * priceUnit
+  // 假設初始狀態是未選擇
+  const [selected,setSelected] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null); 
+  const [qty, setQty] = useState(1)
 
-  // console.log(eventsData)
+
+
+ const handleSelection = ()=>{
+    setSelected(!selected)  // 切換選擇狀態
+  }
+
+  const handleDate = (date) => {
+    setSelectedDate(date);
+  };
+
+  const handleTime = (time) => {
+    setSelectedTime(time);
+  };
+
 
   const handleDecrease = () => {
-    if (qty > 0) {
+    if (qty > 1) {
       setQty(qty - 1)
     }
   }
@@ -23,27 +37,25 @@ export default function Detail() {
     setQty(qty + 1)
   }
 
-  const getDatas = async(params)=>{
-    const searchParams = new URLSearchParams(params)
-    try{
-      const res = await fetch(`http://localhost:3005/api/info?${searchParams}`);
-      return await res.json();
-    }catch(error){
-      console.log(error)
-    }
-  }
+  const totalAmount = selected ? 3200 * qty : 0;
+
+  const addToCart = () => {
+    const cartData = {
+      selectedDate,
+      selectedTime,
+      qty,
+      totalAmount
+    };
+    
+  };
+ 
 
   return (
-    <>
-    {/* {events.map((event,i) =>{return(<li key={event.id}>
-            <p>{event.event_name}</p>
-            <p>地點: {event.place}</p>
-            <p>票價: {event.price}</p>
-            <p>時間: {event.start_date}</p>
-            <p>內容: {event.content}</p>
-
-          </li>)})} */}
-      <section>
+   <>
+    
+    {data?.data.posts.map((v) => (
+      <>
+    <section>
         <div className=" d-flex p-4 d-none d-xxl-inline-flex">
           <p>
             首頁 <i className="bi bi-chevron-right"></i>
@@ -93,7 +105,8 @@ export default function Detail() {
       <main>
         <div className="wrapper">
           <section className="title">
-            <div className="d-flex align-items-center justify-content-between mt-3">
+         
+            <div key={v.id} className="d-flex align-items-center justify-content-between mt-3">
               <h5 className="border-5 border-start border-primary px-2">
                 YOASOBI
               </h5>
@@ -107,21 +120,25 @@ export default function Detail() {
             </div>
             <div>
               <h3 className="my-4">
-                YOASOBI演唱會2024台北站
+                {/* YOASOBI演唱會2024台北站 */}
+                {v.event_name}
                 <span className="d-none d-xxl-inline-flex">
                   ｜YOASOBI ASIA TOUR 2023-2024 Solo Concert in Taipei
                 </span>
               </h3>
               <h6 className="text-normal-gray-light">
                 <i className="bi bi-calendar me-2 d-none d-xxl-inline-flex" />
-                2024/01/21 － 2024/01/22
+                {/* 2024/01/21 － 2024/01/22 */}
+                {v.start_date}-{v.end_date}
               </h6>
               <h6>
                 <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" />
-                Zepp New Taipei
+                {/* Zepp New Taipei */}
+                {v.place}
               </h6>
               <p className="mx-4 text-secondary-02">
-                新北市新莊區新北大道四段3號8樓
+                {/* 新北市新莊區新北大道四段3號8樓 */}
+                {v.address}
               </p>
               <hr className="d-none d-xxl-block" />
             </div>
@@ -153,8 +170,8 @@ export default function Detail() {
             <div className="row seat1 mt-3">
               <h4 className="col-lg-9 col-sm-6">2F 座位</h4>
               <h4 className="col-lg-2 col-sm-4">NT$ 3,200</h4>
-              <button className="store col-lg-1 col-sm-2 btn btn-primary-deep">
-                選擇
+              <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={handleSelection}>
+              {selected ? '已選擇' : '選擇'}
               </button>
               <div className="d-flex mt-4 d-none d-xxl-inline-flex">
                 <h5 className="me-5">憑證兌換期限</h5>
@@ -175,12 +192,12 @@ export default function Detail() {
                 <div className="me-5">
                   <h5 className="mb-5">選擇日期</h5>
                   <div className="text-center">
-                    <Calendar />
+                    <Calendar onChange={handleDate}/>
                   </div>
                 </div>
                 <div>
                   <h5 className="mb-5">選擇時間</h5>
-                  <button className="store fs-5 p-2 btn btn-primary-deep">
+                  <button className="store fs-5 p-2 btn btn-primary-deep" onClick={() => handleTime('17:00')}>
                     17:00
                   </button>
                   <h5 className="my-5">數量</h5>
@@ -202,8 +219,10 @@ export default function Detail() {
                     <h4 className="dollar">NT$ {totalAmount}</h4>
                   </div>
                   <div className="d-flex justify-content-end mb-3">
-                    <Link href={`/cart?totalAmount=${totalAmount}`}>
-                      <button className="store fs-5 me-2 p-2 btn btn-primary-deep">
+                    <Link href={`
+                    /cart`
+                    }>
+                      <button className="store fs-5 me-2 p-2 btn btn-primary-deep" onClick={addToCart}>
                         加入購物車
                       </button>
                     </Link>
@@ -212,6 +231,7 @@ export default function Detail() {
               </div>
             </div>
           </section>
+        
 
           <section className="row">
             <div className="left col-lg-8 col-sm-12">
@@ -374,7 +394,7 @@ export default function Detail() {
                     </button>
                   </div>
                   <div className="d-flex align-items-center mt-2 ">
-                    <div className="mb-2 ">
+                    <div className="mb-2">
                       <i className="bi bi-star-fill text-primary"></i>
                       <i className="bi bi-star-fill text-primary ms-2"></i>
                       <i className="bi bi-star-fill text-primary ms-2"></i>
@@ -542,89 +562,6 @@ export default function Detail() {
 
           <section className="d-none d-xxl-inline-flex">
             <EventsRecommend />
-            {/* <div className="d-flex align-items-center mt-5">
-              <h4 className="border-5 border-start border-primary px-2">
-                為你推薦
-              </h4>
-            </div>
-            <div className="d-flex justify-content-center pb-5">
-              <div className="width-1200">
-                <div className="mt-4 d-flex justify-content-between">
-                  <Card
-                    style={{ width: '250px' }}
-                    className="custom-card text-white"
-                  >
-                    <Card.Img
-                      variant="top"
-                      src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-                    />
-                    <Card.Body className="bg-bg-gray">
-                      <Card.Title className="h6">
-                        Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                      </Card.Title>
-                      <div className="d-flex justify-content-between align-items-center mt-3">
-                        <p className="text-normal-gray-light">演唱會</p>
-                        <p className="text-primary-light">NT$800 起</p>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                  <Card
-                    style={{ width: '250px' }}
-                    className="custom-card text-white"
-                  >
-                    <Card.Img
-                      variant="top"
-                      src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-                    />
-                    <Card.Body className="bg-bg-gray">
-                      <Card.Title className="h6">
-                        Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                      </Card.Title>
-                      <div className="d-flex justify-content-between align-items-center mt-3">
-                        <p className="text-normal-gray-light">演唱會</p>
-                        <p className="text-primary-light">NT$800 起</p>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                  <Card
-                    style={{ width: '250px' }}
-                    className="custom-card text-white"
-                  >
-                    <Card.Img
-                      variant="top"
-                      src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-                    />
-                    <Card.Body className="bg-bg-gray">
-                      <Card.Title className="h6">
-                        Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                      </Card.Title>
-                      <div className="d-flex justify-content-between align-items-center mt-3">
-                        <p className="text-normal-gray-light">演唱會</p>
-                        <p className="text-primary-light">NT$800 起</p>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                  <Card
-                    style={{ width: '250px' }}
-                    className="custom-card text-white"
-                  >
-                    <Card.Img
-                      variant="top"
-                      src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
-                    />
-                    <Card.Body className="bg-bg-gray">
-                      <Card.Title className="h6">
-                        Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                      </Card.Title>
-                      <div className="d-flex justify-content-between align-items-center mt-3">
-                        <p className="text-normal-gray-light">演唱會</p>
-                        <p className="text-primary-light">NT$800 起</p>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </div>
-              </div>
-            </div> */}
           </section>
         </div>
         <div className="d-inline-flex d-xxl-none align-items-center justify-content-center col-12 bg-bg-gray-secondary p-3 rounded-3">
@@ -712,7 +649,9 @@ export default function Detail() {
           </div>
         </div>
       </main>
-      <footer>{/* place footer here */}</footer>
+</>
+    ))}   
+
       <style global jsx>
         {`
           body {
@@ -823,6 +762,6 @@ export default function Detail() {
           }
         `}
       </style>
-    </>
+    </> 
   )
 }

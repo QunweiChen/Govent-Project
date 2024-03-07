@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 // chunk - 依size分成子陣列，ex. chunk([1, 2, 3, 4, 5], 2) -> [[1,2],[3,4],[5]]
 const chunk = (arr, size) =>
@@ -7,8 +7,22 @@ const chunk = (arr, size) =>
   )
 
 export default function Calendar() {
-  // const [myYear, setMyYear] = useState(2022)
-  // const [myMonth, setMyMonth] = useState(2)
+  const [events, setEvents] = useState([])
+
+  useEffect(() => {
+    fetchEventData()
+  }, [])
+
+  const fetchEventData = async (params) => {
+    const searchParams = new URLSearchParams(params)
+    try {
+      const res = await fetch(`http://localhost:3005/api/info?${searchParams}`)
+      const eventData = await res.json()
+      setEvents(eventData) // 將獲取的資料存入狀態中
+    } catch (error) {
+      console.error('獲取資料時發生錯誤:', error)
+    }
+  }
 
   // 一開始未選中日期
   const [myDate, setMyDate] = useState(0)
@@ -59,18 +73,18 @@ export default function Calendar() {
           <h5 id="yearAndMonth" className="col-4">{`${nowY}`}</h5>
           <h5 id="yearAndMonth" className="col-4">{`${nowM}月`}</h5>
           <div className="d-flex pb-1">
-            <button className="leftBtn" onClick={preM}>
+            <button className="leftBtn">
               <i className="bi bi-caret-left-fill"></i>
             </button>
             <div className="month"></div>
-            <button className="rightBtn" onClick={nowM}>
+            <button className="rightBtn">
               <i className="bi bi-caret-right-fill"></i>
             </button>
           </div>
         </div>
-        
+
         <table border="1">
-          <thead id="title" >
+          <thead id="title">
             <tr>
               {weekDayList.map(function (v, i) {
                 return <th key={i}>{v}</th>
@@ -124,14 +138,14 @@ export default function Calendar() {
           }
 
           .today {
-            background-color:DarkOrange;
+            background-color: DarkOrange;
           }
 
           .chosen-date {
-            background-color:coral;
+            background-color: coral;
           }
 
-          .leftBtn{
+          .leftBtn {
             font-size: 24px;
             font-weight: bold;
             cursor: pointer;
@@ -140,7 +154,7 @@ export default function Calendar() {
             background: none;
           }
 
-          .rightBtn{
+          .rightBtn {
             font-size: 24px;
             font-weight: bold;
             cursor: pointer;
@@ -148,22 +162,19 @@ export default function Calendar() {
             border: none;
             background: none;
           }
-          
+
           @media screen and (max-width: 576px) {
-            .calendar{
-                border: 1px solid white;
-                border-radius: 10px;
-                
+            .calendar {
+              border: 1px solid white;
+              border-radius: 10px;
             }
-          table {
-            border-radius: 10px;
-            margin-top: 10px;
-          }
-
+            table {
+              border-radius: 10px;
+              margin-top: 10px;
+            }
           }
         `}
       </style>
     </>
   )
 }
-
