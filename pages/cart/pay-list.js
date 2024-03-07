@@ -4,8 +4,14 @@ import Link from 'next/link'
 import { useCart } from '@/hooks/use-cart'
 
 export default function PayList() {
+  //引入勾子
+  const { merchantItems, setMerchantItems } = useCart()
+
   // 從 localStorage 中獲取 MtItems 資料
-  var MtItemsString = window.localStorage.getItem('MtItems')
+  var MtItemsString =
+    typeof window !== 'undefined'
+      ? window.localStorage.getItem('MtItems')
+      : '[]'
 
   // 將字串轉換為 JavaScript 物件
   var MtItems = JSON.parse(MtItemsString)
@@ -45,7 +51,7 @@ export default function PayList() {
 
     // 將更新後的 MtItems 存回 localStorage
     window.localStorage.setItem('MtItems', JSON.stringify(updatedMtItems))
-
+    setMerchantItems(updatedMtItems)
     // 清空 pay 狀態
     setPay([])
   }

@@ -72,6 +72,7 @@ export function CartProvider({
     // eslint-disable-next-line
 }, [cartItems])
   useEffect(() => {
+    console.log(merchantItems)
     // 使用字串比較
     if (JSON.stringify(merchantItems) !== storedValueMt) {
       setValueMt(merchantItems)
@@ -84,18 +85,22 @@ export function CartProvider({
   const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
   //連接資料庫
   const [data, setData] = useState([])
+  const [Mt, setMt] = useState([])
   console.log(data)
   useEffect(() => {
     const getCartMt = async () => {
       fetch('http://localhost:3005/api/cart')
         .then((res) => res.json())
-        .then((text) => setData(text))
+        .then((text) => {
+          setData(text)
+          setMt(text.data ? text.data.posts : [])
+        })
     }
 
     getCartMt()
   }, [])
   //重新定義公司
-  const Mt = data.data?.posts
+  //const Mt = data.data ? data.data.posts : []
   // console.log(Mt)
 
   //checkbox內容
@@ -161,7 +166,7 @@ export function CartProvider({
   //資料庫-用id尋找商家name
   const foundMt = (MtId) => {
     const foundItem = Mt.find((item) => item.id === MtId)
-    const bankName = foundItem.name
+    const bankName = foundItem?.name
     // console.log(bankName)
     return bankName
   }
