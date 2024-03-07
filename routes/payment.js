@@ -1,10 +1,11 @@
 import express from 'express'
+import multer from 'multer'
 const router = express.Router()
-
-router.post('/', (req, res) => {
+const upload = multer()
+router.post('/', upload.none(), (req, res) => {
   const data = req.body
   console.log(data)
-  res.send('h3')
+  res.json(data)
 })
 
 export default router
