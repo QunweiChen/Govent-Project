@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 import CartCard from '@/components/cart/cart-card'
 import TodoAll from '@/components/cart/todo-all'
 import NoCart from '@/components/cart/no-cart'
@@ -13,73 +13,22 @@ export default function CartIndex() {
   //--------
   //引入勾子
   const {
-    data,
     merchantItems,
     removeItem,
-    calcTotalItems,
-    calcTotalPrice,
+    calcTotalItemstotal,
+    calcTotalPricetotal,
     handleToggleCompleted,
     handleToggleSelectedAll,
     handleToggleSelectedMt,
     foundMt,
   } = useCart()
-  // {
-  //   "id": 1,
-  //   "merchantId": 1,
-  //   "eventName": "YOASOBI 台北演唱會111",
-  //   "holdingTime": "8:00",
-  //   "images": "4-03.jpg",
-  //   "ticketName": "優惠票",
-  //   "price": "3400",
-  //   "qty":2
-  // }
-  //-
-  // [
-  //   {
-  //     merchantId: 1,
-  //     items: [
-  //       {
-  //         id: 1,
-  //         merchantId: 1,
-  //         eventTypeId: 2,
-  //         eventName: 'YOASOBI 台北演唱會111',
-  //         startDate: '2024-04-01 8:00:00',
-  //         endDate: '2024-04-01 11:00:00',
-  //         holdingTime: '2023-06-15 14:23:45',
-  //         images: '4-03.jpg',
-  //         str: '台北市',
-  //         vaild: '上架中',
-  //         ticketName: '優惠票',
-  //         price: '3400',
-  //         qty: 2,
-  //         checked: false
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     merchantId: 2,
-  //     items: [
-  //       {
-  //         id: 3,
-  //         merchantId: 2,
-  //         eventTypeId: 2,
-  //         eventName: 'YOASOBI 台北演唱會333',
-  //         startDate: '2024-04-01 8:00:00',
-  //         endDate: '2024-04-01 11:00:00',
-  //         holdingTime: '2025-02-10 18:00:00',
-  //         images: '4-03.jpg',
-  //         str: '台北市',
-  //         vaild: '上架中',
-  //         ticketName: '早鳥票',
-  //         price: '3000',
-  //         qty: 5,
-  //         checked: false
-  //       }
-  //     ]
-  //   }
-  // ]
-  console.log(data)
 
+  const [hasMtItems, setHasMtItems] = useState(false)
+
+  useLayoutEffect(() => {
+    const mtItems = window.localStorage.getItem('MtItems')
+    if (mtItems.length) setHasMtItems(mtItems > 0)
+  }, [])
   return (
     <>
       <div className="container width-1200">
@@ -112,8 +61,8 @@ export default function CartIndex() {
                 foundMt={foundMt}
                 handleToggleCompleted={handleToggleCompleted}
                 removeItem={removeItem}
-                calcTotalItems={calcTotalItems}
-                calcTotalPrice={calcTotalPrice}
+                calcTotalItemstotal={calcTotalItemstotal}
+                calcTotalPricetotal={calcTotalPricetotal}
               />
             ) : (
               <NoCart />
@@ -136,12 +85,10 @@ export default function CartIndex() {
         {merchantItems && merchantItems.length > 0 ? (
           <div className="d-flex justify-content-between align-items-center m-2">
             <p className="text-primary-light ms-3">
-              合計{calcTotalItems()}件商品
+              合計{calcTotalItemstotal}件商品
             </p>
             <div className="d-flex justify-content-center align-items-center">
-              <p className="text-white ms-3">
-                總金額 NT {parseInt(calcTotalPrice()).toLocaleString()}
-              </p>
+              <p className="text-white ms-3">總金額 NT {calcTotalPricetotal}</p>
               <h6 className="btn btn-primary-deep text-white ms-4 m-0">
                 <Link href="/payment" className="text-white">
                   前往結帳

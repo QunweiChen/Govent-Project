@@ -18,7 +18,7 @@ export default function PayList() {
   // console.log(MtItems)
   //存入狀態
   const [pay, setPay] = useState([])
-  // console.log(pay)
+  console.log(pay)
 
   // 過濾出所有符合條件的項目
   const news = MtItems.flatMap((merchant) => {

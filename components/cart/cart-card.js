@@ -7,8 +7,8 @@ export default function CartCard({
   foundMt = () => {},
   handleToggleCompleted = () => {},
   removeItem = () => {},
-  calcTotalItems = () => {},
-  calcTotalPrice = () => {},
+  calcTotalItemstotal = '',
+  calcTotalPricetotal = '',
 }) {
   return (
     <>
@@ -120,11 +120,9 @@ export default function CartCard({
       <div className="border-0 cart-card d-none d-sm-block border-top border-normal-gray">
         <div className="d-flex justify-content-end align-items-center m-4">
           <p className="text-primary-light ms-3">
-            合計{calcTotalItems()}件商品
+            合計{calcTotalItemstotal}件商品
           </p>
-          <h5 className="text-white ms-3">
-            總金額 NT {parseInt(calcTotalPrice()).toLocaleString()}
-          </h5>
+          <h5 className="text-white ms-3">總金額 NT {calcTotalPricetotal}</h5>
           <h6 className="btn btn-primary-deep ms-4">
             <Link href="/cart/pay-list" className="text-white">
               前往結帳

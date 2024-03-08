@@ -43,67 +43,58 @@ export function CartProvider({
     }
   }
 
-  // 初始化 cartItems, cartState)($)
   // 加入到購物車中的項目
   const [cartItems, setCartItems] = useState(items)
   // 加入到各分類的項目
   const [merchantItems, setMerchantItems] = useState(MtItems)
-  // console.log(merchantItems)
-  //送來資料多一個checked屬性
-  //即時更新
+
+  // 初始化 setValue(localStoage), setValue用於存入localStorage中
+  const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
+  const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
+  //連接資料庫
+  const [Mt, setMt] = useState([])
+
+  //重新定義公司
   useEffect(() => {
-    const news = merchantItems.map((v, i) => {
+    const getCartMt = async () => {
+      try {
+        const response = await fetch('http://localhost:3005/api/cart')
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        const data = await response.json()
+        setMt(data.data ? data.data.posts : [])
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+    getCartMt()
+  }, [])
+  //送來資料多一個checked屬性
+  useEffect(() => {
+    const news = merchantItems.map((v) => {
       const a = v.items
-      a.map((v, i) => {
+      a.map((v) => {
         v.checked = false
       })
     })
     setMerchantItems(news)
   }, [])
-  useEffect(() => {
-    setMerchantItems(merchantItems)
-  }, [merchantItems])
   // 當 cartItems 更動時 -> 更動 localStorage 中的值 -> 更動 cartState
   useEffect(() => {
     // 使用字串比較
     if (JSON.stringify(cartItems) !== storedValue) {
       setValue(cartItems)
     }
-    // eslint-disable-next-line
-}, [cartItems])
-  useEffect(() => {
-    console.log(merchantItems)
+    setMerchantItems(merchantItems)
     // 使用字串比較
     if (JSON.stringify(merchantItems) !== storedValueMt) {
       setValueMt(merchantItems)
     }
     // eslint-disable-next-line
-}, [merchantItems])
-
-  // 初始化 setValue(localStoage), setValue用於存入localStorage中
-  const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
-  const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
-  //連接資料庫
-  const [data, setData] = useState([])
-  const [Mt, setMt] = useState([])
-  console.log(data)
-  useEffect(() => {
-    const getCartMt = async () => {
-      fetch('http://localhost:3005/api/cart')
-        .then((res) => res.json())
-        .then((text) => {
-          setData(text)
-          setMt(text.data ? text.data.posts : [])
-        })
-    }
-    getCartMt()
-  }, [])
-  //重新定義公司
-  //const Mt = data.data ? data.data.posts : []
-  // console.log(Mt)
+}, [cartItems,merchantItems])
 
   //checkbox內容
-  //商家全選
   //切換
   // 依傳入id進行切換completed屬性改變
   const toggleCheckbox = (newmerchantItems, id) => {
@@ -119,7 +110,6 @@ export function CartProvider({
         }),
       }
     })
-    // console.log(news)
     setMerchantItems(news)
   }
   const handleToggleCompleted = (id) => {
@@ -135,13 +125,11 @@ export function CartProvider({
         }),
       }
     })
-    // console.log(news)
     setMerchantItems(news)
   }
   const handleToggleSelectedAll = (isSelectedAll) => {
     toggleSelectedAll(merchantItems, isSelectedAll)
   }
-
   //商家全選
   const toggleSelectedMt = (merchantItems, isSelectedMt, MtId) => {
     const news = merchantItems.map((merchant) => {
@@ -156,7 +144,6 @@ export function CartProvider({
         return merchant
       }
     })
-    console.log(news)
     setMerchantItems(news)
   }
   const handleToggleSelectedMt = (isSelectedMt, MtId) => {
@@ -166,10 +153,8 @@ export function CartProvider({
   const foundMt = (MtId) => {
     const foundItem = Mt.find((item) => item.id === MtId)
     const bankName = foundItem?.name
-    // console.log(bankName)
     return bankName
   }
-
   // 添加分類
   const MerchantItem = (item, quantityToAdd) => {
     const merchantId = item.merchantId
@@ -250,7 +235,7 @@ export function CartProvider({
     const filteredItems = newItems.filter(
       (merchant) => merchant.items.length > 0
     )
-    console.log(filteredItems)
+    // console.log(filteredItems)
     setMerchantItems(filteredItems)
   }
   //計算數量
@@ -265,6 +250,8 @@ export function CartProvider({
     }
     return total
   }
+  const calcTotalItemstotal = calcTotalItems()
+  console.log(calcTotalItemstotal)
 
   //總金額
   const calcTotalPrice = () => {
@@ -277,19 +264,22 @@ export function CartProvider({
     }
     return total
   }
+  const calcTotalPricetotal = parseInt(calcTotalPrice()).toLocaleString()
+  console.log(calcTotalPricetotal)
+
   //最外(上)元件階層包裹提供者元件，讓⽗⺟元件可以提供它
   return (
     <CartContext.Provider
       value={{
-        data,
+        MtItems,
         cartItems,
         addItem,
         MerchantItem,
         merchantItems,
         setMerchantItems,
         removeItem,
-        calcTotalItems,
-        calcTotalPrice,
+        calcTotalItemstotal,
+        calcTotalPricetotal,
         handleToggleCompleted,
         handleToggleSelectedAll,
         handleToggleSelectedMt,
