@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import React, { useState } from 'react'
+import { useHistory, useLocation, useParams, useRouteMatch } from 'react-router-dom';
 
 import { CiHeart } from 'react-icons/ci'
 import { GoSortDesc } from 'react-icons/go'
@@ -16,6 +17,7 @@ import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import AlwaysOpenExample from '@/components/layout/list-layout/accordion'
 import Sidebar from '@/components/layout/list-layout/sidebar'
+import PageBar from '@/components/layout/list-layout/pagebar'
 
 import EventCard from '@/components/layout/list-layout/event_card'
 import useEvents from '@/hooks/use-event/events'
@@ -591,43 +593,7 @@ export default function List() {
                   role="toolbar"
                   aria-label="Toolbar with button groups"
                 >
-                  <div className="btn-group " role="group" aria-label="group">
-                    <button
-                      type="button"
-                      className="btn btn-normal-gray"
-                      aria-label="previous"
-                    >
-                      &laquo;
-                    </button>
-                    <button type="button" className="btn btn-primary">
-                      1
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary text-white"
-                    >
-                      2
-                    </button>
-                    <button type="button" className="btn btn-secondary">
-                      3
-                    </button>
-                    <button type="button" className="btn btn-secondary">
-                      4
-                    </button>
-                    <button type="button" className="btn btn-secondary">
-                      5
-                    </button>
-                    <button type="button" className="btn btn-secondary">
-                      6
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-normal-gray"
-                      aria-label="next"
-                    >
-                      &raquo;
-                    </button>
-                  </div>
+                <PageBar/>
                 </div>
               </footer>
             </div>

@@ -1,15 +1,18 @@
 import { useEffect } from 'react'
 import React, { useState } from 'react'
+import Link from 'next/link'
 
+// import FavFcon from '@/components/fav-test/fav-icon'
 import FavIcon from '@/components/layout/list-layout/fav-icon'
 import useEvents from '@/hooks/use-event/events'
 
-export default function EventCard() {
+export default function EventCard({ id, name }) {
   const { data } = useEvents()
   return (
     <>
       {data?.data.posts.map((v) => (
         <div key={v.id} className="col-md-4 col-sm-6 ">
+        <Link href={`/product/product-info/${v.id}`} className="col-md-4 col-sm-6" key={v.id} style={{ textDecoration: 'none' }}>
           <div className="card  stretched-link bg-bg-gray-secondary text-white px-0 no-border">
             <figure>
               <img
@@ -18,7 +21,8 @@ export default function EventCard() {
                 className="card-img-top"
               />
             </figure>
-            <FavIcon />
+            <FavIcon id={v.id} />
+            {/* <FavFcon/> */}
 
             <div className="card-body">
               <p className=" text-normal-gray-light">{v.activity_name}</p>
@@ -34,6 +38,7 @@ export default function EventCard() {
               </div>
             </div>
           </div>
+        </Link>
         </div>
       ))}
     </>

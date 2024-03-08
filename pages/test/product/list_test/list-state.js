@@ -7,13 +7,13 @@ import ActivityCategory from '@/data/event/activity_category.json'
 import EventType from '@/data/event/event_type.json'
 import StrList from '@/data/event/str.json'
 
-import useEvents from '@/hooks/use-event/events'
+// import useEvents from '@/hooks/use-event/events'
 
 // 載入分頁元件
 import BS5Pagination from '@/components/common/bs5-pagination'
 
 export default function ProductStateList() {
-  const { data } = useEvents()
+  // const { data } = useEvents()
   // 各選項的state
   const [nameLike, setNameLike] = useState('') //關鍵字
   const [catIds, setCatIds] = useState([]) //活動類別(BrandID)
@@ -37,41 +37,89 @@ export default function ProductStateList() {
   const [items, setItems] = useState([])
 
   // 從伺服器載入資料
+  // const getEvents = async (toFirstPage = false) => {
+  //   // 跳至第一頁
+  //   // 當重新過濾或重置選項，因重新載入資料需要跳至第一頁
+  //   if (toFirstPage) {
+  //     setPage(1)
+  //   }
+
+  //   // 要送至伺服器的query string參數
+  //   const params = {
+  //     page: toFirstPage ? 1 : page, // 跳至第一頁
+  //     name_like: nameLike,
+  //     cat_ids: catIds.join(','), // 空陣列會變成空字串
+  //     str_ids: strIds.join(','),
+  //     sort: orderby.sort,
+  //     order: orderby.order,
+  //     perpage,
+  //     price_gte: priceGte, //最好給預設值
+  //     price_lte: priceLte, //最好給預設值
+  //   }
+
+  //   // 用URLSearchParams產生查詢字串
+  //   const searchParams = new URLSearchParams(params)
+
+  //   const res = await axios.get(`http://localhost:3005/api/events?${searchParams.toString()}`);
+
+  //   if (res.data.status === 'success') {
+  //     //將物件轉為陣列
+  //     const eventsData = res.data.data.events;
+  //     const eventsArray = Object.values(eventsData);
+  //     // 設定獲取頁數總合
+  //     setItemTotal(res.data.data.total)
+  //     // 設定獲取項目
+  //     setItems(res.data.data.events)
+  //     setPageCount(res.data.data.pageCount)
+  //   }
+  // }
   const getEvents = async (toFirstPage = false) => {
-    // 跳至第一頁
-    // 當重新過濾或重置選項，因重新載入資料需要跳至第一頁
-    if (toFirstPage) {
-      setPage(1)
+    try {
+      // 跳至第一頁
+      // 當重新過濾或重置選項，因重新載入資料需要跳至第一頁
+      if (toFirstPage) {
+        setPage(1);
+      }
+  
+      // 要送至伺服器的 query string 參數
+      const params = {
+        page: toFirstPage ? 1 : page, // 跳至第一頁
+        name_like: nameLike,
+        cat_ids: catIds.join(','), // 空陣列會變成空字串
+        str_ids: strIds.join(','),
+        sort: orderby.sort,
+        order: orderby.order,
+        perpage,
+        price_gte: priceGte, // 最好給預設值
+        price_lte: priceLte, // 最好給預設值
+      };
+  
+      // 用 URLSearchParams 產生查詢字串
+      const searchParams = new URLSearchParams(params);
+  
+      const res = await axios.get(`http://localhost:3005/api/events?${searchParams.toString()}`);
+  
+      if (res.data.status === 'success') {
+        const eventsData = res.data.data.events;
+        if (eventsData) {
+          // 將非空的 JSON 物件轉換為陣列，並篩選掉空值
+          const eventsArray = Object.values(eventsData).filter(event => event !== null && event !== undefined);
+  
+          // 設定獲取頁數總合
+          setItemTotal(res.data.data.total);
+          // 設定獲取項目
+          setItems(eventsArray);
+          setPageCount(res.data.data.pageCount);
+        } else {
+          console.error('No events data found');
+        }
+      } else {
+        console.error('Error fetching events data:', res.data.status);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
-
-    // 要送至伺服器的query string參數
-    const params = {
-      page: toFirstPage ? 1 : page, // 跳至第一頁
-      name_like: nameLike,
-      cat_ids: catIds.join(','), // 空陣列會變成空字串
-      str_ids: strIds.join(','),
-      sort: orderby.sort,
-      order: orderby.order,
-      perpage,
-      price_gte: priceGte, //最好給預設值
-      price_lte: priceLte, //最好給預設值
-    }
-
-    // 用URLSearchParams產生查詢字串
-    const searchParams = new URLSearchParams(params)
-
-    const res = await axios.get(
-      `http://localhost:3005/api/events?${searchParams.toString()}`
-    )
-
-    if (res.data.status === 'success') {
-      // 設定獲取頁數總合
-      setItemTotal(res.data.data.total)
-      // 設定獲取項目
-      setItems(res.data.data.events)
-      setPageCount(res.data.data.pageCount)
-    }
-  }
+  };
 
   useEffect(() => {
     // 載入資料
@@ -129,14 +177,10 @@ export default function ProductStateList() {
   const displayList = (
     <>
       <ul>
-        {data?.data.posts.map((v) => {
+        {items.map((v) => {
           return (
             <li key={v.id}>
-              {v.name}(str_id:{v.str_id})(price: {v.price})
-              {/* (tag:{' '}
-                {convertNames(tagOptions, v.tag)}
-                )(color: {convertNames(colorOptions, v.color)})(size:{' '}
-                {convertNames(sizeOptions, v.size)}) */}
+              {v.name}(str_id:{v.str})(price: {v.price})
             </li>
           )
         })}
