@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react'
-import { Modal, Button } from 'react-bootstrap'
 import 'react-datepicker/dist/react-datepicker.css'
 import EventsRecommend from '@/components/events-recommend'
 import Calendar from '@/components/product/date2'
 import Link from 'next/link'
-import EventsData from '@/hooks/use-info'
+
 
 export default function Detail() {
   // 假設初始狀態是未選擇
   const [selected,setSelected] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null); 
+  const [eventInfo, setEventInfo] = useState([])
   const [qty, setQty] = useState(1)
 
-
+  
+  useEffect(() => {
+    fetch('http://localhost:3005/api/info')
+      .then((response) => response.json())
+      .then((data) => {
+        // 檢查是否有資料並設定到 state 中
+        
+        console.log(data.data)
+      })
+      .catch((error) => console.error('Error fetching data:', error))
+  }, [])
 
  const handleSelection = ()=>{
     setSelected(!selected)  // 切換選擇狀態
@@ -53,7 +63,7 @@ export default function Detail() {
   return (
    <>
     
-    {data?.data.posts.map((v) => (
+    {/* {data?.data.posts.map((v) => ( */}
       <>
     <section>
         <div className=" d-flex p-4 d-none d-xxl-inline-flex">
@@ -106,7 +116,7 @@ export default function Detail() {
         <div className="wrapper">
           <section className="title">
          
-            <div key={v.id} className="d-flex align-items-center justify-content-between mt-3">
+            <div key={eventInfo.id} className="d-flex align-items-center justify-content-between mt-3">
               <h5 className="border-5 border-start border-primary px-2">
                 YOASOBI
               </h5>
@@ -121,7 +131,7 @@ export default function Detail() {
             <div>
               <h3 className="my-4">
                 {/* YOASOBI演唱會2024台北站 */}
-                {v.event_name}
+                {eventInfo.event_name}
                 <span className="d-none d-xxl-inline-flex">
                   ｜YOASOBI ASIA TOUR 2023-2024 Solo Concert in Taipei
                 </span>
@@ -129,16 +139,16 @@ export default function Detail() {
               <h6 className="text-normal-gray-light">
                 <i className="bi bi-calendar me-2 d-none d-xxl-inline-flex" />
                 {/* 2024/01/21 － 2024/01/22 */}
-                {v.start_date}-{v.end_date}
+                {eventInfo.start_date}-{eventInfo.end_date}
               </h6>
               <h6>
                 <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" />
                 {/* Zepp New Taipei */}
-                {v.place}
+                {eventInfo.place}
               </h6>
               <p className="mx-4 text-secondary-02">
                 {/* 新北市新莊區新北大道四段3號8樓 */}
-                {v.address}
+                {eventInfo.address}
               </p>
               <hr className="d-none d-xxl-block" />
             </div>
@@ -650,7 +660,7 @@ export default function Detail() {
         </div>
       </main>
 </>
-    ))}   
+    {/* ))}    */}
 
       <style global jsx>
         {`
