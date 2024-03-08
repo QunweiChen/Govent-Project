@@ -8,14 +8,14 @@ import Image from 'react-bootstrap/Image'
 import GoventToast from '@/components/toast'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
-export default function PaymentForm() {
+export default function PaymentForm({ setDiscount = () => {} }) {
   //使用react-hook-form套件檢查form表單
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm()
-
+  //結帳之後將資料傳送至後端
   const postSubmit = (data) => {
     // console.log(data)
     fetch('http://localhost:3005/api/payment', {
@@ -44,23 +44,16 @@ export default function PaymentForm() {
     console.log(numberValue.current.checked)
   }
 
-  //儲存傳送給後端資料
-  // const [data, setDate] = useState({
-  //   userName: '',
-  //   userGender: '',
-  //   birthday: '',
-  //   phoneNumber: '',
-  //   email: '',
-  //   point: 0,
-  //   coupon: 0,
-  //   payType: false,
-  // })
   //監聽使用者輸入表單欄位
-  // function formChange(e) {
-  //   let setConnectionData = { ...data, [e.target.name]: e.target.value }
-  //   console.log(setConnectionData)
-  //   setDate(setConnectionData)
-  // }
+  function formChange(e) {
+    let data = {
+      point: 0,
+      coupon: 1,
+    }
+    let setConnectionData = { ...data, [e.target.name]: e.target.value }
+    console.log(setConnectionData)
+    setDiscount(setConnectionData)
+  }
   //監聽點數及優惠券是否被勾選
   const pointInputRef = useRef(null)
 
@@ -145,9 +138,6 @@ export default function PaymentForm() {
                 placeholder="輸入姓名"
                 className="bg-bg-gray  placeholder-text text-white-50 validate"
                 name="userName"
-                // onChange={(e) => {
-                //   formChange(e)
-                // }}
                 {...register('userName', { required: true })}
                 aria-invalid={errors.userName ? 'true' : 'false'}
               />
@@ -164,9 +154,6 @@ export default function PaymentForm() {
                 aria-label="Default select example"
                 className="bg-bg-gray text-white-50 validate"
                 name="userGender"
-                // onChange={(e) => {
-                //   formChange(e)
-                // }}
                 {...register('userGender', { required: true })}
                 aria-invalid={errors.userGender ? 'true' : 'false'}
               >
@@ -190,9 +177,6 @@ export default function PaymentForm() {
                 type="date"
                 className="bg-bg-gray text-white-50  validate"
                 name="birthday"
-                // onChange={(e) => {
-                //   formChange(e)
-                // }}
                 {...register('birthday', { required: true })}
                 aria-invalid={errors.birthday ? 'true' : 'false'}
               />
@@ -214,9 +198,6 @@ export default function PaymentForm() {
                 placeholder="0912345678"
                 className="bg-bg-gray text-white-50 placeholder-text validate"
                 name="phoneNumber"
-                // onChange={(e) => {
-                //   formChange(e)
-                // }}
                 {...register('phoneNumber', {
                   required: '請輸入手機',
                   pattern: {
@@ -242,9 +223,6 @@ export default function PaymentForm() {
                 placeholder="輸入email"
                 className="bg-bg-gray  placeholder-text text-white-50 validate"
                 name="email"
-                // onChange={(e) => {
-                //   formChange(e)
-                // }}
                 {...register('email', {
                   required: '請輸入信箱',
                   pattern: {
@@ -301,7 +279,7 @@ export default function PaymentForm() {
                   id="pointInput"
                   placeholder="輸入數量"
                   ref={pointInputRef}
-                  // onChange={formChange}
+                  onChange={formChange}
                 />
               </div>
             </div>
@@ -322,11 +300,12 @@ export default function PaymentForm() {
                 <select
                   className="form-select bg-bg-gray text-white-50 "
                   aria-label="Default select example"
-                  defaultValue="0"
+                  defaultValue="1"
                   ref={couponInputRef}
                   name="coupon"
+                  onChange={formChange}
                 >
-                  <option value="0">選擇優惠券</option>
+                  <option value="1">選擇優惠券</option>
                   <option value="0.9">九折</option>
                   <option value="-200">折抵200</option>
                   <option value="+200">增加200</option>
