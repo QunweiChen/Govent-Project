@@ -41,7 +41,11 @@
     "react-paginate": "^8.2.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.22.1",
+<<<<<<< HEAD
+    "react-toastify": "^10.0.4",
+=======
     "react-scroll": "^1.9.0",
+>>>>>>> 7ce036c05f9ac1d9184ac34335d804403a4e8d99
     "swiper": "^11.0.3",
     "swr": "^2.2.4",
     "uuid": "^9.0.1",
