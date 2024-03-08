@@ -1,9 +1,12 @@
-// import { useEffect } from 'react'
+import { useEffect } from 'react'
 import React, { useState } from 'react'
 
 import { CiHeart } from 'react-icons/ci'
 import { GoSortDesc } from 'react-icons/go'
 
+// import { TbMap } from 'react-icons/tb'
+// import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2'
+// import { CiFilter } from 'react-icons/ci'
 
 import { FaHouse } from 'react-icons/fa6'
 import { FaRegStar } from 'react-icons/fa'
@@ -16,52 +19,41 @@ import FavIcon from '@/components/layout/list-layout/fav-icon'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import AlwaysOpenExample from '@/components/layout/list-layout/accordion'
-import Sidebar from '@/components/layout/list-layout/sidebar'
-import SidebarDown from '@/components/layout/list-layout/sidebar_down';
 
+import EventCard from '@/components/layout/list-layout/event_card'
 import useEvents from '@/hooks/use-event/events'
-import event from '@/data/event/event.json'
-import catOptions from '@/data/product/Category.json'
+// import event from '@/data/event/event.json'
+// console.log(event)
 
 export default function List() {
   const { data } = useEvents()
+  // console.log(data.data?.posts)
   console.log(data?.data.posts)
+  // Toggle the side navigation
+  // useEffect(() => {
+  // fix next issue
+  // if (typeof window !== 'undefined') {
+  //   const sidebarToggle = document.body.querySelector('#sidebarToggle')
 
-  //篩選條件
-  const [filterEventType, setFilterEventType] = useState('');
-  const filteredPosts = data?.data.posts.filter(post => 
-    filterEventType ? post.event_type_id === filterEventType : true
-  );
+  //   if (sidebarToggle) {
+  //     // 在localStorage中儲存目前sidebar情況
+  //     if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+  //       document.body.classList.toggle('sb-sidenav-toggled')
+  //     }
 
-  // 篩選UI元件
-  const FilterUI = () => (
-    <div>
-      <select onChange={(e) => setFilterEventType(e.target.value)} value={filterEventType}>
-        <option value="">所有類型</option>
-        {/* 假設有三種事件類型 */}
-        <option value="1">類型1</option>
-        <option value="2">類型2</option>
-        <option value="3">類型3</option>
-      </select>
-    </div>
-  );
+  //     sidebarToggle.addEventListener('click', (event) => {
+  //       event.preventDefault()
 
-  const allMainCatIds = catOptions
-  .filter((v) => !v.parent_id)
-  .map((v) => v.id)
+  //       document.body.classList.toggle('sb-sidenav-toggled')
 
-  for (let i = 0; i < allMainCatIds.length; i++) {
-    const subIds1 = catOptions.filter((v) => v.parent_id === allMainCatIds[i])
-
-    const subIds2 = catOptions.filter(
-      (v) => v.parent_id === allMainCatIds[i] && catIds.includes(v.id)
-    )
-
-    if (subIds1.length === subIds2.length) {
-      existingMainCatIds.push(allMainCatIds[i])
-    }
-  }
-
+  //       localStorage.setItem(
+  //         'sb|sidebar-toggle',
+  //         document.body.classList.contains('sb-sidenav-toggled')
+  //       )
+  //     })
+  //   }
+  // }
+  // }, [])
   return (
     <>
       <useEvents>
@@ -75,15 +67,194 @@ export default function List() {
             <section>
               <NavbarTopRwd />
             </section>
+
+            {/* <selector className="d-flex ">
+            <div className="sort_icon">
+              <button className="btn no-border rounded-0 text-white">
+                排序方式 <GoSortDesc className=" btn-primary-deep" />
+              </button>
+            </div>
+
+            <div className="test">
+              <button className="btn no-border rounded-0 text-white pb-0">
+                推薦
+              </button>
+            </div>
+            <div className="test">
+              <button className="btn no-border rounded-0 text-white pb-0">
+                日期
+              </button>
+            </div>
+            <div className="test">
+              <button className="btn no-border rounded-0 text-white pb-0">
+                價格
+              </button>
+            </div>
+            <div className="test">
+              <button className="btn no-border rounded-0 text-white pb-0">
+                地區
+              </button>
+            </div>
+          </selector> */}
           </h5>
         </nav>
+        {/* <nav className="header-m container row">
+        <button className="col btn btn-outline-primary-deep no-border rounded-0 text-white">
+          <TbMap />
+          地區
+        </button>
+        <button className="col btn btn-outline-primary-deep no-border rounded-0 text-white">
+          <HiOutlineAdjustmentsHorizontal />
+          類別
+        </button>
+        <button className="col btn btn-outline-primary-deep no-border rounded-0 text-white">
+          <CiFilter />
+          篩選
+        </button>
+        <button className="col btn btn-outline-primary-deep no-border rounded-0 text-white">
+          <GoSortDesc />
+          排序
+        </button>
+      </nav> */}
         <nav className="header-m">
           <NavbarTopRwdSm />
         </nav>
         <main className="container w-1200">
           <div className="row">
             <div className="sidebar me-3 col-md-2 col-3">
-              <Sidebar/>
+              <div className="upSidebar ">
+                <h6>活動種類</h6>
+                <div className="form-group">
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckChecked"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexCheckChecked"
+                    >
+                      所有類型
+                    </label>
+                  </div>
+
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckChecked"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexCheckChecked"
+                    >
+                      演唱會
+                    </label>
+                  </div>
+
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckChecked"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexCheckChecked"
+                    >
+                      展覽
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckChecked"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexCheckChecked"
+                    >
+                      快閃活動
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckChecked"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexCheckChecked"
+                    >
+                      市集
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckChecked"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexCheckChecked"
+                    >
+                      粉絲見面會
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckChecked"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexCheckChecked"
+                    >
+                      課程講座
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckChecked"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexCheckChecked"
+                    >
+                      體育賽事
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckChecked"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexCheckChecked"
+                    >
+                      景點門票
+                    </label>
+                  </div>
+                </div>
+              </div>
               <hr />
               <div className="downSidebar no-border">
                 <h6>地區</h6>
@@ -480,72 +651,13 @@ export default function List() {
                       </div>
                     </div>
                   </div>
-
-                  <div className="accordion-item bg-bg-gray text-white">
-                    <h2 className="accordion-header" id="headingOne">
-                      <button
-                        className="accordion-button p-1 gap-2 bg-bg-gray text-white"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne"
-                        aria-expanded="true"
-                        aria-controls="collapseOne"
-                      >
-                        <input type="checkbox" className="form-check-input" />
-                        <label
-                          className="form-check-label"
-                          htmlFor="flexCheckDefault"
-                        >
-                          離島地區
-                        </label>
-                      </button>
-                    </h2>
-
-                    <div
-                      id="collapseOne"
-                      className="accordion-collapse collapse show"
-                      aria-labelledby="headingOne"
-                      data-bs-parent="#accordionExample"
-                    >
-                      <div className="accordion-body">
-                        <div className="form-check">
-                        {catOptions
-          .filter((v) => v.parent_id)
-          .map((v) => {
-            return (
-                        <label key={v.id} className="mx-1">
-                          <input
-                            type="checkbox"
-                            value={v.id}
-                            checked={catIds.includes(v.id)}
-                            onChange={(e) => {
-                              // 注意，要轉數字，為了保持數字陣列
-                              const targetValue = Number(e.target.value)
-                              if (catIds.includes(targetValue)) {
-                                setCatIds(catIds.filter((v2) => v2 !== targetValue))
-                              } else {
-                                setCatIds([...catIds, targetValue])
-                              }
-                            }}
-                          />
-                          {v.name}({v.id})
-                        </label>
-                        )
-          })}
-                        </div>
-                       
-                      </div>
-                    </div>
-                  </div>
                 </div>
                 <AlwaysOpenExample />
               </div>
-              <SidebarDown/>
             </div>
             <div className="col">
-            <FilterUI />
               <div className="cardList row g-3">
-              {filteredPosts.map((v) => (
+                {data?.data.posts.map((v) => (
                   <div key={v.id} className="col-md-4 col-sm-6 ">
                     <div className="card  stretched-link bg-bg-gray-secondary text-white px-0 no-border">
                       <figure>
@@ -557,7 +669,7 @@ export default function List() {
                       </figure>
                       <FavIcon />
 
-                      <div className="card-body ">
+                      <div className="card-body">
                         <p className=" text-normal-gray-light">
                           {v.event_type_id} 演唱會
                         </p>
@@ -581,6 +693,207 @@ export default function List() {
                     </div>
                   </div>
                 ))}
+                <EventCard />
+                {/* <div className="col-md-4 col-sm-6 ">
+                <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                  <figure>
+                    <img
+                      src="/images/product/list/1-02.jpg"
+                      alt=""
+                      className="card-img-top"
+                    />
+                  </figure>
+                  <FavIcon />
+
+                  <div className="card-body p-">
+                    <p className=" text-normal-gray-light">演唱會</p>
+                    <h5 className="card-title">
+                      {' '}
+                      NOneRepublic 共和世代 高雄巨蛋
+                    </h5>
+                    <h6 className="text-primary-deep">$1200起</h6>
+                    <div className="d-flex justify-content-between">
+                      <p className="text-normal-gray-light mb-2">台北</p>
+                      <span className="text-normal-gray-light">2023-06-01</span>
+                    </div>
+                  </div>
+                </div>
+              </div> */}
+                {/* <div className="col-md-4 col-sm-6 ">
+                <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                  <figure>
+                    <img
+                      src="/images/product/list/1-03.jpg"
+                      alt=""
+                      className="card-img-top"
+                    />
+                  </figure>
+                  <FavIcon />
+
+                  <div className="card-body p-">
+                    <p className=" text-normal-gray-light">演唱會</p>
+                    <h5 className="card-title">
+                      {' '}
+                      NOneRepublic 共和世代 高雄巨蛋
+                    </h5>
+                    <h6 className="text-primary-deep">$1200起</h6>
+                    <div className="d-flex justify-content-between">
+                      <p className="text-normal-gray-light mb-2">台北</p>
+                      <span className="text-normal-gray-light">2023-06-01</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-6 ">
+                <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                  <figure>
+                    <img
+                      src="/images/product/list/1-04.jpg"
+                      alt=""
+                      className="card-img-top"
+                    />
+                  </figure>
+                  <FavIcon />
+
+                  <div className="card-body p-">
+                    <p className=" text-normal-gray-light">演唱會</p>
+                    <h5 className="card-title">
+                      {' '}
+                      NOneRepublic 共和世代 高雄巨蛋
+                    </h5>
+                    <h6 className="text-primary-deep">$1200起</h6>
+                    <div className="d-flex justify-content-between">
+                      <p className="text-normal-gray-light mb-2">台北</p>
+                      <span className="text-normal-gray-light">2023-06-01</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-6 ">
+                <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                  <figure>
+                    <img
+                      src="/images/product/list/1-05.jpg"
+                      alt=""
+                      className="card-img-top"
+                    />
+                  </figure>
+                  <FavIcon />
+
+                  <div className="card-body p-">
+                    <p className=" text-normal-gray-light">演唱會</p>
+                    <h5 className="card-title">
+                      {' '}
+                      NOneRepublic 共和世代 高雄巨蛋
+                    </h5>
+                    <h6 className="text-primary-deep">$1200起</h6>
+                    <div className="d-flex justify-content-between">
+                      <p className="text-normal-gray-light mb-2">台北</p>
+                      <span className="text-normal-gray-light">2023-06-01</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-6 ">
+                <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                  <figure>
+                    <img
+                      src="/images/product/list/1-06.jpg"
+                      alt=""
+                      className="card-img-top"
+                    />
+                  </figure>
+                  <FavIcon />
+
+                  <div className="card-body">
+                    <p className=" text-normal-gray-light">演唱會</p>
+                    <h5 className="card-title">
+                      {' '}
+                      NOneRepublic 共和世代 高雄巨蛋
+                    </h5>
+                    <h6 className="text-primary-deep">$1200起</h6>
+                    <div className="d-flex justify-content-between">
+                      <p className="text-normal-gray-light mb-2">台北</p>
+                      <span className="text-normal-gray-light">2023-06-01</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-6 ">
+                <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                  <figure>
+                    <img
+                      src="/images/product/list/1-07.jpg"
+                      alt=""
+                      className="card-img-top"
+                    />
+                  </figure>
+                  <FavIcon />
+
+                  <div className="card-body p-">
+                    <p className=" text-normal-gray-light">演唱會</p>
+                    <h5 className="card-title">
+                      {' '}
+                      NOneRepublic 共和世代 高雄巨蛋
+                    </h5>
+                    <h6 className="text-primary-deep">$1200起</h6>
+                    <div className="d-flex justify-content-between">
+                      <p className="text-normal-gray-light mb-2">台北</p>
+                      <span className="text-normal-gray-light">2023-06-01</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-6 ">
+                <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                  <figure>
+                    <img
+                      src="/images/product/list/1-08.jpg"
+                      alt=""
+                      className="card-img-top"
+                    />
+                  </figure>
+                  <FavIcon />
+
+                  <div className="card-body p-">
+                    <p className=" text-normal-gray-light">演唱會</p>
+                    <h5 className="card-title">
+                      {' '}
+                      NOneRepublic 共和世代 高雄巨蛋
+                    </h5>
+                    <h6 className="text-primary-deep">$1200起</h6>
+                    <div className="d-flex justify-content-between">
+                      <p className="text-normal-gray-light mb-2">台北</p>
+                      <span className="text-normal-gray-light">2023-06-01</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-6 ">
+                <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                  <figure>
+                    <img
+                      src="/images/product/list/product-ex.png"
+                      alt=""
+                      className="card-img-top"
+                    />
+                  </figure>
+                  <FavIcon />
+
+                  <div className="card-body p-">
+                    <p className=" text-normal-gray-light">演唱會</p>
+                    <h5 className="card-title">
+                      {' '}
+                      NOneRepublic 共和世代 高雄巨蛋
+                    </h5>
+                    <h6 className="text-primary-deep">$1200起</h6>
+                    <div className="d-flex justify-content-between">
+                      <p className="text-normal-gray-light mb-2">台北</p>
+                      <span className="text-normal-gray-light">2023-06-01</span>
+                    </div>
+                  </div>
+                </div>
+              </div> */}
               </div>
 
               <footer className="d-flex justify-content-center m-3">
@@ -628,6 +941,28 @@ export default function List() {
                   </div>
                 </div>
               </footer>
+              {/* <footer className="footer-m container row sticky-bottom">
+              <button className="col btn btn-outline-primary-deep no-border rounded-0 text-white">
+                <FaHouse />
+                <br />
+                首頁
+              </button>
+              <button className="col btn btn-outline-primary-deep no-border rounded-0 text-white">
+                <FaRegStar />
+                <br />
+                我的收藏
+              </button>
+              <button className="col btn btn-outline-primary-deep no-border rounded-0 text-white">
+                <FaTicket />
+                <br />
+                我的票卷
+              </button>
+              <button className="col btn btn-outline-primary-deep no-border rounded-0 text-white">
+                <RxPerson />
+                <br />
+                帳戶設定
+              </button>
+            </footer> */}
             </div>
           </div>
         </main>
