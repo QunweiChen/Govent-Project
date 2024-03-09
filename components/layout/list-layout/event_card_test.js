@@ -4,10 +4,15 @@ import Link from 'next/link'
 
 // import FavFcon from '@/components/fav-test/fav-icon'
 import FavIcon from '@/components/layout/list-layout/fav-icon'
-import useEvents from '@/hooks/use-event'
+// import useEvents from '@/hooks/use-event/events'
 
-export default function EventCard({ v, id, name }) {
-  const { data } = useEvents()
+//Json檔案引入（測試用）
+import Event from '@/data/event.json'
+
+export default function EventCard() {
+  console.log(Event)
+
+  const { data } = Event
   return (
     <>
       {data?.data.posts.slice(0, 15).map((v) => (

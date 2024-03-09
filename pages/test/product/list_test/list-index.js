@@ -21,12 +21,12 @@ import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import AlwaysOpenExample from '@/components/layout/list-layout/accordion'
 
 import EventCard from '@/components/layout/list-layout/event_card'
-import useEvents from '@/hooks/use-event/events'
+// import useEvents from '@/hooks/use-event'
 // import event from '@/data/event/event.json'
 // console.log(event)
 
 export default function List() {
-  const { data } = useEvents()
+  // const { data } = useEvents()
   // console.log(data.data?.posts)
   console.log(data?.data.posts)
   // Toggle the side navigation

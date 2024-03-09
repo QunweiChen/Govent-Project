@@ -1,6 +1,11 @@
-import { useEffect } from 'react'
-import React, { useState } from 'react'
-import { useHistory, useLocation, useParams, useRouteMatch } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import {
+  useHistory,
+  useLocation,
+  useParams,
+  useRouteMatch,
+} from 'react-router-dom'
+import Link from 'next/link'
 
 import { CiHeart } from 'react-icons/ci'
 import { GoSortDesc } from 'react-icons/go'
@@ -12,30 +17,66 @@ import { RxPerson } from 'react-icons/rx'
 
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
-import FavIcon from '@/components/layout/list-layout/fav-icon'
+// import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import AlwaysOpenExample from '@/components/layout/list-layout/accordion'
 import Sidebar from '@/components/layout/list-layout/sidebar'
 import PageBar from '@/components/layout/list-layout/pagebar'
 
-import EventCard from '@/components/layout/list-layout/event_card'
-import useEvents from '@/hooks/use-event/events'
-// import event from '@/data/event/event.json'
-// console.log(event)
+// import EventCard from '@/components/layout/list-layout/event_card_test'
+import useEvents from '@/hooks/use-event'
+//Json檔案引入（測試用）
+// import data from '@/data/event.json'
 
 export default function List() {
   const { data } = useEvents()
   console.log(data?.data.posts)
+
+  useEffect(() => {
+    console.log(data) // 这里可以看到数据
+  }, [data])
+
+  //擴充原本的活動資料，多一個fav屬性
+  const initState = data?.data.posts.map((v, i) => {
+    return { ...v, fav: false }
+  })
+
+  //加入收藏前先設定活動狀態。
+  const [events, setEvents] = useState(initState)
+
+  //純函式
+  const toggleFav = (array, id) => {
+    // 展開每個成員，如果條件符合(v.id===id)，反則屬性fav值
+    // const newEvents = data.map((v, i) => {
+    //   if (v.id === id) return { ...v, fav: !v.fav }
+    //   else return v
+    // })
+    return array.map((v, i) => {
+      if (v.id === id) return { ...v, fav: !v.fav }
+      else return v
+    })
+  }
+  // const handleToggleFav = (id) => {
+  //   //設定回原狀態
+  //   setEvents(toggleFav(events, id))
+  // }
+
+  // 測試用陣列
+  // const aa = [
+  //   { id: 'a01', fav: true },
+  //   { id: 'a02', fav: 'false' },
+  // ]
+  // console.log(toggleFav(aa, 'a01'))
+  // console.log(toggleFav(aa, 'a02'))
+
   return (
     <>
       <useEvents>
         <nav className="header container navbar-expand mt-5 w-1200">
           <h5 className="d-flex justify-content-between">
             <div className="bg-bg-gray-secondary rounded-3">
-              <p className="mx-4 my-2">
-                目前共有 {data?.data.posts.length} 筆 結果
-              </p>
+              <p className="mx-4 my-2">目前共有 {} 筆 結果</p>
             </div>
             <section>
               <NavbarTopRwd />
@@ -48,139 +89,6 @@ export default function List() {
         <main className="container w-1200">
           <div className="row">
             <div className="sidebar me-3 col-md-2 col-3">
-              {/* <div className="upSidebar ">
-                <h6>活動種類</h6>
-                <div className="form-group">
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexCheckChecked"
-                    >
-                      所有類型
-                    </label>
-                  </div>
-
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexCheckChecked"
-                    >
-                      演唱會
-                    </label>
-                  </div>
-
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexCheckChecked"
-                    >
-                      展覽
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexCheckChecked"
-                    >
-                      快閃活動
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexCheckChecked"
-                    >
-                      市集
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexCheckChecked"
-                    >
-                      粉絲見面會
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexCheckChecked"
-                    >
-                      課程講座
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexCheckChecked"
-                    >
-                      體育賽事
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexCheckChecked"
-                    >
-                      景點門票
-                    </label>
-                  </div>
-                </div>
-              </div> */}
               <Sidebar />
               <hr />
               <div className="downSidebar no-border">
@@ -584,7 +492,57 @@ export default function List() {
             </div>
             <div className="col">
               <div className="cardList row g-3">
-                <EventCard />
+                {/* <EventCard /> */}
+                {/* 列出所有活動 */}
+                {data?.data.posts.map((v, i) => {
+                  return (
+                    <div className="col-md-4 col-sm-6 " key={v.id}>
+                      <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                        <figure>
+                          <img
+                            src={`/images/product/list/${
+                              v.image?.split(',')[0]
+                            }`}
+                            alt=""
+                            className="card-img-top"
+                          />
+
+                          <button
+                            className={`btn position-absolute top-0 end-0 bi ${
+                              v.fav ? 'bi-heart' : 'bi-heart-fill'
+                            }`}
+                            onClick={() => {
+                              // handleToggleFav(v.id)
+                              const newEvents = toggleFav(events, v.id)
+                              setEvents(newEvents)
+                            }}
+                          >
+                            {/* <i
+                            style={{ opacity: 0.8 }}
+                            className="px-2 py-1 rounded-3 bi bi-heart-fill fs-5"
+                          ></i> */}
+                          </button>
+                        </figure>
+
+                        <div className="card-body p-">
+                          <p className=" text-normal-gray-light">
+                            {v.event_type_id}
+                          </p>
+                          <h5 className="card-title">{v.event_name}</h5>
+                          <h6 className="text-primary-deep">$1200起</h6>
+                          <div className="d-flex justify-content-between">
+                            <p className="text-normal-gray-light mb-2">
+                              {v.str}
+                            </p>
+                            <span className="text-normal-gray-light">
+                              {v.start_date.substring(0, 10)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
 
               <footer className="d-flex justify-content-center m-3">
@@ -593,7 +551,7 @@ export default function List() {
                   role="toolbar"
                   aria-label="Toolbar with button groups"
                 >
-                <PageBar/>
+                  <PageBar />
                 </div>
               </footer>
             </div>

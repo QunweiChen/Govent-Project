@@ -6,6 +6,7 @@ import NavbarTopRwd from '@/components/layout/list-layout/navbar-top-sm'
 import ActivityCategory from '@/data/event/activity_category.json'
 import EventType from '@/data/event/event_type.json'
 import StrList from '@/data/event/str.json'
+import data from '@/data/event.json'
 
 // import useEvents from '@/hooks/use-event/events'
 
@@ -13,6 +14,10 @@ import StrList from '@/data/event/str.json'
 import BS5Pagination from '@/components/common/bs5-pagination'
 
 export default function ProductStateList() {
+  console.log(data)
+  const initState = data.map((v, i) => {
+    return { ...v }
+  })
   // const { data } = useEvents()
   // 各選項的state
   const [nameLike, setNameLike] = useState('') //關鍵字
@@ -78,9 +83,9 @@ export default function ProductStateList() {
       // 跳至第一頁
       // 當重新過濾或重置選項，因重新載入資料需要跳至第一頁
       if (toFirstPage) {
-        setPage(1);
+        setPage(1)
       }
-  
+
       // 要送至伺服器的 query string 參數
       const params = {
         page: toFirstPage ? 1 : page, // 跳至第一頁
@@ -92,34 +97,38 @@ export default function ProductStateList() {
         perpage,
         price_gte: priceGte, // 最好給預設值
         price_lte: priceLte, // 最好給預設值
-      };
-  
+      }
+
       // 用 URLSearchParams 產生查詢字串
-      const searchParams = new URLSearchParams(params);
-  
-      const res = await axios.get(`http://localhost:3005/api/events?${searchParams.toString()}`);
-  
+      const searchParams = new URLSearchParams(params)
+
+      const res = await axios.get(
+        `http://localhost:3005/api/events?${searchParams.toString()}`
+      )
+
       if (res.data.status === 'success') {
-        const eventsData = res.data.data.events;
+        const eventsData = res.data.data.events
         if (eventsData) {
           // 將非空的 JSON 物件轉換為陣列，並篩選掉空值
-          const eventsArray = Object.values(eventsData).filter(event => event !== null && event !== undefined);
-  
+          const eventsArray = Object.values(eventsData).filter(
+            (event) => event !== null && event !== undefined
+          )
+
           // 設定獲取頁數總合
-          setItemTotal(res.data.data.total);
+          setItemTotal(res.data.data.total)
           // 設定獲取項目
-          setItems(eventsArray);
-          setPageCount(res.data.data.pageCount);
+          setItems(eventsArray)
+          setPageCount(res.data.data.pageCount)
         } else {
-          console.error('No events data found');
+          console.error('No events data found')
         }
       } else {
-        console.error('Error fetching events data:', res.data.status);
+        console.error('Error fetching events data:', res.data.status)
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching data:', error)
     }
-  };
+  }
 
   useEffect(() => {
     // 載入資料

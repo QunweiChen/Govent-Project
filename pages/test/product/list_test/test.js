@@ -4,7 +4,7 @@ import NavbarTopRwd from '@/components/layout/list-layout/navbar-top-sm'
 import ActivityCategory from '@/data/event/activity_category.json'
 import EventType from '@/data/event/event_type.json'
 import StrList from '@/data/event/str.json'
-import useEvents from '@/hooks/use-event/events'
+import useEvents from '@/hooks/use-event'
 import BS5Pagination from '@/components/common/bs5-pagination'
 
 export default function ProductStateList() {
