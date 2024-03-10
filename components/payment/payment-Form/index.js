@@ -36,8 +36,6 @@ export default function PaymentForm({ setDiscount = () => {} }) {
       })
   }
 
-  // include type check against field path with the name you have supplied.
-
   //確認是否有勾選與會員資料相同
   const numberValue = useRef(null)
   function changeNumberValue() {
@@ -47,11 +45,23 @@ export default function PaymentForm({ setDiscount = () => {} }) {
   //監聽使用者輸入表單欄位
   function formChange(e) {
     let data = {
-      point: 0,
-      coupon: 1,
+      point: 0, //這邊的問題
+      coupon: { name: '', value: 1 },
+    }
+    if (e.target.name === 'coupon') {
+      let setConnectionData = {
+        ...data,
+        coupon: {
+          name: e.target.options[e.target.selectedIndex].text,
+          value: e.target.value,
+        },
+      }
+      setDiscount(setConnectionData)
+
+      return
     }
     let setConnectionData = { ...data, [e.target.name]: e.target.value }
-    console.log(setConnectionData)
+
     setDiscount(setConnectionData)
   }
   //監聽點數及優惠券是否被勾選
@@ -273,7 +283,7 @@ export default function PaymentForm({ setDiscount = () => {} }) {
                   折抵數量
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   className="form-control bg-bg-gray  text-white-50 placeholder-text"
                   name="point"
                   id="pointInput"
@@ -306,9 +316,15 @@ export default function PaymentForm({ setDiscount = () => {} }) {
                   onChange={formChange}
                 >
                   <option value="1">選擇優惠券</option>
-                  <option value="0.9">九折</option>
-                  <option value="-200">折抵200</option>
-                  <option value="+200">增加200</option>
+                  <option value="0.9" label="九折">
+                    九折
+                  </option>
+                  <option value="200" label="折抵200">
+                    折抵200
+                  </option>
+                  <option value="500" label="折抵500">
+                    增加200
+                  </option>
                 </select>
               </div>
             </div>
