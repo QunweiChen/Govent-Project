@@ -25,20 +25,20 @@ import Sidebar from '@/components/layout/list-layout/sidebar'
 import PageBar from '@/components/layout/list-layout/pagebar'
 
 // import EventCard from '@/components/layout/list-layout/event_card_test'
-import useEvents from '@/hooks/use-event'
+// import useEvents from '@/hooks/use-event'
 //Json檔案引入（測試用）
-// import data from '@/data/event.json'
+import data from '@/data/event.json'
 
 export default function List() {
-  const { data } = useEvents()
-  console.log(data?.data.posts)
+  // const { data } = useEvents()
+  // console.log(data?.data.posts)
 
-  useEffect(() => {
+   useEffect(() => {
     console.log(data) // 这里可以看到数据
   }, [data])
 
   //擴充原本的活動資料，多一個fav屬性
-  const initState = data?.data.posts.map((v, i) => {
+  const initState = data.map((v, i) => {
     return { ...v, fav: false }
   })
 
