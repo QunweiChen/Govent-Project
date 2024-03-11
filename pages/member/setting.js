@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Form } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
-import NoBCLayout from '@/components/layout/nocb-default-layout'
+import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
 
 export default function MemberSetting() {
@@ -233,5 +233,5 @@ export default function MemberSetting() {
 }
 
 MemberSetting.getLayout = function (page) {
-  return <NoBCLayout title="帳戶設定">{page}</NoBCLayout>
+  return <MemberLayout title="帳戶設定">{page}</MemberLayout>
 }

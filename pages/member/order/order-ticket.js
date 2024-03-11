@@ -1,10 +1,9 @@
 // import { useRouter } from 'next/router'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Form from 'react-bootstrap/Form'
 import TicketInfoLeft from '@/components/member/m-order-left-bar'
 import Link from 'next/link'
-import NoBCLayout from '@/components/layout/nocb-default-layout'
+import MemberLayout from '@/components/layout/member-layout'
 
 // only redirect to member/login
 export default function MemberOrderTicket() {
@@ -138,5 +137,5 @@ export default function MemberOrderTicket() {
 }
 
 MemberOrderTicket.getLayout = function (page) {
-  return <NoBCLayout>{page}</NoBCLayout>
+  return <MemberLayout>{page}</MemberLayout>
 }

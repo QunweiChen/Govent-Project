@@ -1,6 +1,6 @@
 import { Row, Col, Form } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
-import NoBCLayout from '@/components/layout/nocb-default-layout'
+import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
 
 // only redirect to member/login
@@ -14,41 +14,20 @@ export default function MemberPayment() {
   return (
     <>
       <div className="container width-1200">
-        <Row data-bs-theme="dark" className='mb-5'>
+        <Row data-bs-theme="dark" className="mb-5">
           <Col sm={3}>
             <Memberleft />
           </Col>
           <Col sm={9}>
             <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.4 }}
-            className="member-bgc contain">
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="member-bgc contain"
+            >
               <Form>
                 <h4>管理付款方式</h4>
                 <Row className="mt-4">
-                  <Col sm={4}>
-                    <div className="card d-flex justify-content-between p-3">
-                      <div className="text-end">
-                        刪除<i className="ps-2 bi bi-x-square-fill"></i>
-                      </div>
-                      <div className="card-content d-flex justify-content-between">
-                        <p>XXXX-1234</p>
-                        <p>09/25</p>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col sm={4}>
-                    <div className="card d-flex justify-content-between p-3">
-                      <div className="text-end">
-                        刪除<i className="ps-2 bi bi-x-square-fill"></i>
-                      </div>
-                      <div className="card-content d-flex justify-content-between">
-                        <p>XXXX-1234</p>
-                        <p>09/25</p>
-                      </div>
-                    </div>
-                  </Col>
                   <Col sm={4}>
                     <div className="card d-flex justify-content-between p-3">
                       <div className="text-end">
@@ -101,5 +80,5 @@ export default function MemberPayment() {
 }
 
 MemberPayment.getLayout = function (page) {
-  return <NoBCLayout>{page}</NoBCLayout>
+  return <MemberLayout title="管理付款方式">{page}</MemberLayout>
 }

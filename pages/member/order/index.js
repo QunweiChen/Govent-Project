@@ -2,7 +2,7 @@
 import { Row, Col } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
 import Link from 'next/link'
-import NoBCLayout from '@/components/layout/nocb-default-layout'
+import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
 
 // only redirect to member/login
@@ -26,7 +26,7 @@ export default function MemberOrder() {
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.4 }}
             className="member-bgc contain">
-              <h4>我的票卷</h4>
+              <h4>我的訂單</h4>
               <hr className="my-4" />
               <div className="event mt-2">
                 <div className="ticket-number sm-p">訂單編號 TX225633592</div>
@@ -107,5 +107,5 @@ export default function MemberOrder() {
 }
 
 MemberOrder.getLayout = function (page) {
-  return <NoBCLayout>{page}</NoBCLayout>
+  return <MemberLayout title='訂單管理'>{page}</MemberLayout>
 }
