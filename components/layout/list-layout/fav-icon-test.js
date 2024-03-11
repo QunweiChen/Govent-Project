@@ -4,16 +4,15 @@ import toast from 'react-hot-toast'
 import data from '@/data/event.json'
 
 const Heart = () => (
-  <button
+  <i
     className={`btn position-absolute top-0 end-0 text-white
     }`}
-    onClick={}
   >
     <i
       style={{ opacity: 0.8 }}
       className="px-2 py-1 rounded-3 bi bi-heart-fill fs-5"
     ></i>
-  </button>
+  </i>
 )
 
 export default function FavIcon({ id }) {

@@ -1,10 +1,4 @@
 import React, { useEffect, useState } from 'react'
-// import {
-//   useHistory,
-//   useLocation,
-//   useParams,
-//   useRouteMatch,
-// } from 'react-router-dom'
 
 // 引入icon
 import { CiHeart } from 'react-icons/ci'
@@ -27,19 +21,60 @@ import PageBar from '@/components/layout/list-layout/pagebar'
 import EventCard from '@/components/layout/list-layout/event_card'
 import useEvents from '@/hooks/use-event'
 
-// 假活動資料
-// import event from '@/data/event/event.json'
-// console.log(event)
 
 export default function List() {
-  const { data } = useEvents()
-  console.log(data);
-  // console.log(data?.data.posts)
-  // useEffect(() => {
-  //   console.log(data) // 这里可以看到数据
-  // }, [data])
-  // console.log(listItem);
-  // console.log(data?.length);
+
+    const { data } = useEvents()
+    console.log(data);
+
+    //活動資料
+    // 1. 從伺服器來的原始資料
+    const [events, setEvents] = useState([])
+    // 2. 用於網頁上經過各種處理(排序、搜尋、過濾)後的資料
+    const [displayevents, setDisplayevents] = useState([])
+
+    //篩選條件
+    const [categorie, setCategorie] = useState([])
+    const categories = [ '演唱會',
+    '展覽',
+    '快閃活動',
+    '市集',
+    '粉絲見面會',
+    '課程講座',
+    '體育賽事',
+    '景點門票',]
+  
+    // radio 價格篩選
+    const [priceRange, setPriceRange] = useState('所有')
+    const priceRangeTypes = ['所有', '1萬以下', '1~2萬']
+
+    const [searchWord, setSearchWord] = useState('')
+    const [sortBy, setSortBy] = useState('')
+
+    // 載入指示的spinner動畫用的
+    const [isLoading, setIsLoading] = useState(false)
+
+    //x秒後自動關掉spinner(設定isLoading為false)
+    useEffect(() => {
+    if (isLoading) {
+        setTimeout(() => {
+        setIsLoading(false)
+        }, 1000)
+    }
+    }, [isLoading])
+
+    // 初始化資料-didMount
+    useEffect(() => {
+        // 先開起載入指示器
+        setIsLoading(true)
+
+        // 模擬和伺服器要資料
+        // 最後設定到狀態中
+        setProducts(data)
+        setDisplayProducts(data)
+    }, [])
+
+    
   return (
     <>
       <useEvents>

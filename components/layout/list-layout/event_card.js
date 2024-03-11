@@ -4,13 +4,20 @@ import Link from 'next/link'
 
 // import FavFcon from '@/components/fav-test/fav-icon'
 import FavIcon from '@/components/layout/list-layout/fav-icon'
+
+// 引入活動資料
 import useEvents from '@/hooks/use-event'
 
-export default function EventCard({ v, id, name }) {
+// 假活動資料
+// import event from '@/data/event/event.json'
+// console.log(event)
+
+export default function EventCard({ v, id }) {
   const { data } = useEvents()
   return (
     <>
-      {data?.data.posts.slice(0, 15).map((v) => (
+          {/* {event.map((v)=>( */}
+      {data?.slice(0, 15).map((v) => (
         <div key={v.id} className="col-md-4 col-sm-6 ">
           <Link
             href={`/product/product-info/${v.id}`}
@@ -30,7 +37,7 @@ export default function EventCard({ v, id, name }) {
               {/* <FavFcon/> */}
 
               <div className="card-body">
-                <p className=" text-normal-gray-light">{v.activity_name}</p>
+                <p className=" text-normal-gray-light">{v.category_name}</p>
                 <h5 className="card-title">{v.event_name}</h5>
                 <div className="">
                   <h6 className="text-primary-deep">${v.price || 0}起</h6>
@@ -43,7 +50,7 @@ export default function EventCard({ v, id, name }) {
                 </div>
               </div>
             </div>
-          </Link>
+            </Link>
         </div>
       ))}
     </>
