@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import dynamic from 'next/dynamic'
 const CartIndex = dynamic(() => import('@/components/cart/index'), {
   ssr: false,

@@ -147,7 +147,9 @@ export default function CartCard({
                               className="btn btn-primary"
                               data-bs-dismiss="modal"
                               onClick={() => {
-                                removeItem(merchantItems, v.id, v.merchantId)
+                                setTimeout(() => {
+                                  removeItem(merchantItems, v.id, v.merchantId)
+                                }, 3000)
                               }}
                             >
                               移除

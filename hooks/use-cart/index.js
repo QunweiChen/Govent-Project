@@ -246,7 +246,7 @@ export function CartProvider({
   //計算數量
   // console.log(merchantItems)
   //數量
-  const calcTotalItems = (merchantItems = []) => {
+  const calcTotalItems = () => {
     let total = 0
 
     for (let i = 0; i < merchantItems.length; i++) {

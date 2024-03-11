@@ -35,7 +35,7 @@ export default function CartIndex() {
   useEffect(() => {
     const mtItems = window.localStorage.getItem('MtItems')
     const newsMtItems = JSON.parse(mtItems).length
-    console.log(newsMtItems)
+    // console.log(newsMtItems)
     if (newsMtItems > 0) {
       setHasMtItems(true)
     } else {
