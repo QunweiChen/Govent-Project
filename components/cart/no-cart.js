@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import Image from 'react-bootstrap/Image'
 
 export default function NoCart() {
   return (
@@ -14,7 +15,7 @@ export default function NoCart() {
         <div className="border-0 cart-card d-flex justify-content-center align-items-center">
           <div className="my-5 text-center d-flex flex-column align-items-center">
             <div className="cart-logo mb-3">
-              <img
+              <Image
                 src="\govent-logo.png"
                 className="object-fit-cover img-fluid"
                 alt="..."

@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import Image from 'react-bootstrap/Image'
 
 export default function CartCard({
   merchantItems = {},
@@ -7,8 +8,8 @@ export default function CartCard({
   foundMt = () => {},
   handleToggleCompleted = () => {},
   removeItem = () => {},
-  calcTotalItemstotal = '',
-  calcTotalPricetotal = '',
+  calcTotalItemstotal = 0,
+  calcTotalPricetotal = 0,
 }) {
   return (
     <>
@@ -38,6 +39,7 @@ export default function CartCard({
               {v.items.map((v, i) => {
                 // 使用 split() 方法分割日期時間字串
                 const [datePart, timePart] = v.holdingTime.split(' ')
+
                 return (
                   <div key={i}>
                     <div className="border-bottom border-normal-gray">
@@ -46,14 +48,14 @@ export default function CartCard({
                           <input
                             type="checkbox"
                             checked={v.checked}
-                            onChange={(e) => {
+                            onChange={() => {
                               // 這裡要作toggle completed狀態的動作
                               handleToggleCompleted(v.id)
                             }}
                             className="me-4 checkbox-large form-check-input"
                           />
                           <div className="bg-normal-white rounded-4 product-img">
-                            <img
+                            <Image
                               src="./images/cart/4-03.jpg"
                               className=" rounded-start object-fit-cover"
                               alt="..."
@@ -85,26 +87,70 @@ export default function CartCard({
                               <i className="bi bi-person-fill text-primary-light"></i>
                               <p className="text-white ms-2"> X {v.qty} 張</p>
                             </div>
-                            <div className="col-sm-6">
-                              <p className="text-white">
-                                NT ${parseInt(v.price).toLocaleString()}
-                                /張
-                              </p>
-                            </div>
+                            <p className="col-sm-6 text-white">
+                              NT ${parseInt(v.price).toLocaleString()}
+                              /張
+                            </p>
                           </div>
                         </div>
                         <div className="col-1 d-flex justify-content-center align-items-center">
                           <div className="btn me-5 me-sm-0">
                             <button
-                              className="btn d-flex justify-content-center align-items-center"
+                              type="button"
+                              className="p btn d-flex justify-content-center align-items-center text-white text-nowrap"
+                              data-bs-toggle="modal"
+                              data-bs-target="#staticBackdrop"
+                            >
+                              <i className="bi bi-trash-fill text-primary-light me-1"></i>
+                              刪除
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* 吐司 */}
+                    <div
+                      className="modal fade"
+                      id="staticBackdrop"
+                      data-bs-backdrop="static"
+                      data-bs-keyboard="false"
+                      tabindex="-1"
+                      aria-labelledby="staticBackdropLabel"
+                      aria-hidden="true"
+                    >
+                      <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                          <div className="modal-header ">
+                            <h1
+                              className="modal-title fs-5 "
+                              id="staticBackdropLabel"
+                            >
+                              是否要移除此張票券?
+                            </h1>
+                            <button
+                              type="button"
+                              className="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div className="modal-footer">
+                            <button
+                              type="button"
+                              className="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              再考慮一下
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-primary"
+                              data-bs-dismiss="modal"
                               onClick={() => {
                                 removeItem(merchantItems, v.id, v.merchantId)
                               }}
                             >
-                              <i className="bi bi-trash-fill text-primary-light"></i>
-                              <p className="text-white ms-2 hide text-nowrap">
-                                刪除
-                              </p>
+                              移除
                             </button>
                           </div>
                         </div>

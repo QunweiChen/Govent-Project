@@ -5,7 +5,9 @@ import styles from './toolbar.module.scss'
 import { useCart } from '@/hooks/use-cart'
 
 export default function Toolbar({ handleShow }) {
-  const { calcTotalItemstotal } = useCart()
+
+  const { calcTotalItems, merchantItems } = useCart()
+
   return (
     <ul className="navbar-nav pe-2 ms-auto">
       <li className="nav-item">
@@ -14,7 +16,7 @@ export default function Toolbar({ handleShow }) {
             <i className="bi bi-cart-fill"></i>
             <div className="bg-white text-center rounded-circle ms-2">
               <p className="cart-total text-center text-secondary">
-                {calcTotalItemstotal}
+                {calcTotalItems(merchantItems) }
               </p>
             </div>
           </div>

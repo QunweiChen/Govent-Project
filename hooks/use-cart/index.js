@@ -237,10 +237,16 @@ export function CartProvider({
     )
     // console.log(filteredItems)
     setMerchantItems(filteredItems)
+    //---
+    const news = cartItems.filter((item) => item.id !== id)
+    // console.log(cartItems)
+    // console.log(news)
+    setCartItems(news)
   }
   //計算數量
+  // console.log(merchantItems)
   //數量
-  const calcTotalItems = () => {
+  const calcTotalItems = (merchantItems = []) => {
     let total = 0
 
     for (let i = 0; i < merchantItems.length; i++) {
@@ -251,7 +257,7 @@ export function CartProvider({
     return total
   }
   const calcTotalItemstotal = calcTotalItems()
-  console.log(calcTotalItemstotal)
+  // console.log(calcTotalItemstotal)
 
   //總金額
   const calcTotalPrice = () => {
@@ -265,7 +271,7 @@ export function CartProvider({
     return total
   }
   const calcTotalPricetotal = parseInt(calcTotalPrice()).toLocaleString()
-  console.log(calcTotalPricetotal)
+  // console.log(calcTotalPricetotal)
 
   //最外(上)元件階層包裹提供者元件，讓⽗⺟元件可以提供它
   return (
@@ -284,6 +290,7 @@ export function CartProvider({
         handleToggleSelectedAll,
         handleToggleSelectedMt,
         foundMt,
+        calcTotalItems,
       }}
     >
       {children}
