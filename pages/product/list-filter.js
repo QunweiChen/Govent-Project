@@ -17,73 +17,203 @@ import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import Sidebar from '@/components/layout/list-layout/sidebar'
 import PageBar from '@/components/layout/list-layout/pagebar'
 
+//篩選用components
+import FilterBar from '@/components/layout/list-layout/FilterBar'
+import EventList from '@/components/layout/list-layout/EventList'
+
 // 引入活動資料
 import EventCard from '@/components/layout/list-layout/event_card'
 import useEvents from '@/hooks/use-event'
 
-
 export default function List() {
+  const { data } = useEvents()
+  console.log(data)
 
-    const { data } = useEvents()
-    console.log(data);
+  //活動資料
+  // 1. 從伺服器來的原始資料
+  const [events, setEvents] = useState([])
+  // 2. 用於網頁上經過各種處理(排序、搜尋、過濾)後的資料
+  const [displayEvents, setDisplayEvents] = useState([])
 
-    //活動資料
-    // 1. 從伺服器來的原始資料
-    const [events, setEvents] = useState([])
-    // 2. 用於網頁上經過各種處理(排序、搜尋、過濾)後的資料
-    const [displayevents, setDisplayevents] = useState([])
-
-    //篩選條件
-    const [categorie, setCategorie] = useState([])
-    const categories = [ '演唱會',
+  //篩選條件
+  const [category_name] = 'categorie'
+  const [categorie, setCategorie] = useState([])
+  const categories = [
+    '演唱會',
     '展覽',
     '快閃活動',
     '市集',
     '粉絲見面會',
     '課程講座',
     '體育賽事',
-    '景點門票',]
-  
-    // radio 價格篩選
-    const [priceRange, setPriceRange] = useState('所有')
-    const priceRangeTypes = ['所有', '1萬以下', '1~2萬']
+    '景點門票',
+  ]
 
-    const [searchWord, setSearchWord] = useState('')
-    const [sortBy, setSortBy] = useState('')
+  // radio 價格篩選
+  const [priceRange, setPriceRange] = useState('所有')
+  const priceRangeTypes = ['所有', '1百以下', '1~2百']
 
-    // 載入指示的spinner動畫用的
-    const [isLoading, setIsLoading] = useState(false)
+  const [searchWord, setSearchWord] = useState('')
+  const [sortBy, setSortBy] = useState('')
 
-    //x秒後自動關掉spinner(設定isLoading為false)
-    useEffect(() => {
+  // 載入指示的spinner動畫用的
+  const [isLoading, setIsLoading] = useState(false)
+
+  //x秒後自動關掉spinner(設定isLoading為false)
+  useEffect(() => {
     if (isLoading) {
-        setTimeout(() => {
+      setTimeout(() => {
         setIsLoading(false)
-        }, 1000)
+      }, 1000)
     }
-    }, [isLoading])
+  }, [isLoading])
 
-    // 初始化資料-didMount
-    useEffect(() => {
-        // 先開起載入指示器
-        setIsLoading(true)
+  // 初始化資料-didMount
+  useEffect(() => {
+    // 先開起載入指示器
+    setIsLoading(true)
 
-        // 模擬和伺服器要資料
-        // 最後設定到狀態中
-        setProducts(data)
-        setDisplayProducts(data)
-    }, [])
+    // 模擬和伺服器要資料
+    // 最後設定到狀態中
+    setEvents(data)
+    setDisplayEvents(data)
+  }, [])
 
-    
+  // 四個表單元素的處理方法
+  // 文字搜尋
+  // const handleSearch = (events, searchWord) => {
+  //   let newEvents = [...events]
+
+  //   if (searchWord.length) {
+  //     newEvents = events.filter((event) => {
+  //       // includes -> String API
+  //       return event.name.includes(searchWord)
+  //     })
+  //   }
+
+  //   return newEvents
+  // }
+  //大小排序
+  const handleSort = (events, sortBy) => {
+    let newEvents = [...events]
+
+    // 以價格排序-由少至多
+    if (sortBy === '1') {
+      newEvents = [...newEvents].sort((a, b) => a.price - b.price)
+    }
+
+    if (sortBy === '2') {
+      newEvents = [...newEvents].sort((a, b) => b.price - a.price)
+    }
+
+    // 預設用id 小至大
+    if (sortBy === '' && newEvents.length > 0) {
+      newEvents = [...newEvents].sort((a, b) => a.id - b.id)
+    }
+
+    return newEvents
+  }
+  // 活動種類篩選
+  // console.log(categories)
+  const handleCategorie = (events, categorie) => {
+    let newEvents = [...events]
+
+    // tags = 代表使用者目前勾選的標籤陣列
+    // console.log(categorie)
+
+    // 處理勾選標記
+    if (categorie.length > 0) {
+      newEvents = [...newEvents].filter((event) => {
+        let isFound = false
+
+        // 原本資料裡的tags字串轉為陣列
+        const eventCategorie = event.categorie.split(',')
+
+        // 用目前使用者勾選的標籤用迴圈找，有找到就回傳true
+        for (let i = 0; i < categorie.length; i++) {
+          // includes -> Array api
+          if (eventCategorie.includes(categorie[i])) {
+            isFound = true // 找到設為true
+            break // 找到一個就可以，中斷迴圈
+          }
+        }
+
+        return isFound
+      })
+    }
+
+    return newEvents
+  }
+  //價格區間排序
+  const handlePriceRange = (events, priceRange) => {
+    let newEvents = [...events]
+    // console.log(events)
+
+    // 處理價格區間選項
+    switch (priceRange) {
+      case '1百以下':
+        newEvents = events.filter((p) => {
+          return p.price <= 100
+        })
+        break
+      case '1~2百':
+        newEvents = events.filter((p) => {
+          return p.price >= 100 && p.price <= 200
+        })
+        break
+      // 指所有的產品都出現
+      default:
+        break
+    }
+
+    return newEvents
+  }
+
+  // 當四個過濾表單元素有更動時
+  // componentDidUpdate + didMount
+  // ps. 一開始也會載入
+  useEffect(() => {
+    // 搜尋字串太少不需要搜尋
+    if (searchWord.length < 3 && searchWord.length !== 0) return
+
+    // 先開起載入指示器
+    setIsLoading(true)
+
+    let newEvents = []
+
+    // 處理搜尋
+    // newEvents = handleSearch(events, searchWord)
+
+    // 處理排序
+    newEvents = handleSort(newEvents, sortBy)
+
+    // 處理勾選標記
+    newEvents = handleCategorie(newEvents, categorie)
+
+    // 處理價格區間選項
+    newEvents = handlePriceRange(newEvents, priceRange)
+
+    setDisplayEvents(newEvents)
+  }, [searchWord, events, sortBy, categorie, priceRange])
+
+  // bootstrap 的spinner
+  const spinner = (
+    <>
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border text-success" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    </>
+  )
+
   return (
     <>
       <useEvents>
         <nav className="header container navbar-expand mt-5 w-1200">
           <h5 className="d-flex justify-content-between">
             <div className="bg-bg-gray-secondary rounded-3">
-              <p className="mx-4 my-2">
-                目前共有 {data?.length} 筆 結果
-              </p>
+              <p className="mx-4 my-2">目前共有 {data?.length} 筆 結果</p>
             </div>
             <section>
               <NavbarTopRwd />
@@ -97,10 +227,19 @@ export default function List() {
           <div className="row">
             <div className="sidebar me-3 col-md-2 col-3">
               <Sidebar />
+              <FilterBar
+                priceRangeTypes={priceRangeTypes}
+                priceRange={priceRange}
+                setPriceRange={setPriceRange}
+                categories={categories}
+                categorie={categorie}
+                setCategorie={setCategorie}
+              />
             </div>
             <div className="col">
               <div className="cardList row g-3">
                 <EventCard />
+                <EventList products={displayEvents} />
               </div>
 
               <footer className="d-flex justify-content-center m-3">

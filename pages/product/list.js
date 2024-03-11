@@ -33,7 +33,7 @@ import useEvents from '@/hooks/use-event'
 
 export default function List() {
   const { data } = useEvents()
-  console.log(data);
+  console.log(data)
   // console.log(data?.data.posts)
   // useEffect(() => {
   //   console.log(data) // 这里可以看到数据
@@ -46,9 +46,7 @@ export default function List() {
         <nav className="header container navbar-expand mt-5 w-1200">
           <h5 className="d-flex justify-content-between">
             <div className="bg-bg-gray-secondary rounded-3">
-              <p className="mx-4 my-2">
-                目前共有 {data?.length} 筆 結果
-              </p>
+              <p className="mx-4 my-2">目前共有 {data?.length} 筆 結果</p>
             </div>
             <section>
               <NavbarTopRwd />
