@@ -13,21 +13,46 @@ export default function Detail() {
   const [eventInfo, setEventInfo] = useState([]);
   const [qty, setQty] = useState(1)
 
+  const [sellStartDate, setSellStartDate] = useState('');
+  const [sellEndDate, setSellEndDate] = useState('');
 
-  useEffect(() => {
-    fetch('http://localhost:3005/api/info')
+let date1, date2,time1,time2;
+
+  useEffect(async() => {
+
+   await fetch('http://localhost:3005/api/info')
       .then((response) => response.json())
       .then((data) => {
         // 檢查是否有資料並設定到 state 中
         if (data && data.data) {
-          console.log('success:', data.data.posts);
-          setEventInfo(data.data.posts[0])
+          console.log('success:', data?.data.posts);
+          setEventInfo(data?.data.posts[0])
+
+          // 建立日期物件
+          const startDate = data?.data.posts[0].start_date; // 因為eventInfo 還沒設定好不能使用, 故使用data?.data.posts[0]
+          const endDate = data?.data.posts[0].end_date;
+
+          setSellStartDate(data?.data.posts[0].sell_start_date) 
+          setSellEndDate(data?.data.posts[0].sell_end_date)
+
+          console.log(startDate);
+          console.log(endDate);
+          
+           [date1, time1] = startDate.split('T');
+           [date2, time2] = endDate.split('T');
+
+          // // 印出結果
+          console.log('日期部分:', date1);
+          console.log('時間部分:', time1);
+          console.log('日期部分:', date2);
+          console.log('時間部分:', time2);
+
         }
       })
       .catch((error) => console.error('Error fetching data:', error))
   }, [])
   console.log(eventInfo);
-
+console.log(date1);
 
   const handleSelection = () => {
     setSelected(!selected)  // 切換選擇狀態
@@ -143,7 +168,7 @@ export default function Detail() {
                 <h6 className="text-normal-gray-light">
                   <i className="bi bi-calendar me-2 d-none d-xxl-inline-flex" />
                   {/* 2024/01/21 － 2024/01/22 */}
-                  {eventInfo.start_date}-{eventInfo.end_date}
+                  {date1}-{date2}
                 </h6>
                 <h6>
                   <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" />
@@ -182,8 +207,8 @@ export default function Detail() {
                 </button>
               </div>
               <div className="row seat1 mt-3">
-                <h4 className="col-lg-9 col-sm-6">2F 座位</h4>
-                <h4 className="col-lg-2 col-sm-4">NT$ 3,200</h4>
+                <h4 className="col-lg-9 col-sm-6">{eventInfo.ticket_name}</h4>
+                <h4 className="col-lg-2 col-sm-4">NT$ {eventInfo.price}</h4>
                 <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={handleSelection}>
                   {selected ? '已選擇' : '選擇'}
                 </button>
@@ -206,7 +231,8 @@ export default function Detail() {
                   <div className="me-5">
                     <h5 className="mb-5">選擇日期</h5>
                     <div className="text-center">
-                      <Calendar onChange={handleDate} />
+                      <Calendar onChange={handleDate} sellEndDate={sellEndDate} sellStartDate={sellStartDate}/>
+
                     </div>
                   </div>
                   <div>
