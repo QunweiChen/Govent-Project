@@ -3,16 +3,19 @@ import ProductInfo from '@/components/payment/product-info/index.js'
 import DefaultLayout from '@/components/layout/default-layout'
 import PaymentForm from '@/components/payment/payment-Form'
 export default function Payment() {
+  //總金額
   const [money, setMoney] = useState(0)
-  console.log(money)
-
   //點數及優惠券
   const [discount, setDiscount] = useState({
     point: 0,
     coupon: { name: '', value: 1 },
   })
-  console.log('discount', discount)
-
+  const [discountState, setDiscountState] = useState({
+    point: false,
+    coupon: false,
+  })
+  console.log(discountState)
+  //購物車資料
   const [productData, setProductData] = useState([])
   // 從 localStorage 中獲取 MtItems 資料
   const MtItemsString =
@@ -25,7 +28,6 @@ export default function Payment() {
   const news = MtItems.flatMap((merchant) => {
     return merchant.items.filter((item) => item.checked === true)
   })
-  // console.log('MtItems', MtItems)
   //計算總金額
   const TotalPrice = () => {
     let total = 0
@@ -34,7 +36,6 @@ export default function Payment() {
     })
     return total
   }
-
   //計算回饋的點數
   const redeem = () => {
     let total = money
@@ -51,24 +52,41 @@ export default function Payment() {
     let result = total - total * coupon
     return result
   }
-  useEffect(() => {
-    setProductData(news)
-    // setMoney(TotalPrice())
-  }, [])
+
+  //監聽是否有輸入優惠券或折抵金額
   useEffect(() => {
     let TotalMoney = TotalPrice()
-    console.log('123421341', discount.coupon.value)
-    if (discount.point === '') {
-      setMoney(TotalPrice())
-
-      return
+    let result = 0
+    switch (true) {
+      case discountState.coupon == false && discountState.point == true:
+        TotalMoney = TotalMoney - discount.point
+        setMoney(TotalMoney)
+        break
+      case discountState.point == false && discountState.coupon == true:
+        TotalMoney = TotalMoney - coupon()
+        setMoney(TotalMoney)
+        break
+      case discountState.point == false && discountState.coupon == false:
+        setMoney(TotalMoney)
+        break
+      case discount.point === '':
+        setMoney(TotalPrice())
+        if (discount.coupon.value !== 1) {
+          setMoney(TotalPrice() - coupon())
+        }
+        break
+      case discountState.point == true && discountState.coupon == true:
+        result = TotalMoney - coupon() - discount.point
+        setMoney(result)
+        break
     }
-    let result = TotalMoney - coupon() - discount.point
-    console.log(result)
-    setMoney(result)
-  }, [discount])
+  }, [discount, discountState])
+  //初始化設定
   useEffect(() => {
     setMoney(TotalPrice())
+  }, [])
+  useEffect(() => {
+    setProductData(news)
   }, [])
   return (
     <>
@@ -78,7 +96,15 @@ export default function Payment() {
           {/* 商品詳情 */}
           <ProductInfo productData={productData} />
           {/* 會員資料&折抵&付款資訊 */}
-          <PaymentForm setDiscount={setDiscount} />
+          <PaymentForm
+            setDiscount={setDiscount}
+            setDiscountState={setDiscountState}
+            discount={discount}
+            money={money}
+            productData={productData}
+            discountState={discountState}
+            redeem={redeem}
+          />
         </div>
         <div className="col-md-4 ">
           <div className="bg-bg-gray-secondary  rounded-4 py-3 px-4 sticky-top">

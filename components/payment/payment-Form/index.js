@@ -8,7 +8,16 @@ import Image from 'react-bootstrap/Image'
 import GoventToast from '@/components/toast'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
-export default function PaymentForm({ setDiscount = () => {} }) {
+export default function PaymentForm({
+  setDiscount = () => {},
+  setDiscountState = () => {},
+  discount = {},
+  discountState = {},
+  money = 0,
+  productData = {},
+  redeem = () => {},
+}) {
+  console.log(money)
   //使用react-hook-form套件檢查form表單
   const {
     register,
@@ -17,13 +26,18 @@ export default function PaymentForm({ setDiscount = () => {} }) {
   } = useForm()
   //結帳之後將資料傳送至後端
   const postSubmit = (data) => {
-    // console.log(data)
+    let result = {
+      ...data,
+      money: money,
+      productData: productData,
+      redeem: redeem(),
+    }
     fetch('http://localhost:3005/api/payment', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(result),
     })
       .then((response) => {
         return response.json()
@@ -44,29 +58,23 @@ export default function PaymentForm({ setDiscount = () => {} }) {
 
   //監聽使用者輸入表單欄位
   function formChange(e) {
-    let data = {
-      point: 0, //這邊的問題
-      coupon: { name: '', value: 1 },
-    }
     if (e.target.name === 'coupon') {
       let setConnectionData = {
-        ...data,
+        ...discount,
         coupon: {
           name: e.target.options[e.target.selectedIndex].text,
           value: e.target.value,
         },
       }
       setDiscount(setConnectionData)
-
       return
     }
-    let setConnectionData = { ...data, [e.target.name]: e.target.value }
+    let setConnectionData = { ...discount, [e.target.name]: e.target.value }
 
     setDiscount(setConnectionData)
   }
   //監聽點數及優惠券是否被勾選
   const pointInputRef = useRef(null)
-
   const couponInputRef = useRef(null)
   //使用useState更改disabled的狀態，false為增加屬性true為關閉屬性
   const [pointDisabledValue, setPointDisabledValue] = useState(false)
@@ -90,6 +98,12 @@ export default function PaymentForm({ setDiscount = () => {} }) {
     if (couponDisabledValue === false) {
       couponInputRef.current.setAttribute('disabled', true)
     }
+    let state = {
+      ...discountState,
+      point: pointDisabledValue,
+      coupon: couponDisabledValue,
+    }
+    setDiscountState(state)
   }, [pointDisabledValue, couponDisabledValue])
 
   //控制input radio選項，選擇信用卡時跳出填入信用卡資訊的欄位
@@ -482,7 +496,7 @@ export default function PaymentForm({ setDiscount = () => {} }) {
               type="radio"
               name="paymentType"
               id="LinePay"
-              value="LinePay"
+              value="line-pay"
               {...register('paymentType', { onChange: changeValue })}
             />
             <label className="form-check-label" htmlFor="LinePay">
@@ -516,13 +530,12 @@ export default function PaymentForm({ setDiscount = () => {} }) {
             type="submit"
             className="btn btn-primary h6 fw-bolder text-white"
             style={{ width: '400px', height: '60px', borderRadius: '15px' }}
-            onClick={() => {
-              console.log('post')
-            }}
           >
             確認付款
           </button>
         </div>
+
+        {/* <input type="hidden" {...register('money')} value={money} /> */}
       </Form>
       <style global jsx>{`
         .placeholder-text::placeholder {
