@@ -32,7 +32,7 @@ export default function PaymentForm({
       productData: productData,
       redeem: redeem(),
     }
-    fetch('http://localhost:3005/api/payment', {
+    fetch('http://localhost:3005/api/payment-line-pay', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +43,8 @@ export default function PaymentForm({
         return response.json()
       })
       .then((response) => {
-        console.log(response)
+        console.log(response.url)
+        window.location.replace(response.url)
       })
       .catch((err) => {
         console.log(err)
