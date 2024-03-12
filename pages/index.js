@@ -3,7 +3,7 @@ import styles from './index.module.scss'
 import Carousel from 'react-bootstrap/Carousel'
 import EventsBar from '@/components/events-bar'
 import EventsTypeBar from '@/components/events-type-bar'
-import IndexLayout from '@/components/layout/nocb-default-layout'
+import IndexLayout from '@/components/layout/index-layout'
 import { motion, useTime, useTransform } from 'framer-motion'
 
 // 載入svg
