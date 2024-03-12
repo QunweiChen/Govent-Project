@@ -16,11 +16,18 @@ export default function Detail() {
   const [sellStartDate, setSellStartDate] = useState('');
   const [sellEndDate, setSellEndDate] = useState('');
 
-let date1, date2,time1,time2;
+  //設日期狀態()
+  const [dateStart, setDateStart] = useState('')
+  const [dateEnd, setDateEnd] = useState('')
+  const [timeStart,setTimeStart] = useState('')
+  const [timeEnd,setTimeEnd] = useState('')
+  const [sellTime,setSellTime] = useState('')
 
-  useEffect(async() => {
+  let date1, date2, time1,time2 ,date3,time3;
 
-   await fetch('http://localhost:3005/api/info')
+  useEffect(() => {
+
+    fetch('http://localhost:3005/api/info')
       .then((response) => response.json())
       .then((data) => {
         // 檢查是否有資料並設定到 state 中
@@ -28,31 +35,40 @@ let date1, date2,time1,time2;
           console.log('success:', data?.data.posts);
           setEventInfo(data?.data.posts[0])
 
-          // 建立日期物件
-          const startDate = data?.data.posts[0].start_date; // 因為eventInfo 還沒設定好不能使用, 故使用data?.data.posts[0]
+          // 建立日期物件 // 因為eventInfo 還沒設定好不能使用, 故使用data?.data.posts[0]
+          const startDate = data?.data.posts[0].start_date; 
           const endDate = data?.data.posts[0].end_date;
+          
+          // console.log(startDate);
+          // console.log(endDate);
 
-          setSellStartDate(data?.data.posts[0].sell_start_date) 
+          [date1, time1] = startDate.split('T');
+          [date2, time2] = endDate.split('T');
+          [date3,time3] = sellStartDate.split('T');
+          time3 = time3.substring(0, 5); 
+          
+          setSellStartDate(data?.data.posts[0].sell_start_date)
           setSellEndDate(data?.data.posts[0].sell_end_date)
 
-          console.log(startDate);
-          console.log(endDate);
-          
-           [date1, time1] = startDate.split('T');
-           [date2, time2] = endDate.split('T');
-
-          // // 印出結果
-          console.log('日期部分:', date1);
-          console.log('時間部分:', time1);
-          console.log('日期部分:', date2);
-          console.log('時間部分:', time2);
-
+          //狀態接變數值
+          setDateStart(date1)
+          setDateEnd(date2)
+          setTimeStart(time1)
+          setTimeEnd(time2)
+          setSellTime(time3)
         }
       })
       .catch((error) => console.error('Error fetching data:', error))
+
   }, [])
-  console.log(eventInfo);
-console.log(date1);
+  // console.log(eventInfo);
+  // console.log(timeStart);
+  console.log(sellEndDate);
+  console.log(sellTime);
+  
+  
+
+
 
   const handleSelection = () => {
     setSelected(!selected)  // 切換選擇狀態
@@ -76,7 +92,8 @@ console.log(date1);
     setQty(qty + 1)
   }
 
-  const totalAmount = selected ? 3200 * qty : 0;
+  const totalAmount = selected ? eventInfo.price * qty : 0;
+  
 
   const addToCart = () => {
     const cartData = {
@@ -134,7 +151,7 @@ console.log(date1);
 
           <div>
             <img
-              src="/images/product/detail/slideshow.jpg"
+              src={`/images/product/list/${eventInfo.image?.split(',')[0]}`}
               className="object-fit-cover"
               alt=""
             />
@@ -159,7 +176,6 @@ console.log(date1);
               </div>
               <div>
                 <h3 className="my-4">
-                  {/* YOASOBI演唱會2024台北站 */}
                   {eventInfo.event_name}
                   {/* <span className="d-none d-xxl-inline-flex">
                     ｜YOASOBI ASIA TOUR 2023-2024 Solo Concert in Taipei
@@ -167,16 +183,13 @@ console.log(date1);
                 </h3>
                 <h6 className="text-normal-gray-light">
                   <i className="bi bi-calendar me-2 d-none d-xxl-inline-flex" />
-                  {/* 2024/01/21 － 2024/01/22 */}
-                  {date1}-{date2}
+                  {dateStart}~{dateEnd}
                 </h6>
                 <h6>
                   <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" />
-                  {/* Zepp New Taipei */}
                   {eventInfo.place}
                 </h6>
                 <p className="mx-4 text-secondary-02">
-                  {/* 新北市新莊區新北大道四段3號8樓 */}
                   {eventInfo.address}
                 </p>
                 <hr className="d-none d-xxl-block" />
@@ -208,7 +221,7 @@ console.log(date1);
               </div>
               <div className="row seat1 mt-3">
                 <h4 className="col-lg-9 col-sm-6">{eventInfo.ticket_name}</h4>
-                <h4 className="col-lg-2 col-sm-4">NT$ {eventInfo.price}</h4>
+                <h4 className="col-lg-2 col-sm-4">NT$ {parseInt(eventInfo.price ).toLocaleString()}</h4>
                 <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={handleSelection}>
                   {selected ? '已選擇' : '選擇'}
                 </button>
@@ -231,14 +244,14 @@ console.log(date1);
                   <div className="me-5">
                     <h5 className="mb-5">選擇日期</h5>
                     <div className="text-center">
-                      <Calendar onChange={handleDate} sellEndDate={sellEndDate} sellStartDate={sellStartDate}/>
+                      <Calendar onChange={handleDate} sellStartDate={sellStartDate} sellEndDate={sellEndDate}/>
 
                     </div>
                   </div>
                   <div>
                     <h5 className="mb-5">選擇時間</h5>
                     <button className="store fs-5 p-2 btn btn-primary-deep" onClick={() => handleTime('17:00')}>
-                      17:00
+                      {sellTime}
                     </button>
                     <h5 className="my-5">數量</h5>
                     <div className="d-flex align-items-center">

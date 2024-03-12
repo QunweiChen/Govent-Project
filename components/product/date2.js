@@ -6,10 +6,7 @@ const chunk = (arr, size) =>
     arr.slice(i * size, i * size + size)
   )
 
-export default function Calendar({ events, sellEndDate = '', sellStartDate = '' }) {
-  const [selectedDate, setSelectedDate] = useState(null);
-
-
+export default function Calendar({ events, sellStartDate = '', sellEndDate = '' }) {
 
   //const [events, setEvents] = useState([])
 
@@ -31,11 +28,13 @@ export default function Calendar({ events, sellEndDate = '', sellStartDate = '' 
   // 一開始未選中日期
   const [myDate, setMyDate] = useState(0)
 
-  // 呈現yearAndMonth
+  //設定售票起始日
   const now = new Date()
 
   console.log(new Date(sellStartDate))
   console.log(sellStartDate)
+  console.log(sellEndDate);
+  
 
 
   // 要得到今天的西元年使用Date物件的getFullYear()，要得到月份使用getMonth()(注意回傳為 0~11)
@@ -48,7 +47,7 @@ export default function Calendar({ events, sellEndDate = '', sellStartDate = '' 
   // nowD
   const nowD = now.getDate() //注意回傳為 0~11
 
-  // 呈現標題
+  // 星期
   const weekDayList = ['日', '一', '二', '三', '四', '五', '六']
 
   // 本月有幾天
@@ -73,17 +72,10 @@ export default function Calendar({ events, sellEndDate = '', sellStartDate = '' 
   //------ 以下準備呈現在網頁上
   const allDataChunks = chunk(allData, 7)
 
-  const isDateSelectable = (date) => {
-    return events.includes(date);
-  };
-
-  // const handleDateClick = (date) => {
-  //   if (isDateFromDatabase(date)) {
-  //     setSelectedDate(date);
-  //   } else {
-  //     // Date is not from the database, do nothing or show a message
-  //   }
-  // };
+  const handleDateClick = (item) => {
+    setMyDate(item);
+  }
+  
 
   return (
     <>
@@ -116,7 +108,8 @@ export default function Calendar({ events, sellEndDate = '', sellStartDate = '' 
               return (
                 <tr key={i}>
                   {v.map((item, idx) => {
-                    {/* console.log(new Date(`${nowY}-${nowM}-${item}`), new Date(sellStartDate), new Date(sellEndDate)) */}
+                    const currentDate = new Date(nowY, nowM - 1, item);
+        const isSelectable = currentDate >= new Date(sellStartDate) && currentDate <= new Date(sellEndDate);
 
                     return (
                       <td
@@ -124,8 +117,8 @@ export default function Calendar({ events, sellEndDate = '', sellStartDate = '' 
                         onClick={() => {
                           handleDateClick(item)
                         }}
-                        className={`${new Date(`${nowY}-${nowM}-${item}`) >= new Date(sellStartDate) && new Date(`${nowY}-${nowM}-${item}`) <= new Date(sellEndDate) ? 'selectable' : ''}`}
-                        // className={`${isDateSelectable(item) ? 'selectable' : 'disabled'}`}
+                        // className={`${new Date(`${nowY}-${nowM}-${item}`) >= new Date(sellStartDate) && new Date(`${nowY}-${nowM}-${item}`) <= new Date(sellEndDate) ? 'selectable' : ''}`}
+                        className={isSelectable ? 'selectable' : ''}
                         style={{ cursor: 'pointer' }}
                         role="presentation"
                       >
