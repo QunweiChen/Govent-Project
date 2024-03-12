@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon govent ./bin/www",
+    "dev": "nodemon ./bin/www",
     "seed": "node ./cli/db-init.js",
     "backup": "node ./cli/db-backup.js",
     "debug": "DEBUG=express:* node ./bin/www",
@@ -34,6 +34,7 @@
     "pug": "^3.0.2",
     "request": "^2.88.2",
     "secure-compare": "^3.0.1",
+    
     "sequelize": "^6.33.0",
     "session-file-store": "^1.5.0",
     "sqlstring": "^2.3.3",
