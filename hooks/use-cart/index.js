@@ -86,39 +86,13 @@ export function CartProvider({
     if (JSON.stringify(cartItems) !== storedValue) {
       setValue(cartItems)
     }
-    // eslint-disable-next-line
-}, [cartItems])
-  useEffect(() => {
-    console.log(merchantItems)
+    setMerchantItems(merchantItems)
     // 使用字串比較
     if (JSON.stringify(merchantItems) !== storedValueMt) {
       setValueMt(merchantItems)
     }
     // eslint-disable-next-line
-}, [merchantItems])
-
-  // 初始化 setValue(localStoage), setValue用於存入localStorage中
-  const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
-  const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
-  //連接資料庫
-  const [data, setData] = useState([])
-  const [Mt, setMt] = useState([])
-  console.log(data)
-  useEffect(() => {
-    const getCartMt = async () => {
-      fetch('http://localhost:3005/api/cart')
-        .then((res) => res.json())
-        .then((text) => {
-          setData(text)
-          setMt(text.data ? text.data.posts : [])
-        })
-    }
-
-    getCartMt()
-  }, [])
-  //重新定義公司
-  //const Mt = data.data ? data.data.posts : []
-  // console.log(Mt)
+}, [cartItems,merchantItems])
 
   //checkbox內容
   //切換
@@ -170,7 +144,6 @@ export function CartProvider({
         return merchant
       }
     })
-    console.log(news)
     setMerchantItems(news)
   }
   const handleToggleSelectedMt = (isSelectedMt, MtId) => {
