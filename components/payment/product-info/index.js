@@ -1,5 +1,5 @@
+import { clearConfigCache } from 'prettier'
 import React from 'react'
-import InfoData from './info-data'
 import { Image } from 'react-bootstrap'
 export default function ProductInfo({ productData = {} }) {
   return (
@@ -27,13 +27,13 @@ export default function ProductInfo({ productData = {} }) {
                 <div className="date-range d-flex me-2">
                   <i className="bi bi-calendar-week text-primary me-1"></i>
                   <p className="d-flex align-items-center p">
-                    {v.startDate.split(' ')[0]}
+                    {v.holdingTime.split(' ')[0]}
                   </p>
                 </div>
                 <div className="date-time d-flex me-2">
                   <i className="bi bi-clock text-primary me-1"></i>
                   <p className="d-flex align-items-center p">
-                    {v.startDate.split(' ')[1]}
+                    {v.holdingTime.split(' ')[1]}
                   </p>
                 </div>
                 <div className="product-people d-flex me-1 me-2">
