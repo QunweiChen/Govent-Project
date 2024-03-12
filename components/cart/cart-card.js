@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'react-bootstrap/Image'
 
@@ -11,6 +11,13 @@ export default function CartCard({
   calcTotalItemstotal = 0,
   calcTotalPricetotal = 0,
 }) {
+  const [deletedItems, setDeletedItems] = useState([])
+
+  const handleDeleteItem = (merchantId, itemId) => {
+    setDeletedItems([...deletedItems, { merchantId, itemId }])
+    // 添加删除项目的任何其他必要逻辑
+    removeItem(merchantItems, itemId, merchantId)
+  }
   return (
     <>
       <div className="rwd-text">
@@ -172,12 +179,23 @@ export default function CartCard({
           </p>
           <h5 className="text-white ms-3">總金額 NT {calcTotalPricetotal}</h5>
           <h6 className="btn btn-primary-deep ms-4">
-            <Link href="/cart/pay-list" className="text-white">
+            <Link href="/payment" className="text-white">
               前往結帳
             </Link>
           </h6>
         </div>
       </div>
+      <style global jsx>
+        {`
+          .cart-card.row {
+            transition: transform 0.3s ease;
+          }
+
+          .cart-card.row.slide-out {
+            transform: translateX(-100%);
+          }
+        `}
+      </style>
     </>
   )
 }
