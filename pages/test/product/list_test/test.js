@@ -4,8 +4,9 @@ import NavbarTopRwd from '@/components/layout/list-layout/navbar-top-sm'
 import ActivityCategory from '@/data/event/activity_category.json'
 import EventType from '@/data/event/event_type.json'
 import StrList from '@/data/event/str.json'
-import useEvents from '@/hooks/use-event/events'
+import useEvents from '@/hooks/use-event'
 import BS5Pagination from '@/components/common/bs5-pagination'
+import SideBarDown from '@/components/layout/list-layout/sidebar_down'
 
 export default function ProductStateList() {
   const [nameLike, setNameLike] = useState('')
@@ -85,15 +86,15 @@ export default function ProductStateList() {
     getEvents(true)
   }
 
-  const displayList = (
-    <ul>
-      {items.map((v) => (
-        <li key={v.id}>
-          {v.name}(str_id:{v.str_id})(price: {v.price})
-        </li>
-      ))}
-    </ul>
-  )
+  // const displayList = (
+  //   <ul>
+  //     {items.map((v) => (
+  //       <li key={v.id}>
+  //         {v.name}(str_id:{v.str_id})(price: {v.price})
+  //       </li>
+  //     ))}
+  //   </ul>
+  // )
 
   const pagination = (
     <BS5Pagination
@@ -107,6 +108,9 @@ export default function ProductStateList() {
     <>
       <nav>
         <NavbarTopRwd />
+        <div>
+          <SideBarDown />
+        </div>
       </nav>
       <div className="container">
         <h1>商品測試頁(state)</h1>

@@ -12,7 +12,8 @@
     "image": "1-01.jpg",
     "str": "高雄市",
     "address": "高雄市左營區博愛二路757號",
-    "vaild": "1"
+    "vaild": "1",
+    "favorite_id": ""
 },
 {
     "id": "2",
@@ -28,7 +29,8 @@
     "image": "1-02.jpg",
     "str": "新北市",
     "address": "新北市新莊區新北大道四段3號8樓",
-    "vaild": "1"
+    "vaild": "1",
+    "favorite_id": ""
 },
 {
     "id": "3",
@@ -44,7 +46,8 @@
     "image": "1-03.jpg",
     "str": "台北市",
     "address": "台北市中正區八德路一段1號",
-    "vaild": "1"
+    "vaild": "1",
+    "favorite_id": ""
 },
 {
     "id": "4",
@@ -60,7 +63,8 @@
     "image": "1-04.jpg",
     "str": "高雄市",
     "address": "高雄市左營區博愛二路757號",
-    "vaild": "1"
+    "vaild": "1",
+    "favorite_id": ""
 },
 {
     "id": "5",
@@ -76,7 +80,8 @@
     "image": "1-05.jpg",
     "str": "高雄市",
     "address": "高雄市小港區瀋陽路123號",
-    "vaild": "1"
+    "vaild": "1",
+    "favorite_id": ""
 },
 {
     "id": "6",
@@ -92,7 +97,8 @@
     "image": "1-06.jpg",
     "str": "新北市",
     "address": "新北市林口區文化一路99號",
-    "vaild": "1"
+    "vaild": "1",
+    "favorite_id": ""
 },
 {
     "id": "7",
@@ -108,7 +114,8 @@
     "image": "1-07.jpg",
     "str": "高雄市",
     "address": "高雄市鹽埕區真愛路1號",
-    "vaild": "1"
+    "vaild": "1",
+    "favorite_id": ""
 },
 {
     "id": "8",
@@ -124,7 +131,8 @@
     "image": "1-08.jpg",
     "str": "新北市",
     "address": "新北市新莊區新北大道四段3號8樓",
-    "vaild": "1"
+    "vaild": "1",
+    "favorite_id": ""
 }
 ]
 

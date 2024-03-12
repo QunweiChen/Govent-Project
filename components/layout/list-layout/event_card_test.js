@@ -4,31 +4,18 @@ import Link from 'next/link'
 
 // import FavFcon from '@/components/fav-test/fav-icon'
 import FavIcon from '@/components/layout/list-layout/fav-icon'
+// import useEvents from '@/hooks/use-event/events'
 
-// 引入活動資料
-import useEvents from '@/hooks/use-event'
+//Json檔案引入（測試用）
+import Event from '@/data/event.json'
 
-// 假活動資料
-// import event from '@/data/event/event.json'
-// console.log(event)
+export default function EventCard() {
+  console.log(Event)
 
-export default function EventCard({ EventCard }) {
-  const { data } = useEvents()
-
-  // 分頁
-  const [events, setEvents] = useState([])
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(15);
- 
-  //頁碼
-  const lastPostIndex = currentPage * postsPerPage;
-  const firstPostIndex = lastPostIndex - postsPerPage;
-  const currentEvents = events.slice(firstPostIndex, lastPostIndex);
-
+  const { data } = Event
   return (
     <>
-          {/* {event.map((v)=>( */}
-      {data?.map((v) => (
+      {data?.data.posts.slice(0, 15).map((v) => (
         <div key={v.id} className="col-md-4 col-sm-6 ">
           <Link
             href={`/product/product-info/${v.id}`}
@@ -48,7 +35,7 @@ export default function EventCard({ EventCard }) {
               {/* <FavFcon/> */}
 
               <div className="card-body">
-                <p className=" text-normal-gray-light">{v.category_name}</p>
+                <p className=" text-normal-gray-light">{v.activity_name}</p>
                 <h5 className="card-title">{v.event_name}</h5>
                 <div className="">
                   <h6 className="text-primary-deep">${v.price || 0}起</h6>
@@ -61,7 +48,7 @@ export default function EventCard({ EventCard }) {
                 </div>
               </div>
             </div>
-            </Link>
+          </Link>
         </div>
       ))}
     </>
