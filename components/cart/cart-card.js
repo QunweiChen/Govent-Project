@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'react-bootstrap/Image'
+
+import { Modal } from 'react-bootstrap'
 
 export default function CartCard({
   merchantItems = {},
@@ -10,14 +12,28 @@ export default function CartCard({
   removeItem = () => {},
   calcTotalItemstotal = 0,
   calcTotalPricetotal = 0,
+  incrementOne = () => {},
+  decrementOne = () => {},
 }) {
-  const [deletedItems, setDeletedItems] = useState([])
+  const [showModal, setShowModal] = useState()
+  // console.log(showModal)
+  // console.log(merchantItems)
+  const checkAllChecked = (merchantItems) => {
+    let allChecked = true
 
-  const handleDeleteItem = (merchantId, itemId) => {
-    setDeletedItems([...deletedItems, { merchantId, itemId }])
-    // 添加删除项目的任何其他必要逻辑
-    removeItem(merchantItems, itemId, merchantId)
+    merchantItems.forEach((merchant) => {
+      merchant.items.forEach((item) => {
+        if (item.checked === false) {
+          allChecked = false
+          return
+        }
+      })
+    })
+
+    setShowModal(!allChecked) // 如果所有选项都未选中，则显示模态框
+    return allChecked // 返回是否所有选项都未选中
   }
+
   return (
     <>
       <div className="rwd-text">
@@ -92,7 +108,31 @@ export default function CartCard({
                           <div className="col-sm-4 col row d-flex justify-content-center align-items-center pb-3 pb-sm-0">
                             <div className="col-sm-6 d-flex justify-content-start align-items-center">
                               <i className="bi bi-person-fill text-primary-light"></i>
-                              <p className="text-white ms-2"> X {v.qty} 張</p>
+                              <button
+                                className="btn"
+                                onClick={() => {
+                                  incrementOne(
+                                    merchantItems,
+                                    v.id,
+                                    v.merchantId
+                                  )
+                                }}
+                              >
+                                <i className="bi bi-plus-circle text-white"></i>
+                              </button>
+                              <p className="text-white">{v.qty}</p>
+                              <button
+                                className="btn"
+                                onClick={() => {
+                                  decrementOne(
+                                    merchantItems,
+                                    v.id,
+                                    v.merchantId
+                                  )
+                                }}
+                              >
+                                <i className="bi bi-dash-circle text-white"></i>
+                              </button>
                             </div>
                             <p className="col-sm-6 text-white">
                               NT ${parseInt(v.price).toLocaleString()}
@@ -106,7 +146,7 @@ export default function CartCard({
                               type="button"
                               className="p btn d-flex justify-content-center align-items-center text-white text-nowrap"
                               data-bs-toggle="modal"
-                              data-bs-target="#staticBackdrop"
+                              data-bs-target="#delete"
                             >
                               <i className="bi bi-trash-fill text-primary-light me-1"></i>
                               刪除
@@ -118,7 +158,7 @@ export default function CartCard({
                     {/* 吐司 */}
                     <div
                       className="modal fade"
-                      id="staticBackdrop"
+                      id="delete"
                       data-bs-backdrop="static"
                       data-bs-keyboard="false"
                       tabindex="-1"
@@ -179,23 +219,30 @@ export default function CartCard({
           </p>
           <h5 className="text-white ms-3">總金額 NT {calcTotalPricetotal}</h5>
           <h6 className="btn btn-primary-deep ms-4">
-            <Link href="/payment" className="text-white">
+            <Link
+              href="/payment"
+              className="text-white"
+              onClick={(e) => {
+                if (!checkAllChecked(merchantItems)) {
+                  e.preventDefault() // 阻止默认行为
+                }
+              }}
+            >
               前往結帳
             </Link>
           </h6>
         </div>
       </div>
-      <style global jsx>
-        {`
-          .cart-card.row {
-            transition: transform 0.3s ease;
-          }
-
-          .cart-card.row.slide-out {
-            transform: translateX(-100%);
-          }
-        `}
-      </style>
+      {/* 吐司 */}
+      <Modal
+        show={showModal} // 控制模态框显示
+        onHide={() => setShowModal(false)} // 点击模态框外部或关闭按钮时关闭模态框
+        centered
+      >
+        <Modal.Body>
+          <Modal.Header closeButton>請勾選要結帳的票券</Modal.Header>
+        </Modal.Body>
+      </Modal>
     </>
   )
 }
