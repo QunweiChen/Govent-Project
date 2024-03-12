@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { motion} from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 
 export default function EventsBar() {
@@ -105,13 +105,22 @@ export default function EventsBar() {
                     <h3>2024金馬奇幻影展</h3>
                     <hr />
                     <p>
-                    2024金馬奇幻影展焦點導演專題推出美國兄弟檔名導柯恩兄弟的七部早期經典。適逢柯恩兄弟首部劇情長片《血迷宮（導演版）》（Blood Simple (Director's Cut)）問世40週年，影展特別邀來4K數位修復導演版本，另外還有被評選為影史百大喜劇的《扶養亞歷桑納》（Raising Arizona），囊括坎城影展金棕櫚、導演、男主角三項大獎的《巴頓芬克》（Barton Fink），以及他們首度榮獲奧斯卡的《冰血暴》（Fargo）和Cult片經典《謀殺綠腳趾》（The Big Lebowski），好看又好聽的《霹靂高手》（O Brother, Where Art Thou?），還有影史地位水漲船高的《黑幫龍虎門》（Miller's Crossing）等精彩作品。
+                      2024金馬奇幻影展焦點導演專題推出美國兄弟檔名導柯恩兄弟的七部早期經典。適逢柯恩兄弟首部劇情長片《血迷宮（導演版）》（Blood
+                      Simple (Director's
+                      Cut)）問世40週年，影展特別邀來4K數位修復導演版本，另外還有被評選為影史百大喜劇的《扶養亞歷桑納》（Raising
+                      Arizona），囊括坎城影展金棕櫚、導演、男主角三項大獎的《巴頓芬克》（Barton
+                      Fink），以及他們首度榮獲奧斯卡的《冰血暴》（Fargo）和Cult片經典《謀殺綠腳趾》（The
+                      Big Lebowski），好看又好聽的《霹靂高手》（O Brother, Where
+                      Art
+                      Thou?），還有影史地位水漲船高的《黑幫龍虎門》（Miller's
+                      Crossing）等精彩作品。
                     </p>
                   </motion.div>
                   <div className="gradient-overlay"></div>
                 </motion.div>
               )}
-              <Link href="/"
+              <Link
+                href="/"
                 className={`event-link d-flex justify-content-between text-white ${
                   isHovered ? '' : 'hide'
                 }`}
@@ -127,8 +136,7 @@ export default function EventsBar() {
                   setEvent(1)
                   setEventImg('/images/index-silder/ed-sheeran.jpg')
                 }}
-              >
-              </div>
+              ></div>
               <div
                 className={`event-btn mb-3 ${event === 2 ? 'active' : ''}`}
                 onMouseEnter={() => {
@@ -161,7 +169,6 @@ export default function EventsBar() {
                 opacity: 1;
                 transition: 300ms;
                 height: 45px;
-                
               }
               .event-link.hide {
                 height: 0;

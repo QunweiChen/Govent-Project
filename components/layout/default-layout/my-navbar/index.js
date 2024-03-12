@@ -4,7 +4,8 @@ import Link from 'next/link'
 // 組合以下區塊
 import Menubar from './menubar'
 import SearchForm from './search-form'
-import Toolbar from './toolbar'
+import dynamic from 'next/dynamic'
+const Toolbar = dynamic(() => import('./toolbar'), { ssr: false })
 import ToturialPanel from './tutorial-panel'
 
 import { useRouter } from 'next/router'
@@ -23,10 +24,19 @@ export default function MyNavbar() {
   return (
     <>
       <header>
-        <nav className="navbar navbar-expand-lg fixed-top navbar-light py-3" data-bs-theme="dark">
+        <nav
+          className="navbar navbar-expand-lg fixed-top navbar-light py-3"
+          data-bs-theme="dark"
+        >
           <div className="container width-1200">
             <Link className="navbar-brand" href="/">
-              <Image src="/govent-logo.png" alt="" width={100} height={24} priority />
+              <Image
+                src="/govent-logo.png"
+                alt=""
+                width={100}
+                height={24}
+                priority
+              />
             </Link>
             <button
               className="navbar-toggler"

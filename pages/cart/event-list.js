@@ -12,7 +12,7 @@ export default function EventList() {
 
   return (
     <>
-      <ul className="">
+      <ul className="text-white">
         {events.map((v, i) => {
           return (
             <li className="" key={v.id}>
