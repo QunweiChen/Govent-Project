@@ -8,35 +8,48 @@ import Image from 'react-bootstrap/Image'
 import GoventToast from '@/components/toast'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
-export default function PaymentForm() {
+export default function PaymentForm({
+  setDiscount = () => {},
+  setDiscountState = () => {},
+  discount = {},
+  discountState = {},
+  money = 0,
+  productData = {},
+  redeem = () => {},
+}) {
+  console.log(money)
   //使用react-hook-form套件檢查form表單
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm()
-
+  //結帳之後將資料傳送至後端
   const postSubmit = (data) => {
-    // console.log(data)
-    fetch('http://localhost:3005/api/payment', {
+    let result = {
+      ...data,
+      money: money,
+      productData: productData,
+      redeem: redeem(),
+    }
+    fetch('http://localhost:3005/api/payment-line-pay', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(result),
     })
       .then((response) => {
         return response.json()
       })
       .then((response) => {
-        console.log(response)
+        console.log(response.url)
+        window.location.replace(response.url)
       })
       .catch((err) => {
         console.log(err)
       })
   }
-
-  // include type check against field path with the name you have supplied.
 
   //確認是否有勾選與會員資料相同
   const numberValue = useRef(null)
@@ -44,26 +57,25 @@ export default function PaymentForm() {
     console.log(numberValue.current.checked)
   }
 
-  //儲存傳送給後端資料
-  // const [data, setDate] = useState({
-  //   userName: '',
-  //   userGender: '',
-  //   birthday: '',
-  //   phoneNumber: '',
-  //   email: '',
-  //   point: 0,
-  //   coupon: 0,
-  //   payType: false,
-  // })
   //監聽使用者輸入表單欄位
-  // function formChange(e) {
-  //   let setConnectionData = { ...data, [e.target.name]: e.target.value }
-  //   console.log(setConnectionData)
-  //   setDate(setConnectionData)
-  // }
+  function formChange(e) {
+    if (e.target.name === 'coupon') {
+      let setConnectionData = {
+        ...discount,
+        coupon: {
+          name: e.target.options[e.target.selectedIndex].text,
+          value: e.target.value,
+        },
+      }
+      setDiscount(setConnectionData)
+      return
+    }
+    let setConnectionData = { ...discount, [e.target.name]: e.target.value }
+
+    setDiscount(setConnectionData)
+  }
   //監聽點數及優惠券是否被勾選
   const pointInputRef = useRef(null)
-
   const couponInputRef = useRef(null)
   //使用useState更改disabled的狀態，false為增加屬性true為關閉屬性
   const [pointDisabledValue, setPointDisabledValue] = useState(false)
@@ -87,6 +99,12 @@ export default function PaymentForm() {
     if (couponDisabledValue === false) {
       couponInputRef.current.setAttribute('disabled', true)
     }
+    let state = {
+      ...discountState,
+      point: pointDisabledValue,
+      coupon: couponDisabledValue,
+    }
+    setDiscountState(state)
   }, [pointDisabledValue, couponDisabledValue])
 
   //控制input radio選項，選擇信用卡時跳出填入信用卡資訊的欄位
@@ -145,9 +163,6 @@ export default function PaymentForm() {
                 placeholder="輸入姓名"
                 className="bg-bg-gray  placeholder-text text-white-50 validate"
                 name="userName"
-                // onChange={(e) => {
-                //   formChange(e)
-                // }}
                 {...register('userName', { required: true })}
                 aria-invalid={errors.userName ? 'true' : 'false'}
               />
@@ -164,9 +179,6 @@ export default function PaymentForm() {
                 aria-label="Default select example"
                 className="bg-bg-gray text-white-50 validate"
                 name="userGender"
-                // onChange={(e) => {
-                //   formChange(e)
-                // }}
                 {...register('userGender', { required: true })}
                 aria-invalid={errors.userGender ? 'true' : 'false'}
               >
@@ -190,9 +202,6 @@ export default function PaymentForm() {
                 type="date"
                 className="bg-bg-gray text-white-50  validate"
                 name="birthday"
-                // onChange={(e) => {
-                //   formChange(e)
-                // }}
                 {...register('birthday', { required: true })}
                 aria-invalid={errors.birthday ? 'true' : 'false'}
               />
@@ -214,9 +223,6 @@ export default function PaymentForm() {
                 placeholder="0912345678"
                 className="bg-bg-gray text-white-50 placeholder-text validate"
                 name="phoneNumber"
-                // onChange={(e) => {
-                //   formChange(e)
-                // }}
                 {...register('phoneNumber', {
                   required: '請輸入手機',
                   pattern: {
@@ -242,9 +248,6 @@ export default function PaymentForm() {
                 placeholder="輸入email"
                 className="bg-bg-gray  placeholder-text text-white-50 validate"
                 name="email"
-                // onChange={(e) => {
-                //   formChange(e)
-                // }}
                 {...register('email', {
                   required: '請輸入信箱',
                   pattern: {
@@ -295,13 +298,13 @@ export default function PaymentForm() {
                   折抵數量
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   className="form-control bg-bg-gray  text-white-50 placeholder-text"
                   name="point"
                   id="pointInput"
                   placeholder="輸入數量"
                   ref={pointInputRef}
-                  // onChange={formChange}
+                  onChange={formChange}
                 />
               </div>
             </div>
@@ -322,14 +325,21 @@ export default function PaymentForm() {
                 <select
                   className="form-select bg-bg-gray text-white-50 "
                   aria-label="Default select example"
-                  defaultValue="0"
+                  defaultValue="1"
                   ref={couponInputRef}
                   name="coupon"
+                  onChange={formChange}
                 >
-                  <option value="0">選擇優惠券</option>
-                  <option value="0.9">九折</option>
-                  <option value="-200">折抵200</option>
-                  <option value="+200">增加200</option>
+                  <option value="1">選擇優惠券</option>
+                  <option value="0.9" label="九折">
+                    九折
+                  </option>
+                  <option value="200" label="折抵200">
+                    折抵200
+                  </option>
+                  <option value="500" label="折抵500">
+                    增加200
+                  </option>
                 </select>
               </div>
             </div>
@@ -487,7 +497,7 @@ export default function PaymentForm() {
               type="radio"
               name="paymentType"
               id="LinePay"
-              value="LinePay"
+              value="line-pay"
               {...register('paymentType', { onChange: changeValue })}
             />
             <label className="form-check-label" htmlFor="LinePay">
@@ -521,13 +531,12 @@ export default function PaymentForm() {
             type="submit"
             className="btn btn-primary h6 fw-bolder text-white"
             style={{ width: '400px', height: '60px', borderRadius: '15px' }}
-            onClick={() => {
-              console.log('post')
-            }}
           >
             確認付款
           </button>
         </div>
+
+        {/* <input type="hidden" {...register('money')} value={money} /> */}
       </Form>
       <style global jsx>{`
         .placeholder-text::placeholder {
