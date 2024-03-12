@@ -2,9 +2,13 @@ import express from 'express'
 const router = express.Router()
 import sequelize from '#configs/db.js'
 import { QueryTypes, DataTypes } from 'sequelize'
+
 // const { Cart } = sequelize.models
 
 router.get('/', async function (req, res) {
+  //Angus 加入的
+  res.json({ message: "Access granted to member's area.", user: req.user })
+
   try {
     // findAll 是回傳所有資料
     const posts = await sequelize.query('SELECT * FROM `member` WHERE id = 1', {
