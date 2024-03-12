@@ -2,8 +2,12 @@ import BackToMainPage from '@/components/user/backToMainPage'
 import { counties, townships, postcodes } from '@/data/township'
 import React, { useState } from 'react'
 import Link from 'next/link'
+import LoadingLayout from '@/components/layout/loading-layout'
+import { useRouter } from 'next/router'
 
 export default function Signup() {
+  const router = useRouter()
+
   const [user, setUser] = useState({
     username: '',
     password: '',
@@ -102,6 +106,7 @@ export default function Signup() {
       .then((data) => {
         // Handle success
         console.log('Success:', data)
+        router.rush('/user/signin')
       })
       .catch((errorResponse) => {
         // Handle HTTP errors
@@ -123,16 +128,6 @@ export default function Signup() {
           console.log('Error: ', errorResponse.message)
         }
       })
-    // .then((response) => {
-    //   return response.json()
-    // })
-    // .then((result) => {
-    //   let user = result.user
-    //   console.log(user)
-    // })
-    // .catch((error) => {
-    //   console.log(error)
-    // })
   }
 
   return (
@@ -212,8 +207,8 @@ export default function Signup() {
                         <button
                           className={`bi ${
                             passwordVisibility
-                              ? 'bi-eye-slash-fill'
-                              : 'bi-eye-fill'
+                              ? 'bi-eye-fill'
+                              : 'bi-eye-slash-fill'
                           } btn text-normal-gray bg-normal-gray-light`}
                           onClick={() => {
                             passwordVisibility
@@ -576,4 +571,8 @@ export default function Signup() {
       </style>
     </>
   )
+}
+
+Signup.getLayout = function (page) {
+  return <LoadingLayout title="註冊">{page}</LoadingLayout>
 }
