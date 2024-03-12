@@ -95,7 +95,7 @@ export default function MemberSetting() {
       name: '我是localname',
       level: '我是local會員',
       email: '我是local email',
-      avatar: 'https://www.shutterstock.com/image-vector/cute-cartoon-rubber-duck-vector-600nw-2276837591.jpg'
+      avatar: 'http://localhost:3005/images/contain/ct_1709886753648.jpg'
     }
 
     // 将对象转换为 JSON 字符串并存储在 localStorage 中

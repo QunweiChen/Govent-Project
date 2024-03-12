@@ -4,9 +4,7 @@ import Memberleft from '@/components/member/member-left-bar'
 import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
 
-
 export default function MemberFavorites() {
-
   const [userData, setUserData] = useState([])
 
   useEffect(() => {
@@ -14,11 +12,7 @@ export default function MemberFavorites() {
       .then((response) => response.json())
       .then((data) => {
         // 檢查是否有資料並設定到 state 中
-        if (
-          data &&
-          data.data &&
-          data.data.result
-        ) {
+        if (data && data.data && data.data.result) {
           setUserData(data.data.result)
         } else {
           console.warn('No favorites data received from the server.')
@@ -27,9 +21,9 @@ export default function MemberFavorites() {
       .catch((error) => console.error('Error fetching data:', error))
   }, [])
 
-  useEffect(()=>{
-    console.log('user', userData);
-  },[userData])
+  useEffect(() => {
+    console.log('user', userData)
+  }, [userData])
 
   return (
     <>
@@ -50,25 +44,27 @@ export default function MemberFavorites() {
               <div className="mb-4">您已收藏 {userData.length} 項商品</div>
               {userData.map((data) => (
                 <div key={data.div} className="event p-3 mt-2 d-flex">
-                <div className="event-img me-3">
-                  <img
-                    src={`http://localhost:3005/images/banner/${data.banner}`}
-                    alt=""
-                  />
-                </div>
-                <div className="py-1 content d-flex flex-column justify-content-between">
-                  <h6>
-                    {data.event_name}
-                  </h6>
-                  <div>
-                  <h6 className="text-primary-deep m-0">＄{data.price} 起</h6>
-                  <span className="sm-p">{data.start_date.split('T')[0]}</span>
+                  <div className="event-img me-3">
+                    <img
+                      src={`http://localhost:3005/images/banner/${data.banner}`}
+                      alt=""
+                    />
+                  </div>
+                  <div className="py-1 content d-flex flex-column justify-content-between">
+                    <h6>{data.event_name}</h6>
+                    <div>
+                      <h6 className="text-primary-deep m-0">
+                        ＄{data.min_price} 起
+                      </h6>
+                      <span className="sm-p">
+                        {data.start_date.split('T')[0]}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-1">
+                    <i className="bi bi-heart-fill text-primary"></i>
                   </div>
                 </div>
-                <div className='p-1'>
-                  <i className="bi bi-heart-fill text-primary"></i>
-                </div>
-              </div>
               ))}
             </motion.div>
           </Col>
@@ -96,7 +92,7 @@ export default function MemberFavorites() {
           .event {
             background-color: var(--bg-gray-light-color);
             border-radius: 10px;
-            .content{
+            .content {
               flex: 1;
             }
           }
@@ -118,5 +114,5 @@ export default function MemberFavorites() {
 }
 
 MemberFavorites.getLayout = function (page) {
-  return <MemberLayout title='我的收藏'>{page}</MemberLayout>
+  return <MemberLayout title="我的收藏">{page}</MemberLayout>
 }

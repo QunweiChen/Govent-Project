@@ -1,15 +1,11 @@
+import { useEffect, useState } from 'react'
 import { Row, Col, Form } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
 import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
 
-// only redirect to member/login
+
 export default function MemberPayment() {
-  // const router = useRouter()
-  // // Make sure we're in the browser
-  // if (typeof window !== 'undefined') {
-  //   router.push('/member/login')
-  // }
 
   return (
     <>

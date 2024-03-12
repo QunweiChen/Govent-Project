@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useEffect, use } from 'react'
+import React, { useState, useEffect } from 'react'
 import OrganizerSidebar from '@/components/organizer/organizer-sidebar'
 import OrganizerLayout from '@/components/layout/organizer-layout'
 import { Row, Col, Form, Button } from 'react-bootstrap'
@@ -118,6 +118,7 @@ function OrganizerOtptionForm() {
 
       const data = await response.json()
       console.log(data)
+      
     } catch (error) {
       console.error('Error sending form data:', error)
     }
