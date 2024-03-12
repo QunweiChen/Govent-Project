@@ -8,20 +8,22 @@ import axios from 'axios'
 import 'react-quill/dist/quill.core.css'
 import 'react-quill/dist/quill.snow.css'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/router'
 
 const QuillNoSSRWrapper = dynamic(
   async () => {
-    const { default: RQ } = await import('react-quill');
+    const { default: RQ } = await import('react-quill')
     // eslint-disable-next-line react/display-name
-    return ({ forwardedRef, ...props }) => <RQ ref={forwardedRef} {...props} />;
+    return ({ forwardedRef, ...props }) => <RQ ref={forwardedRef} {...props} />
   },
   { ssr: false }
-);
+)
 
 function OrganizerForm() {
+  const router = useRouter()
   const editorRef = useRef(null)
   const [banner, setBanner] = useState(null)
-  const [previewBanner, setPreviewBanner] = useState(null);
+  const [previewBanner, setPreviewBanner] = useState(null)
   const [quillContent, setQuillContent] = useState('')
   const [otherFormData, setOtherFormData] = useState({
     merchat_id: '69',
@@ -38,16 +40,16 @@ function OrganizerForm() {
   })
 
   const bannerChange = (event) => {
-    const selectedFile = event.target.files[0];
+    const selectedFile = event.target.files[0]
 
     if (selectedFile) {
-      setBanner(selectedFile);
+      setBanner(selectedFile)
 
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onloadend = () => {
-        setPreviewBanner(reader.result);
-      };
-      reader.readAsDataURL(selectedFile);
+        setPreviewBanner(reader.result)
+      }
+      reader.readAsDataURL(selectedFile)
     }
   }
 
@@ -62,52 +64,55 @@ function OrganizerForm() {
     console.log('這是quill')
     console.log(quillContent)
     console.log('這是banner')
-    console.log(banner);
-
-
+    console.log(banner)
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
       // 创建 FormData 对象
-      const formData = new FormData();
+      const formData = new FormData()
 
       // 将其他表单数据添加到 FormData 中
       for (const key in otherFormData) {
-        formData.append(key, otherFormData[key]);
+        formData.append(key, otherFormData[key])
       }
 
       // 添加 content 和 banner 到 FormData 中
-      formData.append('content', quillContent);
-      formData.append('banner', banner);
+      formData.append('content', quillContent)
+      formData.append('banner', banner)
 
-      console.log('FormData:', formData);
+      console.log('FormData:', formData)
 
       // 使用 axios 或其他 HTTP 客户端发送数据至服务器
-      const response = await axios.post('http://localhost:3005/api/organizer/add-event', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // 设置请求头为 multipart/form-data
-        },
-      });
+      const response = await axios.post(
+        'http://localhost:3005/api/organizer/add-event',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data', // 设置请求头为 multipart/form-data
+          },
+        }
+      )
 
-      console.log('表单提交成功:', response.data);
+      console.log('表单提交成功:', response.data.data.event_id)
+      router.push('/organizer/add-event/' + response.data.data.event_id)
 
       // 处理成功情况，比如显示成功消息或重定向
     } catch (error) {
-      console.error('表单提交出错:', error);
+      console.error('表单提交出错:', error)
     }
-  };
+  }
 
   // ---------------------------------------------------------
   // 處理編輯器圖片上傳
   // ---------------------------------------------------------
 
   useEffect(() => {
-    console.log("editorRef.current:", editorRef.current);
+    console.log('editorRef.current:', editorRef.current)
     // 其他代码
-  }, [editorRef.current]); // 这样可以确保在 editorRef.current 发生变化时执行 useEffect
+  }, [editorRef.current]) // 这样可以确保在 editorRef.current 发生变化时执行 useEffect
 
   const modules = useMemo(() => {
     const imageHandler = () => {
@@ -133,17 +138,21 @@ function OrganizerForm() {
       fd.append('upload', file)
 
       const xhr = new XMLHttpRequest()
-      xhr.open('POST', 'http://localhost:3005/api/organizer/contain-image', true)
+      xhr.open(
+        'POST',
+        'http://localhost:3005/api/organizer/contain-image',
+        true
+      )
       xhr.onload = () => {
         if (xhr.status === 201) {
           // this is callback data: url
           const url = JSON.parse(xhr.responseText).url
-          console.log("上傳成功", url)
+          console.log('上傳成功', url)
 
           if (editorRef.current) {
-            editorRef.current.getEditor().insertEmbed(null, 'image', url);
+            editorRef.current.getEditor().insertEmbed(null, 'image', url)
           } else {
-            console.error("Editor ref is not available");
+            console.error('Editor ref is not available')
           }
         }
       }
@@ -168,10 +177,8 @@ function OrganizerForm() {
           image: imageHandler,
         },
       },
-    };
-  }, []); // Add any dependencies for modules if needed
-
-
+    }
+  }, []) // Add any dependencies for modules if needed
 
   return (
     <>
@@ -186,14 +193,14 @@ function OrganizerForm() {
                 <Row>
                   <Col sm="12">
                     <Form.Group className="mb-3" controlId="banner">
-                      <Form.Label
-                        className="banner-upload object-fit flex-column d-flex align-items-center justify-content-center"
-                      >
+                      <Form.Label className="banner-upload object-fit flex-column d-flex align-items-center justify-content-center">
                         {!previewBanner && (
                           <motion.div
-                          initial={{ y: 10}}
-                          whileHover={{ y: 0}}
-                            transition={{ duration: 0.2 }} className='text-center'>
+                            initial={{ y: 10 }}
+                            whileHover={{ y: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="text-center"
+                          >
                             <h2>
                               <i className="bi bi-image"></i>
                             </h2>
@@ -211,12 +218,17 @@ function OrganizerForm() {
                           />
                         )}
                       </Form.Label>
-                      <Form.Control type="file" name="banner" accept="image/*" onChange={bannerChange} hidden />
+                      <Form.Control
+                        type="file"
+                        name="banner"
+                        accept="image/*"
+                        onChange={bannerChange}
+                        hidden
+                      />
                     </Form.Group>
-                    
                   </Col>
-                  <Col sm='12'>
-                  <Form.Group className="mb-3" controlId="place">
+                  <Col sm="12">
+                    <Form.Group className="mb-3" controlId="place">
                       <Form.Label>活動名稱</Form.Label>
                       <Form.Control
                         type="text"
@@ -257,7 +269,7 @@ function OrganizerForm() {
                   <Col sm="3">
                     <Form.Group className="mb-3" controlId="city">
                       <Form.Label>縣市</Form.Label>
-                      
+
                       <Form.Select
                         name="str"
                         value={otherFormData.str}
@@ -285,6 +297,7 @@ function OrganizerForm() {
                       />
                     </Form.Group>
                   </Col>
+                  <h5 className="my-5 text-center">活動內容</h5>
                   <Col sm="12">
                     <Form.Group className="mb-1" controlId="content">
                       <Form.Label>活動說明</Form.Label>
@@ -297,12 +310,12 @@ function OrganizerForm() {
                       modules={modules}
                       value={quillContent}
                       onChange={setQuillContent}
-                      placeholder='請填寫'
+                      placeholder="請填寫"
                     />
                   </Col>
                   <Col sm="12">
                     <Form.Group className="mb-3" controlId="buyTicket">
-                      <Form.Label className='pb-2'>購票須知</Form.Label>
+                      <Form.Label className="pb-2">購票須知</Form.Label>
                       <Form.Control
                         as="textarea"
                         rows={5}
@@ -316,7 +329,6 @@ function OrganizerForm() {
                   <h5 className="my-5 text-center">時間資訊</h5>
                   <Col sm="6">
                     <Form.Group className="mb-5" controlId="startTime">
-                      
                       <Form.Label id="startTime" muted>
                         <div className="mb-2">活動開始時間</div>
                       </Form.Label>
@@ -343,7 +355,6 @@ function OrganizerForm() {
                   </Col>
                   <Col sm="6">
                     <Form.Group className="mb-3" controlId="startSellTime">
-                      
                       <Form.Label id="startSellTime" muted>
                         <div className="mb-2">開始售票時間</div>
                       </Form.Label>
@@ -368,63 +379,9 @@ function OrganizerForm() {
                       />
                     </Form.Group>
                   </Col>
-                  <h5 className="my-5 text-center">票卷規格</h5>
-                  <Col sm="12">
-                    <div className="ticket-format-01">
-                      <div className="bottom-line px-3 py-2">規格1</div>
-                      <Row className="px-3 py-2">
-                        <Col sm="12">
-                          <Form.Group className="mb-3" controlId="event-place">
-                            <Form.Label className="sm-p">
-                              票卷規格名稱
-                            </Form.Label>
-                            <Form.Control
-                              type="text"
-                              placeholder="請填寫規格名稱 EX:1F站票"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col sm="6">
-                          <Form.Group className="mb-3" controlId="event-place">
-                            <Form.Label className="sm-p">
-                              最大販售數量
-                            </Form.Label>
-                            <Form.Control
-                              type="text"
-                              placeholder="最大販售數量"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col sm="6">
-                          <Form.Group className="mb-3" controlId="event-place">
-                            <Form.Label className="sm-p">價格</Form.Label>
-                            <Form.Control type="text" placeholder="價格" />
-                          </Form.Group>
-                        </Col>
-                        <Col sm="12">
-                          <Form.Group className="mb-2" controlId="event-place">
-                            <Form.Label className="sm-p">
-                              規格說明（顯示於顧客票卷中）
-                            </Form.Label>
-                            <Form.Control
-                              as="textarea"
-                              rows={5}
-                              placeholder="請填寫規格說明"
-                            />
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    </div>
-                  </Col>
-                  <div className="mt-3">
-                    <button className="btn btn-outline-normal-gray text-white w-100">
-                      新增規格 ＋
-                    </button>
-                  </div>
-                  
-                  <div className="my-5 d-flex justify-content-between">
-                    <Button variant="primary" type="submit">
-                      提交
+                  <div className="my-5 d-flex justify-content-center">
+                    <Button className='px-5' variant="primary" type="submit">
+                      <h6 className='m-0'>下一步，填寫規格</h6>
                     </Button>
                   </div>
                 </Row>
@@ -465,6 +422,7 @@ function OrganizerForm() {
           .on-main {
             background-color: var(--bg-gray-secondary-color);
             border-radius: 10px;
+            height: 100%;
           }
           .w-1200 {
             width: 1000px;
@@ -478,7 +436,7 @@ function OrganizerForm() {
             transition: 300ms;
             color: var(--normal-gray-light-color);
             overflow: hidden;
-            &:hover{
+            &:hover {
               color: white;
             }
           }
@@ -488,7 +446,7 @@ function OrganizerForm() {
               border-radius: 5px 5px 0 0;
             }
             .ql-container {
-              height: 600px;
+              height: 500px;
               border-radius: 0 0 5px 5px;
               border: 1px solid var(--normal-gray-color);
               background-color: var(--bg-gray-light-color);
@@ -502,7 +460,7 @@ function OrganizerForm() {
           }
           .object-fit {
             img {
-              width:100%;
+              width: 100%;
               height: 100%;
               object-fit: cover;
             }

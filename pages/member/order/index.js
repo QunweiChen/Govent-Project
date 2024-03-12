@@ -1,17 +1,29 @@
 // import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
 import Link from 'next/link'
-import NoBCLayout from '@/components/layout/nocb-default-layout'
+import Image from 'next/image'
+import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
 
-// only redirect to member/login
 export default function MemberOrder() {
-  // const router = useRouter()
-  // // Make sure we're in the browser
-  // if (typeof window !== 'undefined') {
-  //   router.push('/member/login')
-  // }
+  const [orders, setOrders] = useState([])
+
+  useEffect(() => {
+    fetch('http://localhost:3005/api/member/order')
+      .then((response) => response.json())
+      .then((data) => {
+        // 檢查是否有資料並設定到 state 中
+        if (data && data.data && data.data.result) {
+          console.log('Received data:', data.data.result)
+          setOrders(data.data.result)
+        } else {
+          console.warn('No favorites data received from the server.')
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error))
+  }, [])
 
   return (
     <>
@@ -22,38 +34,42 @@ export default function MemberOrder() {
           </Col>
           <Col sm={9}>
             <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.4 }}
-            className="member-bgc contain">
-              <h4>我的票卷</h4>
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="member-bgc contain"
+            >
+              <h4>我的訂單</h4>
               <hr className="my-4" />
-              <div className="event mt-2">
-                <div className="ticket-number sm-p">訂單編號 TX225633592</div>
-                <div className="p-4 d-flex">
-                  <div className="event-img me-4">
-                    <img
-                      src="https://www.shutterstock.com/image-vector/cute-cartoon-rubber-duck-vector-600nw-2276837591.jpg"
-                      alt=""
-                    />
+              {orders.map((data) => (
+                <div key={data.id} className="event mt-2">
+                  <div className="ticket-number sm-p">
+                    訂單編號 {data.order_number}
                   </div>
-                  <div className="me-4">
-                    <h6>
-                      YOASOBI演唱會2024台北站｜YOASOBI ASIA TOUR 2023-2024 Solo
-                      Concert in Taipei
-                    </h6>
-
-                    <div className="d-flex justify-content-between align-items-end">
-                      <h6 className="text-primary-deep m-0">總金額 $8000</h6>
-                      <Link href="order/order-info">
-                        <button className="btn btn-primary text-white">
-                          查看票卷
-                        </button>
-                      </Link>
+                  <div className="p-3 d-flex">
+                    <div className="event-img me-3">
+                      <img
+                        src={`http://localhost:3005/images/banner/${data.banner}`}
+                        alt=""
+                      />
+                    </div>
+                    <div className="me-2 content d-flex flex-column justify-content-between">
+                      <div>
+                      <h6>{data.event_name}</h6>
+                      <p>建立時間 {data.create_at.split('T')[0]}</p>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-end">
+                        <h6 className="text-primary-deep m-0">總金額 ${data.total}</h6>
+                        <Link href={`order/${data.order_number}`}>
+                          <button className="btn btn-primary text-white">
+                            查看詳情
+                          </button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </motion.div>
           </Col>
         </Row>
@@ -88,6 +104,9 @@ export default function MemberOrder() {
           .event {
             background-color: var(--bg-gray-light-color);
             border-radius: 10px;
+            .content{
+              flex: 1;
+            }
           }
           .event-img {
             width: 160px;
@@ -107,5 +126,5 @@ export default function MemberOrder() {
 }
 
 MemberOrder.getLayout = function (page) {
-  return <NoBCLayout>{page}</NoBCLayout>
+  return <MemberLayout title="訂單管理">{page}</MemberLayout>
 }
