@@ -1,7 +1,7 @@
 import React from 'react'
 
 function TagCheckbox(props) {
-  const { value, handleChecked, categorie } = props
+  const { value, handleChecked, category } = props
   return (
     <>
       <div className="checkbox">
@@ -10,7 +10,7 @@ function TagCheckbox(props) {
             type="checkbox"
             className="icheck"
             value={value}
-            checked={categorie.includes(value)}
+            checked={category.includes(value)}
             onChange={handleChecked}
           />{' '}
           {value}

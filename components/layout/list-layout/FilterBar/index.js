@@ -1,26 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PriceRangeRadio from './PriceRangeRadio'
 import TagCheckbox from './TagCheckbox'
 
-function FilterBar(props) {
-  const {
-    priceRangeTypes,
-    priceRange,
-    setPriceRange,
-    categories,
-    categorie,
-    setCategorie,
-  } = props
-
+function FilterBar({
+  priceRangeTypes,
+  priceRange,
+  setPriceRange,
+  categories,
+  category="",
+  setCategory=()=>{},}) {
+ 
   const handleChecked = (e) => {
+    console.log(e.target.value)
     const value = e.target.value
-    if (!categorie.includes(value)) return setCategorie([...categorie, value])
-
-    if (categorie.includes(value)) {
-      const newTags = categorie.filter((v) => v !== value)
-      setCategorie(newTags)
+    
+    if (category.includes(value)) {
+      const newTags = category.filter((v) => v !== value)
+      console.log(newTags);
+      setCategory(newTags)
+    }else{
+      return setCategory([...category, value])
     }
   }
+  console.log(category);
+  
   return (
     <>
       <h2 className="grid-title">
@@ -43,10 +46,7 @@ function FilterBar(props) {
 
       <h4>
         標籤
-        <button
-          className="btn btn-link btn-sm"
-          onClick={() => setCategorie([])}
-        >
+        <button className="btn btn-link btn-sm" onClick={() => setCategory([])}>
           重設
         </button>
       </h4>
@@ -56,7 +56,7 @@ function FilterBar(props) {
         <TagCheckbox
           value={value}
           key={i}
-          categorie={categorie}
+          category={category}
           handleChecked={handleChecked}
         />
       ))}

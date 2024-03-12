@@ -33,13 +33,23 @@ import useEvents from '@/hooks/use-event'
 
 export default function List() {
   const { data } = useEvents()
-  console.log(data)
   // console.log(data?.data.posts)
   // useEffect(() => {
   //   console.log(data) // 这里可以看到数据
   // }, [data])
   // console.log(listItem);
   // console.log(data?.length);
+
+  // 分頁
+  const [events, setEvents] = useState([])
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(15);
+ 
+  //頁碼
+  const lastPostIndex = currentPage * postsPerPage;
+  const firstPostIndex = lastPostIndex - postsPerPage;
+  const currentEvents = events.slice(firstPostIndex, lastPostIndex);
+
   return (
     <>
       <useEvents>
@@ -63,7 +73,9 @@ export default function List() {
             </div>
             <div className="col">
               <div className="cardList row g-3">
-                <EventCard />
+                <EventCard 
+                  currentEvents= {currentEvents}
+                />
               </div>
 
               <footer className="d-flex justify-content-center m-3">
@@ -72,7 +84,7 @@ export default function List() {
                   role="toolbar"
                   aria-label="Toolbar with button groups"
                 >
-                  <PageBar />
+                  <PageBar/>
                 </div>
               </footer>
             </div>
