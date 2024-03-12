@@ -48,7 +48,7 @@ export function CartProvider({
   const [cartItems, setCartItems] = useState(items)
   // 加入到各分類的項目
   const [merchantItems, setMerchantItems] = useState(MtItems)
-  console.log(merchantItems)
+  // console.log(merchantItems)
   //送來資料多一個checked屬性
   //即時更新
   useEffect(() => {
@@ -72,7 +72,7 @@ export function CartProvider({
     // eslint-disable-next-line
 }, [cartItems])
   useEffect(() => {
-    console.log(merchantItems)
+    // console.log(merchantItems)
     // 使用字串比較
     if (JSON.stringify(merchantItems) !== storedValueMt) {
       setValueMt(merchantItems)
@@ -86,7 +86,7 @@ export function CartProvider({
   //連接資料庫
   const [data, setData] = useState([])
   const [Mt, setMt] = useState([])
-  console.log(data)
+  // console.log(data)
   useEffect(() => {
     const getCartMt = async () => {
       fetch('http://localhost:3005/api/cart')
@@ -157,7 +157,7 @@ export function CartProvider({
         return merchant
       }
     })
-    console.log(news)
+    // console.log(news)
     setMerchantItems(news)
   }
   const handleToggleSelectedMt = (isSelectedMt, MtId) => {
@@ -251,7 +251,7 @@ export function CartProvider({
     const filteredItems = newItems.filter(
       (merchant) => merchant.items.length > 0
     )
-    console.log(filteredItems)
+    // console.log(filteredItems)
     setMerchantItems(filteredItems)
   }
   //計算數量

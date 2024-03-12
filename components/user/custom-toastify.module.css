@@ -1,0 +1,7 @@
+.Toastify__toast {
+  background-color: #404040; /* Example: Change to Bootstrap's primary color */
+  color: #ff4136;
+}
+.Toastify__close-button {
+  color: #ff4136;
+}
