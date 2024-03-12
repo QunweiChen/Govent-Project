@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext, useEffect } from 'react'
+import { useState, useContext, createContext } from 'react'
 import { useRouter } from 'next/router'
 import axiosInstance from '@/services/axios-instance'
 import { checkAuth, getFavs } from '@/services/user'
