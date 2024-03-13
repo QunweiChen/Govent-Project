@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import AlwaysOpenExample from '@/components/layout/list-layout/accordion'
+import React, { useState, useEffect } from 'react'
+import City from '@/data/event/str.json'
 
-export default function Sidebar() {
+export default function Sidebar(props) {
   const categories = [
     '演唱會',
     '展覽',
@@ -12,31 +12,30 @@ export default function Sidebar() {
     '體育賽事',
     '景點門票',
   ]
+
   const [selectedCategories, setSelectedCategories] = useState({})
+  const [selectedRegions, setSelectedRegions] = useState({})
+
+  useEffect(() => {
+    const selectedCategoriesArray = Object.keys(selectedCategories).filter(
+      (category) => selectedCategories[category]
+    )
+    const selectedCitiesArray = Object.keys(selectedRegions).filter(
+      (cityId) => selectedRegions[cityId]
+    )
+
+    // 回傳選擇的篩選條件給父元素
+    props.onFilterChange(selectedCategoriesArray, selectedCitiesArray)
+  }, [selectedCategories, selectedRegions])
 
   const handleOnChange = (category) => {
     const newSelectedCategories = {
       ...selectedCategories,
       [category]: !selectedCategories[category],
     }
-
-    // 更新選中的類別
     setSelectedCategories(newSelectedCategories)
-
-    // 檢查是否所有單獨的類別都被選中了
-    const allSelected = categories.every((cat) => newSelectedCategories[cat])
-    // 如果是，也選中"所有類型"
-    if (allSelected) {
-      newSelectedCategories['所有類型'] = true
-      setSelectedCategories(newSelectedCategories)
-    } else if (selectedCategories['所有類型'] && !allSelected) {
-      // 如果"所有類型"是選中的但不是所有類別都選中，取消選中"所有類型"
-      newSelectedCategories['所有類型'] = false
-      setSelectedCategories(newSelectedCategories)
-    }
   }
 
-  // 當選擇"所有類型"時的處理
   const handleSelectAll = () => {
     const newSelection = {}
     if (!selectedCategories['所有類型']) {
@@ -47,6 +46,20 @@ export default function Sidebar() {
       newSelection['所有類型'] = false
     }
     setSelectedCategories(newSelection)
+  }
+
+  const handleRegionCheckboxChange = (regionId, isChecked) => {
+    setSelectedRegions((prevState) => ({
+      ...prevState,
+      [regionId]: isChecked,
+    }))
+  }
+
+  const handleCityCheckboxChange = (cityId, isChecked) => {
+    setSelectedRegions((prevState) => ({
+      ...prevState,
+      [cityId]: isChecked,
+    }))
   }
 
   return (
@@ -85,389 +98,69 @@ export default function Sidebar() {
       <hr />
       <div className="downSidebar no-border">
         <h6>地區</h6>
-        <div className=" d-none accordion" id="accordionExample">
-          {/* North */}
-          <div className="accordion-item bg-bg-gray text-white">
-            {/* title */}
-            <h2 className="accordion-header" id="headingOne">
-              <button
-                className="accordion-button p-1 gap-2 bg-bg-gray text-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseOne"
-                aria-expanded="true"
-                aria-controls="collapseOne"
+        <div className="accordion" id="accordionExample">
+  {City.map((region) => (
+    <div
+      key={region.id}
+      className="accordion-item bg-bg-gray text-white"
+    >
+      <h2 className="accordion-header" id={`heading-${region.id}`}>
+        <button
+          className="accordion-button p-1 gap-2 bg-bg-gray text-white"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target={`#collapse-${region.id}`}
+          aria-expanded="true"
+          aria-controls={`collapse-${region.id}`}
+        >
+          <input
+            type="checkbox"
+            className="form-check-input"
+            checked={selectedRegions[region.id] || false}
+            onChange={(e) =>
+              handleRegionCheckboxChange(region.id, e.target.checked)
+            }
+          />
+          <label
+            className="form-check-label"
+            htmlFor={`flexCheck-${region.id}`}
+          >
+            {region.name}
+          </label>
+        </button>
+      </h2>
+      <div
+        id={`collapse-${region.id}`}
+        className="accordion-collapse collapse show"
+        aria-labelledby={`heading-${region.id}`}
+        data-bs-parent="#accordionExample"
+      >
+        <div className="accordion-body">
+          {region.cities.map((city) => (
+            <div key={city.id} className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id={`flexCheck-${city.id}`}
+                checked={selectedRegions[city.id] || false}
+                onChange={(e) =>
+                  handleCityCheckboxChange(city.id, e.target.checked)
+                }
+              />
+              <label
+                className="form-check-label"
+                htmlFor={`flexCheck-${city.id}`}
               >
-                <input type="checkbox" className="form-check-input" />
-                <label className="form-check-label" htmlFor="flexCheckDefault">
-                  北部地區
-                </label>
-              </button>
-            </h2>
-
-            {/* selection */}
-            <div
-              id="collapseOne"
-              className="accordion-collapse collapse show"
-              aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample"
-            >
-              <div className="accordion-body">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckDefault"
-                  >
-                    台北市
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    新北市
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    桃園市
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    基隆市
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    新竹市
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    新竹縣
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    宜蘭縣
-                  </label>
-                </div>
-              </div>
+                {city.name}
+              </label>
             </div>
-          </div>
-          {/* middle */}
-          <div className="accordion-item bg-bg-gray text-white">
-            <h2 className="accordion-header" id="headingOne">
-              <button
-                className="accordion-button p-1 gap-2 bg-bg-gray text-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseOne"
-                aria-expanded="true"
-                aria-controls="collapseOne"
-              >
-                <input type="checkbox" className="form-check-input" />
-                <label className="form-check-label" htmlFor="flexCheckDefault">
-                  中部地區
-                </label>
-              </button>
-            </h2>
-
-            <div
-              id="collapseOne"
-              class="accordion-collapse collapse show"
-              aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample"
-            >
-              <div className="accordion-body">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckDefault"
-                  >
-                    苗栗縣
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    台中市
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    南投縣
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    彰化縣
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    雲林縣
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* South */}
-          <div className="accordion-item bg-bg-gray text-white">
-            <h2 className="accordion-header" id="headingOne">
-              <button
-                className="accordion-button p-1 gap-2 bg-bg-gray text-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseOne"
-                aria-expanded="true"
-                aria-controls="collapseOne"
-              >
-                <input type="checkbox" className="form-check-input" />
-                <label className="form-check-label" htmlFor="flexCheckDefault">
-                  南部地區
-                </label>
-              </button>
-            </h2>
-
-            <div
-              id="collapseOne"
-              class="accordion-collapse collapse show"
-              aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample"
-            >
-              <div className="accordion-body">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckDefault"
-                  >
-                    嘉義縣
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    嘉義市
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    台南市
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    高雄市
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    屏東縣
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* East */}
-          <div className="accordion-item bg-bg-gray text-white">
-            <h2 className="accordion-header" id="headingOne">
-              <button
-                className="accordion-button p-1 gap-2 bg-bg-gray text-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseOne"
-                aria-expanded="true"
-                aria-controls="collapseOne"
-              >
-                <input type="checkbox" className="form-check-input" />
-                <label className="form-check-label" htmlFor="flexCheckDefault">
-                  東部地區
-                </label>
-              </button>
-            </h2>
-
-            <div
-              id="collapseOne"
-              className="accordion-collapse collapse show"
-              aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample"
-            >
-              <div className="accordion-body">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckDefault"
-                  >
-                    花蓮縣
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexCheckChecked"
-                  >
-                    台東縣
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
-        <AlwaysOpenExample />
+      </div>
+    </div>
+  ))}
+</div>
+
       </div>
     </>
   )

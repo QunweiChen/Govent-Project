@@ -12,28 +12,22 @@ import useEvents from '@/hooks/use-event'
 // import event from '@/data/event/event.json'
 // console.log(event)
 
-export default function EventCard({
-  link = {},
-  image = {},
-  category = {},
-  eventTime = {},
-  str = {},
-  startDate = {},
-}) {
+export default function EventCard({ EventCard }) {
   const { data } = useEvents()
 
   // 分頁
   const [events, setEvents] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [postsPerPage, setPostsPerPage] = useState(15)
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(15);
+ 
   //頁碼
-  const lastPostIndex = currentPage * postsPerPage
-  const firstPostIndex = lastPostIndex - postsPerPage
-  const currentEvents = events.slice(firstPostIndex, lastPostIndex)
+  const lastPostIndex = currentPage * postsPerPage;
+  const firstPostIndex = lastPostIndex - postsPerPage;
+  const currentEvents = events.slice(firstPostIndex, lastPostIndex);
 
   return (
     <>
+          {/* {event.map((v)=>( */}
       {data?.map((v) => (
         <div key={v.id} className="col-md-4 col-sm-6 ">
           <Link
@@ -67,7 +61,7 @@ export default function EventCard({
                 </div>
               </div>
             </div>
-          </Link>
+            </Link>
         </div>
       ))}
     </>

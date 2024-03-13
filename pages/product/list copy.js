@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+// import {
+//   useHistory,
+//   useLocation,
+//   useParams,
+//   useRouteMatch,
+// } from 'react-router-dom'
 
 // 引入icon
 import { CiHeart } from 'react-icons/ci'
@@ -19,9 +24,6 @@ import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import Sidebar from '@/components/layout/list-layout/sidebar'
 import PageBar from '@/components/layout/list-layout/pagebar'
 
-//篩選用components
-import FilterBar from '@/components/layout/list-layout/FilterBar'
-
 // 引入活動資料
 import EventCard from '@/components/layout/list-layout/event_card'
 import useEvents from '@/hooks/use-event'
@@ -32,47 +34,25 @@ import useEvents from '@/hooks/use-event'
 
 export default function List() {
   const { data } = useEvents()
+  // console.log(data?.data.posts)
+  // useEffect(() => {
+  //   console.log(data) // 这里可以看到数据
+  // }, [data])
+  // console.log(listItem);
+  // console.log(data?.length);
   console.log(data)
 
-  //活動資料
-  // 1. 從伺服器來的原始資料
-  const [events, setEvents] = useState([])
-  // // 2. 用於網頁上經過各種處理(排序、搜尋、過濾)後的資料
-  // const [displayEvents, setDisplayEvents] = useState([])
-
-  // 類別篩選
-  const categories = [
-    '演唱會',
-    '展覽',
-    '快閃活動',
-    '市集',
-    '粉絲見面會',
-    '課程講座',
-    '體育賽事',
-    '景點門票',
-  ]
-  const [selectedCategories, setSelectedCategories] = useState([])
-
-  const handleCategoryChange = (selectedCategoryIds) => {
-    setSelectedCategories(Object.values(selectedCategoryIds))
-  }
-
-  const filteredEvents =
-    data && data.length > 0
-      ? data.filter((event) => {
-          if (selectedCategories.length === 0) return true
-          return selectedCategories.includes(event.category_name)
-        })
-      : []
-
   // 分頁
+  const [events, setEvents] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
+
   //頁碼
   const lastPostIndex = currentPage * postsPerPage
   const firstPostIndex = lastPostIndex - postsPerPage
   // const currentEvents = events.slice(firstPostIndex, lastPostIndex)
-  const currentEvents = filteredEvents?.slice(firstPostIndex, lastPostIndex)
+  const currentEvents = data?.slice(firstPostIndex, lastPostIndex)
+
   //修改頁碼
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
@@ -95,16 +75,11 @@ export default function List() {
       <main className="container w-1200">
         <div className="row">
           <div className="sidebar me-3 col-md-2 col-3">
-            <Sidebar
-              categories={categories}
-              selectedCategories={selectedCategories}
-              onCategoryChange={handleCategoryChange}
-            />
+            <Sidebar />
           </div>
           <div className="col">
             <div className="cardList row g-3">
               {/* {data?.map((v) => ( */}
-              {/* {filteredEvents?.map((v) => ( */}
               {currentEvents?.map((v) => (
                 <div key={v.id} className="col-md-4 col-sm-6 ">
                   <Link

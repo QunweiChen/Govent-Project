@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react'
+import EventCard from '@/components/layout/list-layout/event_card'
 
-export default function PageBar(currentPage, totalItems, itemsPerPage, paginate) {
+export default function PageBar(
+  currentPage,
+  totalItems,
+  itemsPerPage,
+  paginate
+) {
   //設定頁碼
   const pageNumbers = []
   for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
-    pageNumbers.push(i);
+    pageNumbers.push(i)
   }
 
   return (
@@ -38,36 +44,46 @@ export default function PageBar(currentPage, totalItems, itemsPerPage, paginate)
     //     &raquo;
     //   </button>
     // </div>
-    <div className="btn-group" role="group" aria-label="group">
-    {/* 上一頁 */}
-    <button
-      type="button"
-      className="btn btn-normal-gray"
-      aria-label="previous"
-      onClick={() => currentPage > 1 && paginate(currentPage - 1)}
-    >
-      &laquo;
-    </button>
-    {/* 依照資料數量調整頁碼 */}
-    {pageNumbers.map(number => (
-      <button
-        key={number}
-        type="button"
-        onClick={() => paginate(number)}
-        className={`btn ${number === currentPage ? 'btn-primary' : 'btn-secondary text-white'}`}
-      >
-        {number}
-      </button>
-    ))}
-    {/* 下一頁 */}
-    <button
-      type="button"
-      className="btn btn-normal-gray"
-      aria-label="next"
-      onClick={() => currentPage < pageNumbers.length && paginate(currentPage + 1)}
-    >
-      &raquo;
-    </button>
-  </div>
+    <>
+      {/* components引入 */}
+      <EventCard EventCard={EventCard} />
+      <div className="btn-group" role="group" aria-label="group">
+        {/* 上一頁 */}
+        <button
+          type="button"
+          className="btn btn-normal-gray"
+          aria-label="previous"
+          onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+        >
+          &laquo;
+        </button>
+        {/* 依照資料數量調整頁碼 */}
+        {pageNumbers.map((number) => (
+          <button
+            key={number}
+            type="button"
+            onClick={() => paginate(number)}
+            className={`btn ${
+              number === currentPage
+                ? 'btn-primary'
+                : 'btn-secondary text-white'
+            }`}
+          >
+            {number}
+          </button>
+        ))}
+        {/* 下一頁 */}
+        <button
+          type="button"
+          className="btn btn-normal-gray"
+          aria-label="next"
+          onClick={() =>
+            currentPage < pageNumbers.length && paginate(currentPage + 1)
+          }
+        >
+          &raquo;
+        </button>
+      </div>
+    </>
   )
 }

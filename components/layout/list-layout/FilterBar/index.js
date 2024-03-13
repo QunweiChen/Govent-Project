@@ -33,14 +33,14 @@ function FilterBar({
 
       <h4>價格</h4>
 
-      {priceRangeTypes.map((value, i) => (
+      {/* {priceRangeTypes.map((value, i) => (
         <PriceRangeRadio
           key={i}
           value={value}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
         />
-      ))}
+      ))} */}
 
       <hr />
 
