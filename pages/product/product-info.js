@@ -8,24 +8,28 @@ import Link from 'next/link'
 export default function Detail() {
   // 假設初始狀態是未選擇
   const [selected, setSelected] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
+
+  // const [selectedTime, setSelectedTime] = useState(null);
   const [eventInfo, setEventInfo] = useState([]);
   const [qty, setQty] = useState(1)
 
+  //設售票期間的日曆狀態
   const [sellStartDate, setSellStartDate] = useState('');
   const [sellEndDate, setSellEndDate] = useState('');
 
-  //設日期狀態()
+  //設日期狀態(切割日期和時間)
   const [dateStart, setDateStart] = useState('')
   const [dateEnd, setDateEnd] = useState('')
-  const [timeStart,setTimeStart] = useState('')
-  const [timeEnd,setTimeEnd] = useState('')
-  const [sellTime,setSellTime] = useState('')
-  
-  const [selectDate, setSelectDate] = useState('')
+  const [timeStart, setTimeStart] = useState('')
+  const [timeEnd, setTimeEnd] = useState('')
+  const [sellTime, setSellTime] = useState('')
 
-  let date1, date2, time1,time2 ,date3,time3;
+  //存取選取日期和時間
+  const [selectDate, setSelectDate] = useState('')
+  // const [selectTime, setSelectTime] = useState('')
+
+  //切割日期和時間的變數
+  let date1, date2, time1, time2, date3, time3;
 
   useEffect(() => {
 
@@ -37,8 +41,8 @@ export default function Detail() {
           console.log('success:', data?.data.posts);
           setEventInfo(data?.data.posts[0])
 
-          // 建立日期物件 // 因為eventInfo 還沒設定好不能使用, 故使用data?.data.posts[0]
-          const startDate = data?.data.posts[0].start_date; 
+          // 建立日期物件 // 因為eventInfo 尚未設定好不能使用, 故用data?.data.posts[0]
+          const startDate = data?.data.posts[0].start_date;
           const endDate = data?.data.posts[0].end_date;
           const sellStartDate = data?.data.posts[0].sell_start_date;
           // console.log(startDate);
@@ -46,9 +50,9 @@ export default function Detail() {
 
           [date1, time1] = startDate.split('T');
           [date2, time2] = endDate.split('T');
-          [date3,time3] = sellStartDate.split('T');
-          // time3 = time3.substring(0, 5); 
-          
+          [date3, time3] = sellStartDate.split('T');
+          time3 = time3.substring(0, 5);
+
           setSellStartDate(data?.data.posts[0].sell_start_date)
           setSellEndDate(data?.data.posts[0].sell_end_date)
 
@@ -64,11 +68,10 @@ export default function Detail() {
 
   }, [])
   // console.log(eventInfo);
-  // console.log(timeStart);
   console.log(sellStartDate);
   console.log(sellTime);
-  
-  
+
+
 
 
 
@@ -76,12 +79,9 @@ export default function Detail() {
     setSelected(!selected)  // 切換選擇狀態
   }
 
-  const handleDate = (date) => {
-    setSelectedDate(date);
-  };
 
-  const handleTime = (time) => {
-    setSelectedTime(time);
+  const handleTime = (sellTime) => {
+    setSellTime(sellTime);
   };
 
 
@@ -95,24 +95,23 @@ export default function Detail() {
   }
 
   const totalAmount = selected ? eventInfo.price * qty : 0;
-  
+
 
   const addToCart = () => {
     const cartData = {
-      selectedDate,
-      selectedTime,
+      // selectedDate,
+      // selectedTime,
       qty,
       totalAmount
     };
 
   };
-  // console.log(selectDate);
+  console.log(sellTime);
 
 
   return (
     <>
 
-      {/* {data?.data.posts.map((v) => ( */}
       <>
         <section>
           <div className=" d-flex p-4 d-none d-xxl-inline-flex">
@@ -164,7 +163,6 @@ export default function Detail() {
         <main>
           <div className="wrapper">
             <section className="title">
-
               <div key={eventInfo.id} className="d-flex align-items-center justify-content-between mt-3">
                 <h5 className="border-5 border-start border-primary px-2">
                   YOASOBI
@@ -247,14 +245,20 @@ export default function Detail() {
                   <div className="me-5">
                     <h5 className="mb-5">選擇日期</h5>
                     <div className="text-center">
-                      <Calendar onChange={handleDate} sellStartDate={sellStartDate} sellEndDate={sellEndDate} setSelectDate={setSelectDate}/>
+                      <Calendar
+                        // onChange={handleDate} 
+                        sellStartDate={sellStartDate}
+                        sellEndDate={sellEndDate}
+                        setSelectDate={setSelectDate} />
 
                     </div>
                   </div>
                   <div>
                     <h5 className="mb-5">選擇時間</h5>
-                    <button className="store fs-5 p-2 btn btn-primary-deep" onClick={() => handleTime('17:00')}>
-                      {sellTime}
+                    <button className="store fs-5 p-2 btn btn-primary-deep"
+                      onClick={handleTime}
+                    >
+                    {sellTime}
                     </button>
                     <h5 className="my-5">數量</h5>
                     <div className="d-flex align-items-center">

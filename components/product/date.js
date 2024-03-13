@@ -6,30 +6,16 @@ const chunk = (arr, size) =>
     arr.slice(i * size, i * size + size)
   )
 
-export default function Calendar({ events, sellStartDate = '', sellEndDate = '' ,setSelectDate}) {
+export default function Calendar({ events, sellStartDate = '', sellEndDate = '' , setSelectDate}) {
+
+//時區問題(自動+8小時):創建一個新物件 sellStartDateObj，以 `sellStartDate` 作為參數。使用 `setHours` 將 `sellStartDateObj` 的小時數設定為當前小時數減 8。
+
   let sellStartDateObj = new Date(sellStartDate);
   sellStartDate= sellStartDateObj.setHours(sellStartDateObj.getHours() - 8);
   let sellEndDateObj = new Date(sellEndDate);
   sellEndDate= sellEndDateObj.setHours(sellEndDateObj.getHours() - 8);
+
   
-
-  //const [events, setEvents] = useState([])
-
-  // useEffect(() => {
-  //   fetchEventData()
-  // }, [])
-
-  // const fetchEventData = async (params) => {
-  //   const searchParams = new URLSearchParams(params)
-  //   try {
-  //     const res = await fetch(`http://localhost:3005/api/info?${searchParams}`)
-  //     const eventData = await res.json()
-  //     setEvents(eventData) // 將獲取的資料存入狀態中
-  //   } catch (error) {
-  //     console.error('獲取資料時發生錯誤:', error)
-  //   }
-  // }
-
   // 一開始未選中日期
   const [myDate, setMyDate] = useState(0)
 
@@ -37,8 +23,8 @@ export default function Calendar({ events, sellStartDate = '', sellEndDate = '' 
   const now = new Date()
 
   console.log(new Date(sellStartDate))
-  console.log(sellStartDate)
-  console.log(sellEndDate)
+  // console.log(sellStartDate)
+  // console.log(sellEndDate)
 
 
 
@@ -79,9 +65,9 @@ export default function Calendar({ events, sellStartDate = '', sellEndDate = '' 
   console.log('allDataChunks', allDataChunks);
   
 
-  const handleDateClick = (item) => {
-    setMyDate(item);
-  }
+  // const handleDateClick = (item) => {
+  //   setMyDate(item);
+  // }
 
 
   return (
@@ -111,19 +97,13 @@ export default function Calendar({ events, sellStartDate = '', sellEndDate = '' 
           </thead>
 
           <tbody id="data">
-              {/* Array(6) [
-        Array(7) [ '', '', '', '', '', 1, 2 ],
-        Array(7) [ 3, 4, 5, 6, 7, 8, 9 ],
-        Array(7) [ 10, 11, 12, 13, 14, 15, 16 ],
-        Array(7) [ 17, 18, 19, 20, 21, 22, 23 ],
-        Array(7) [ 24, 25, 26, 27, 28, 29, 30 ],
-        [ 31 ]
-      ] */}
+            
             {allDataChunks.map((v, i) => {
-              console.log("v",v)
+              {/* console.log("v",v) */}
               return (
                 <tr key={i}>
                   {v.map((item, idx) => {
+                    //時區問題(去除時間):用setHours(0, 0, 0, 0)將時間設為0
                     const sellStartDateObj = new Date(sellStartDate);
                     sellStartDateObj.setHours(0, 0, 0, 0);
                     const sellEndDateObj = new Date(sellEndDate);
@@ -133,8 +113,8 @@ export default function Calendar({ events, sellStartDate = '', sellEndDate = '' 
 
                     const isSelectable = currentDate >= sellStartDateObj && currentDate <= sellEndDateObj;
                     {/* console.log("sellStartDate:", sellStartDateObj);
-                    console.log("sellEndDate:",sellEndDateObj);
-                    console.log("currentDate",currentDate);
+                    console.log("sellEndDate:",sellEndDateObj); */}
+                    {/* console.log("currentDate",currentDate);
                     console.log("isSelectable",isSelectable); */}
 
                     return (
@@ -143,6 +123,7 @@ export default function Calendar({ events, sellStartDate = '', sellEndDate = '' 
                         onClick={() => {
                           // handleDateClick(item)
                           setSelectDate(`${currentDate}`)
+                          // console.log("currentDate",currentDate);
                         }}
                         // className={`${new Date(`${nowY}-${nowM}-${item}`) >= new Date(sellStartDate) && new Date(`${nowY}-${nowM}-${item}`) <= new Date(sellEndDate) ? 'selectable' : ''}`}
                         className={isSelectable ? 'selectable' : ''}
