@@ -14,24 +14,26 @@ export default function CartCard({
   calcTotalPricetotal = 0,
   incrementOne = () => {},
   decrementOne = () => {},
+  checkcalcTotalItems = () => {},
 }) {
-  const [showModal, setShowModal] = useState()
+  const [showModal, setShowModal] = useState(false)
   // console.log(showModal)
   // console.log(merchantItems)
+
   const checkAllChecked = (merchantItems) => {
-    let allChecked = true
+    let allUnchecked = true
 
     merchantItems.forEach((merchant) => {
       merchant.items.forEach((item) => {
-        if (item.checked === false) {
-          allChecked = false
-          return
+        if (item.checked) {
+          allUnchecked = false
+          return // 如果有一个选中了就跳出循环
         }
       })
     })
 
-    setShowModal(!allChecked) // 如果所有选项都未选中，则显示模态框
-    return allChecked // 返回是否所有选项都未选中
+    setShowModal(allUnchecked) // 如果所有选项都未选中，则显示模态框
+    return !allUnchecked // 返回是否有任何选项被选中
   }
 
   return (
@@ -196,7 +198,7 @@ export default function CartCard({
                               onClick={() => {
                                 setTimeout(() => {
                                   removeItem(merchantItems, v.id, v.merchantId)
-                                }, 3000)
+                                }, 650)
                               }}
                             >
                               移除
@@ -215,7 +217,7 @@ export default function CartCard({
       <div className="border-0 cart-card d-none d-sm-block border-top border-normal-gray">
         <div className="d-flex justify-content-end align-items-center m-4">
           <p className="text-primary-light ms-3">
-            合計{calcTotalItemstotal}件商品
+            已選取 {calcTotalItemstotal} 張票券
           </p>
           <h5 className="text-white ms-3">總金額 NT {calcTotalPricetotal}</h5>
           <h6 className="btn btn-primary-deep ms-4">

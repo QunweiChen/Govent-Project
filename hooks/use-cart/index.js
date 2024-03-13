@@ -47,7 +47,7 @@ export function CartProvider({
   const [cartItems, setCartItems] = useState(items)
   // 加入到各分類的項目
   const [merchantItems, setMerchantItems] = useState(MtItems)
-
+  console.log(merchantItems)
   // 初始化 setValue(localStoage), setValue用於存入localStorage中
   const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
   const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
@@ -302,9 +302,23 @@ export function CartProvider({
   }
 
   //計算數量
-  // console.log(merchantItems)
   //數量
   const calcTotalItems = () => {
+    let total = 0
+
+    merchantItems.forEach((merchant) => {
+      merchant.items.forEach((item) => {
+        if (item.checked === true) {
+          total += item.qty
+        }
+      })
+    })
+    return total
+  }
+  const calcTotalItemstotal = calcTotalItems()
+  // console.log(calcTotalItemstotal)
+  //Navbar
+  const NavbarcalcTotalItems = () => {
     let total = 0
 
     for (let i = 0; i < merchantItems.length; i++) {
@@ -312,20 +326,25 @@ export function CartProvider({
         total += event.qty
       })
     }
+
     return total
   }
-  const calcTotalItemstotal = calcTotalItems()
-  // console.log(calcTotalItemstotal)
-
+  const NavbaralcTotalItemstotal = NavbarcalcTotalItems()
   //總金額
   const calcTotalPrice = () => {
     let total = 0
-
-    for (let i = 0; i < merchantItems.length; i++) {
-      merchantItems[i].items.forEach((event) => {
-        total += event.qty * event.price
+    merchantItems.forEach((merchant) => {
+      merchant.items.forEach((item) => {
+        if (item.checked === true) {
+          total += item.qty * item.price
+        }
       })
-    }
+    })
+    // for (let i = 0; i < merchantItems.length; i++) {
+    //   merchantItems[i].items.forEach((event) => {
+    //     total += event.qty * event.price
+    //   })
+    // }
     return total
   }
   const calcTotalPricetotal = parseInt(calcTotalPrice()).toLocaleString()
@@ -350,6 +369,7 @@ export function CartProvider({
         calcTotalItems,
         incrementOne,
         decrementOne,
+        NavbaralcTotalItemstotal,
       }}
     >
       {children}

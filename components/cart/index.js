@@ -45,23 +45,24 @@ export default function CartIndex() {
       setHasMtItems(false)
     }
   }, [])
-  const [showModal, setShowModal] = useState()
+  const [showModal, setShowModal] = useState(false)
   // console.log(showModal)
   // console.log(merchantItems)
+
   const checkAllChecked = (merchantItems) => {
-    let allChecked = true
+    let allUnchecked = true
 
     merchantItems.forEach((merchant) => {
       merchant.items.forEach((item) => {
-        if (item.checked === false) {
-          allChecked = false
-          return
+        if (item.checked) {
+          allUnchecked = false
+          return // 如果有一个选中了就跳出循环
         }
       })
     })
 
-    setShowModal(!allChecked) // 如果所有选项都未选中，则显示模态框
-    return allChecked // 返回是否所有选项都未选中
+    setShowModal(allUnchecked) // 如果所有选项都未选中，则显示模态框
+    return !allUnchecked // 返回是否有任何选项被选中
   }
   return (
     <>
