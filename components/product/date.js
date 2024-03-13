@@ -6,7 +6,12 @@ const chunk = (arr, size) =>
     arr.slice(i * size, i * size + size)
   )
 
-export default function Calendar({ events, sellStartDate = '', sellEndDate = '' }) {
+export default function Calendar({ events, sellStartDate = '', sellEndDate = '' ,setSelectDate}) {
+  let sellStartDateObj = new Date(sellStartDate);
+  sellStartDate= sellStartDateObj.setHours(sellStartDateObj.getHours() - 8);
+  let sellEndDateObj = new Date(sellEndDate);
+  sellEndDate= sellEndDateObj.setHours(sellEndDateObj.getHours() - 8);
+  
 
   //const [events, setEvents] = useState([])
 
@@ -33,8 +38,8 @@ export default function Calendar({ events, sellStartDate = '', sellEndDate = '' 
 
   console.log(new Date(sellStartDate))
   console.log(sellStartDate)
-  console.log(sellEndDate);
-  
+  console.log(sellEndDate)
+
 
 
   // 要得到今天的西元年使用Date物件的getFullYear()，要得到月份使用getMonth()(注意回傳為 0~11)
@@ -71,11 +76,13 @@ export default function Calendar({ events, sellStartDate = '', sellEndDate = '' 
   const allData = [...emptyData, ...valueData]
   //------ 以下準備呈現在網頁上
   const allDataChunks = chunk(allData, 7)
+  console.log('allDataChunks', allDataChunks);
+  
 
   const handleDateClick = (item) => {
     setMyDate(item);
   }
-  
+
 
   return (
     <>
@@ -102,24 +109,44 @@ export default function Calendar({ events, sellStartDate = '', sellEndDate = '' 
               })}
             </tr>
           </thead>
-          <tbody id="data">
 
+          <tbody id="data">
+              {/* Array(6) [
+        Array(7) [ '', '', '', '', '', 1, 2 ],
+        Array(7) [ 3, 4, 5, 6, 7, 8, 9 ],
+        Array(7) [ 10, 11, 12, 13, 14, 15, 16 ],
+        Array(7) [ 17, 18, 19, 20, 21, 22, 23 ],
+        Array(7) [ 24, 25, 26, 27, 28, 29, 30 ],
+        [ 31 ]
+      ] */}
             {allDataChunks.map((v, i) => {
+              console.log("v",v)
               return (
                 <tr key={i}>
                   {v.map((item, idx) => {
-                    const currentDate = new Date(nowY, nowM - 1, item);
-        const isSelectable = currentDate >= new Date(sellStartDate) && currentDate <= new Date(sellEndDate);
+                    const sellStartDateObj = new Date(sellStartDate);
+                    sellStartDateObj.setHours(0, 0, 0, 0);
+                    const sellEndDateObj = new Date(sellEndDate);
+                    sellEndDateObj.setHours(0, 0, 0, 0);
+                    const currentDate = new Date(nowY, nowM -1, item);
+                    currentDate.setHours(0, 0, 0, 0);
+
+                    const isSelectable = currentDate >= sellStartDateObj && currentDate <= sellEndDateObj;
+                    {/* console.log("sellStartDate:", sellStartDateObj);
+                    console.log("sellEndDate:",sellEndDateObj);
+                    console.log("currentDate",currentDate);
+                    console.log("isSelectable",isSelectable); */}
 
                     return (
                       <td
                         key={idx}
                         onClick={() => {
-                          handleDateClick(item)
+                          // handleDateClick(item)
+                          setSelectDate(`${currentDate}`)
                         }}
                         // className={`${new Date(`${nowY}-${nowM}-${item}`) >= new Date(sellStartDate) && new Date(`${nowY}-${nowM}-${item}`) <= new Date(sellEndDate) ? 'selectable' : ''}`}
                         className={isSelectable ? 'selectable' : ''}
-                        style={{ cursor: 'pointer' }}
+                        style={isSelectable ? { cursor: 'pointer' } : { cursor: 'default' }}
                         role="presentation"
                       >
                         {item}

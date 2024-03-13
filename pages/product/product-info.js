@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import EventsRecommend from '@/components/events-recommend'
-import Calendar from '@/components/product/date2'
+import Calendar from '@/components/product/date'
 import Link from 'next/link'
 
 
@@ -22,6 +22,8 @@ export default function Detail() {
   const [timeStart,setTimeStart] = useState('')
   const [timeEnd,setTimeEnd] = useState('')
   const [sellTime,setSellTime] = useState('')
+  
+  const [selectDate, setSelectDate] = useState('')
 
   let date1, date2, time1,time2 ,date3,time3;
 
@@ -38,14 +40,14 @@ export default function Detail() {
           // 建立日期物件 // 因為eventInfo 還沒設定好不能使用, 故使用data?.data.posts[0]
           const startDate = data?.data.posts[0].start_date; 
           const endDate = data?.data.posts[0].end_date;
-          
+          const sellStartDate = data?.data.posts[0].sell_start_date;
           // console.log(startDate);
           // console.log(endDate);
 
           [date1, time1] = startDate.split('T');
           [date2, time2] = endDate.split('T');
           [date3,time3] = sellStartDate.split('T');
-          time3 = time3.substring(0, 5); 
+          // time3 = time3.substring(0, 5); 
           
           setSellStartDate(data?.data.posts[0].sell_start_date)
           setSellEndDate(data?.data.posts[0].sell_end_date)
@@ -63,7 +65,7 @@ export default function Detail() {
   }, [])
   // console.log(eventInfo);
   // console.log(timeStart);
-  console.log(sellEndDate);
+  console.log(sellStartDate);
   console.log(sellTime);
   
   
@@ -104,6 +106,7 @@ export default function Detail() {
     };
 
   };
+  // console.log(selectDate);
 
 
   return (
@@ -244,7 +247,7 @@ export default function Detail() {
                   <div className="me-5">
                     <h5 className="mb-5">選擇日期</h5>
                     <div className="text-center">
-                      <Calendar onChange={handleDate} sellStartDate={sellStartDate} sellEndDate={sellEndDate}/>
+                      <Calendar onChange={handleDate} sellStartDate={sellStartDate} sellEndDate={sellEndDate} setSelectDate={setSelectDate}/>
 
                     </div>
                   </div>
