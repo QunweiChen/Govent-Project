@@ -8,18 +8,15 @@ const chunk = (arr, size) =>
   )
 
 
-export default function Calendar({ events, sellStartDate = '', sellEndDate = '' , setSelectDate}) {
+export default function Calendar({ events, sellStartDate , sellEndDate = '' , setSelectDate}) {
 
-  const [sTime, setSTime] = useState('')
+  //const [sTime, setSTime] = useState('')
 
-  useEffect(() => {
-    setSTime(sellStartDate)
-  },[sellStartDate])
+
 
 //時區問題(自動+8小時):創建一個新物件 sellStartDateObj，以 `sellStartDate` 作為參數。使用 `setHours` 將 `sellStartDateObj` 的小時數設定為當前小時數減 8。
-console.log(sellStartDate)
   // let sellStartDateObj = new Date(sellStartDate);
-  console.log(sTime);
+  //console.log(sTime);
   
   
   
@@ -31,9 +28,10 @@ console.log(sellStartDate)
   const [myDate, setMyDate] = useState(0)
 
   //設定售票起始日
-  const now = new Date()
+  const now = sellStartDate ? new Date(sellStartDate) : new Date()
+  console.log(now)
   // console.log(new Date(sellStartDate))
-  // console.log(sellStartDate)
+   console.log(sellStartDate)
   // console.log(sellEndDate)
 
 
@@ -72,7 +70,7 @@ console.log(sellStartDate)
   const allData = [...emptyData, ...valueData]
   //------ 以下準備呈現在網頁上
   const allDataChunks = chunk(allData, 7)
-  console.log('allDataChunks', allDataChunks);
+ // console.log('allDataChunks', allDataChunks);
   
 
 // 新增狀態來存取年份和月份
@@ -86,23 +84,23 @@ useEffect(() => {
 }, [sellStartDate]);
 
 // 在按鈕的 onClick 事件更新年份和月份
-const LeftBtn = () => {
-  if (month === 1) {
-    setYear(year - 1);
-    setMonth(12);
-  } else {
-    setMonth(month - 1);
-  }
-};
+// const LeftBtn = () => {
+//   if (month === 1) {
+//     setYear(year - 1);
+//     setMonth(12);
+//   } else {
+//     setMonth(month - 1);
+//   }
+// };
 
-const RightBtn = () => {
-  if (month === 12) {
-    setYear(year + 1);
-    setMonth(1);
-  } else {
-    setMonth(month + 1);
-  }
-};
+// const RightBtn = () => {
+//   if (month === 12) {
+//     setYear(year + 1);
+//     setMonth(1);
+//   } else {
+//     setMonth(month + 1);
+//   }
+// };
 
 
   return (
@@ -112,11 +110,15 @@ const RightBtn = () => {
           <h5 id="yearAndMonth" className="col-4">{`${year}`}</h5>
           <h5 id="yearAndMonth" className="col-4">{`${month}月`}</h5>
           <div className="d-flex pb-1">
-            <button className="leftBtn" onClick={LeftBtn}>
+            <button className="leftBtn" 
+            // onClick={LeftBtn}
+            >
               <i className="bi bi-caret-left-fill"></i>
             </button>
             <div className="month"></div>
-            <button className="rightBtn" onClick={RightBtn}>
+            <button className="rightBtn" 
+            // onClick={RightBtn}
+            >
               <i className="bi bi-caret-right-fill"></i>
             </button>
           </div>
@@ -126,7 +128,6 @@ const RightBtn = () => {
           <thead id="title">
             <tr>
               {weekDayList.map(function (v, i) {
-                {/* console.log(sTime) */}
                 return <th key={i}>{v}</th>
               })}
             </tr>
@@ -136,20 +137,19 @@ const RightBtn = () => {
             
             {allDataChunks.map((v, i) => {
               {/* console.log("v",v) */}
-              {/* console.log(sTime) */}
+
               return (
                 <tr key={i}>
                   {v.map((item, idx) => {
                     //時區問題(去除時間):用setHours(0, 0, 0, 0)將時間設為0
-                    {/* console.log(sellStartDate) */}
+
                     const sellStartDateObj = new Date(sellStartDate);
                     sellStartDateObj.setHours(0, 0, 0, 0);
                     const sellEndDateObj = new Date(sellEndDate);
                     sellEndDateObj.setHours(0, 0, 0, 0);
                     const currentDate = new Date(nowY, nowM -1, item);
                     currentDate.setHours(0, 0, 0, 0);
-                    {/* console.log(sTime) */}
-
+                    
                     const isSelectable = currentDate >= sellStartDateObj && currentDate <= sellEndDateObj;
                     {/* console.log("sellStartDate:", sellStartDateObj);
                     console.log("sellEndDate:",sellEndDateObj);

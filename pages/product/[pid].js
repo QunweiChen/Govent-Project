@@ -9,7 +9,7 @@ import { useCart } from '@/hooks/use-cart'
 
 export default function Detail() {
   //引入鉤子 
-  const { addItem, items, MerchantItem } = useCart()
+  const { addItem, items} = useCart()
   const router = useRouter()
   const { pid } = router.query
 
@@ -17,6 +17,8 @@ export default function Detail() {
   const [selected, setSelected] = useState(false);
 
   const [eventInfo, setEventInfo] = useState([]);
+  console.log(eventInfo);
+  
   const [qty, setQty] = useState(1)
 
   //設售票期間的日曆狀態
@@ -48,11 +50,11 @@ export default function Detail() {
     "ticketName": "",
     "price": "",
     "qty": 0,
-    "event_id":0
-
+    "eventId":0
 
     }
   ])
+
   // {
   //   "id": 1,
   //   "merchantId": 1,
@@ -65,6 +67,7 @@ export default function Detail() {
   //   "qty": 2,
   //   "event_id":6454685
   // }
+  
   useEffect(() => {
 
     fetch('http://localhost:3005/api/info')
@@ -73,7 +76,7 @@ export default function Detail() {
         // 檢查是否有資料並設定到 state 中
         if (data && data.data) {
           console.log('success:', data?.data.posts);
-          setEventInfo(data?.data.posts[0])
+          setEventInfo(data?.data.posts)
 
           // 建立日期物件 // 因為eventInfo 尚未設定好不能使用, 故用data?.data.posts[0]
           const startDate = data?.data.posts[0].start_date;
@@ -100,9 +103,9 @@ export default function Detail() {
       })
       .catch((error) => console.error('Error fetching data:', error))
 
-  }, [pid])
+  }, [])
   // console.log(eventInfo);
-  console.log(sellStartDate);
+  //console.log(sellStartDate);
   // console.log(sellTime);
 
 
@@ -129,16 +132,7 @@ export default function Detail() {
   const totalAmount = selected ? eventInfo.price * qty : 0;
 
 
-  const addToCart = () => {
-    const cartData = {
-      // selectedDate,
-      // selectedTime,
-      qty,
-      totalAmount
-    };
-
-  };
-  console.log(selectTime);
+  // console.log(selectTime);
 
 
   return (
@@ -195,9 +189,11 @@ export default function Detail() {
         <main>
           <div className="wrapper">
             <section className="title">
-              <div key={eventInfo.id} className="d-flex align-items-center justify-content-between mt-3">
+              <div 
+               key={eventInfo[0]?.id} 
+              className="d-flex align-items-center justify-content-between mt-3">
                 <h5 className="border-5 border-start border-primary px-2">
-                  YOASOBI
+                  {eventInfo[0]?.event_name}
                 </h5>
                 <button
                   type="button"
@@ -209,7 +205,7 @@ export default function Detail() {
               </div>
               <div>
                 <h3 className="my-4">
-                  {eventInfo.event_name}
+                  {eventInfo[0]?.event_name}
                   {/* <span className="d-none d-xxl-inline-flex">
                     ｜YOASOBI ASIA TOUR 2023-2024 Solo Concert in Taipei
                   </span> */}
@@ -220,10 +216,10 @@ export default function Detail() {
                 </h6>
                 <h6>
                   <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" />
-                  {eventInfo.place}
+                  {eventInfo[0]?.place}
                 </h6>
                 <p className="mx-4 text-secondary-02">
-                  {eventInfo.address}
+                  {eventInfo[0]?.address}
                 </p>
                 <hr className="d-none d-xxl-block" />
               </div>
@@ -239,22 +235,26 @@ export default function Detail() {
               </div>
               <hr />
             </section>
-            <section>
-              <div className="d-flex align-items-center mt-5">
+            <div className="d-flex align-items-center mt-5">
                 <h4 className="border-5 border-start border-primary px-2">
                   選擇方案
                 </h4>
               </div>
-              <div className="row justify-content-center seat1 mt-3">
-                <h4 className="col-lg-9 col-sm-6">{eventInfo.ticket_name}</h4>
+              {/* map跑出來 */}
+            <section>
+            {eventInfo.map((v,i)=>{
+              return(
+              <div key={i}>
+              {/* <div  className="row justify-content-center seat1 mt-3">
+                <h4 className="col-lg-9 col-sm-6">{v.ticket_name}</h4>
                 <h4 className="col-lg-2 col-sm-4">NT$ 3,200</h4>
                 <button className="store col-lg-1 col-sm-2 btn btn-primary-deep">
                   選擇
                 </button>
-              </div>
+              </div> */}
               <div className="row seat1 mt-3">
-                <h4 className="col-lg-9 col-sm-6">{eventInfo.ticket_name}</h4>
-                <h4 className="col-lg-2 col-sm-4">NT$ {parseInt(eventInfo.price).toLocaleString()}</h4>
+                <h4 className="col-lg-9 col-sm-6">{v.ticket_name}</h4>
+                <h4 className="col-lg-2 col-sm-4">NT$ {parseInt(v.price).toLocaleString()}</h4>
                 <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={handleSelection}>
                   {selected ? '已選擇' : '選擇'}
                 </button>
@@ -312,11 +312,12 @@ export default function Detail() {
                     </div>
                     <div className="d-flex justify-content-end mb-3">
                       <Link href={`/cart`}>
-                        <button className="store fs-5 me-2 p-2 btn btn-primary-deep" onClick={() => {
-                          // console.log(v)
-                          addItem(all)
-                          MerchantItem(all, all.qty)
-                        }}>
+                        <button className="store fs-5 me-2 p-2 btn btn-primary-deep" 
+                        onClick={() => {
+                          console.log(v)
+                          addItem(v)
+                        }}
+                        >
                           加入購物車
                         </button>
                       </Link>
@@ -324,6 +325,9 @@ export default function Detail() {
                   </div>
                 </div>
               </div>
+              </div>
+              )
+            })}
             </section>
 
 
@@ -744,7 +748,7 @@ export default function Detail() {
           </div>
         </main>
       </>
-      {/* ))}    */}
+      
 
       <style global jsx>
         {`
