@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `favorite`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `favorite` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `pid` int NOT NULL,
+  `eid` int NOT NULL,
   `uid` int NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;

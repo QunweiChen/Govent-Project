@@ -2,45 +2,45 @@
 SET @uid = 1;
 --
 -- TEST
-SELECT p.*,
+SELECT e.*,
     f.id AS favorite_id
-FROM products AS p
-    LEFT JOIN favorites AS f ON f.pid = p.id
+FROM event AS e
+    LEFT JOIN favorites AS f ON f.eid = e.id
     AND f.uid = @uid
-ORDER BY p.id ASC;
+ORDER BY e.id ASC;
 --
 -- TEST
-SELECT p.*, IF(f.id, 'true', 'false') AS is_favorite
-    FROM products AS p
-    LEFT JOIN favorites AS f ON f.pid = p.id
+SELECT e.*, IF(f.id, 'true', 'false') AS is_favorite
+    FROM event AS e
+    LEFT JOIN favorites AS f ON f.eid = e.id
     AND f.uid = @uid
-    ORDER BY p.id ASC;
+    ORDER BY e.id ASC;
 --
 -- 只有會員有加入到我的最愛的商品清單
-SELECT p.*
-FROM product AS p
-    INNER JOIN favorites AS f ON f.pid = p.id
+SELECT e.*
+FROM event AS e
+    INNER JOIN favorites AS f ON f.eid = e.id
     AND f.uid = @uid
-ORDER BY p.id ASC;
+ORDER BY e.id ASC;
 --
 -- uid為使用者id變數，會員登入後可以得到，需要代入查詢
 SET @uid = 1;
-SET @pid = 5;
+SET @eid = 74267257;
 -- 
-INSERT INTO favorites (uid, pid)
-VALUES (@uid, @pid)
+INSERT INTO favorites (uid, eid)
+VALUES (@uid, @eid)
 
 --
 -- uid為使用者id變數，會員登入後可以得到，需要代入查詢
 SET @uid = 1;
-SET @pid = 5;
+SET @eid = 74267257;
 DELETE FROM favorites
-WHERE pid=@pid AND uid=@uid;
+WHERE eid=@eid AND uid=@uid;
 
 --
 -- uid為使用者id變數，會員登入後可以得到，需要代入查詢
 SET @uid = 1;
-SELECT f.pid
+SELECT f.eid
 FROM favorites AS f
     WHERE f.uid = @uid
-ORDER BY f.pid ASC;
+ORDER BY f.eid ASC;
