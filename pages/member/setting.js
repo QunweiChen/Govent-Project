@@ -27,7 +27,13 @@ export default function MemberSetting() {
   //---------------------------------------------------------------------------------
 
   useEffect(() => {
-    fetch('http://localhost:3005/api/member')
+    fetch('http://localhost:3005/api/member', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
       .then((response) => response.json())
       .then((data) => {
         // 檢查是否有資料並設定到 state 中
@@ -78,6 +84,7 @@ export default function MemberSetting() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+        credentials: 'include',
       })
 
       if (response.ok) {
@@ -89,18 +96,6 @@ export default function MemberSetting() {
       console.error('Error:', error)
     }
   }
-
-  const setLocalStorage = () => {
-    const userObject = {
-      name: '我是localname',
-      level: '我是local會員',
-      email: '我是local email',
-      avatar: 'http://localhost:3005/images/contain/ct_1709886753648.jpg'
-    }
-
-    // 将对象转换为 JSON 字符串并存储在 localStorage 中
-    localStorage.setItem('user', JSON.stringify(userObject))
-}
 
   return (
     <>
@@ -200,9 +195,6 @@ export default function MemberSetting() {
                   </button>
                 </div>
               </Form>
-              <button className="btn btn-primary" onClick={setLocalStorage}>
-                拿localstorge
-              </button>
             </motion.div>
           </Col>
         </Row>

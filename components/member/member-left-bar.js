@@ -5,23 +5,25 @@ import MemberleftOption from './member-left-option'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { motion } from 'framer-motion'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function Memberleft() {
   const [name, setName] = useState('')
   const [level, setLevel] = useState('')
   const [email, setEmail] = useState('')
   const [avatar, setAvatar] = useState('')
+  const { auth } = useAuth()
 
   useEffect(() => {
-      const storedUser = localStorage.getItem('user')
-      const jsonStoredUser = JSON.parse(storedUser)
-      if (jsonStoredUser) {
-        setName(jsonStoredUser.name);
-        setLevel(jsonStoredUser.level);
-        setEmail(jsonStoredUser.email);
-        setAvatar(jsonStoredUser.avatar);
+      if (auth.user) {
+        setName(auth.user.name)
+        setLevel(auth.user.level);
+        setEmail(auth.user.username);
+        setAvatar(auth.user.avatar);
       }
-  }, [])
+      console.log(auth.user);
+      
+  }, [auth])
 
 
 
@@ -33,13 +35,13 @@ export default function Memberleft() {
       transition={{ duration: 0.4 }}
       className="py-2">
         <div className="py-3 d-flex justify-content-center">
-          <img className={`${styles['avatar']} rounded-circle`} src={avatar} />
+          <img className={`${styles['avatar']} rounded-circle`} src={`http://localhost:3005/avatar/${avatar}`} />
         </div>
         <div className="d-flex justify-content-center align-items-center">
           <h6 className="mb-0 me-2">{name || <Skeleton baseColor='#00000000'/>}</h6>
           <Badge bg="primary">{level}</Badge>
         </div>
-        <p className={`text-center sm-p ${styles['sm-p']} mt-2`}>{email  || <Skeleton baseColor='#00000000'/>}</p>
+        <p className={`text-center sm-p ${styles['sm-p']} mt-2`}>{email || <Skeleton baseColor='#00000000'/>}</p>
       </motion.div>
       <hr />
       <div className={`py-2 member-side-bar`}>
