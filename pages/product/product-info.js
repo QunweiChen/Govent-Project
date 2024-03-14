@@ -221,7 +221,7 @@ export default function Detail() {
               </div>
               <div className="row seat1 mt-3">
                 <h4 className="col-lg-9 col-sm-6">{eventInfo.ticket_name}</h4>
-                <h4 className="col-lg-2 col-sm-4">NT$ {parseInt(eventInfo.price ).toLocaleString()}</h4>
+                <h4 className="col-lg-2 col-sm-4">NT$ {parseInt(eventInfo.price).toLocaleString()}</h4>
                 <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={handleSelection}>
                   {selected ? '已選擇' : '選擇'}
                 </button>
