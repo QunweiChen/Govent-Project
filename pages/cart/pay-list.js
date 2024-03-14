@@ -5,25 +5,24 @@ import { useCart } from '@/hooks/use-cart'
 
 export default function PayList() {
   //引入勾子
-  const { merchantItems, setMerchantItems } = useCart()
+  const { setCartItems } = useCart()
 
-  // 從 localStorage 中獲取 MtItems 資料
-  var MtItemsString =
+  // 從 localStorage 中獲取 cartItems 資料
+  var cartItemsString =
     typeof window !== 'undefined'
-      ? window.localStorage.getItem('MtItems')
+      ? window.localStorage.getItem('cartItems')
       : '[]'
 
   // 將字串轉換為 JavaScript 物件
-  var MtItems = JSON.parse(MtItemsString)
-  // console.log(MtItems)
+  var cartItems = JSON.parse(cartItemsString)
+  // console.log(cartItems)
   //存入狀態
   const [pay, setPay] = useState([])
-  console.log(pay)
+  // console.log(pay)
 
   // 過濾出所有符合條件的項目
-  const news = MtItems.flatMap((merchant) => {
-    return merchant.items.filter((item) => item.checked === true)
-  })
+  const news = cartItems.filter((item) => item.checked === true)
+
   //總價
   const TotalPrice = () => {
     let total = 0
@@ -35,23 +34,17 @@ export default function PayList() {
   }
   // console.log(TotalPrice())
 
-  // 定義處理結帳的函式
   const handleCheckout = () => {
-    // 將符合條件的項目從 MtItems 中移除
-    const updatedMtItems = MtItems.map((merchant) => {
-      // 過濾掉支付清單中的項目
-      const updatedItems = merchant.items.filter(
-        (item) => !pay.some((p) => p.id === item.id)
-      )
-      // 如果商家中的票券為空，則不返回該商家
-      return updatedItems.length > 0
-        ? { ...merchant, items: updatedItems }
-        : null
-    }).filter(Boolean) // 去除為空的商家
+    // 將符合條件的項目從 cartItems 中移除
+    // 過濾掉支付清單中的項目
+    const updatedcartItems = cartItems
+      .filter((item) => !pay.some((p) => p.id === item.id))
+      // 如果商家中的票券不為空，則返回該商家
 
-    // 將更新後的 MtItems 存回 localStorage
-    window.localStorage.setItem('MtItems', JSON.stringify(updatedMtItems))
-    setMerchantItems(updatedMtItems)
+      .filter(Boolean) // 去除為空的商家
+    // 將更新後的 cartItems 存回 localStorage
+    window.localStorage.setItem('cartItems', JSON.stringify(updatedcartItems))
+    setCartItems(updatedcartItems)
     // 清空 pay 狀態
     setPay([])
   }
