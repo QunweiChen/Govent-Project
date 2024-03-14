@@ -86,39 +86,13 @@ export function CartProvider({
     if (JSON.stringify(cartItems) !== storedValue) {
       setValue(cartItems)
     }
-    // eslint-disable-next-line
-}, [cartItems])
-  useEffect(() => {
-    console.log(merchantItems)
+    setMerchantItems(merchantItems)
     // 使用字串比較
     if (JSON.stringify(merchantItems) !== storedValueMt) {
       setValueMt(merchantItems)
     }
     // eslint-disable-next-line
-}, [merchantItems])
-
-  // 初始化 setValue(localStoage), setValue用於存入localStorage中
-  const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
-  const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
-  //連接資料庫
-  const [data, setData] = useState([])
-  const [Mt, setMt] = useState([])
-  console.log(data)
-  useEffect(() => {
-    const getCartMt = async () => {
-      fetch('http://localhost:3005/api/cart')
-        .then((res) => res.json())
-        .then((text) => {
-          setData(text)
-          setMt(text.data ? text.data.posts : [])
-        })
-    }
-
-    getCartMt()
-  }, [])
-  //重新定義公司
-  //const Mt = data.data ? data.data.posts : []
-  // console.log(Mt)
+}, [cartItems,merchantItems])
 
   //checkbox內容
   //切換
@@ -170,7 +144,7 @@ export function CartProvider({
         return merchant
       }
     })
-    console.log(news)
+    // console.log(news)
     setMerchantItems(news)
   }
   const handleToggleSelectedMt = (isSelectedMt, MtId) => {
@@ -270,6 +244,63 @@ export function CartProvider({
     // console.log(news)
     setCartItems(news)
   }
+  //`incrementOne(items, id)` 依照某id更新項目的數量+1
+  const incrementOne = (items, id, merchantId) => {
+    const newItems = items.map((merchant) => {
+      if (merchant.merchantId === merchantId) {
+        // 找到對應票券
+        const updatedItems = merchant.items.map((item) => {
+          if (item.id === id) {
+            // 找到要增加數量的項目
+            const newQty = item.qty + 1 > 0 ? item.qty + 1 : 1
+            // 返回更新後的項目
+            return { ...item, qty: newQty }
+          }
+          return item
+        })
+
+        // 返回更新後的商家資料
+        return { ...merchant, items: updatedItems }
+      }
+      return merchant
+    })
+    // console.log(newItems)
+    setMerchantItems(newItems)
+  }
+  // decrementOne(items, id)` 依照某id更新項目的數量-1。最小為1。
+  const decrementOne = (items, id, merchantId) => {
+    const newItems = items
+      .map((merchant) => {
+        if (merchant.merchantId === merchantId) {
+          // 找到对应商家
+          const updatedItems = merchant.items
+            .map((item) => {
+              if (item.id === id) {
+                // 找到要减少数量的项目
+                const newQty = item.qty - 1 > 0 ? item.qty - 1 : 0
+                // 如果数量为0，则该项目自动消失
+                if (newQty === 0) return null
+                // 返回更新后的项目
+                return { ...item, qty: newQty }
+              }
+              return item
+            })
+            .filter(Boolean) // 过滤掉值为 null 的项目
+
+          // 如果商家内没有项目，则将该商家从商家列表中删除
+          if (updatedItems.length === 0) return null
+
+          // 返回更新后的商家数据
+          return { ...merchant, items: updatedItems }
+        }
+        return merchant
+      })
+      .filter(Boolean) // 过滤掉值为 null 的商家
+
+    // console.log(newItems)
+    setMerchantItems(newItems)
+  }
+
   //計算數量
   // console.log(merchantItems)
   //數量
@@ -298,7 +329,6 @@ export function CartProvider({
     return total
   }
   const calcTotalPricetotal = parseInt(calcTotalPrice()).toLocaleString()
-  // console.log(calcTotalPricetotal)
 
   //最外(上)元件階層包裹提供者元件，讓⽗⺟元件可以提供它
   return (
@@ -318,6 +348,8 @@ export function CartProvider({
         handleToggleSelectedMt,
         foundMt,
         calcTotalItems,
+        incrementOne,
+        decrementOne,
       }}
     >
       {children}
