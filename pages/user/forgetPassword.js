@@ -1,10 +1,30 @@
 import BackToMainPage from '@/components/user/backToMainPage'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Form } from 'react-bootstrap'
 import styles from '@/components/user/forgetPassword.module.css'
+import LoadingLayout from '@/components/layout/loading-layout'
+import { useRouter } from 'next/router'
 
 export default function ForgetPassword() {
+  const router = useRouter()
+
+  useEffect(() => {
+    fetch('http://localhost:3005/api/user/verifyToken', {
+      method: 'GET',
+      credentials: 'include', // Ensures cookies are sent with the request
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error('Network response was not ok')
+        return response.json()
+      })
+      .then((data) => {
+        console.log('Data from verifyToken:', data)
+        // You can access the user information here
+      })
+      .catch((error) => console.error('Error verifying token:', error))
+  }, [])
+
   const [user, setUser] = useState({
     emailAuth: '',
     codeAuth: '',
@@ -207,4 +227,8 @@ export default function ForgetPassword() {
       </style>
     </>
   )
+}
+
+ForgetPassword.getLayout = function (page) {
+  return <LoadingLayout title="忘記密碼">{page}</LoadingLayout>
 }

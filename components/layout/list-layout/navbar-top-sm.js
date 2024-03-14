@@ -20,7 +20,7 @@ export default function NavbarTopRwdSm() {
           }`}
           onClick={() => handleClick(0)}
         >
-          <i class="bi bi-map fs-5"></i>
+          <i className="bi bi-map fs-5"></i>
           <div className="sm-p">地圖</div>
         </button>
         <button
@@ -29,7 +29,7 @@ export default function NavbarTopRwdSm() {
           }`}
           onClick={() => handleClick(1)}
         >
-          <i class="bi bi-sliders fs-4"></i>
+          <i className="bi bi-sliders fs-4"></i>
           <div className="sm-p">類別</div>
         </button>
         <button
@@ -38,7 +38,7 @@ export default function NavbarTopRwdSm() {
           }`}
           onClick={() => handleClick(2)}
         >
-          <i class="bi bi-funnel fs-5"></i>
+          <i className="bi bi-funnel fs-5"></i>
           <div className="sm-p">篩選</div>
         </button>
         <button
@@ -47,7 +47,7 @@ export default function NavbarTopRwdSm() {
           }`}
           onClick={() => handleClick(3)}
         >
-          <i class="bi bi-sort-down fs-5"></i>
+          <i className="bi bi-sort-down fs-5"></i>
           <div className="sm-p">排序</div>
         </button>
       </section>

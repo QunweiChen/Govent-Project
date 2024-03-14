@@ -7,6 +7,41 @@ import { motion } from 'framer-motion'
 // 只作導向到 product/list
 export default function MemberIndex() {
   const router = useRouter()
+
+  //Angus 加入的
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        console.log('沒有token')
+        return
+      }
+
+      fetch('http://localhost:3000/user/signin', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Ensure "Bearer" is included
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
+              console.log('得到 403, 401 錯誤')
+            }
+            throw new Error('Failed to fetch')
+          }
+          return response.json()
+        })
+        .then((data) => {
+          console.log(data)
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    }
+  }, [])
+
   const [isVisible, setIsVisible] = useState(false)
   const [progressNumber, setProgressNumber] = useState(0)
 
@@ -51,10 +86,12 @@ export default function MemberIndex() {
         >
           <h4>前往會員中心</h4>
         </motion.div>
-        <motion.div initial={{ opacity: 0, y: 30 }}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.3 }}>
-            <span className="sm-p">{progressNumber}%</span>
+          transition={{ duration: 0.3, delay: 0.3 }}
+        >
+          <span className="sm-p">{progressNumber}%</span>
           <ProgressBar now={`${progressNumber}`} className="my-3 progress" />
         </motion.div>
       </div>

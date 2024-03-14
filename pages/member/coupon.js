@@ -1,16 +1,82 @@
 // import { useRouter } from 'next/router'
-import { Row, Col } from 'react-bootstrap'
-import NoBCLayout from '@/components/layout/nocb-default-layout'
+import { useEffect, useState } from 'react'
+import { Row, Col, Form, Button } from 'react-bootstrap'
+import MemberLayout from '@/components/layout/member-layout'
 import Memberleft from '@/components/member/member-left-bar'
 import { motion } from 'framer-motion'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
-// only redirect to member/login
 export default function MemberCoupon() {
-  // const router = useRouter()
-  // // Make sure we're in the browser
-  // if (typeof window !== 'undefined') {
-  //   router.push('/member/login')
-  // }
+  const [coupon, setCoupon] = useState([])
+  const [addCoupon, setAddCoupon] = useState('')
+
+  const successSwal = () => {
+    withReactContent(Swal).fire({
+      icon: 'success',
+      title: '新增成功',
+    })
+    loadData()
+  }
+
+  const errorSwal = (title) => {
+    withReactContent(Swal).fire({
+      icon: 'error',
+      title: title,
+      text: '請再試一次',
+    })
+  }
+
+  const loadData = () => {
+    fetch('http://localhost:3005/api/member/coupon')
+      .then((response) => response.json())
+      .then((data) => {
+        // 檢查是否有資料並設定到 state 中
+        if (data && data.data && data.data.result) {
+          setCoupon(data.data.result)
+        } else {
+          console.warn('No favorites data received from the server.')
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error))
+  }
+
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  const handleCoupon = (e) => {
+    setAddCoupon(e.target.value)
+  }
+
+  const CouponSubmit = async (e) => {
+    e.preventDefault()
+    // 在這裡處理表單提交的邏輯
+    try {
+      const response = await fetch(
+        'http://localhost:3005/api/member/add-coupon',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ coupon: addCoupon }),
+        }
+      )
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log(data)
+
+        successSwal()
+      } else {
+        const errorData = await response.json()
+        errorSwal(errorData.message)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
 
   return (
     <>
@@ -26,45 +92,55 @@ export default function MemberCoupon() {
               transition={{ duration: 0.4 }}
               className="member-bgc contain"
             >
-              <h4>可用優惠卷</h4>
+              <div className="d-flex justify-content-between">
+                <h4>可用優惠卷</h4>
+                <Form className="d-flex" onSubmit={CouponSubmit}>
+                  <Form.Group className="mb-3 me-3" controlId="formName">
+                    <Form.Control
+                      className="dark-input"
+                      type="text"
+                      name="name"
+                      placeholder="新增優惠卷"
+                      value={addCoupon}
+                      onChange={handleCoupon}
+                    />
+                  </Form.Group>
+                  <span>
+                    <Button className="" type="submit">
+                      新增
+                    </Button>
+                  </span>
+                </Form>
+              </div>
               <hr className="my-4" />
-              <Row>
-                <Col sm={6}>
-                  <div className="card">
-                    <div className="sm-p px-3 py-2">折扣碼 govent300</div>
-                    <hr className="my-0" />
-                    <div className="px-3 py-3">
-                      <h3 className="text-primary">NT$300</h3>
-                      <p className="pb-3">最低消費金額3000</p>
-                      <p className="sm-p">
-                        GOVENT x JCB
-                        1月全站商品單筆消費滿NT$3,000元現折NT$300元優惠活動
+              <Row className="gy-3">
+                {coupon.map((data) => (
+                  <Col key={data.id} sm={6}>
+                    <motion.div
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.4 }}
+                      className="card"
+                    >
+                      <div className="sm-p px-3 py-2">
+                        折扣碼 {data.coupon_code}
+                      </div>
+                      <hr className="my-0" />
+                      <div className="px-3 py-3">
+                        <h3 className="text-primary">
+                          NT${data.discount_valid}
+                        </h3>
+                        <p className="pb-3">最低消費金額 {data.price_min}</p>
+                        <p className="sm-p">{data.coupon_description}</p>
+                      </div>
+                      <hr className="my-0" />
+                      <p className="px-3 py-2">
+                        使用期限：{data.start_at.split('T')[0]} -{' '}
+                        {data.expires_at.split('T')[0]}
                       </p>
-                    </div>
-                    <hr className="my-0" />
-                    <p className="px-3 py-2">
-                      使用期限：2024/01/01 - 2024/01/31
-                    </p>
-                  </div>
-                </Col>
-                <Col sm={6}>
-                  <div className="card">
-                    <div className="sm-p px-3 py-2">折扣碼 govent300</div>
-                    <hr className="my-0" />
-                    <div className="px-3 py-3">
-                      <h3 className="text-primary">NT$300</h3>
-                      <p className="pb-3">最低消費金額3000</p>
-                      <p className="sm-p">
-                        GOVENT x JCB
-                        1月全站商品單筆消費滿NT$3,000元現折NT$300元優惠活動
-                      </p>
-                    </div>
-                    <hr className="my-0" />
-                    <p className="px-3 py-2">
-                      使用期限：2024/01/01 - 2024/01/31
-                    </p>
-                  </div>
-                </Col>
+                    </motion.div>
+                  </Col>
+                ))}
               </Row>
             </motion.div>
           </Col>
@@ -93,6 +169,9 @@ export default function MemberCoupon() {
             background-color: var(--bg-gray-light-color);
             border-radius: 10px;
           }
+          body.swal2-height-auto {
+            height: 100vh !important;
+          }
         `}
       </style>
     </>
@@ -100,5 +179,5 @@ export default function MemberCoupon() {
 }
 
 MemberCoupon.getLayout = function (page) {
-  return <NoBCLayout>{page}</NoBCLayout>
+  return <MemberLayout title="優惠卷管理">{page}</MemberLayout>
 }
