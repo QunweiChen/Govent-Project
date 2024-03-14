@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col'
 import NavbarBottomRwd from '@/components/layout/default-layout/navbar-bottom-rwd'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { Modal } from 'react-bootstrap'
 const TodoAll = dynamic(() => import('@/components/cart/todo-all'), {
   ssr: false,
 })
@@ -28,6 +29,8 @@ export default function CartIndex() {
     handleToggleSelectedAll,
     handleToggleSelectedMt,
     foundMt,
+    incrementOne,
+    decrementOne,
   } = useCart()
 
   const [hasMtItems, setHasMtItems] = useState(false)
@@ -42,6 +45,25 @@ export default function CartIndex() {
       setHasMtItems(false)
     }
   }, [])
+  const [showModal, setShowModal] = useState(false)
+  // console.log(showModal)
+  // console.log(merchantItems)
+
+  const checkAllChecked = (merchantItems) => {
+    let allUnchecked = true
+
+    merchantItems.forEach((merchant) => {
+      merchant.items.forEach((item) => {
+        if (item.checked) {
+          allUnchecked = false
+          return // 如果有一个选中了就跳出循环
+        }
+      })
+    })
+
+    setShowModal(allUnchecked) // 如果所有选项都未选中，则显示模态框
+    return !allUnchecked // 返回是否有任何选项被选中
+  }
   return (
     <>
       <div className="container width-1200">
@@ -76,6 +98,8 @@ export default function CartIndex() {
                 removeItem={removeItem}
                 calcTotalItemstotal={calcTotalItemstotal}
                 calcTotalPricetotal={calcTotalPricetotal}
+                incrementOne={incrementOne}
+                decrementOne={decrementOne}
               />
             ) : (
               <NoCart />
@@ -103,7 +127,15 @@ export default function CartIndex() {
             <div className="d-flex justify-content-center align-items-center">
               <p className="text-white ms-3">總金額 NT {calcTotalPricetotal}</p>
               <h6 className="btn btn-primary-deep text-white ms-4 m-0">
-                <Link href="/payment" className="text-white">
+                <Link
+                  href="/payment"
+                  className="text-white"
+                  onClick={(e) => {
+                    if (!checkAllChecked(merchantItems)) {
+                      e.preventDefault() // 阻止默认行为
+                    }
+                  }}
+                >
                   前往結帳
                 </Link>
               </h6>
@@ -117,7 +149,16 @@ export default function CartIndex() {
           </div>
         )}
       </div>
-
+      {/* 吐司 */}
+      <Modal
+        show={showModal} // 控制模态框显示
+        onHide={() => setShowModal(false)} // 点击模态框外部或关闭按钮时关闭模态框
+        centered
+      >
+        <Modal.Body>
+          <Modal.Header closeButton>請勾選要結帳的票券</Modal.Header>
+        </Modal.Body>
+      </Modal>
       <style global jsx>
         {`
           body {

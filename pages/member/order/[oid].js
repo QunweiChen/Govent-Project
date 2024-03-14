@@ -5,6 +5,8 @@ import { Row, Col } from 'react-bootstrap'
 import TicketInfoLeft from '@/components/member/m-order-left-bar'
 import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
+import ReactDOM from 'react-dom';
+import { QRCodeSVG } from 'qrcode.react'
 
 
 export default function MemberOrderInfo() {
@@ -153,11 +155,8 @@ export default function MemberOrderInfo() {
                           </div>
                           <hr className="my-0" />
                           <div className="p-3 d-flex">
-                            <div className="event-img me-4">
-                              <img
-                                src="https://qr-code-generator-free.com/wp-content/themes/QR%20theme/img/defaultQR.png"
-                                alt=""
-                              />
+                            <div className="me-4">
+                              <QRCodeSVG value={ticket.ticket_code} bgColor='#00000000' fgColor='#ffffff'/>
                             </div>
                             <div className="d-flex flex-column justify-content-between">
                               <div>

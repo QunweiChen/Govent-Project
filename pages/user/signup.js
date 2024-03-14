@@ -106,7 +106,7 @@ export default function Signup() {
       .then((data) => {
         // Handle success
         console.log('Success:', data)
-        router.rush('/user/signin')
+        router.push('/user/signin')
       })
       .catch((errorResponse) => {
         // Handle HTTP errors

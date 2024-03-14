@@ -1,6 +1,7 @@
 import { result } from 'lodash'
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import useLocalStorage from '@/hooks/use-localstorage'
+const _ = require('lodash')
 
 //建立context
 const CartContext = createContext()
@@ -43,11 +44,80 @@ export function CartProvider({
     }
   }
 
+  // [
+  //   {
+  //     merchantId: 1,
+  //     items: [
+  //       {
+  //         id: 1,
+  //         merchantId: 1,
+  //         eventTypeId: 2,
+  //         eventName: 'YOASOBI 台北演唱會111',
+  //         startDate: '2024-04-01 8:00:00',
+  //         endDate: '2024-04-01 11:00:00',
+  //         holdingTime: '2023-06-15 14:23:45',
+  //         images: '4-03.jpg',
+  //         str: '台北市',
+  //         vaild: '上架中',
+  //         ticketName: '優惠票',
+  //         price: '3400',
+  //         qty: 4,
+  //         event_id: 2135465,
+  //         checked: false
+  //       },
+  //       {
+  //         id: 4,
+  //         merchantId: 1,
+  //         eventTypeId: 1,
+  //         eventName: 'TWICE 台北演唱會001',
+  //         startDate: '2024-05-15 19:00:00',
+  //         endDate: '2024-05-15 22:00:00',
+  //         holdingTime: '2022-12-05 21:10:20',
+  //         images: 'twice-concert.jpg',
+  //         str: '台北市',
+  //         vaild: '上架中',
+  //         ticketName: 'VIP票',
+  //         price: '5000',
+  //         qty: 2,
+  //         event_id: 7421325,
+  //         checked: false
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     merchantId: 4,
+  //     items: [
+  //       {
+  //         id: 5,
+  //         merchantId: 4,
+  //         eventTypeId: 2,
+  //         eventName: 'Billie Eilish 台北演唱會',
+  //         startDate: '2024-06-10 20:00:00',
+  //         endDate: '2024-06-10 23:00:00',
+  //         holdingTime: '2023-03-20 12:30:45',
+  //         images: 'billie-eilish-concert.jpg',
+  //         str: '台北市',
+  //         vaild: '上架中',
+  //         ticketName: '普通票',
+  //         price: '3800',
+  //         qty: 1,
+  //         event_id: 41045525,
+  //         checked: false
+  //       }
+  //     ]
+  //   }
+  // ]
+
   // 加入到購物車中的項目
   const [cartItems, setCartItems] = useState(items)
+  // console.log(cartItems)
   // 加入到各分類的項目
   const [merchantItems, setMerchantItems] = useState(MtItems)
+  // console.log(merchantItems)
+  //儲存有多少商家
+  const MerchantIds = _.uniq(items.map((item) => item.merchantId))
 
+  // console.log(MerchantIds)
   // 初始化 setValue(localStoage), setValue用於存入localStorage中
   const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
   const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
@@ -92,6 +162,7 @@ export function CartProvider({
       setValueMt(merchantItems)
     }
     // eslint-disable-next-line
+}, [cartItems,merchantItems])
 }, [cartItems,merchantItems])
 
   //checkbox內容
@@ -199,14 +270,16 @@ export function CartProvider({
   }
   //添加
   const addItem = (item) => {
-    // console.log(item)
-    const foundIndex = cartItems.findIndex((v, i) => {
-      return v.id === item.id
-    })
+    // 在新商品對象中添加 checked 屬性
+    const newItem = { ...item, checked: false }
+
+    // 檢查是否已存在相同的商品，如果是，則執行 increment
+    const foundIndex = cartItems.findIndex((v) => v.id === item.id)
     if (foundIndex > -1) {
       increment(cartItems, item.id)
     } else {
-      const newItems = [...cartItems, item]
+      // 否則將新商品加入購物車
+      const newItems = [...cartItems, newItem]
       setCartItems(newItems)
     }
   }
@@ -301,10 +374,81 @@ export function CartProvider({
     setMerchantItems(newItems)
   }
 
+  //`incrementOne(items, id)` 依照某id更新項目的數量+1
+  const incrementOne = (items, id, merchantId) => {
+    const newItems = items.map((merchant) => {
+      if (merchant.merchantId === merchantId) {
+        // 找到對應票券
+        const updatedItems = merchant.items.map((item) => {
+          if (item.id === id) {
+            // 找到要增加數量的項目
+            const newQty = item.qty + 1 > 0 ? item.qty + 1 : 1
+            // 返回更新後的項目
+            return { ...item, qty: newQty }
+          }
+          return item
+        })
+
+        // 返回更新後的商家資料
+        return { ...merchant, items: updatedItems }
+      }
+      return merchant
+    })
+    // console.log(newItems)
+    setMerchantItems(newItems)
+  }
+  // decrementOne(items, id)` 依照某id更新項目的數量-1。最小為1。
+  const decrementOne = (items, id, merchantId) => {
+    const newItems = items
+      .map((merchant) => {
+        if (merchant.merchantId === merchantId) {
+          // 找到对应商家
+          const updatedItems = merchant.items
+            .map((item) => {
+              if (item.id === id) {
+                // 找到要减少数量的项目
+                const newQty = item.qty - 1 > 0 ? item.qty - 1 : 0
+                // 如果数量为0，则该项目自动消失
+                if (newQty === 0) return null
+                // 返回更新后的项目
+                return { ...item, qty: newQty }
+              }
+              return item
+            })
+            .filter(Boolean) // 过滤掉值为 null 的项目
+
+          // 如果商家内没有项目，则将该商家从商家列表中删除
+          if (updatedItems.length === 0) return null
+
+          // 返回更新后的商家数据
+          return { ...merchant, items: updatedItems }
+        }
+        return merchant
+      })
+      .filter(Boolean) // 过滤掉值为 null 的商家
+
+    // console.log(newItems)
+    setMerchantItems(newItems)
+  }
+
   //計算數量
-  // console.log(merchantItems)
   //數量
   const calcTotalItems = () => {
+    let total = 0
+
+    merchantItems.forEach((merchant) => {
+      merchant.items.forEach((item) => {
+        if (item.checked === true) {
+          total += item.qty
+        }
+      })
+    })
+    return total
+  }
+  const calcTotalItemstotal = calcTotalItems()
+  // console.log(calcTotalItemstotal)
+  //Navbar
+  const NavbarcalcTotalItems = () => {
     let total = 0
 
     for (let i = 0; i < merchantItems.length; i++) {
@@ -312,20 +456,25 @@ export function CartProvider({
         total += event.qty
       })
     }
+
     return total
   }
-  const calcTotalItemstotal = calcTotalItems()
-  // console.log(calcTotalItemstotal)
-
+  const NavbaralcTotalItemstotal = NavbarcalcTotalItems()
   //總金額
   const calcTotalPrice = () => {
     let total = 0
-
-    for (let i = 0; i < merchantItems.length; i++) {
-      merchantItems[i].items.forEach((event) => {
-        total += event.qty * event.price
+    merchantItems.forEach((merchant) => {
+      merchant.items.forEach((item) => {
+        if (item.checked === true) {
+          total += item.qty * item.price
+        }
       })
-    }
+    })
+    // for (let i = 0; i < merchantItems.length; i++) {
+    //   merchantItems[i].items.forEach((event) => {
+    //     total += event.qty * event.price
+    //   })
+    // }
     return total
   }
   const calcTotalPricetotal = parseInt(calcTotalPrice()).toLocaleString()
@@ -350,6 +499,7 @@ export function CartProvider({
         calcTotalItems,
         incrementOne,
         decrementOne,
+        NavbaralcTotalItemstotal,
       }}
     >
       {children}
