@@ -20,12 +20,12 @@ export default function Sidebar(props) {
     const selectedCategoriesArray = Object.keys(selectedCategories).filter(
       (category) => selectedCategories[category]
     )
-    const selectedCitiesArray = Object.keys(selectedRegions).filter(
-      (cityId) => selectedRegions[cityId]
+    const selectedRegionsNames = Object.keys(selectedRegions).filter(
+      (regionOrCityName) => selectedRegions[regionOrCityName]
     )
 
     // 回傳選擇的篩選條件給父元素
-    props.onFilterChange(selectedCategoriesArray, selectedCitiesArray)
+    props.onFilterChange(selectedCategoriesArray, selectedRegionsNames)
   }, [selectedCategories, selectedRegions])
 
   const handleOnChange = (category) => {
@@ -48,18 +48,52 @@ export default function Sidebar(props) {
     setSelectedCategories(newSelection)
   }
 
-  const handleRegionCheckboxChange = (regionId, isChecked) => {
-    setSelectedRegions((prevState) => ({
-      ...prevState,
-      [regionId]: isChecked,
-    }))
+  // const handleRegionCheckboxChange = (regionName, isChecked) => {
+  //   setSelectedRegions((prevState) => ({
+  //     ...prevState,
+  //     [regionName]: isChecked,
+  //   }))
+  // }
+
+  // const handleCityCheckboxChange = (cityName, isChecked) => {
+  //   setSelectedRegions((prevState) => ({
+  //     ...prevState,
+  //     [cityName]: isChecked,
+  //   }))
+  // }
+
+  const handleRegionCheckboxChange = (regionName, isChecked) => {
+    const region = City.find((r) => r.name === regionName)
+    const updatedRegions = { ...selectedRegions, [regionName]: isChecked }
+
+    // 更新该地区下所有城市的选中状态
+    region.cities.forEach((city) => {
+      updatedRegions[city.name] = isChecked
+    })
+
+    setSelectedRegions(updatedRegions)
   }
 
-  const handleCityCheckboxChange = (cityId, isChecked) => {
-    setSelectedRegions((prevState) => ({
-      ...prevState,
-      [cityId]: isChecked,
-    }))
+  const handleCityCheckboxChange = (cityName, isChecked) => {
+    const updatedRegions = { ...selectedRegions, [cityName]: isChecked }
+
+    // 检查如果所有同地区的城市都被选中/取消选中，相应更新地区的选中状态
+    const region = City.find((r) =>
+      r.cities.some((city) => city.name === cityName)
+    )
+    const allCitiesChecked = region.cities.every((city) =>
+      updatedRegions[city.name] !== undefined
+        ? updatedRegions[city.name]
+        : false
+    )
+    const anyCityChecked = region.cities.some(
+      (city) => updatedRegions[city.name] === true
+    )
+
+    // 如果所有城市都选中，则地区选中；如果有一个城市未选中，地区取消选中
+    updatedRegions[region.name] = allCitiesChecked && anyCityChecked
+
+    setSelectedRegions(updatedRegions)
   }
 
   return (
@@ -99,68 +133,67 @@ export default function Sidebar(props) {
       <div className="downSidebar no-border">
         <h6>地區</h6>
         <div className="accordion" id="accordionExample">
-  {City.map((region) => (
-    <div
-      key={region.id}
-      className="accordion-item bg-bg-gray text-white"
-    >
-      <h2 className="accordion-header" id={`heading-${region.id}`}>
-        <button
-          className="accordion-button p-1 gap-2 bg-bg-gray text-white"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target={`#collapse-${region.id}`}
-          aria-expanded="true"
-          aria-controls={`collapse-${region.id}`}
-        >
-          <input
-            type="checkbox"
-            className="form-check-input"
-            checked={selectedRegions[region.id] || false}
-            onChange={(e) =>
-              handleRegionCheckboxChange(region.id, e.target.checked)
-            }
-          />
-          <label
-            className="form-check-label"
-            htmlFor={`flexCheck-${region.id}`}
-          >
-            {region.name}
-          </label>
-        </button>
-      </h2>
-      <div
-        id={`collapse-${region.id}`}
-        className="accordion-collapse collapse show"
-        aria-labelledby={`heading-${region.id}`}
-        data-bs-parent="#accordionExample"
-      >
-        <div className="accordion-body">
-          {region.cities.map((city) => (
-            <div key={city.id} className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id={`flexCheck-${city.id}`}
-                checked={selectedRegions[city.id] || false}
-                onChange={(e) =>
-                  handleCityCheckboxChange(city.id, e.target.checked)
-                }
-              />
-              <label
-                className="form-check-label"
-                htmlFor={`flexCheck-${city.id}`}
+          {City.map((region) => (
+            <div
+              key={region.id}
+              className="accordion-item bg-bg-gray text-white"
+            >
+              <h2 className="accordion-header" id={`heading-${region.id}`}>
+                <button
+                  className="accordion-button p-1 gap-2 bg-bg-gray text-white"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target={`#collapse-${region.id}`}
+                  aria-expanded="true"
+                  aria-controls={`collapse-${region.id}`}
+                >
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    checked={selectedRegions[region.name] || false}
+                    onChange={(e) =>
+                      handleRegionCheckboxChange(region.name, e.target.checked)
+                    }
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor={`flexCheck-${region.id}`}
+                  >
+                    {region.name}
+                  </label>
+                </button>
+              </h2>
+              <div
+                id={`collapse-${region.id}`}
+                className="accordion-collapse collapse show"
+                aria-labelledby={`heading-${region.id}`}
+                data-bs-parent="#accordionExample"
               >
-                {city.name}
-              </label>
+                <div className="accordion-body">
+                  {region.cities.map((city) => (
+                    <div key={city.id} className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={`flexCheck-${city.id}`}
+                        checked={selectedRegions[city.name] || false}
+                        onChange={(e) =>
+                          handleCityCheckboxChange(city.name, e.target.checked)
+                        }
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor={`flexCheck-${city.id}`}
+                      >
+                        {city.name}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           ))}
         </div>
-      </div>
-    </div>
-  ))}
-</div>
-
       </div>
     </>
   )

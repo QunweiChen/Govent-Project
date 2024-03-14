@@ -32,48 +32,77 @@ import useEvents from '@/hooks/use-event'
 
 export default function List() {
   const { data } = useEvents()
+
   console.log(data)
 
   //活動資料
   // 1. 從伺服器來的原始資料
   const [events, setEvents] = useState([])
-  // // 2. 用於網頁上經過各種處理(排序、搜尋、過濾)後的資料
-  // const [displayEvents, setDisplayEvents] = useState([])
-
-  // 類別篩選
-  const categories = [
-    '演唱會',
-    '展覽',
-    '快閃活動',
-    '市集',
-    '粉絲見面會',
-    '課程講座',
-    '體育賽事',
-    '景點門票',
-  ]
-  const [selectedCategories, setSelectedCategories] = useState([])
-
-  const handleCategoryChange = (selectedCategoryIds) => {
-    setSelectedCategories(Object.values(selectedCategoryIds))
-  }
-
-  const filteredEvents =
-    data && data.length > 0
-      ? data.filter((event) => {
-          if (selectedCategories.length === 0) return true
-          return selectedCategories.includes(event.category_name)
-        })
-      : []
-
   // 分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
-  //頁碼
-  const lastPostIndex = currentPage * postsPerPage
-  const firstPostIndex = lastPostIndex - postsPerPage
-  // const currentEvents = events.slice(firstPostIndex, lastPostIndex)
-  const currentEvents = filteredEvents?.slice(firstPostIndex, lastPostIndex)
-  //修改頁碼
+
+  useEffect(() => {
+    if (data) {
+      setEvents(data)
+    }
+  }, [data])
+  console.log(events)
+
+  //回調函式
+  // 筛选结果状态
+  const [filteredEvents, setFilteredEvents] = useState([])
+
+  const [selectedCategories, setSelectedCategories] = useState([])
+  const [selectedRegions, setSelectedRegions] = useState([])
+
+  // 处理升降密排序的回调函数
+  const handleSortEvents = (sortedEvents) => {
+    setFilteredEvents(sortedEvents)
+  }
+  // 处理地区排序的回调函数
+  const handleCityEvents = (citySortedEvents) => {
+    setFilteredEvents(citySortedEvents)
+  }
+  // 处理日期排序的回调函数
+  const handleDateEvents = (dateSortedEvents) => {
+    setFilteredEvents(dateSortedEvents)
+  }
+  // 处理价格排序的回调函数
+  const handlePriceEvents = (priceSortedEvents) => {
+    setFilteredEvents(priceSortedEvents)
+  }
+  // sidebar回調
+  const handleFilterChange = (selectedCategories, selectedRegions) => {
+    console.log('Selected categories:', selectedCategories)
+    console.log('Selected regions:', selectedRegions)
+    setSelectedCategories(selectedCategories)
+    setSelectedRegions(selectedRegions)
+  }
+
+  // 根据筛选条件过滤事件
+  const getFilteredEvents = () => {
+    return events.filter((event) => {
+      const categoryMatch =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(event.category_name)
+      const regionMatch =
+        selectedRegions.length === 0 || selectedRegions.includes(event.str)
+      return categoryMatch && regionMatch
+    })
+  }
+
+  const newFilteredEvents = getFilteredEvents()
+
+  // Get current events for pagination
+  const indexOfLastEvent = currentPage * postsPerPage
+  const indexOfFirstEvent = indexOfLastEvent - postsPerPage
+  const currentEvents = newFilteredEvents.slice(
+    indexOfFirstEvent,
+    indexOfLastEvent
+  )
+
+  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   return (
@@ -85,7 +114,15 @@ export default function List() {
             <p className="mx-4 my-2">目前共有 {data?.length} 筆 結果</p>
           </div>
           <section>
-            <NavbarTopRwd />
+            <NavbarTopRwd
+              events={events} //傳原始資料至props
+              setEvents={setEvents} // 将更新事件列表的函数传递给子组件
+              //回調元素
+              onSort={handleSortEvents}
+              onCity={handleCityEvents}
+              onDate={handleDateEvents}
+              onPrice={handlePriceEvents}
+            />
           </section>
         </h5>
       </nav>
@@ -96,16 +133,13 @@ export default function List() {
         <div className="row">
           <div className="sidebar me-3 col-md-2 col-3">
             <Sidebar
-              categories={categories}
-              selectedCategories={selectedCategories}
-              onCategoryChange={handleCategoryChange}
+              events={events} //傳原始資料至props
+              onFilterChange={handleFilterChange}
             />
           </div>
           <div className="col">
             <div className="cardList row g-3">
-              {/* {data?.map((v) => ( */}
-              {/* {filteredEvents?.map((v) => ( */}
-              {currentEvents?.map((v) => (
+              {currentEvents.map((v) => (
                 <div key={v.id} className="col-md-4 col-sm-6 ">
                   <Link
                     href={`/product/product-info?id=${v.id}`}
@@ -155,7 +189,6 @@ export default function List() {
                 role="toolbar"
                 aria-label="Toolbar with button groups"
               >
-                {/* <PageBar /> */}
                 <div className="btn-group" role="group" aria-label="group">
                   <button
                     type="button"
@@ -167,7 +200,12 @@ export default function List() {
                   </button>
 
                   {Array.from(
-                    { length: Math.ceil(data?.length / postsPerPage) },
+                    //要用篩選後的數輛計算依據events(全)=>newFilteredEvents(篩選結果)
+                    {
+                      length: Math.ceil(
+                        newFilteredEvents?.length / postsPerPage
+                      ),
+                    },
                     (_, number) => (
                       <button
                         key={number}
@@ -187,7 +225,8 @@ export default function List() {
                     className="btn btn-normal-gray"
                     aria-label="next"
                     onClick={() =>
-                      currentPage < Math.ceil(data?.length / postsPerPage) &&
+                      currentPage <
+                        Math.ceil(newFilteredEvents?.length / postsPerPage) &&
                       paginate(currentPage + 1)
                     }
                   >

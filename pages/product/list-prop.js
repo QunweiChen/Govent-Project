@@ -52,6 +52,10 @@ export default function List() {
   //回調函式
   // 筛选结果状态
   const [filteredEvents, setFilteredEvents] = useState([])
+
+  const [selectedCategories, setSelectedCategories] = useState([])
+  const [selectedRegions, setSelectedRegions] = useState([])
+
   // 处理升降密排序的回调函数
   const handleSortEvents = (sortedEvents) => {
     setFilteredEvents(sortedEvents)
@@ -69,21 +73,34 @@ export default function List() {
     setFilteredEvents(priceSortedEvents)
   }
   // sidebar回調
-  const handleFilterChange = (
-    selectedCategories,
-    selectedRegions,
-    selectedCities
-  ) => {
-    // 执行筛选操作或其他逻辑
+  const handleFilterChange = (selectedCategories, selectedRegions) => {
     console.log('Selected categories:', selectedCategories)
-    console.log('Selected regions:', selectedRegions, selectedCities)
-    // 这里可以执行其他操作，例如更新父组件状态或调用其他函数等
+    console.log('Selected regions:', selectedRegions)
+    setSelectedCategories(selectedCategories)
+    setSelectedRegions(selectedRegions)
   }
+
+  // 根据筛选条件过滤事件
+  const getFilteredEvents = () => {
+    return events.filter((event) => {
+      const categoryMatch =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(event.category_name)
+      const regionMatch =
+        selectedRegions.length === 0 || selectedRegions.includes(event.str)
+      return categoryMatch && regionMatch
+    })
+  }
+
+  const newFilteredEvents = getFilteredEvents()
 
   // Get current events for pagination
   const indexOfLastEvent = currentPage * postsPerPage
   const indexOfFirstEvent = indexOfLastEvent - postsPerPage
-  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent)
+  const currentEvents = newFilteredEvents.slice(
+    indexOfFirstEvent,
+    indexOfLastEvent
+  )
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
@@ -183,7 +200,12 @@ export default function List() {
                   </button>
 
                   {Array.from(
-                    { length: Math.ceil(events?.length / postsPerPage) },
+                    //要用篩選後的數輛計算依據events(全)=>newFilteredEvents(篩選結果)
+                    {
+                      length: Math.ceil(
+                        newFilteredEvents?.length / postsPerPage
+                      ),
+                    },
                     (_, number) => (
                       <button
                         key={number}
@@ -203,7 +225,8 @@ export default function List() {
                     className="btn btn-normal-gray"
                     aria-label="next"
                     onClick={() =>
-                      currentPage < Math.ceil(events?.length / postsPerPage) &&
+                      currentPage <
+                        Math.ceil(newFilteredEvents?.length / postsPerPage) &&
                       paginate(currentPage + 1)
                     }
                   >
