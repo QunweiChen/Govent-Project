@@ -330,7 +330,7 @@ export default function PaymentForm({
                   name="coupon"
                   onChange={formChange}
                 >
-                  <option value="1">選擇優惠券</option>
+                  <option value="0">選擇優惠券</option>
                   <option value="0.9" label="九折">
                     九折
                   </option>

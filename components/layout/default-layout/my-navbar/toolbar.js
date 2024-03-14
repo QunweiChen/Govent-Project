@@ -5,7 +5,6 @@ import styles from './toolbar.module.scss'
 import { useCart } from '@/hooks/use-cart'
 
 export default function Toolbar({ handleShow }) {
-
   const { calcTotalItems, merchantItems } = useCart()
 
   return (
@@ -16,7 +15,7 @@ export default function Toolbar({ handleShow }) {
             <i className="bi bi-cart-fill"></i>
             <div className="bg-white text-center rounded-circle ms-2">
               <p className="cart-total text-center text-secondary">
-                {calcTotalItems(merchantItems) }
+                {calcTotalItems(merchantItems)}
               </p>
             </div>
           </div>

@@ -5,7 +5,7 @@ export default function Confirm() {
   const router = useRouter()
   useEffect(() => {
     if (router.isReady) {
-      console.log(router.query.transactionId)
+      console.log(router.query)
       let transactionId = router.query.transactionId
       fetch(
         `http://localhost:3005/api/payment-line-pay/confirm?transactionId=${transactionId}`,
