@@ -164,7 +164,6 @@ export function CartProvider({
     }
     // eslint-disable-next-line
 }, [cartItems,merchantItems])
-}, [cartItems,merchantItems])
 
   //checkbox內容
   //切換
