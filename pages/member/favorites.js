@@ -1,16 +1,29 @@
-// import { useRouter } from 'next/router'
+import { useState, useEffect } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
-import NoBCLayout from '@/components/layout/nocb-default-layout'
+import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
 
-// only redirect to member/login
 export default function MemberFavorites() {
-  // const router = useRouter()
-  // // Make sure we're in the browser
-  // if (typeof window !== 'undefined') {
-  //   router.push('/member/login')
-  // }
+  const [userData, setUserData] = useState([])
+
+  useEffect(() => {
+    fetch('http://localhost:3005/api/member/favorites')
+      .then((response) => response.json())
+      .then((data) => {
+        // 檢查是否有資料並設定到 state 中
+        if (data && data.data && data.data.result) {
+          setUserData(data.data.result)
+        } else {
+          console.warn('No favorites data received from the server.')
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error))
+  }, [])
+
+  useEffect(() => {
+    console.log('user', userData)
+  }, [userData])
 
   return (
     <>
@@ -28,64 +41,31 @@ export default function MemberFavorites() {
             >
               <h4>我的收藏</h4>
               <hr className="my-4" />
-              <div className="mb-4">您已收藏 3 項商品</div>
-              <div className="event p-4 mt-2 d-flex">
-                <div className="event-img me-4">
-                  <img
-                    src="https://www.shutterstock.com/image-vector/cute-cartoon-rubber-duck-vector-600nw-2276837591.jpg"
-                    alt=""
-                  />
+              <div className="mb-4">您已收藏 {userData.length} 項商品</div>
+              {userData.map((data) => (
+                <div key={data.div} className="event p-3 mt-2 d-flex">
+                  <div className="event-img me-3">
+                    <img
+                      src={`http://localhost:3005/images/banner/${data.banner}`}
+                      alt=""
+                    />
+                  </div>
+                  <div className="py-1 content d-flex flex-column justify-content-between">
+                    <h6>{data.event_name}</h6>
+                    <div>
+                      <h6 className="text-primary-deep m-0">
+                        ＄{data.min_price} 起
+                      </h6>
+                      <span className="sm-p">
+                        {data.start_date.split('T')[0]}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-1">
+                    <i className="bi bi-heart-fill text-primary"></i>
+                  </div>
                 </div>
-                <div className="me-4">
-                  <h6>
-                    YOASOBI演唱會2024台北站｜YOASOBI ASIA TOUR 2023-2024 Solo
-                    Concert in Taipei
-                  </h6>
-                  <h6 className="text-primary-deep m-0">＄1200 起</h6>
-                  <span className="sm-p">2023-06-01</span>
-                </div>
-                <div>
-                  <i className="bi bi-heart-fill text-primary"></i>
-                </div>
-              </div>
-              <div className="event p-4 mt-2 d-flex">
-                <div className="event-img me-4">
-                  <img
-                    src="https://www.shutterstock.com/image-vector/cute-cartoon-rubber-duck-vector-600nw-2276837591.jpg"
-                    alt=""
-                  />
-                </div>
-                <div className="me-4">
-                  <h6>
-                    YOASOBI演唱會2024台北站｜YOASOBI ASIA TOUR 2023-2024 Solo
-                    Concert in Taipei
-                  </h6>
-                  <h6 className="text-primary-deep m-0">＄1200 起</h6>
-                  <span className="sm-p">2023-06-01</span>
-                </div>
-                <div>
-                  <i className="bi bi-heart-fill text-primary"></i>
-                </div>
-              </div>
-              <div className="event p-4 mt-2 d-flex">
-                <div className="event-img me-4">
-                  <img
-                    src="https://www.shutterstock.com/image-vector/cute-cartoon-rubber-duck-vector-600nw-2276837591.jpg"
-                    alt=""
-                  />
-                </div>
-                <div className="me-4">
-                  <h6>
-                    YOASOBI演唱會2024台北站｜YOASOBI ASIA TOUR 2023-2024 Solo
-                    Concert in Taipei
-                  </h6>
-                  <h6 className="text-primary-deep m-0">＄1200 起</h6>
-                  <span className="sm-p">2023-06-01</span>
-                </div>
-                <div>
-                  <i className="bi bi-heart-fill text-primary"></i>
-                </div>
-              </div>
+              ))}
             </motion.div>
           </Col>
         </Row>
@@ -112,6 +92,9 @@ export default function MemberFavorites() {
           .event {
             background-color: var(--bg-gray-light-color);
             border-radius: 10px;
+            .content {
+              flex: 1;
+            }
           }
           .event-img {
             width: 160px;
@@ -131,5 +114,5 @@ export default function MemberFavorites() {
 }
 
 MemberFavorites.getLayout = function (page) {
-  return <NoBCLayout>{page}</NoBCLayout>
+  return <MemberLayout title="我的收藏">{page}</MemberLayout>
 }

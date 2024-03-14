@@ -1,17 +1,21 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './toolbar.module.scss'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function Toolbar({ handleShow }) {
+  const { isAuthenticated, signOut, auth } = useAuth()
+  console.log(auth)
+
+  const handleSignOut = () => {
+    signOut() // Call the sign out method
+    // Redirect or perform additional actions after signing out if needed
+  }
+
   return (
     <ul className="navbar-nav pe-2 ms-auto">
       <li className="nav-item">
-        <Link
-          className="nav-link"
-          href="/cart"
-          role="button"
-          title="購物車"
-        >
+        <Link className="nav-link" href="/cart" role="button" title="購物車">
           <i className="bi bi-cart-fill"></i>
           <p className="d-none d-md-inline d-lg-none"> 購物車</p>
         </Link>
@@ -22,7 +26,7 @@ export default function Toolbar({ handleShow }) {
       >
         <Link
           className="nav-link dropdown-toggle"
-          href=""
+          href="/member"
           role="button"
           data-bs-toggle="dropdown"
           aria-expanded="false"
@@ -44,25 +48,45 @@ export default function Toolbar({ handleShow }) {
                 height={80}
               />
             </p>
-            <p className="text-center">
-              會員姓名: 艾迪
-              <br />
-              帳號: eddy123
-            </p>
-          </li>
-          <li>
-            <Link className="dropdown-item text-center" href="/admin">
-              會員管理區
-            </Link>
+            {auth.isAuthenticated && auth.user ? (
+              <p className="text-center dropdown-item">
+                會員姓名:
+                <br />
+                {auth.user.name}
+                <br />
+                帳號: <br />
+                {auth.user.username}
+              </p>
+            ) : (
+              <Link className="text-center dropdown-item" href="/user/signin">
+                請登入
+              </Link>
+            )}
           </li>
           <li>
             <hr className="dropdown-divider" />
           </li>
-          <li>
-            <Link className="dropdown-item text-center " href="/about">
-              客服中心
+          {auth.isAuthenticated && (
+            <li>
+              <Link className="dropdown-item text-center " href="/member">
+                會員中心
+              </Link>
+            </li>
+          )}
+          {auth.isAuthenticated && auth.user ? (
+            <li>
+              <button
+                className="dropdown-item text-center "
+                onClick={handleSignOut}
+              >
+                登出
+              </button>
+            </li>
+          ) : (
+            <Link className="text-center dropdown-item" href="/user/signup">
+              我要註冊
             </Link>
-          </li>
+          )}
         </ul>
       </li>
       <li className="nav-item">

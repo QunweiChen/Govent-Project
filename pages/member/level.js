@@ -1,7 +1,7 @@
 // import { useRouter } from 'next/router'
 import { Row, Col } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
-import NoBCLayout from '@/components/layout/nocb-default-layout'
+import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
 import LevelType from '@/components/member/member-level-type'
 
@@ -61,5 +61,5 @@ export default function MemberLevel() {
 }
 
 MemberLevel.getLayout = function (page) {
-  return <NoBCLayout>{page}</NoBCLayout>
+  return <MemberLayout title='會員等級'>{page}</MemberLayout>
 }

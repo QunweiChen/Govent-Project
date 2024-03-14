@@ -35,7 +35,6 @@ export default function OrganizerIndex() {
   }, []) // 空数组作为第二个参数，表示只在组件挂载时运行一次
 
   useEffect(() => {
-    // 确认 window(瀏覽器) 开始运作后，3秒后进行路由跳转
     if (isVisible) {
       router.push('/organizer/event')
     }

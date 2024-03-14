@@ -6,29 +6,36 @@ const chunk = (arr, size) =>
     arr.slice(i * size, i * size + size)
   )
 
-export default function Calendar() {
-  const [events, setEvents] = useState([])
+export default function Calendar({ events, sellStartDate = '', sellEndDate = '' }) {
 
-  useEffect(() => {
-    fetchEventData()
-  }, [])
+  //const [events, setEvents] = useState([])
 
-  const fetchEventData = async (params) => {
-    const searchParams = new URLSearchParams(params)
-    try {
-      const res = await fetch(`http://localhost:3005/api/info?${searchParams}`)
-      const eventData = await res.json()
-      setEvents(eventData) // 將獲取的資料存入狀態中
-    } catch (error) {
-      console.error('獲取資料時發生錯誤:', error)
-    }
-  }
+  // useEffect(() => {
+  //   fetchEventData()
+  // }, [])
+
+  // const fetchEventData = async (params) => {
+  //   const searchParams = new URLSearchParams(params)
+  //   try {
+  //     const res = await fetch(`http://localhost:3005/api/info?${searchParams}`)
+  //     const eventData = await res.json()
+  //     setEvents(eventData) // 將獲取的資料存入狀態中
+  //   } catch (error) {
+  //     console.error('獲取資料時發生錯誤:', error)
+  //   }
+  // }
 
   // 一開始未選中日期
   const [myDate, setMyDate] = useState(0)
 
-  // 呈現yearAndMonth
+  //設定售票起始日
   const now = new Date()
+
+  console.log(new Date(sellStartDate))
+  console.log(sellStartDate)
+  console.log(sellEndDate);
+  
+
 
   // 要得到今天的西元年使用Date物件的getFullYear()，要得到月份使用getMonth()(注意回傳為 0~11)
   const nowY = now.getFullYear()
@@ -40,7 +47,7 @@ export default function Calendar() {
   // nowD
   const nowD = now.getDate() //注意回傳為 0~11
 
-  // 呈現標題
+  // 星期
   const weekDayList = ['日', '一', '二', '三', '四', '五', '六']
 
   // 本月有幾天
@@ -56,7 +63,6 @@ export default function Calendar() {
 
   // 有值的陣列1 ~ days
   // 如何建立一個陣列包含1...N數字
-  // https://stackoverflow.com/questions/3746725/how-to-create-an-array-containing-1-n
   const valueData = Array(days)
     .fill('')
     .map((v, i) => i + 1)
@@ -65,6 +71,11 @@ export default function Calendar() {
   const allData = [...emptyData, ...valueData]
   //------ 以下準備呈現在網頁上
   const allDataChunks = chunk(allData, 7)
+
+  const handleDateClick = (item) => {
+    setMyDate(item);
+  }
+  
 
   return (
     <>
@@ -92,7 +103,33 @@ export default function Calendar() {
             </tr>
           </thead>
           <tbody id="data">
+
             {allDataChunks.map((v, i) => {
+              return (
+                <tr key={i}>
+                  {v.map((item, idx) => {
+                    const currentDate = new Date(nowY, nowM - 1, item);
+        const isSelectable = currentDate >= new Date(sellStartDate) && currentDate <= new Date(sellEndDate);
+
+                    return (
+                      <td
+                        key={idx}
+                        onClick={() => {
+                          handleDateClick(item)
+                        }}
+                        // className={`${new Date(`${nowY}-${nowM}-${item}`) >= new Date(sellStartDate) && new Date(`${nowY}-${nowM}-${item}`) <= new Date(sellEndDate) ? 'selectable' : ''}`}
+                        className={isSelectable ? 'selectable' : ''}
+                        style={{ cursor: 'pointer' }}
+                        role="presentation"
+                      >
+                        {item}
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+            {/* {allDataChunks.map((v, i) => {
               return (
                 <tr key={i}>
                   {v.map((item, idx) => (
@@ -112,12 +149,15 @@ export default function Calendar() {
                   ))}
                 </tr>
               )
-            })}
+            })} */}
           </tbody>
         </table>
       </div>
       <style jsx>
         {`
+          .selectable {
+            background-color: #ff6600;
+          }
           .calendar {
             padding-top: 5px;
             background-color: #323232;
