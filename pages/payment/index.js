@@ -2,19 +2,20 @@ import React, { use, useEffect, useState } from 'react'
 import ProductInfo from '@/components/payment/product-info/index.js'
 import DefaultLayout from '@/components/layout/default-layout'
 import PaymentForm from '@/components/payment/payment-Form'
+
 export default function Payment() {
   //總金額
   const [money, setMoney] = useState(0)
-  //點數及優惠券
+  //點數及優惠券的值
   const [discount, setDiscount] = useState({
     point: 0,
     coupon: { name: '', value: 1 },
   })
+  //點數及優惠券是否被勾選
   const [discountState, setDiscountState] = useState({
     point: false,
     coupon: false,
   })
-  console.log(discountState)
   //購物車資料
   const [productData, setProductData] = useState([])
   // 從 localStorage 中獲取 MtItems 資料
