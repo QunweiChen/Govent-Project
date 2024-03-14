@@ -1,16 +1,33 @@
 import express from 'express'
-const router = express.Router()
 import sequelize from '#configs/db.js'
 import { QueryTypes, DataTypes } from 'sequelize'
-//(finish member favorites/coupon)
-// const { Cart } = sequelize.models
+import authenticate from '##/middlewares/authenticate.js'
+import dotenv from 'dotenv'
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
+dotenv.config()
 
-router.get('/', async function (req, res) {
+const app = express()
+
+const router = express.Router()
+app.use(express.json())
+
+const corsOptions = {
+  origin: 'http://localhost:3000', // Adjust according to your frontend's origin
+  credentials: true, // Allows cookies to be sent across origins
+}
+
+app.use(cors(corsOptions))
+
+// Use cookieParser middleware
+app.use(cookieParser())
+
+router.get('/', authenticate, async function (req, res) {
   // const { Cart } = sequelize.models
-
   try {
     // findAll 是回傳所有資料
-    const posts = await sequelize.query('SELECT * FROM `member` WHERE id = 1', {
+    const posts = await sequelize.query('SELECT * FROM `member` WHERE id = ?', {
+      replacements: [req.user.id], // 使用占位符传递参数
       type: QueryTypes.SELECT,
     })
 
@@ -60,6 +77,23 @@ router.get('/favorites', async function (req, res) {
     )
 
     return res.json({ status: 'success link favorites', data: { result } })
+  } catch (error) {
+    console.error('Error fetching data:', error)
+    res.status(500).json({ status: 'error', message: 'Failed to fetch data.' })
+  }
+})
+
+router.get('/cost', authenticate, async function (req, res) {
+  try {
+    const result = await sequelize.query(
+      'SELECT SUM(total) AS total_sum FROM `user_order` WHERE user_id = ?',
+      {
+        replacements: [req.user.id], // 使用占位符传递参数
+        type: QueryTypes.SELECT,
+      }
+    )
+
+    return res.json({ status: 'success link cost', data: { result } })
   } catch (error) {
     console.error('Error fetching data:', error)
     res.status(500).json({ status: 'error', message: 'Failed to fetch data.' })

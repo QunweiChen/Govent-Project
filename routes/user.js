@@ -112,6 +112,7 @@ router.post('/signin', upload.none(), async (req, res) => {
           birthday: user[0].birthday,
           phone: user[0].phone,
           address: user[0].address,
+          avatar: user[0].avatar,
         },
         process.env.JWT_SECRET_KEY,
         { expiresIn: '120m' }
