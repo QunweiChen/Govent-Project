@@ -113,19 +113,6 @@ export default function CartCard({
                               <button
                                 className="btn"
                                 onClick={() => {
-                                  incrementOne(
-                                    merchantItems,
-                                    v.id,
-                                    v.merchantId
-                                  )
-                                }}
-                              >
-                                <i className="bi bi-plus-circle text-white"></i>
-                              </button>
-                              <p className="text-white">{v.qty}</p>
-                              <button
-                                className="btn"
-                                onClick={() => {
                                   decrementOne(
                                     merchantItems,
                                     v.id,
@@ -134,6 +121,19 @@ export default function CartCard({
                                 }}
                               >
                                 <i className="bi bi-dash-circle text-white"></i>
+                              </button>
+                              <p className="text-white">{v.qty}</p>
+                              <button
+                                className="btn"
+                                onClick={() => {
+                                  incrementOne(
+                                    merchantItems,
+                                    v.id,
+                                    v.merchantId
+                                  )
+                                }}
+                              >
+                                <i className="bi bi-plus-circle text-white"></i>
                               </button>
                             </div>
                             <p className="col-sm-6 text-white">

@@ -43,11 +43,76 @@ export function CartProvider({
     }
   }
 
+  // [
+  //   {
+  //     merchantId: 1,
+  //     items: [
+  //       {
+  //         id: 1,
+  //         merchantId: 1,
+  //         eventTypeId: 2,
+  //         eventName: 'YOASOBI 台北演唱會111',
+  //         startDate: '2024-04-01 8:00:00',
+  //         endDate: '2024-04-01 11:00:00',
+  //         holdingTime: '2023-06-15 14:23:45',
+  //         images: '4-03.jpg',
+  //         str: '台北市',
+  //         vaild: '上架中',
+  //         ticketName: '優惠票',
+  //         price: '3400',
+  //         qty: 4,
+  //         event_id: 2135465,
+  //         checked: false
+  //       },
+  //       {
+  //         id: 4,
+  //         merchantId: 1,
+  //         eventTypeId: 1,
+  //         eventName: 'TWICE 台北演唱會001',
+  //         startDate: '2024-05-15 19:00:00',
+  //         endDate: '2024-05-15 22:00:00',
+  //         holdingTime: '2022-12-05 21:10:20',
+  //         images: 'twice-concert.jpg',
+  //         str: '台北市',
+  //         vaild: '上架中',
+  //         ticketName: 'VIP票',
+  //         price: '5000',
+  //         qty: 2,
+  //         event_id: 7421325,
+  //         checked: false
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     merchantId: 4,
+  //     items: [
+  //       {
+  //         id: 5,
+  //         merchantId: 4,
+  //         eventTypeId: 2,
+  //         eventName: 'Billie Eilish 台北演唱會',
+  //         startDate: '2024-06-10 20:00:00',
+  //         endDate: '2024-06-10 23:00:00',
+  //         holdingTime: '2023-03-20 12:30:45',
+  //         images: 'billie-eilish-concert.jpg',
+  //         str: '台北市',
+  //         vaild: '上架中',
+  //         ticketName: '普通票',
+  //         price: '3800',
+  //         qty: 1,
+  //         event_id: 41045525,
+  //         checked: false
+  //       }
+  //     ]
+  //   }
+  // ]
+
   // 加入到購物車中的項目
   const [cartItems, setCartItems] = useState(items)
+  console.log(cartItems)
   // 加入到各分類的項目
   const [merchantItems, setMerchantItems] = useState(MtItems)
-  console.log(merchantItems)
+  // console.log(merchantItems)
   // 初始化 setValue(localStoage), setValue用於存入localStorage中
   const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
   const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
@@ -199,14 +264,16 @@ export function CartProvider({
   }
   //添加
   const addItem = (item) => {
-    // console.log(item)
-    const foundIndex = cartItems.findIndex((v, i) => {
-      return v.id === item.id
-    })
+    // 在新商品對象中添加 checked 屬性
+    const newItem = { ...item, checked: false }
+
+    // 檢查是否已存在相同的商品，如果是，則執行 increment
+    const foundIndex = cartItems.findIndex((v) => v.id === item.id)
     if (foundIndex > -1) {
       increment(cartItems, item.id)
     } else {
-      const newItems = [...cartItems, item]
+      // 否則將新商品加入購物車
+      const newItems = [...cartItems, newItem]
       setCartItems(newItems)
     }
   }

@@ -22,6 +22,7 @@ export default function EventList() {
               <div>活動時間 : {v.holdingTime}</div>
               <div>票券規格 : {v.ticketName}</div>
               <div>數量 : {v.qty} 張</div>
+              <div>活動編號 : {v.event_id}</div>
               <div>
                 <button
                   onClick={() => {
