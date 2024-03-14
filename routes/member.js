@@ -1,17 +1,14 @@
 import express from 'express'
 const router = express.Router()
 import sequelize from '#configs/db.js'
-<<<<<<< HEAD
-import { QueryTypes } from 'sequelize'
+
 import authenticate from '##/middlewares/authenticate.js'
-=======
 import { QueryTypes, DataTypes } from 'sequelize'
->>>>>>> 517101c (finish member favorites/coupon)
+//(finish member favorites/coupon)
 // const { Cart } = sequelize.models
 
 router.get('/', authenticate, async function (req, res) {
-  //Angus 加入的
-  res.json({ message: "Access granted to member's area.", user: req.user })
+  // const { Cart } = sequelize.models
 
   try {
     // findAll 是回傳所有資料
