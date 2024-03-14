@@ -62,16 +62,17 @@ router.post('/update', async (req, res) => {
   }
 })
 
-router.get('/favorites', async function (req, res) {
+router.get('/favorites', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
       'SELECT collection.id, collection.collection_user_id, collection.collection_activity_id, event.event_name, event.banner, event.start_date, MIN(event_options.price) AS min_price ' +
         'FROM `collection` ' +
         'JOIN `event` ON collection.collection_activity_id = event.event_id ' +
         'JOIN `event_options` ON collection.collection_activity_id = event_options.event_id ' +
-        'WHERE collection.collection_user_id = 1 ' +
+        'WHERE collection.collection_user_id = ? ' +
         'GROUP BY collection.id, collection.collection_user_id, collection.collection_activity_id, event.event_name, event.banner, event.start_date',
       {
+        replacements: [req.user.id],
         type: QueryTypes.SELECT,
       }
     )
@@ -100,14 +101,15 @@ router.get('/cost', authenticate, async function (req, res) {
   }
 })
 
-router.get('/coupon', async function (req, res) {
+router.get('/coupon', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
       'SELECT member_coupon.*, coupon.* ' +
         'FROM `member_coupon` ' +
         'JOIN `coupon` ON member_coupon.coupon_id = coupon.id ' +
-        'WHERE member_coupon.user_id = 1',
+        'WHERE member_coupon.user_id = ?',
       {
+        replacements: [req.user.id],
         type: QueryTypes.SELECT,
       }
     )
@@ -119,7 +121,7 @@ router.get('/coupon', async function (req, res) {
   }
 })
 
-router.post('/add-coupon', async (req, res) => {
+router.post('/add-coupon', authenticate, async (req, res) => {
   const CouponModel = sequelize.define(
     'Coupon',
     {
@@ -161,7 +163,7 @@ router.post('/add-coupon', async (req, res) => {
 
     if (existingCoupon) {
       // 找到匹配的记录
-      const memberId = 1 // 你的用户ID
+      const memberId = req.user.id // 你的用户ID
 
       const existingMemberCoupon = await MemberCouponModel.findOne({
         where: {
@@ -205,14 +207,15 @@ router.post('/add-coupon', async (req, res) => {
   }
 })
 
-router.get('/order', async function (req, res) {
+router.get('/order', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
       'SELECT user_order.*, event.event_name, event.banner ' +
         'FROM `user_order` ' +
         'JOIN `event` ON event.event_id = user_order.event_id ' +
-        'WHERE user_order.user_id = 1',
+        'WHERE user_order.user_id = ?',
       {
+        replacements: [req.user.id],
         type: QueryTypes.SELECT,
       }
     )
@@ -224,10 +227,10 @@ router.get('/order', async function (req, res) {
   }
 })
 
-router.get('/order/:orderId', async (req, res) => {
-  const orderId = req.params.orderId
+router.get('/order/:orderId', authenticate, async (req, res) => {
 
   try {
+    const orderId = req.params.orderId
     const result = await sequelize.query(
       'SELECT user_order.*, event.event_name, event.banner, event.place, event.address, event.content ,event.merchat_id, organizer.name ' +
         'FROM `user_order` ' +
@@ -239,14 +242,19 @@ router.get('/order/:orderId', async (req, res) => {
         replacements: { orderId: orderId },
       }
     )
-
+    if(result[0].user_id == req.user.id){
+      res.json({ status: 'success', data: { result } })
+    }else{
+      res
+      .status(403)
+      .json({ status: 'error', message: '403' })
+    }
     // 将订单数据发送给前端
-    res.json({ status: 'success', data: { result } })
   } catch (error) {
     console.error('Error fetching order data:', error)
     res
       .status(500)
-      .json({ status: 'error', message: 'Failed to fetch order data.' })
+      .json({ status: 'error', message: '500' })
   }
 })
 
