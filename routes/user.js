@@ -17,7 +17,7 @@ const upload = multer()
 app.use(express.json())
 
 const corsOptions = {
-  origin: 'http://localhost:3000/user/signin', // Adjust according to your frontend's origin
+  origin: 'http://localhost:3000', // Adjust according to your frontend's origin
   credentials: true, // Allows cookies to be sent across origins
 }
 
@@ -143,6 +143,15 @@ router.get('/forgetPassword', authenticate, (req, res) => {
 router.get('/verifyToken', authenticate, (req, res) => {
   // If this point is reached, the `authenticate` middleware has already verified the token
   res.json({ message: 'User is authenticated', user: req.user })
+})
+
+router.get('/signout', (req, res) => {
+  res.clearCookie('auth_token', {
+    httpOnly: true,
+    secure: true, // use true in production with HTTPS
+    sameSite: 'none',
+  })
+  res.json({ message: 'User has signed out', user: null })
 })
 
 export default router
