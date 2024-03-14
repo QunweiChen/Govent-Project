@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { CiGlass } from 'react-icons/ci'
 
 // chunk - 依size分成子陣列，ex. chunk([1, 2, 3, 4, 5], 2) -> [[1,2],[3,4],[5]]
 const chunk = (arr, size) =>
@@ -6,35 +7,35 @@ const chunk = (arr, size) =>
     arr.slice(i * size, i * size + size)
   )
 
-export default function Calendar({ events, sellStartDate = '', sellEndDate = '' }) {
 
-  //const [events, setEvents] = useState([])
+export default function Calendar({ events, sellStartDate = '', sellEndDate = '' , setSelectDate}) {
 
-  // useEffect(() => {
-  //   fetchEventData()
-  // }, [])
+  const [sTime, setSTime] = useState('')
 
-  // const fetchEventData = async (params) => {
-  //   const searchParams = new URLSearchParams(params)
-  //   try {
-  //     const res = await fetch(`http://localhost:3005/api/info?${searchParams}`)
-  //     const eventData = await res.json()
-  //     setEvents(eventData) // 將獲取的資料存入狀態中
-  //   } catch (error) {
-  //     console.error('獲取資料時發生錯誤:', error)
-  //   }
-  // }
+  useEffect(() => {
+    setSTime(sellStartDate)
+  },[sellStartDate])
 
+//時區問題(自動+8小時):創建一個新物件 sellStartDateObj，以 `sellStartDate` 作為參數。使用 `setHours` 將 `sellStartDateObj` 的小時數設定為當前小時數減 8。
+console.log(sellStartDate)
+  // let sellStartDateObj = new Date(sellStartDate);
+  console.log(sTime);
+  
+  
+  
+  let sellEndDateObj = new Date(sellEndDate);
+  sellEndDate= sellEndDateObj.setHours(sellEndDateObj.getHours() - 8);
+
+  
   // 一開始未選中日期
   const [myDate, setMyDate] = useState(0)
 
   //設定售票起始日
   const now = new Date()
+  // console.log(new Date(sellStartDate))
+  // console.log(sellStartDate)
+  // console.log(sellEndDate)
 
-  console.log(new Date(sellStartDate))
-  console.log(sellStartDate)
-  console.log(sellEndDate);
-  
 
 
   // 要得到今天的西元年使用Date物件的getFullYear()，要得到月份使用getMonth()(注意回傳為 0~11)
@@ -42,7 +43,7 @@ export default function Calendar({ events, sellStartDate = '', sellEndDate = '' 
 
   // nowM =1-12
   const nowM = now.getMonth() + 1 //注意回傳為 0~11
-  const preM = now.getMonth() - 1 //注意回傳為 0~11
+  const preM = now.getMonth() === 0 ? 12 : now.getMonth() //注意回傳為 0~11
 
   // nowD
   const nowD = now.getDate() //注意回傳為 0~11
@@ -71,24 +72,51 @@ export default function Calendar({ events, sellStartDate = '', sellEndDate = '' 
   const allData = [...emptyData, ...valueData]
   //------ 以下準備呈現在網頁上
   const allDataChunks = chunk(allData, 7)
-
-  const handleDateClick = (item) => {
-    setMyDate(item);
-  }
+  console.log('allDataChunks', allDataChunks);
   
+
+// 新增狀態來存取年份和月份
+const [year, setYear] = useState(now.getFullYear());
+const [month, setMonth] = useState(now.getMonth() + 1);
+
+useEffect(() => {
+  const date = new Date(sellStartDate);
+  setYear(date.getFullYear());
+  setMonth(date.getMonth() + 1);
+}, [sellStartDate]);
+
+// 在按鈕的 onClick 事件更新年份和月份
+const LeftBtn = () => {
+  if (month === 1) {
+    setYear(year - 1);
+    setMonth(12);
+  } else {
+    setMonth(month - 1);
+  }
+};
+
+const RightBtn = () => {
+  if (month === 12) {
+    setYear(year + 1);
+    setMonth(1);
+  } else {
+    setMonth(month + 1);
+  }
+};
+
 
   return (
     <>
       <div className="calendar">
         <div className="d-flex subtitle justify-content-around align-items-center">
-          <h5 id="yearAndMonth" className="col-4">{`${nowY}`}</h5>
-          <h5 id="yearAndMonth" className="col-4">{`${nowM}月`}</h5>
+          <h5 id="yearAndMonth" className="col-4">{`${year}`}</h5>
+          <h5 id="yearAndMonth" className="col-4">{`${month}月`}</h5>
           <div className="d-flex pb-1">
-            <button className="leftBtn">
+            <button className="leftBtn" onClick={LeftBtn}>
               <i className="bi bi-caret-left-fill"></i>
             </button>
             <div className="month"></div>
-            <button className="rightBtn">
+            <button className="rightBtn" onClick={RightBtn}>
               <i className="bi bi-caret-right-fill"></i>
             </button>
           </div>
@@ -98,28 +126,45 @@ export default function Calendar({ events, sellStartDate = '', sellEndDate = '' 
           <thead id="title">
             <tr>
               {weekDayList.map(function (v, i) {
+                {/* console.log(sTime) */}
                 return <th key={i}>{v}</th>
               })}
             </tr>
           </thead>
-          <tbody id="data">
 
+          <tbody id="data">
+            
             {allDataChunks.map((v, i) => {
+              {/* console.log("v",v) */}
+              {/* console.log(sTime) */}
               return (
                 <tr key={i}>
                   {v.map((item, idx) => {
-                    const currentDate = new Date(nowY, nowM - 1, item);
-        const isSelectable = currentDate >= new Date(sellStartDate) && currentDate <= new Date(sellEndDate);
+                    //時區問題(去除時間):用setHours(0, 0, 0, 0)將時間設為0
+                    {/* console.log(sellStartDate) */}
+                    const sellStartDateObj = new Date(sellStartDate);
+                    sellStartDateObj.setHours(0, 0, 0, 0);
+                    const sellEndDateObj = new Date(sellEndDate);
+                    sellEndDateObj.setHours(0, 0, 0, 0);
+                    const currentDate = new Date(nowY, nowM -1, item);
+                    currentDate.setHours(0, 0, 0, 0);
+                    {/* console.log(sTime) */}
+
+                    const isSelectable = currentDate >= sellStartDateObj && currentDate <= sellEndDateObj;
+                    {/* console.log("sellStartDate:", sellStartDateObj);
+                    console.log("sellEndDate:",sellEndDateObj);
+                    console.log("currentDate",currentDate);
+                    console.log("isSelectable",isSelectable); */}
 
                     return (
                       <td
                         key={idx}
                         onClick={() => {
-                          handleDateClick(item)
+                          setSelectDate(`${currentDate}`)
+                          // console.log("currentDate",currentDate);
                         }}
-                        // className={`${new Date(`${nowY}-${nowM}-${item}`) >= new Date(sellStartDate) && new Date(`${nowY}-${nowM}-${item}`) <= new Date(sellEndDate) ? 'selectable' : ''}`}
                         className={isSelectable ? 'selectable' : ''}
-                        style={{ cursor: 'pointer' }}
+                        style={isSelectable ? { cursor: 'pointer' } : { cursor: 'default' }}
                         role="presentation"
                       >
                         {item}

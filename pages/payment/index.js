@@ -2,19 +2,22 @@ import React, { use, useEffect, useState } from 'react'
 import ProductInfo from '@/components/payment/product-info/index.js'
 import DefaultLayout from '@/components/layout/default-layout'
 import PaymentForm from '@/components/payment/payment-Form'
+
 export default function Payment() {
   //總金額
   const [money, setMoney] = useState(0)
-  //點數及優惠券
+  //點數及優惠券的值
   const [discount, setDiscount] = useState({
     point: 0,
-    coupon: { name: '', value: 1 },
+    coupon: { name: '', value: 0 },
   })
+  console.log(discount)
+  //點數及優惠券是否被勾選
   const [discountState, setDiscountState] = useState({
     point: false,
     coupon: false,
   })
-  console.log(discountState)
+
   //購物車資料
   const [productData, setProductData] = useState([])
   // 從 localStorage 中獲取 MtItems 資料
@@ -49,7 +52,11 @@ export default function Payment() {
     if (coupon > 1) {
       return coupon
     }
+    if (coupon == 0) {
+      return 0
+    }
     let result = total - total * coupon
+
     return result
   }
 
@@ -71,7 +78,7 @@ export default function Payment() {
         break
       case discount.point === '':
         setMoney(TotalPrice())
-        if (discount.coupon.value !== 1) {
+        if (discount.coupon.value !== 0) {
           setMoney(TotalPrice() - coupon())
         }
         break
@@ -104,6 +111,7 @@ export default function Payment() {
             productData={productData}
             discountState={discountState}
             redeem={redeem}
+            coupon={coupon}
           />
         </div>
         <div className="col-md-4 ">
@@ -122,7 +130,7 @@ export default function Payment() {
                 </div>
               )
             })}
-            {discount.coupon?.name !== '' && (
+            {discount.coupon?.value != 0 && discountState.coupon != false && (
               <>
                 <div className=" d-flex justify-content-between align-items-center mb-1">
                   <div>{discount.coupon?.name}</div>
@@ -135,7 +143,7 @@ export default function Payment() {
             )}
 
             <div className="col-auto">
-              {discount.point !== '' && (
+              {discount.point != 0 && discountState.point != false && (
                 <>
                   <div className=" d-flex justify-content-between align-items-center mb-1">
                     <div className="col">點數折抵</div>

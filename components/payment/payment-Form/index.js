@@ -6,7 +6,8 @@ import Form from 'react-bootstrap/Form'
 import CheckboxInput from '../checkbox-input'
 import Image from 'react-bootstrap/Image'
 import GoventToast from '@/components/toast'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function PaymentForm({
   setDiscount = () => {},
@@ -16,13 +17,16 @@ export default function PaymentForm({
   money = 0,
   productData = {},
   redeem = () => {},
+  coupon = () => {},
 }) {
-  console.log(money)
+  //引入會員資料hook
+  const { auth } = useAuth()
   //使用react-hook-form套件檢查form表單
   const {
     register,
     formState: { errors },
     handleSubmit,
+    setValue,
   } = useForm()
   //結帳之後將資料傳送至後端
   const postSubmit = (data) => {
@@ -31,6 +35,8 @@ export default function PaymentForm({
       money: money,
       productData: productData,
       redeem: redeem(),
+      discount: discount,
+      coupon: coupon(),
     }
     fetch('http://localhost:3005/api/payment-line-pay', {
       method: 'POST',
@@ -54,10 +60,17 @@ export default function PaymentForm({
   //確認是否有勾選與會員資料相同
   const numberValue = useRef(null)
   function changeNumberValue() {
-    console.log(numberValue.current.checked)
+    if (numberValue.current.checked) {
+      let newAuth = auth.user
+      setValue('userName', newAuth.name)
+      setValue('userGender', newAuth.gender)
+      setValue('birthday', newAuth.birthday)
+      setValue('phoneNumber', newAuth.phone)
+      setValue('email', newAuth.username)
+    }
   }
 
-  //監聽使用者輸入表單欄位
+  //監聽使用者輸入優惠券表單欄位
   function formChange(e) {
     if (e.target.name === 'coupon') {
       let setConnectionData = {
@@ -163,7 +176,10 @@ export default function PaymentForm({
                 placeholder="輸入姓名"
                 className="bg-bg-gray  placeholder-text text-white-50 validate"
                 name="userName"
-                {...register('userName', { required: true })}
+                // value={number.numberName}
+                {...register('userName', {
+                  required: true,
+                })}
                 aria-invalid={errors.userName ? 'true' : 'false'}
               />
               {errors.userName?.type === 'required' && (
@@ -179,12 +195,14 @@ export default function PaymentForm({
                 aria-label="Default select example"
                 className="bg-bg-gray text-white-50 validate"
                 name="userGender"
-                {...register('userGender', { required: true })}
+                {...register('userGender', {
+                  required: true,
+                })}
                 aria-invalid={errors.userGender ? 'true' : 'false'}
               >
                 <option value="">選擇</option>
-                <option value="1">男</option>
-                <option value="2">女</option>
+                <option value="0">男</option>
+                <option value="1">女</option>
               </Form.Select>
               {errors.userGender?.type === 'required' && (
                 <p role="alert" className="text-danger pt-1">
@@ -244,7 +262,7 @@ export default function PaymentForm({
             >
               <Form.Label>信箱</Form.Label>
               <Form.Control
-                type="email"
+                type="text"
                 placeholder="輸入email"
                 className="bg-bg-gray  placeholder-text text-white-50 validate"
                 name="email"
@@ -330,7 +348,7 @@ export default function PaymentForm({
                   name="coupon"
                   onChange={formChange}
                 >
-                  <option value="1">選擇優惠券</option>
+                  <option value="0">選擇優惠券</option>
                   <option value="0.9" label="九折">
                     九折
                   </option>
