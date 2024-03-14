@@ -22,10 +22,10 @@ import { QueryTypes } from 'sequelize'
 router.get('/', async function(req, res){
     try {
         const posts = await sequelize.query(`
-            SELECT event.*, event_type.*
-            FROM event
-            JOIN event_type ON event.id = event_id
-            WHERE event.id = 12
+            SELECT event_type.*, event.*
+            FROM event_type
+            JOIN event ON event_id = event.id
+            WHERE event_id = 73
         `, {
             type: QueryTypes.SELECT,
         });
