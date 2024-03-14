@@ -87,6 +87,7 @@ export function CartProvider({
       setValue(cartItems)
     }
     setMerchantItems(merchantItems)
+    setMerchantItems(merchantItems)
     // 使用字串比較
     if (JSON.stringify(merchantItems) !== storedValueMt) {
       setValueMt(merchantItems)
@@ -144,7 +145,7 @@ export function CartProvider({
         return merchant
       }
     })
-    // console.log(news)
+    console.log(news)
     setMerchantItems(news)
   }
   const handleToggleSelectedMt = (isSelectedMt, MtId) => {
