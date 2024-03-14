@@ -111,6 +111,7 @@ export default function Payment() {
             productData={productData}
             discountState={discountState}
             redeem={redeem}
+            coupon={coupon}
           />
         </div>
         <div className="col-md-4 ">
