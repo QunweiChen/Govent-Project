@@ -9,21 +9,21 @@ import { useRouter } from 'next/router'
 export default function ForgetPassword() {
   const router = useRouter()
 
-  useEffect(() => {
-    fetch('http://localhost:3005/api/user/verifyToken', {
-      method: 'GET',
-      credentials: 'include', // Ensures cookies are sent with the request
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error('Network response was not ok')
-        return response.json()
-      })
-      .then((data) => {
-        console.log('Data from verifyToken:', data)
-        // You can access the user information here
-      })
-      .catch((error) => console.error('Error verifying token:', error))
-  }, [])
+  // useEffect(() => {
+  //   fetch('http://localhost:3005/api/user/verifyToken', {
+  //     method: 'GET',
+  //     credentials: 'include', // Ensures cookies are sent with the request
+  //   })
+  //     .then((response) => {
+  //       if (!response.ok) throw new Error('Network response was not ok')
+  //       return response.json()
+  //     })
+  //     .then((data) => {
+  //       console.log('Data from verifyToken:', data)
+  //       // You can access the user information here
+  //     })
+  //     .catch((error) => console.error('Error verifying token:', error))
+  // }, [])
 
   const [user, setUser] = useState({
     emailAuth: '',

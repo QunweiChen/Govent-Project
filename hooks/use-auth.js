@@ -1,7 +1,5 @@
 import React, { useState, useContext, createContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import axiosInstance from '@/services/axios-instance'
-import { checkAuth, getFavs } from '@/services/user'
 
 const AuthContext = createContext(null)
 
@@ -41,8 +39,8 @@ export const initUserData = {
 
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
-    isAuth: false,
-    userData: initUserData,
+    isAuthenticated: false,
+    user: null,
   })
 
   // 我的最愛清單使用
@@ -69,24 +67,78 @@ export const AuthProvider = ({ children }) => {
 
   const router = useRouter()
 
-  // 登入頁路由
-  const loginRoute = '/test/user'
-  // 隱私頁面路由，未登入時會，檢查後跳轉至登入頁
-  const protectedRoutes = [
-    '/test/user/status',
-    '/test/user/profile',
-    '/test/user/profile-password',
-  ]
+  // // 登入頁路由
+  // const SigninRoute = '/user/signin'
+  // // 隱私頁面路由，未登入時會，檢查後跳轉至登入頁
+  // const protectedRoutes = ['/user/verifyToken', '/user', '/user/']
 
   // 檢查會員認証用
   // 每次重新到網站中，或重新整理，都會執行這個函式，用於向伺服器查詢取回原本登入會員的資料
-  // const handleCheckAuth = async () => {
-  //   const res = await checkAuth()
+  // Function to verify token and fetch user data
+  // Function to verify token and set user state
+  const verifyToken = async () => {
+    try {
+      const response = await fetch(
+        'http://localhost:3005/api/user/verifyToken',
+        {
+          method: 'GET',
+          credentials: 'include', // To send the cookie with the request
+        }
+      )
 
-  //   // 伺服器api成功的回應為 { status:'success', data:{ user } }
-  //   if (res.data.status === 'success') {
+      if (!response.ok) throw new Error('Token verification failed')
+
+      const { user } = await response.json()
+      setAuth({ isAuthenticated: true, user })
+      console.log('1')
+      // console.log(auth)
+    } catch (error) {
+      console.error('Verification error:', error)
+      setAuth({ isAuthenticated: false, user: null })
+      console.log('2')
+      // console.log(auth)
+    }
+  }
+
+  // Call verifyToken when component mounts
+  useEffect(() => {
+    verifyToken()
+  }, [])
+
+  // Sign in action
+  const signIn = async () => {
+    const response = await fetch('http://localhost:3005/api/user/verifyToken', {
+      method: 'GET',
+      credentials: 'include', // To send the cookie with the request
+    })
+    const { user } = await response.json()
+    setAuth({ isAuthenticated: true, user })
+    // console.log('3')
+    console.log('3', auth)
+
+    // Redirect user after successful login if needed
+    // router.push('/member') // Example redirect
+    router.push('/')
+  }
+
+  // Sign out action
+  const signOut = async () => {
+    try {
+      await fetch('http://localhost:3005/api/user/signout', {
+        method: 'GET',
+        credentials: 'include',
+      })
+      setAuth({ isAuthenticated: false, user: null })
+      router.push('/user/signin')
+    } catch (error) {
+      '登出出現錯誤', error
+    }
+  }
+  console.log(auth)
+  // 伺服器api成功的回應為 { status:'User is authenticated', data:{ user } }
+  //   if (res.json.message === 'User is authenticated') {
   //     // 只需要initUserData的定義屬性值
-  //     const dbUser = res.data.data.user
+  //     const dbUser = res.user
   //     const userData = { ...initUserData }
 
   //     for (const key in userData) {
@@ -101,7 +153,7 @@ export const AuthProvider = ({ children }) => {
 
   //     // 在這裡實作隱私頁面路由的跳轉
   //     if (protectedRoutes.includes(router.pathname)) {
-  //       router.push(loginRoute)
+  //       router.push(SigninRoute)
   //     }
   //   }
   // }
@@ -117,11 +169,13 @@ export const AuthProvider = ({ children }) => {
   //   // eslint-disable-next-line
   // }, [router.isReady, router.pathname])
 
+  // console.log('123')
   return (
     <AuthContext.Provider
       value={{
         auth,
-        setAuth,
+        signIn,
+        signOut,
         // favorites,
         // setFavorites,
       }}

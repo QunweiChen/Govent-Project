@@ -10,9 +10,11 @@ import { toast } from 'react-toastify'
 import LoadingLayout from '@/components/layout/loading-layout'
 import { useRouter } from 'next/router'
 import { FaUserGroup } from 'react-icons/fa6'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function Signin() {
   const router = useRouter()
+  const { signIn, setAuth } = useAuth()
 
   // user information
   const [user, setUser] = useState({
@@ -37,7 +39,7 @@ export default function Signin() {
     }
   }, [])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     // rememberusername
@@ -51,33 +53,56 @@ export default function Signin() {
       username: user.username,
       password: user.password,
     }
-    console.log(formData)
+    // console.log(formData)
 
-    let url = 'http://localhost:3005/api/user/signin'
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-      credentials: 'include', // Necessary for cookies to be sent with requests cross-origin
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('登入失敗')
-        }
-        return response.json
+    try {
+      const response = await fetch('http://localhost:3005/api/user/signin', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+        credentials: 'include',
       })
-      .then((data) => {
-        console.log('登入成功:', data)
-        router.push('/')
-        // Handle success scenario, e.g., redirect to a dashboard or store the JWT token.
-      })
-      .catch((error) => {
-        console.error('登入錯誤', error)
-        toast.error(error.message)
-        // Handle errors, e.g., display a message to the user.
-      })
+
+      if (!response.ok) {
+        throw new Error('登入失敗')
+      }
+
+      const data = await response.json()
+      signIn(data.user)
+      // console.log(data.user)
+      // router.push('/')
+    } catch (error) {
+      console.error('登入錯誤', error)
+      toast.error(error.message)
+    }
+
+    // let url = 'http://localhost:3005/api/user/signin'
+    // fetch(url, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(formData),
+    //   credentials: 'include', // Necessary for cookies to be sent with requests cross-origin
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error('登入失敗')
+    //     }
+    //     return response.json
+    //   })
+    //   .then((data) => {
+    //     console.log('登入成功:', data)
+    //     router.push('/')
+    //     // Handle success scenario, e.g., redirect to a dashboard or store the JWT token.
+    //   })
+    //   .catch((error) => {
+    //     console.error('登入錯誤', error)
+    //     toast.error(error.message)
+    //     // Handle errors, e.g., display a message to the user.
+    //   })
   }
 
   return (
