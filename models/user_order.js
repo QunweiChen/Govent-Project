@@ -47,6 +47,10 @@ export default async function (sequelize) {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      LinePay_returnData: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       tableName: 'test_order', //直接提供資料表名稱
