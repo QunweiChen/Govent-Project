@@ -5,7 +5,6 @@ import { useAuth } from '@/hooks/use-auth'
 
 export default function Toolbar({ handleShow }) {
   const { isAuthenticated, signOut, auth } = useAuth()
-  console.log(auth)
 
   const handleSignOut = () => {
     signOut() // Call the sign out method

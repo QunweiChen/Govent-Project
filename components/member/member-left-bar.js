@@ -5,26 +5,60 @@ import MemberleftOption from './member-left-option'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { motion } from 'framer-motion'
-import { useAuth } from '@/hooks/use-auth'
+
 
 export default function Memberleft() {
-  const [name, setName] = useState('')
-  const [level, setLevel] = useState('')
-  const [email, setEmail] = useState('')
-  const [avatar, setAvatar] = useState('')
-  const { auth } = useAuth()
+  const [userData, setUserData] = useState([])
+  const [userCostTotal, setUserCostTotal] = useState(0)
 
   useEffect(() => {
-      if (auth.user) {
-        setName(auth.user.name)
-        setLevel(auth.user.level);
-        setEmail(auth.user.username);
-        setAvatar(auth.user.avatar);
-      }
-      console.log(auth.user);
-      
-  }, [auth])
+    fetch('http://localhost:3005/api/member', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // 檢查是否有資料並設定到 state 中
+        if (
+          data &&
+          data.data &&
+          data.data.posts &&
+          data.data.posts.length > 0
+        ) {
+          setUserData(data.data.posts[0])
+        } else {
+          console.warn('No data received from the server.')
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error))
+  }, [])
 
+  useEffect(() => {
+    fetch('http://localhost:3005/api/member/cost', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // 檢查是否有資料並設定到 state 中
+        if (
+          data &&
+          data.data &&
+          data.data.result
+        ) {
+          setUserCostTotal(data.data.result[0].total_sum)
+        } else {
+          console.warn('No data received from the server.')
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error))
+  }, [])
 
 
   return (
@@ -35,13 +69,15 @@ export default function Memberleft() {
       transition={{ duration: 0.4 }}
       className="py-2">
         <div className="py-3 d-flex justify-content-center">
-          <img className={`${styles['avatar']} rounded-circle`} src={`http://localhost:3005/avatar/${avatar}`} />
+          <img className={`${styles['avatar']} rounded-circle`} src={`http://localhost:3005/avatar/${userData.avatar}`} />
         </div>
         <div className="d-flex justify-content-center align-items-center">
-          <h6 className="mb-0 me-2">{name || <Skeleton baseColor='#00000000'/>}</h6>
-          <Badge bg="primary">{level}</Badge>
+          <h6 className="mb-0 me-2">{userData.name || <Skeleton baseColor='#00000000'/>}</h6>
+          {userCostTotal <= 10000 && (<Badge bg="normal-gray-light" className='text-dark'>銀級會員</Badge>)}
+          {10000 < userCostTotal && userCostTotal <= 20000 && (<Badge bg="secondary-01" className='text-dark'>黃金會員</Badge>)}
+          {20000 < userCostTotal && (<Badge bg="info" className='text-dark'>鑽石會員</Badge>)}
         </div>
-        <p className={`text-center sm-p ${styles['sm-p']} mt-2`}>{email || <Skeleton baseColor='#00000000'/>}</p>
+        <p className={`text-center sm-p ${styles['sm-p']} mt-2`}>{userData.username || <Skeleton baseColor='#00000000'/>}</p>
       </motion.div>
       <hr />
       <div className={`py-2 member-side-bar`}>

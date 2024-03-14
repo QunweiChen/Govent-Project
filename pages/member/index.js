@@ -3,10 +3,13 @@ import { useState, useEffect } from 'react'
 import LoadingLayout from '@/components/layout/loading-layout'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import { motion } from 'framer-motion'
+import { useAuth } from '@/hooks/use-auth'
+import { ScaleLoader } from "react-spinners";
 
 // 只作導向到 product/list
 export default function MemberIndex() {
   const router = useRouter()
+  const { auth } = useAuth()
 
   //Angus 加入的
   useEffect(() => {
@@ -72,13 +75,43 @@ export default function MemberIndex() {
   useEffect(() => {
     // 确认 window(瀏覽器) 开始运作后，3秒后进行路由跳转
     if (isVisible) {
+      if(!auth.user) {
+        router.push('/user/signin')
+        return
+      }
       router.push('/member/setting')
     }
   }, [isVisible, router])
 
   return (
     <div className="loading-bg d-flex justify-content-center align-items-center">
-      <div className="control-bgc text-white p-3 text-center">
+      {!auth.user && (
+        <div className="control-bgc text-white p-3 text-center">
+          <ScaleLoader
+        color="var(--primary-color)"
+        size={200}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className='mt-3'
+        >
+          <h4>請先登入</h4>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <h6>即將跳轉至登入頁</h6>
+        </motion.div>
+      </div>
+      )}
+      {auth.user && (
+        <div className="control-bgc text-white p-3 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -95,6 +128,7 @@ export default function MemberIndex() {
           <ProgressBar now={`${progressNumber}`} className="my-3 progress" />
         </motion.div>
       </div>
+      )}
       <style global jsx>
         {`
           .loading-bg {

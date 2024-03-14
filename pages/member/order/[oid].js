@@ -1,12 +1,12 @@
 // import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router';
-import { Row, Col } from 'react-bootstrap'
+import { Row, Col, Image, Button } from 'react-bootstrap'
 import TicketInfoLeft from '@/components/member/m-order-left-bar'
 import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
-import ReactDOM from 'react-dom';
 import { QRCodeSVG } from 'qrcode.react'
+import Link from 'next/link';
 
 
 export default function MemberOrderInfo() {
@@ -18,6 +18,9 @@ export default function MemberOrderInfo() {
   const { oid } = router.query
   const [oidLoaded, setOidLoaded] = useState(false)
 
+  const [checkUser, setCheckUser] = useState(true)
+  const [checkOrderNumber, setCheckOrderNumber] = useState(true)
+
   const HtmlRenderer = ({ htmlContent }) => {
     return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
   };
@@ -26,18 +29,31 @@ export default function MemberOrderInfo() {
     if (oid) {
       setOidLoaded(true);
 
-      fetch(`http://localhost:3005/api/member/order/${oid}`)
+      fetch(`http://localhost:3005/api/member/order/${oid}`,{
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      })
         .then((response) => response.json())
         .then((data) => {
           // 檢查是否有資料並設定到 state 中
           if (data && data.data && data.data.result) {
             console.log('Received data:', data.data.result)
             setOrder(data.data.result[0])
+          } else if(data.message == 403){
+            console.warn('非用戶訂單')
+            setCheckUser(false)
           } else {
-            console.warn('No order data received from the server.')
+            console.warn('讀取失敗!')
+            setCheckOrderNumber(false)
           }
         })
-        .catch((error) => console.error('Error fetching data:', error))
+        .catch((error) => {
+          setCheckOrderNumber(false)
+          console.log('讀取失敗:')}
+          )
     }
   }, [oid])
 
@@ -62,7 +78,22 @@ export default function MemberOrderInfo() {
 
     return (
       <>
-        <div className="container width-1200">
+      {!checkUser && (
+        <div className='text-center warming'>
+          <Image src="/NothingFoundHere.png" alt="Nothing Found Here" width='400px'/>
+          <h3 className='mb-4'>此非您的訂單</h3>
+          <Button><Link href="/member/order" className='text-black'>返回訂單頁</Link></Button>
+        </div>
+      )}
+      {!checkOrderNumber && (
+        <div className='text-center warming'>
+          <Image src="/NothingFoundHere.png" alt="Nothing Found Here" width='400px'/>
+          <h3 className='mb-4'>訂單不存在</h3>
+          <Button><Link href="/member/order" className='text-black'>返回訂單頁</Link></Button>
+        </div>
+      )}
+        {checkUser && checkOrderNumber && (
+          <div className="container width-1200">
           <Row data-bs-theme="dark">
             <Col sm={3}>
               <TicketInfoLeft
@@ -184,6 +215,7 @@ export default function MemberOrderInfo() {
             </Col>
           </Row>
         </div>
+        )}
         <style global jsx>
           {`
           body {

@@ -218,7 +218,7 @@ export default function LevelType({ total_sum = '' }) {
         className="px-3"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.6 }}
+        transition={{ duration: 0.4, delay: 0.4 }}
       >
         <div className="sm-p">累積金額 ${total_sum}</div>
         <ProgressBar now={`${progressNumber}`} className="my-3" />

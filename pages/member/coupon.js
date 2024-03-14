@@ -28,7 +28,13 @@ export default function MemberCoupon() {
   }
 
   const loadData = () => {
-    fetch('http://localhost:3005/api/member/coupon')
+    fetch('http://localhost:3005/api/member/coupon',{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    })
       .then((response) => response.json())
       .then((data) => {
         // 檢查是否有資料並設定到 state 中
@@ -61,6 +67,7 @@ export default function MemberCoupon() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ coupon: addCoupon }),
+          credentials: 'include',
         }
       )
 
@@ -122,15 +129,16 @@ export default function MemberCoupon() {
                       transition={{ duration: 0.4 }}
                       className="card"
                     >
-                      <div className="sm-p px-3 py-2">
-                        折扣碼 {data.coupon_code}
+                      <div className="sm-p px-3 py-2 d-flex justify-content-between">
+                        <div>{data.coupon_name}</div>
+                        <div>{data.coupon_code}</div>
                       </div>
                       <hr className="my-0" />
                       <div className="px-3 py-3">
                         <h3 className="text-primary">
                           NT${data.discount_valid}
                         </h3>
-                        <p className="pb-3">最低消費金額 {data.price_min}</p>
+                        <p className="pb-3">最低消費金額$ {data.price_min}</p>
                         <p className="sm-p">{data.coupon_description}</p>
                       </div>
                       <hr className="my-0" />

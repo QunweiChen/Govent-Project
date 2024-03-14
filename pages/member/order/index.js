@@ -11,7 +11,13 @@ export default function MemberOrder() {
   const [orders, setOrders] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:3005/api/member/order')
+    fetch('http://localhost:3005/api/member/order',{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    })
       .then((response) => response.json())
       .then((data) => {
         // 檢查是否有資料並設定到 state 中

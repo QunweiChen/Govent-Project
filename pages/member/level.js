@@ -8,7 +8,6 @@ import LevelType from '@/components/member/member-level-type'
 // only redirect to member/login
 export default function MemberLevel() {
   const [userCostTotal, setUserCostTotal] = useState(0)
-  const [maxProgressNumber, setMaxProgressNumber] = useState(0);
 
   useEffect(() => {
     fetch('http://localhost:3005/api/member/cost', {
