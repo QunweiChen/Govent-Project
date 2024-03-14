@@ -9,9 +9,7 @@ const CartContext = createContext()
 export function CartProvider({
   children,
   initialCartItems = [], //初始化購物車的加入項目
-  initialMtItems = [], //初始化購物車的加入項目
   localStorageKey1 = 'cartItems', //初始化localStorage的鍵名
-  localStorageKey2 = 'MtItems', //初始化localStorage的鍵名
 }) {
   // localStorage中儲存 items、MtItems。如果localStorage有此鍵中的值，則套入使用作為初始items、MtItems。
   let items = initialCartItems
@@ -29,98 +27,14 @@ export function CartProvider({
     }
   }
 
-  let MtItems = initialMtItems
-  if (!MtItems.length) {
-    try {
-      // 修正nextjs中window is undefined的問題
-      if (typeof window !== 'undefined') {
-        const item = window.localStorage.getItem(localStorageKey2)
-        // 剖析存儲的json，如果沒有則返回初始值
-        MtItems = item ? JSON.parse(item) : []
-      }
-    } catch (error) {
-      MtItems = []
-      console.log(error)
-    }
-  }
-
-  // [
-  //   {
-  //     merchantId: 1,
-  //     items: [
-  //       {
-  //         id: 1,
-  //         merchantId: 1,
-  //         eventTypeId: 2,
-  //         eventName: 'YOASOBI 台北演唱會111',
-  //         startDate: '2024-04-01 8:00:00',
-  //         endDate: '2024-04-01 11:00:00',
-  //         holdingTime: '2023-06-15 14:23:45',
-  //         images: '4-03.jpg',
-  //         str: '台北市',
-  //         vaild: '上架中',
-  //         ticketName: '優惠票',
-  //         price: '3400',
-  //         qty: 4,
-  //         event_id: 2135465,
-  //         checked: false
-  //       },
-  //       {
-  //         id: 4,
-  //         merchantId: 1,
-  //         eventTypeId: 1,
-  //         eventName: 'TWICE 台北演唱會001',
-  //         startDate: '2024-05-15 19:00:00',
-  //         endDate: '2024-05-15 22:00:00',
-  //         holdingTime: '2022-12-05 21:10:20',
-  //         images: 'twice-concert.jpg',
-  //         str: '台北市',
-  //         vaild: '上架中',
-  //         ticketName: 'VIP票',
-  //         price: '5000',
-  //         qty: 2,
-  //         event_id: 7421325,
-  //         checked: false
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     merchantId: 4,
-  //     items: [
-  //       {
-  //         id: 5,
-  //         merchantId: 4,
-  //         eventTypeId: 2,
-  //         eventName: 'Billie Eilish 台北演唱會',
-  //         startDate: '2024-06-10 20:00:00',
-  //         endDate: '2024-06-10 23:00:00',
-  //         holdingTime: '2023-03-20 12:30:45',
-  //         images: 'billie-eilish-concert.jpg',
-  //         str: '台北市',
-  //         vaild: '上架中',
-  //         ticketName: '普通票',
-  //         price: '3800',
-  //         qty: 1,
-  //         event_id: 41045525,
-  //         checked: false
-  //       }
-  //     ]
-  //   }
-  // ]
-
   // 加入到購物車中的項目
   const [cartItems, setCartItems] = useState(items)
   // console.log(cartItems)
-  // 加入到各分類的項目
-  const [merchantItems, setMerchantItems] = useState(MtItems)
-  // console.log(merchantItems)
+
   //儲存有多少商家
   const MerchantIds = _.uniq(items.map((item) => item.merchantId))
-
-  // console.log(MerchantIds)
   // 初始化 setValue(localStoage), setValue用於存入localStorage中
   const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
-  const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
   //連接資料庫
   const [Mt, setMt] = useState([])
 
@@ -140,135 +54,24 @@ export function CartProvider({
     }
     getCartMt()
   }, [])
-  //送來資料多一個checked屬性
-  useEffect(() => {
-    const news = merchantItems.map((v) => {
-      const a = v.items
-      a.map((v) => {
-        v.checked = false
-      })
-    })
-    setMerchantItems(news)
-  }, [])
   // 當 cartItems 更動時 -> 更動 localStorage 中的值 -> 更動 cartState
   useEffect(() => {
     // 使用字串比較
     if (JSON.stringify(cartItems) !== storedValue) {
       setValue(cartItems)
     }
-    setMerchantItems(merchantItems)
-    setMerchantItems(merchantItems)
-    // 使用字串比較
-    if (JSON.stringify(merchantItems) !== storedValueMt) {
-      setValueMt(merchantItems)
-    }
+    setCartItems(cartItems)
     // eslint-disable-next-line
-}, [cartItems,merchantItems])
+}, [cartItems])
 
-  //checkbox內容
-  //切換
-  // 依傳入id進行切換completed屬性改變
-  const toggleCheckbox = (newmerchantItems, id) => {
-    const news = newmerchantItems.map((merchant) => {
-      return {
-        ...merchant,
-        items: merchant.items.map((item) => {
-          if (item.id === id) {
-            return { ...item, checked: !item.checked }
-          } else {
-            return item
-          }
-        }),
-      }
-    })
-    setMerchantItems(news)
-  }
-  const handleToggleCompleted = (id) => {
-    toggleCheckbox(merchantItems, id)
-  }
-  //全選
-  const toggleSelectedAll = (MerchantItems, isSelectedAll) => {
-    const news = MerchantItems.map((merchant) => {
-      return {
-        ...merchant,
-        items: merchant.items.map((item) => {
-          return { ...item, checked: isSelectedAll }
-        }),
-      }
-    })
-    setMerchantItems(news)
-  }
-  const handleToggleSelectedAll = (isSelectedAll) => {
-    toggleSelectedAll(merchantItems, isSelectedAll)
-  }
-  //商家全選
-  const toggleSelectedMt = (merchantItems, isSelectedMt, MtId) => {
-    const news = merchantItems.map((merchant) => {
-      if (merchant.merchantId === MtId) {
-        return {
-          ...merchant,
-          items: merchant.items.map((item) => {
-            return { ...item, checked: isSelectedMt }
-          }),
-        }
-      } else {
-        return merchant
-      }
-    })
-    console.log(news)
-    setMerchantItems(news)
-  }
-  const handleToggleSelectedMt = (isSelectedMt, MtId) => {
-    toggleSelectedMt(merchantItems, isSelectedMt, MtId)
-  }
+
   //資料庫-用id尋找商家name
   const foundMt = (MtId) => {
     const foundItem = Mt.find((item) => item.id === MtId)
     const bankName = foundItem?.name
     return bankName
   }
-  // 添加分類
-  const MerchantItem = (item, quantityToAdd) => {
-    const merchantId = item.merchantId
-    const existingCategory = merchantItems.find(
-      (category) => category.merchantId === merchantId
-    )
-    if (existingCategory) {
-      const existingItem = existingCategory.items.find((v) => v.id === item.id)
-      if (existingItem) {
-        // 如果已經存在相同的 merchantId 和相同的活動 id，則遞增該項目的數量
-        const updatedItems = existingCategory.items.map((v) =>
-          v.id === item.id ? { ...v, qty: v.qty + quantityToAdd } : v
-        )
-        const updatedCategories = merchantItems.map((category) =>
-          category.merchantId === merchantId
-            ? { ...category, items: updatedItems }
-            : category
-        )
-        setMerchantItems(updatedCategories)
-      } else {
-        // 如果已經存在相同的 merchantId 但是不存在相同的活動 id，則將新的活動添加到該分類中
-        const updatedItems = [
-          ...existingCategory.items,
-          { ...item, qty: quantityToAdd },
-        ]
-        const updatedCategories = merchantItems.map((category) =>
-          category.merchantId === merchantId
-            ? { ...category, items: updatedItems }
-            : category
-        )
-        setMerchantItems(updatedCategories)
-      }
-    } else {
-      // 如果不存在相同的 merchantId，則創建一個新的分類並將活動添加到該分類中
-      const newCategory = {
-        merchantId: merchantId,
-        items: [{ ...item, qty: quantityToAdd }],
-      }
-      setMerchantItems([...merchantItems, newCategory])
-    }
-  }
-  //添加
+  //添加ok
   const addItem = (item) => {
     // 在新商品對象中添加 checked 屬性
     const newItem = { ...item, checked: false }
@@ -283,7 +86,7 @@ export function CartProvider({
       setCartItems(newItems)
     }
   }
-  //遞增
+  //遞增 ok
   const getItemById = (items, id) => {
     return items.find((item) => item.id === id)
   }
@@ -294,155 +97,127 @@ export function CartProvider({
     })
     setCartItems(newItems)
   }
-  //移除(分類用)
-  const removeItem = (items, id, merchantId) => {
-    const newItems = items.map((merchant) => {
-      if (merchant.merchantId === merchantId) {
-        // 找到對應商家
-        const updatedItems = merchant.items.filter((item) => item.id !== id)
-        // 移除指定的商品
-        return { ...merchant, items: updatedItems }
-      }
-      return merchant
-    })
-    // 移除空商家（即沒有商品的商家）
-    const filteredItems = newItems.filter(
-      (merchant) => merchant.items.length > 0
-    )
-    // console.log(filteredItems)
-    setMerchantItems(filteredItems)
-    //---
-    const news = cartItems.filter((item) => item.id !== id)
-    // console.log(cartItems)
-    // console.log(news)
-    setCartItems(news)
+  //移除 ok
+  const removeItem = (items, id) => {
+    const newItems = items.filter((item) => item.id !== id)
+    setCartItems(newItems)
   }
-  //`incrementOne(items, id)` 依照某id更新項目的數量+1
-  const incrementOne = (items, id, merchantId) => {
-    const newItems = items.map((merchant) => {
-      if (merchant.merchantId === merchantId) {
-        // 找到對應票券
-        const updatedItems = merchant.items.map((item) => {
-          if (item.id === id) {
-            // 找到要增加數量的項目
-            const newQty = item.qty + 1 > 0 ? item.qty + 1 : 1
-            // 返回更新後的項目
-            return { ...item, qty: newQty }
-          }
-          return item
-        })
-
-        // 返回更新後的商家資料
-        return { ...merchant, items: updatedItems }
-      }
-      return merchant
-    })
-    // console.log(newItems)
-    setMerchantItems(newItems)
-  }
-  // decrementOne(items, id)` 依照某id更新項目的數量-1。最小為1。
-  const decrementOne = (items, id, merchantId) => {
-    const newItems = items
-      .map((merchant) => {
-        if (merchant.merchantId === merchantId) {
-          // 找到对应商家
-          const updatedItems = merchant.items
-            .map((item) => {
-              if (item.id === id) {
-                // 找到要减少数量的项目
-                const newQty = item.qty - 1 > 0 ? item.qty - 1 : 0
-                // 如果数量为0，则该项目自动消失
-                if (newQty === 0) return null
-                // 返回更新后的项目
-                return { ...item, qty: newQty }
-              }
-              return item
-            })
-            .filter(Boolean) // 过滤掉值为 null 的项目
-
-          // 如果商家内没有项目，则将该商家从商家列表中删除
-          if (updatedItems.length === 0) return null
-
-          // 返回更新后的商家数据
-          return { ...merchant, items: updatedItems }
+  //`incrementOne ok
+  const incrementOne = (items, id) => {
+    // console.log(items)
+    const newItems = items.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          qty: item.qty + 1 > 0 ? item.qty + 1 : 1,
         }
-        return merchant
-      })
-      .filter(Boolean) // 过滤掉值为 null 的商家
-
-    // console.log(newItems)
-    setMerchantItems(newItems)
+      }
+      return item // 返回原始的項目
+    })
+    setCartItems(newItems)
   }
-
+  // decrementOne ok
+  const decrementOne = (items, id) => {
+    // console.log(items)
+    const newItems = items
+      .map((item) => {
+        if (item.id === id) {
+          const newQty = item.qty - 1 > 0 ? item.qty - 1 : 0
+          if (newQty === 0) {
+            // 如果數量為零，不返回該項目，即移除該項目
+            return null
+          } else {
+            // 否則更新數量並返回項目
+            return {
+              ...item,
+              qty: newQty,
+            }
+          }
+        }
+        return item // 返回原始的項目
+      })
+      .filter((item) => item !== null) // 過濾掉為 null 的項目
+    setCartItems(newItems)
+  }
   //計算數量
-  //數量
+  //數量ok
   const calcTotalItems = () => {
     let total = 0
-
-    merchantItems.forEach((merchant) => {
-      merchant.items.forEach((item) => {
-        if (item.checked === true) {
-          total += item.qty
-        }
-      })
+    cartItems.forEach((cartitem) => {
+      if (cartitem.checked === true) {
+        total += cartitem.qty
+      }
     })
     return total
   }
   const calcTotalItemstotal = calcTotalItems()
-  // console.log(calcTotalItemstotal)
-  //Navbar
+  //Navbar ok
   const NavbarcalcTotalItems = () => {
     let total = 0
-
-    for (let i = 0; i < merchantItems.length; i++) {
-      merchantItems[i].items.forEach((event) => {
-        total += event.qty
-      })
+    for (let i = 0; i < cartItems.length; i++) {
+      total += cartItems[i].qty
     }
-
     return total
   }
   const NavbaralcTotalItemstotal = NavbarcalcTotalItems()
-  //總金額
+  //總金額ok
   const calcTotalPrice = () => {
     let total = 0
-    merchantItems.forEach((merchant) => {
-      merchant.items.forEach((item) => {
-        if (item.checked === true) {
-          total += item.qty * item.price
-        }
-      })
+    cartItems.forEach((cartitem) => {
+      if (cartitem.checked === true) {
+        total += cartitem.qty * cartitem.price
+      }
     })
-    // for (let i = 0; i < merchantItems.length; i++) {
-    //   merchantItems[i].items.forEach((event) => {
-    //     total += event.qty * event.price
-    //   })
-    // }
     return total
   }
   const calcTotalPricetotal = parseInt(calcTotalPrice()).toLocaleString()
 
+  //checkbox內容
+  //更改
+  const handleToggleSelectedAll = (nextChecked, mid = 0) => {
+    if (mid === 0) {
+      // 全選強制修改所有項目的checked屬性
+      const nextPetsX = cartItems.map((v, i) => {
+        return { ...v, checked: nextChecked }
+      })
+      setCartItems(nextPetsX)
+    } else {
+      // 強制修改所有項目的checked屬性
+      const nextPetsX = cartItems.map((v, i) => {
+        if (v.mid === mid) return { ...v, checked: nextChecked }
+        else return v
+      })
+
+      setCartItems(nextPetsX)
+    }
+  }
+  // 用來切換checked屬性的純函式
+  const newtoggleCheckbox = (cartItems, id) => {
+    return cartItems.map((v, i) => {
+      // 如果物件資料中的id屬性符合傳入的id時，則切換(or反相)checked的布林值
+      if (v.id === id) return { ...v, checked: !v.checked }
+      // 否則直接回傳原本的物件值
+      else return v
+    })
+  }
   //最外(上)元件階層包裹提供者元件，讓⽗⺟元件可以提供它
   return (
     <CartContext.Provider
       value={{
-        MtItems,
         cartItems,
+        setCartItems,
         addItem,
-        MerchantItem,
-        merchantItems,
-        setMerchantItems,
         removeItem,
         calcTotalItemstotal,
         calcTotalPricetotal,
-        handleToggleCompleted,
-        handleToggleSelectedAll,
-        handleToggleSelectedMt,
         foundMt,
         calcTotalItems,
         incrementOne,
         decrementOne,
         NavbaralcTotalItemstotal,
+        handleToggleSelectedAll,
+        newtoggleCheckbox,
+        MerchantIds,
       }}
     >
       {children}

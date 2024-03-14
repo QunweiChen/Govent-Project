@@ -6,7 +6,7 @@ import { useCart } from '@/hooks/use-cart'
 import { add } from 'lodash'
 
 export default function EventList() {
-  const { addItem, items, MerchantItem } = useCart()
+  const { addItem } = useCart()
   //   console.log(addItem)
   // console.log(items)
 
@@ -28,7 +28,6 @@ export default function EventList() {
                   onClick={() => {
                     // console.log(v)
                     addItem(v)
-                    MerchantItem(v, v.qty)
                   }}
                 >
                   加入購物車
