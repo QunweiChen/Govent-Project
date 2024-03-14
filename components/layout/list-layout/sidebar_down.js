@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import City from '@/data/event/str.json';
+import React, { useState, useEffect } from 'react'
+import City from '@/data/event/str.json'
 
 export default function Sidebar(props) {
   const categories = [
@@ -11,49 +11,49 @@ export default function Sidebar(props) {
     '課程講座',
     '體育賽事',
     '景點門票',
-  ];
+  ]
 
-  const [selectedCategories, setSelectedCategories] = useState({});
-  const [selectedRegions, setSelectedRegions] = useState({});
+  const [selectedCategories, setSelectedCategories] = useState({})
+  const [selectedRegions, setSelectedRegions] = useState({})
 
   useEffect(() => {
     const selectedCategoriesArray = Object.keys(selectedCategories).filter(
       (category) => selectedCategories[category]
-    );
+    )
     const selectedCitiesArray = Object.keys(selectedRegions).filter(
       (cityId) => selectedRegions[cityId]
-    );
-    
+    )
+
     // 回傳選擇的篩選條件給父元素
-    props.onFilterChange(selectedCategoriesArray, selectedCitiesArray);
-  }, [selectedCategories, selectedRegions]);
+    props.onFilterChange(selectedCategoriesArray, selectedCitiesArray)
+  }, [selectedCategories, selectedRegions])
 
   const handleOnChange = (category) => {
     const newSelectedCategories = {
       ...selectedCategories,
       [category]: !selectedCategories[category],
-    };
-    setSelectedCategories(newSelectedCategories);
-  };
+    }
+    setSelectedCategories(newSelectedCategories)
+  }
 
   const handleSelectAll = () => {
-    const newSelection = {};
+    const newSelection = {}
     if (!selectedCategories['所有類型']) {
-      categories.forEach((cat) => (newSelection[cat] = true));
-      newSelection['所有類型'] = true;
+      categories.forEach((cat) => (newSelection[cat] = true))
+      newSelection['所有類型'] = true
     } else {
-      categories.forEach((cat) => (newSelection[cat] = false));
-      newSelection['所有類型'] = false;
+      categories.forEach((cat) => (newSelection[cat] = false))
+      newSelection['所有類型'] = false
     }
-    setSelectedCategories(newSelection);
-  };
+    setSelectedCategories(newSelection)
+  }
 
   const handleRegionCheckboxChange = (regionId, isChecked) => {
     setSelectedRegions((prevState) => ({
       ...prevState,
       [regionId]: isChecked,
-    }));
-  };
+    }))
+  }
 
   return (
     <>
@@ -81,10 +81,7 @@ export default function Sidebar(props) {
                 onChange={() => handleOnChange(category)}
                 id={`flexCheck${index}`}
               />
-              <label
-                className="form-check-label"
-                htmlFor={`flexCheck${index}`}
-              >
+              <label className="form-check-label" htmlFor={`flexCheck${index}`}>
                 {category}
               </label>
             </div>
@@ -158,5 +155,5 @@ export default function Sidebar(props) {
         </div>
       </div>
     </>
-  );
+  )
 }
