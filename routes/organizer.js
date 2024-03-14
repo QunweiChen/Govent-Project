@@ -2,7 +2,7 @@ import express from 'express'
 import multer from 'multer'
 import path from 'path'
 import sequelize from '#configs/db.js'
-import { QueryTypes } from 'sequelize'
+import { QueryTypes, DataTypes } from 'sequelize'
 
 const router = express.Router()
 
@@ -56,10 +56,12 @@ router.post('/add-event', bannerUpload.single('banner'), async (req, res) => {
     const bannerFileName = req.file ? req.file.filename : null
 
     // 使用 Sequelize 或其他方式新增活动数据
-    const newEvent = await sequelize.query(
-      'INSERT INTO `event` (merchat_id, event_name, event_type_id, place, banner, str, address, ticket_ins, start_date, end_date, sell_start_date, sell_end_date, content, vaild) VALUES (:merchat_id, :event_name, :event_type_id, :place, :banner, :str, :address, :ticket_ins, :start_date, :end_date, :sell_start_date, :sell_end_date, :content, 0)',
+    const randomNumber = Math.floor(10000000 + Math.random() * 90000000)
+    await sequelize.query(
+      'INSERT INTO `event` (event_id, merchat_id, event_name, event_type_id, place, banner, str, address, ticket_ins, start_date, end_date, sell_start_date, sell_end_date, content, vaild) VALUES (:event_id, :merchat_id, :event_name, :event_type_id, :place, :banner, :str, :address, :ticket_ins, :start_date, :end_date, :sell_start_date, :sell_end_date, :content, 0)',
       {
         replacements: {
+          event_id: randomNumber,
           merchat_id,
           event_name,
           event_type_id,
@@ -78,12 +80,60 @@ router.post('/add-event', bannerUpload.single('banner'), async (req, res) => {
       }
     )
 
-    res.json({ status: 'success', data: { newEvent } })
+    res.json({ status: 'success', data: { event_id: randomNumber } })
   } catch (error) {
     console.error('Error creating event:', error)
     res
       .status(500)
       .json({ status: 'error', message: 'Failed to create event.' })
+  }
+})
+
+router.post('/contain-image', upload.single('upload'), (req, res) => {
+  const imageUrl = `http://localhost:3005/images/contain/${req.file.filename}`
+  res.status(201).json({ url: imageUrl })
+})
+
+router.post('/add-options', async (req, res) => {
+  const EventOption = sequelize.define(
+    'EventOption',
+    {
+      // 模型定義
+      event_id: DataTypes.INTEGER,
+      option_name: DataTypes.STRING,
+      price: DataTypes.INTEGER,
+      max_quantity: DataTypes.INTEGER,
+      contain: DataTypes.STRING,
+      start_time: DataTypes.DATE,
+    },
+    {
+      // 指定表格名稱
+      tableName: 'event_options',
+      timestamps: false,
+    }
+  )
+
+  const { data1, data2, data3 } = req.body
+
+  try {
+    // 使用 Sequelize 或其他方式新增活动数据
+    const optionsToCreate = []
+
+    if (data1) optionsToCreate.push(data1)
+    if (data2) optionsToCreate.push(data2)
+    if (data3) optionsToCreate.push(data3)
+
+    if (optionsToCreate.length > 0) {
+      await EventOption.bulkCreate(optionsToCreate)
+      res.json({ status: 'success' })
+    } else {
+      res.json({ status: 'success', message: 'No valid data to create.' })
+    }
+  } catch (error) {
+    console.error('Error creating event:', error)
+    res
+      .status(500)
+      .json({ status: 'error', message: 'Failed to create option.' })
   }
 })
 

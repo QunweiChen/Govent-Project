@@ -1,36 +1,28 @@
-import jsonwebtoken from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
 
-// 存取`.env`設定檔案使用
-import 'dotenv/config.js'
+dotenv.config()
 
-// 獲得加密用字串
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
+// Authentication middleware
+function authenticate(req, res, next) {
+  const token = req.cookies.auth_token // Assuming your cookie is named 'auth_token'
 
-// 中介軟體middleware，用於檢查授權(authenticate)
-export default function authenticate(req, res, next) {
-  // const token = req.headers['authorization']
-  const token = req.cookies.accessToken
-  // console.log(token)
+  // Log for debugging purposes
+  console.log('Cookies:', req.cookies)
+  console.log('Token extracted from cookie:', token)
 
-  // if no token
   if (!token) {
-    return res.json({
-      status: 'error',
-      message: '授權失敗，沒有存取令牌',
-    })
+    return res.status(403).send({ message: 'No token provided.' })
   }
 
-  // verify的callback會帶有decoded payload(解密後的有效資料)，就是user的資料
-  jsonwebtoken.verify(token, accessTokenSecret, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.json({
-        status: 'error',
-        message: '不合法的存取令牌',
-      })
+      return res.status(401).send({ message: 'Failed to authenticate token.' })
     }
 
-    // 將user資料加到req中
-    req.user = user
+    req.user = decoded // Assuming your JWT contains user info
     next()
   })
 }
+
+export default authenticate
