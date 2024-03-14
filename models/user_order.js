@@ -10,7 +10,7 @@ export default async function (sequelize) {
         primaryKey: true,
         autoIncrement: true,
       },
-      order_number: {
+      order_id: {
         type: DataTypes.STRING,
         allowNull: false,
       },
