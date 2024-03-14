@@ -32,7 +32,7 @@ router.post('/', upload.none(), async (req, res) => {
       return response.json()
     })
     .then((response) => {
-      // console.log(response.info.paymentUrl.web)
+      console.log(response.info.paymentUrl.web)
       return response
     })
     .catch((err) => {
