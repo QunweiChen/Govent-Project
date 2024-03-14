@@ -1,6 +1,7 @@
 import { result } from 'lodash'
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import useLocalStorage from '@/hooks/use-localstorage'
+const _ = require('lodash')
 
 //建立context
 const CartContext = createContext()
@@ -109,10 +110,14 @@ export function CartProvider({
 
   // 加入到購物車中的項目
   const [cartItems, setCartItems] = useState(items)
-  console.log(cartItems)
+  // console.log(cartItems)
   // 加入到各分類的項目
   const [merchantItems, setMerchantItems] = useState(MtItems)
   // console.log(merchantItems)
+  //儲存有多少商家
+  const MerchantIds = _.uniq(items.map((item) => item.merchantId))
+
+  // console.log(MerchantIds)
   // 初始化 setValue(localStoage), setValue用於存入localStorage中
   const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
   const [storedValueMt, setValueMt] = useLocalStorage(localStorageKey2, MtItems)
