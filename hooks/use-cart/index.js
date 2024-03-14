@@ -164,7 +164,6 @@ export function CartProvider({
     }
     // eslint-disable-next-line
 }, [cartItems,merchantItems])
-}, [cartItems,merchantItems])
 
   //checkbox內容
   //切換
@@ -216,6 +215,7 @@ export function CartProvider({
         return merchant
       }
     })
+    console.log(news)
     setMerchantItems(news)
   }
   const handleToggleSelectedMt = (isSelectedMt, MtId) => {
