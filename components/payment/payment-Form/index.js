@@ -49,7 +49,7 @@ export default function PaymentForm({
         return response.json()
       })
       .then((response) => {
-        console.log(response.url)
+        console.log(response)
         window.location.replace(response.url)
       })
       .catch((err) => {

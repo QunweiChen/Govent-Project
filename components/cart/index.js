@@ -21,22 +21,23 @@ export default function CartIndex() {
   //--------
   //引入勾子
   const {
-    merchantItems,
+    cartItems,
+    setCartItems,
     removeItem,
     calcTotalItemstotal,
     calcTotalPricetotal,
-    handleToggleCompleted,
-    handleToggleSelectedAll,
-    handleToggleSelectedMt,
     foundMt,
     incrementOne,
     decrementOne,
+    handleToggleSelectedAll,
+    newtoggleCheckbox,
+    MerchantIds,
   } = useCart()
 
   const [hasMtItems, setHasMtItems] = useState(false)
 
   useEffect(() => {
-    const mtItems = window.localStorage.getItem('MtItems')
+    const mtItems = window.localStorage.getItem('cartItems')
     const newsMtItems = JSON.parse(mtItems).length
     // console.log(newsMtItems)
     if (newsMtItems > 0) {
@@ -47,13 +48,12 @@ export default function CartIndex() {
   }, [])
   const [showModal, setShowModal] = useState(false)
   // console.log(showModal)
-  // console.log(merchantItems)
 
-  const checkAllChecked = (merchantItems) => {
+  const checkAllChecked = (cartItems) => {
     let allUnchecked = true
 
-    merchantItems.forEach((merchant) => {
-      merchant.items.forEach((item) => {
+    cartItems.forEach((Items) => {
+      Items.items.forEach((item) => {
         if (item.checked) {
           allUnchecked = false
           return // 如果有一个选中了就跳出循环
@@ -82,24 +82,26 @@ export default function CartIndex() {
                   </Link>
                 </Col>
                 <TodoAll
-                  merchantItems={merchantItems}
                   handleToggleSelectedAll={handleToggleSelectedAll}
+                  cartItems={cartItems}
                 />
               </Row>
             </div>
             {/* 到時候return資料用這一層 */}
             {/* 沒購物車內容 判斷*/}
-            {merchantItems && merchantItems.length > 0 ? (
+            {cartItems && cartItems.length > 0 ? (
               <CartCard
-                merchantItems={merchantItems}
-                handleToggleSelectedMt={handleToggleSelectedMt}
                 foundMt={foundMt}
-                handleToggleCompleted={handleToggleCompleted}
                 removeItem={removeItem}
                 calcTotalItemstotal={calcTotalItemstotal}
                 calcTotalPricetotal={calcTotalPricetotal}
                 incrementOne={incrementOne}
                 decrementOne={decrementOne}
+                handleToggleSelectedAll={handleToggleSelectedAll}
+                cartItems={cartItems}
+                MerchantIds={MerchantIds}
+                setCartItems={setCartItems}
+                newtoggleCheckbox={newtoggleCheckbox}
               />
             ) : (
               <NoCart />
@@ -119,7 +121,7 @@ export default function CartIndex() {
 
       {/* <NavbarBottomRwd /> */}
       <div className="border-0 cart-card d-block d-sm-none border-top border-normal-gray bg-normal-gray-deep fixed-bottom">
-        {merchantItems && merchantItems.length > 0 ? (
+        {cartItems && cartItems.length > 0 ? (
           <div className="d-flex justify-content-between align-items-center m-2">
             <p className="text-primary-light ms-3">
               合計{calcTotalItemstotal}件商品
@@ -131,7 +133,7 @@ export default function CartIndex() {
                   href="/payment"
                   className="text-white"
                   onClick={(e) => {
-                    if (!checkAllChecked(merchantItems)) {
+                    if (!checkAllChecked(cartItems)) {
                       e.preventDefault() // 阻止默认行为
                     }
                   }}
