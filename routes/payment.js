@@ -18,28 +18,24 @@ app.use(cors(corsOptions))
 const router = express.Router()
 
 router.get('/coupon', authenticate, async function (req, res) {
-  // findAll是回傳所有資料
-  //   const posts = await sequelize.query('SELECT * FROM `coupon`', {
-  //     type: QueryTypes.SELECT,
-  //   })
-
-  //   // 標準回傳JSON
-  //   return res.json({ status: 'success', data: { posts } })
-  console.log('sadfsafsafsaf', req.user.id)
   try {
+    let userID = req.user.id
+    console.log(userID)
     const result = await sequelize.query(
-      'SELECT * FROM `member_coupon` WHERE user_id = :?',
+      'SELECT * FROM `member_coupon` JOIN `coupon` ON coupon.id = member_coupon.coupon_id WHERE user_id = :userID ',
       {
-        replacements: [req.user.id], // 使用占位符传递参数
+        replacements: { userID },
         type: QueryTypes.SELECT,
       }
     )
     console.log(result)
-    return res.json({ status: 'success link cost', data: { result } })
+    return res.send({ status: 'success link cost', data: { result } })
   } catch (error) {
     console.error('Error fetching data:', error)
     res.status(500).json({ status: 'error', message: 'Failed to fetch data.' })
   }
 })
+
+router.put('/delete', (req, res) => {})
 
 export default router

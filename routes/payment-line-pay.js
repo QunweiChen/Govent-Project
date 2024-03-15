@@ -14,15 +14,10 @@ router.post('/', upload.none(), async (req, res) => {
 
   //傳送給linePay API的資料，必須按照LinePay的規則
   const LinePayData = {
-    //價格
     amount: body.money,
-    //商店名稱
     productName: 'govent',
-    //成功後轉址
     confirmUrl: `http://localhost:3000/payment/confirm?orderID=${orderId}`,
-    //訂單編號
     orderId: orderId,
-    //貨幣類型
     currency: 'TWD',
   }
   //fetch到line pay的測試網址
@@ -42,6 +37,7 @@ router.post('/', upload.none(), async (req, res) => {
       return response.json()
     })
     .then((response) => {
+      console.log(response)
       //寫進去資料庫的資料
       const dbData = {
         order_id: orderId,
@@ -65,7 +61,7 @@ router.post('/', upload.none(), async (req, res) => {
     })
   //將得到的網址回傳給前端，前端進行轉址
   let url = payment.info.paymentUrl.web
-  res.send({ status: 'success', url, orderId })
+  res.send({ status: 'success', url })
 })
 
 router.get('/confirm', async (req, res) => {
