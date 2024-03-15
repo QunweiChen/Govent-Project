@@ -37,7 +37,7 @@ export default function Toolbar({ handleShow }) {
         }
       })
       .catch((error) => console.error('Error fetching data:', error))
-  })
+  },[])
 
   return (
     <ul className="navbar-nav pe-2 d-flex align-items-center">

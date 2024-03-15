@@ -24,5 +24,8 @@
   },
   "cSpell.words": [
     "Govent"
-  ]
+  ],
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }

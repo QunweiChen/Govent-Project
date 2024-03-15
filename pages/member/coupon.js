@@ -135,7 +135,7 @@ export default function MemberCoupon() {
               </div>
               <Tabs defaultActiveKey="available" className="mb-4 mt-2">
                 <Tab eventKey="available" title="可使用">
-                  <Row className="gy-3">
+                  <Row className="g-3">
                     {availableData.map((data) => (
                         <Col key={data.id} sm={6}>
                           <motion.div
@@ -169,6 +169,7 @@ export default function MemberCoupon() {
                   </Row>
                 </Tab>
                 <Tab eventKey="uesd" title="已使用">
+                  <Row className='g-3'>
                   {coupon
                     .filter(
                       (data) =>
@@ -202,8 +203,10 @@ export default function MemberCoupon() {
                         </motion.div>
                       </Col>
                     ))}
+                    </Row>
                 </Tab>
                 <Tab eventKey="expired" title="已過期">
+                <Row className='g-3'>
                   {expiredData.map((data) => (
                       <Col key={data.id} sm={6}>
                         <motion.div
@@ -232,6 +235,7 @@ export default function MemberCoupon() {
                         </motion.div>
                       </Col>
                     ))}
+                    </Row>
                 </Tab>
               </Tabs>
             </motion.div>
