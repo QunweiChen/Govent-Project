@@ -4,14 +4,12 @@ import { Row, Col, Form } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
 import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/router'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function MemberSetting() {
-  // const router = useRouter()
-  // // Make sure we're in the browser
-  // if (typeof window !== 'undefined') {
-  //   router.push('/member/login')
-  // }
-
+  const router = useRouter()
+  const { auth } = useAuth()
   const [userData, setUserData] = useState([])
   const [formData, setFormData] = useState({
     id: '',
@@ -25,7 +23,6 @@ export default function MemberSetting() {
   //---------------------------------------------------------------------------------
   // 處理後端api
   //---------------------------------------------------------------------------------
-
   useEffect(() => {
     fetch('http://localhost:3005/api/member', {
       method: 'GET',
@@ -89,6 +86,7 @@ export default function MemberSetting() {
 
       if (response.ok) {
         console.log('User updated successfully!')
+        router.reload()
       } else {
         console.error('Failed to update user.')
       }

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './toolbar.module.scss'
@@ -5,6 +6,7 @@ import { useAuth } from '@/hooks/use-auth'
 
 export default function Toolbar({ handleShow }) {
   const { isAuthenticated, signOut, auth } = useAuth()
+  const [userData, setUserData] = useState([])
   console.log(auth)
 
   const handleSignOut = () => {
@@ -12,56 +14,71 @@ export default function Toolbar({ handleShow }) {
     // Redirect or perform additional actions after signing out if needed
   }
 
+  const getUser = () => {
+    fetch('http://localhost:3005/api/member', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // 檢查是否有資料並設定到 state 中
+        if (
+          data &&
+          data.data &&
+          data.data.posts &&
+          data.data.posts.length > 0
+        ) {
+          setUserData(data.data.posts[0])
+        } else {
+          console.warn('No data received from the server.')
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error))
+  }
+
+  useEffect(() => {
+    getUser()
+  }, [])
+
   return (
     <ul className="navbar-nav pe-2 ms-auto">
-      <li className="nav-item">
-        <Link
-          className="nav-link"
-          href="/cart"
-          role="button"
-          title="購物車"
-        >
-          <i className="bi bi-cart-fill"></i>
-          <p className="d-none d-md-inline d-lg-none"> 購物車</p>
-        </Link>
-      </li>
       <li
         // className="nav-item dropdown"
         className={`nav-item dropdown ${styles['dropdown']}`}
       >
         <Link
-          className="nav-link dropdown-toggle"
+          className="nav-link dropdown-toggle d-flex align-items-center"
           href="/member"
           role="button"
           data-bs-toggle="dropdown"
           aria-expanded="false"
           title="會員中心"
         >
-          <i className="bi bi-person-circle"></i>
-          <p className="d-none d-md-inline d-lg-none"> 會員中心</p>
+          <img
+            width={30}
+            className={`${styles['avatar']} rounded-circle me-2`}
+            src={`http://localhost:3005/avatar/${userData.avatar}`}
+          />
+          <h6 className="m-0 me-1">{userData.name}</h6>
         </Link>
         <ul
-          className={`dropdown-menu dropdown-menu-end p-4 mw-100 ${styles['slideIn']} ${styles['dropdown-menu']}`}
+          className={`dropdown-menu dropdown-menu-end p-4 mw-100 user ${styles['slideIn']} ${styles['dropdown-menu']}`}
         >
           <li>
-            <p className="text-center">
-              <Image
-                src="/avatar.svg"
-                className="rounded-circle d-block mx-auto"
-                alt="..."
-                width={80}
-                height={80}
-              />
-            </p>
             {auth.isAuthenticated && auth.user ? (
-              <p className="text-center dropdown-item">
-                會員姓名:
-                <br />
-                {auth.user.name}
-                <br />
-                帳號: <br />
-                {auth.user.username}
-              </p>
+              <>
+                <img
+                  src={`http://localhost:3005/avatar/${userData.avatar}`}
+                  className="rounded-circle d-block mx-auto"
+                  alt="..."
+                  width={80}
+                  height={80}
+                />
+                <p className="text-center mt-2">{auth.user.name}</p>
+              </>
             ) : (
               <Link className="dropdown-item text-center" href="/user/signin">
                 請登入
@@ -73,8 +90,8 @@ export default function Toolbar({ handleShow }) {
           </li>
           {auth.isAuthenticated && (
             <li>
-              <Link className="dropdown-item text-center " href="/member">
-                會員中心
+              <Link className="dropdown-item text-center " href="/">
+                回首頁
               </Link>
             </li>
           )}
@@ -94,25 +111,21 @@ export default function Toolbar({ handleShow }) {
           )}
         </ul>
       </li>
-      <li className="nav-item">
-        <span
-          className="nav-link"
-          role="presentation"
-          onClick={(e) => {
-            e.preventDefault()
-            handleShow()
-          }}
-          title="展示"
-        >
-          <i className="bi bi-mortarboard-fill"></i>
-          <p className="d-none d-md-inline d-lg-none"> 展示</p>
-        </span>
-      </li>
       <style global jsx>
         {`
           .cart-total {
             width: 20px;
             height: 20px;
+          }
+          .user {
+            .dropdown-item {
+              border-radius: 5px;
+              margin-top: 5px;
+              transition: 300ms;
+              &:hover {
+                background-color: var(--primary-50-color);
+              }
+            }
           }
         `}
       </style>

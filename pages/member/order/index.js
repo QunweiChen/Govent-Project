@@ -3,15 +3,22 @@ import { useEffect, useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
 import Link from 'next/link'
-import Image from 'next/image'
 import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/router'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function MemberOrder() {
+  const router = useRouter()
+  const { auth } = useAuth()
   const [orders, setOrders] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:3005/api/member/order',{
+    if (!auth.user) {
+      router.push('/member')
+      return
+    }
+    fetch('http://localhost:3005/api/member/order', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -29,7 +36,7 @@ export default function MemberOrder() {
         }
       })
       .catch((error) => console.error('Error fetching data:', error))
-  }, [])
+  }, [auth.user, router])
 
   return (
     <>
@@ -61,11 +68,13 @@ export default function MemberOrder() {
                     </div>
                     <div className="me-2 content d-flex flex-column justify-content-between">
                       <div>
-                      <h6>{data.event_name}</h6>
-                      <p>建立時間 {data.create_at.split('T')[0]}</p>
+                        <h6>{data.event_name}</h6>
+                        <p>建立時間 {data.create_at.split('T')[0]}</p>
                       </div>
                       <div className="d-flex justify-content-between align-items-end">
-                        <h6 className="text-primary-deep m-0">總金額 ${data.total}</h6>
+                        <h6 className="text-primary-deep m-0">
+                          總金額 ${data.total}
+                        </h6>
                         <Link href={`order/${data.order_number}`}>
                           <button className="btn btn-primary text-white">
                             查看詳情
@@ -110,7 +119,7 @@ export default function MemberOrder() {
           .event {
             background-color: var(--bg-gray-light-color);
             border-radius: 10px;
-            .content{
+            .content {
               flex: 1;
             }
           }

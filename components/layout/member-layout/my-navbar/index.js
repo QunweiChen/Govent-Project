@@ -2,8 +2,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 // 組合以下區塊
-import Menubar from './menubar'
-import SearchForm from './search-form'
 import Toolbar from './toolbar'
 import ToturialPanel from './tutorial-panel'
 
@@ -52,7 +50,7 @@ const MyNavbar = () => {
         >
           <div className={`bg-change ${scrolled ? 'scrolled' : ''}`}></div>
           <div className="container width-1200">
-            <Link className="navbar-brand" href="/">
+            <Link className="navbar-brand ps-4" href="/">
               <Image
                 src="/govent-logo.png"
                 alt=""
@@ -97,11 +95,9 @@ const MyNavbar = () => {
               <motion.div
                 initial={{ y: 10, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.7}}
+                transition={{ duration: 0.7 }}
                 className="offcanvas-body"
               >
-                <Menubar currentRoute={currentRoute} />
-                <SearchForm />
                 <Toolbar currentRoute={currentRoute} handleShow={handleShow} />
               </motion.div>
             </div>
@@ -161,6 +157,17 @@ const MyNavbar = () => {
         }
         .navbar .navbar-nav .nav-item:hover::after {
           width: 100%;
+        }
+        .dropdown-menu{
+          background-color: #1a1a1a60;
+          backdrop-filter: blur(10px);
+          
+          li a{
+            color: white;
+            transition: 300ms;
+            &:hover{
+              background-color: var(--primary-50-color);
+            }
         }
       `}</style>
     </>
