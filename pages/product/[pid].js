@@ -15,11 +15,12 @@ export default function Detail() {
 
   // 假設初始狀態是未選擇
   const [selected, setSelected] = useState(false);
+  
 
   const [eventInfo, setEventInfo] = useState([]);
   console.log(eventInfo);
   
-  const [qty, setQty] = useState(1)
+  // const [qty, setQty] = useState(1)
 
   //設售票期間的日曆狀態
   const [sellStartDate, setSellStartDate] = useState('');
@@ -41,17 +42,16 @@ export default function Detail() {
 
   const [all, setAll] = useState([
     {
-      "id": 0,
+    "id": 0,
     "merchantId": 0,
     "eventTypeId": 0,
     "eventName": "",
-    "holdingTime": "",
+    "holdingTime": "",//*日期加時間
     "images": "",
     "ticketName": "",
-    "price": "",
-    "qty": 0,
+    "price": "",//一張
+    "qty": 0, //*
     "eventId":0
-
     }
   ])
 
@@ -76,7 +76,10 @@ export default function Detail() {
         // 檢查是否有資料並設定到 state 中
         if (data && data.data) {
           console.log('success:', data?.data.posts);
-          setEventInfo(data?.data.posts)
+          const newPostsData = data?.data.posts.map((v) => {
+            return {...v, qty: 1}
+          })
+          setEventInfo(newPostsData)
 
           // 建立日期物件 // 因為eventInfo 尚未設定好不能使用, 故用data?.data.posts[0]
           const startDate = data?.data.posts[0].start_date;
@@ -125,13 +128,22 @@ export default function Detail() {
       setQty(qty - 1)
     }
   }
-  const handleIncrease = () => {
-    setQty(qty + 1)
+  const handleIncrease = (items, id) => {
+    const newItems =  eventInfo.map((v)=>{
+      if(id===v.id){
+        return {...v, qty: v.qty+1}
+      } else {
+        return v
+      }
+      
+    })
+    setEventInfo(newItems)
+    // const newItem = {...item, qty: qty}
+    // const newItems = {...items}
+    // setEventInfo([...eventInfo, newItem])
   }
 
-  const totalAmount = selected ? eventInfo.price * qty : 0;
-
-
+  // const totalAmount = eventInfo[0]?.price * qty
   // console.log(selectTime);
 
 
@@ -179,7 +191,7 @@ export default function Detail() {
 
           <div>
             <img
-              src={`/images/product/list/${eventInfo.image?.split(',')[0]}`}
+              src={`/images/product/list/${eventInfo[0]?.image?.split(',')}`}
               className="object-fit-cover"
               alt=""
             />
@@ -255,7 +267,7 @@ export default function Detail() {
               <div className="row seat1 mt-3">
                 <h4 className="col-lg-9 col-sm-6">{v.ticket_name}</h4>
                 <h4 className="col-lg-2 col-sm-4">NT$ {parseInt(v.price).toLocaleString()}</h4>
-                <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={handleSelection}>
+                <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={() => {handleSelection(v)}}>
                   {selected ? '已選擇' : '選擇'}
                 </button>
                 <div className="d-flex mt-4 d-none d-xxl-inline-flex">
@@ -278,7 +290,6 @@ export default function Detail() {
                     <h5 className="mb-5">選擇日期</h5>
                     <div className="text-center">
                       <Calendar
-                        // onChange={handleDate} 
                         sellStartDate={sellStartDate}
                         sellEndDate={sellEndDate}
                         setSelectDate={setSelectDate} />
@@ -299,16 +310,17 @@ export default function Detail() {
                         className="bi bi-dash-circle me-2 icon"
                         onClick={handleDecrease}
                       />
-                      <h5 className="px-3 py-2 bg-dark rounded">{qty}</h5>
+                      <h5 className="px-3 py-2 bg-dark rounded">{v.qty}</h5>
                       <i
                         type="button"
                         className="bi bi-plus-circle ms-2 icon"
-                        onClick={handleIncrease}
+                        onClick={() => {handleIncrease(eventInfo,v.id)}}
                       />
                     </div>
                     <div className="d-flex my-5">
                       <h5 className="">總金額</h5>
-                      <h4 className="dollar">NT$ {totalAmount}</h4>
+                      <h4 className="dollar">NT$ { (v.price) * v.qty
+}</h4>
                     </div>
                     <div className="d-flex justify-content-end mb-3">
                       <Link href={`/cart`}>
@@ -722,7 +734,7 @@ export default function Detail() {
                         className="bi bi-dash-circle me-2 icon"
                         onClick={handleDecrease}
                       />
-                      <h5 className="px-3">{qty}</h5>
+                      <h5 className="px-3">"哈"</h5>
                       <i
                         type="button"
                         className="bi bi-plus-circle ms-2 icon me-2"

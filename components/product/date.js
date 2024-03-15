@@ -15,7 +15,7 @@ export default function Calendar({ events, sellStartDate , sellEndDate = '' , se
 
 
 //時區問題(自動+8小時):創建一個新物件 sellStartDateObj，以 `sellStartDate` 作為參數。使用 `setHours` 將 `sellStartDateObj` 的小時數設定為當前小時數減 8。
-  // let sellStartDateObj = new Date(sellStartDate);
+  let sellStartDateObj = new Date(sellStartDate);
   //console.log(sTime);
   
   
@@ -29,7 +29,7 @@ export default function Calendar({ events, sellStartDate , sellEndDate = '' , se
 
   //設定售票起始日
   const now = sellStartDate ? new Date(sellStartDate) : new Date()
-  console.log(now)
+  // console.log(now)
   // console.log(new Date(sellStartDate))
    console.log(sellStartDate)
   // console.log(sellEndDate)
@@ -41,7 +41,7 @@ export default function Calendar({ events, sellStartDate , sellEndDate = '' , se
 
   // nowM =1-12
   const nowM = now.getMonth() + 1 //注意回傳為 0~11
-  const preM = now.getMonth() === 0 ? 12 : now.getMonth() //注意回傳為 0~11
+  // const preM = now.getMonth() === 0 ? 12 : now.getMonth() //注意回傳為 0~11
 
   // nowD
   const nowD = now.getDate() //注意回傳為 0~11
@@ -84,23 +84,23 @@ useEffect(() => {
 }, [sellStartDate]);
 
 // 在按鈕的 onClick 事件更新年份和月份
-// const LeftBtn = () => {
-//   if (month === 1) {
-//     setYear(year - 1);
-//     setMonth(12);
-//   } else {
-//     setMonth(month - 1);
-//   }
-// };
+const LeftBtn = () => {
+  if (month === 1) {
+    setYear(year - 1);
+    setMonth(12);
+  } else {
+    setMonth(month - 1);
+  }
+};
 
-// const RightBtn = () => {
-//   if (month === 12) {
-//     setYear(year + 1);
-//     setMonth(1);
-//   } else {
-//     setMonth(month + 1);
-//   }
-// };
+const RightBtn = () => {
+  if (month === 12) {
+    setYear(year + 1);
+    setMonth(1);
+  } else {
+    setMonth(month + 1);
+  }
+};
 
 
   return (
@@ -161,7 +161,7 @@ useEffect(() => {
                         key={idx}
                         onClick={() => {
                           setSelectDate(`${currentDate}`)
-                          // console.log("currentDate",currentDate);
+                          console.log("currentDate",currentDate);
                         }}
                         className={isSelectable ? 'selectable' : ''}
                         style={isSelectable ? { cursor: 'pointer' } : { cursor: 'default' }}
