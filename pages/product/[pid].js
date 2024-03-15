@@ -9,17 +9,17 @@ import { useCart } from '@/hooks/use-cart'
 
 export default function Detail() {
   //引入鉤子 
-  const { addItem, items} = useCart()
+  const { addItem, items } = useCart()
   const router = useRouter()
   const { pid } = router.query
 
   // 假設初始狀態是未選擇
   const [selected, setSelected] = useState(false);
-  
+
 
   const [eventInfo, setEventInfo] = useState([]);
   console.log(eventInfo);
-  
+
   // const [qty, setQty] = useState(1)
 
   //設售票期間的日曆狀態
@@ -42,16 +42,16 @@ export default function Detail() {
 
   const [all, setAll] = useState([
     {
-    "id": 0,
-    "merchantId": 0,
-    "eventTypeId": 0,
-    "eventName": "",
-    "holdingTime": "",//*日期加時間
-    "images": "",
-    "ticketName": "",
-    "price": "",//一張
-    "qty": 0, //*
-    "eventId":0
+      "id": 0,
+      "merchantId": 0,
+      "eventTypeId": 0,
+      "eventName": "",
+      "holdingTime": "",//*日期加時間
+      "images": "",
+      "ticketName": "",
+      "price": "",//一張
+      "qty": 0, //*
+      "eventId": 0
     }
   ])
 
@@ -67,7 +67,7 @@ export default function Detail() {
   //   "qty": 2,
   //   "event_id":6454685
   // }
-  
+
   useEffect(() => {
 
     fetch('http://localhost:3005/api/info')
@@ -77,7 +77,7 @@ export default function Detail() {
         if (data && data.data) {
           console.log('success:', data?.data.posts);
           const newPostsData = data?.data.posts.map((v) => {
-            return {...v, qty: 1}
+            return { ...v, qty: 1 }
           })
           setEventInfo(newPostsData)
 
@@ -129,13 +129,13 @@ export default function Detail() {
     }
   }
   const handleIncrease = (items, id) => {
-    const newItems =  eventInfo.map((v)=>{
-      if(id===v.id){
-        return {...v, qty: v.qty+1}
+    const newItems = eventInfo.map((v) => {
+      if (id === v.id) {
+        return { ...v, qty: v.qty + 1 }
       } else {
         return v
       }
-      
+
     })
     setEventInfo(newItems)
     // const newItem = {...item, qty: qty}
@@ -201,9 +201,9 @@ export default function Detail() {
         <main>
           <div className="wrapper">
             <section className="title">
-              <div 
-               key={eventInfo[0]?.id} 
-              className="d-flex align-items-center justify-content-between mt-3">
+              <div
+                key={eventInfo[0]?.id}
+                className="d-flex align-items-center justify-content-between mt-3">
                 <h5 className="border-5 border-start border-primary px-2">
                   {eventInfo[0]?.event_name}
                 </h5>
@@ -218,9 +218,6 @@ export default function Detail() {
               <div>
                 <h3 className="my-4">
                   {eventInfo[0]?.event_name}
-                  {/* <span className="d-none d-xxl-inline-flex">
-                    ｜YOASOBI ASIA TOUR 2023-2024 Solo Concert in Taipei
-                  </span> */}
                 </h3>
                 <h6 className="text-normal-gray-light">
                   <i className="bi bi-calendar me-2 d-none d-xxl-inline-flex" />
@@ -248,98 +245,96 @@ export default function Detail() {
               <hr />
             </section>
             <div className="d-flex align-items-center mt-5">
-                <h4 className="border-5 border-start border-primary px-2">
-                  選擇方案
-                </h4>
-              </div>
-              {/* map跑出來 */}
-            <section>
-            {eventInfo.map((v,i)=>{
-              return(
-              <div key={i}>
-              {/* <div  className="row justify-content-center seat1 mt-3">
-                <h4 className="col-lg-9 col-sm-6">{v.ticket_name}</h4>
-                <h4 className="col-lg-2 col-sm-4">NT$ 3,200</h4>
-                <button className="store col-lg-1 col-sm-2 btn btn-primary-deep">
-                  選擇
-                </button>
-              </div> */}
-              <div className="row seat1 mt-3">
-                <h4 className="col-lg-9 col-sm-6">{v.ticket_name}</h4>
-                <h4 className="col-lg-2 col-sm-4">NT$ {parseInt(v.price).toLocaleString()}</h4>
-                <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={() => {handleSelection(v)}}>
-                  {selected ? '已選擇' : '選擇'}
-                </button>
-                <div className="d-flex mt-4 d-none d-xxl-inline-flex">
-                  <h5 className="me-5">憑證兌換期限</h5>
-                  <p className="ms-1">
-                    需要按照預訂日期及當天開放時間內兌換，逾期失效
-                  </p>
-                </div>
-                <div className="d-flex mt-4 d-none d-xxl-inline-flex">
-                  <h5 className="me-5">取消政策</h5>
-                  <p className="ms-5 mb-3">
-                    商品一經訂購完成後，即不可取消、更改訂單，亦不得請求退款
-                    <br />
-                    供應商需2-5個工作天進行取消流程，依照您購買的商品取消政策收取手續費，並於取消流程完成後14個工作天內退款。
-                  </p>
-                </div>
-                <hr className="d-none d-xxl-block" />
-                <div className="d-flex d-none d-xxl-inline-flex">
-                  <div className="me-5">
-                    <h5 className="mb-5">選擇日期</h5>
-                    <div className="text-center">
-                      <Calendar
-                        sellStartDate={sellStartDate}
-                        sellEndDate={sellEndDate}
-                        setSelectDate={setSelectDate} />
+              <h4 className="border-5 border-start border-primary px-2">
+                選擇方案
+              </h4>
+            </div>
 
+            {/* map跑出來 */}
+            <section>
+              {eventInfo.map((v, i) => {
+                return (
+                  <div key={i}>
+                    <div className="row seat1 mt-3">
+                      <h4 className="col-lg-9 col-sm-6">{v.ticket_name}</h4>
+                      <h4 className="col-lg-2 col-sm-4">NT$ {parseInt(v.price).toLocaleString()}</h4>
+                      <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={() => { handleSelection(v) }}>
+                        {selected ? '已選擇' : '選擇'}
+                      </button>
+                      {selected && (
+                        <>
+                          <div className="d-flex mt-4 d-none d-xxl-inline-flex">
+                            <h5 className="me-5">憑證兌換期限</h5>
+                            <p className="ms-1">
+                              需要按照預訂日期及當天開放時間內兌換，逾期失效
+                            </p>
+                          </div>
+                          <div className="d-flex mt-4 d-none d-xxl-inline-flex">
+                            <h5 className="me-5">取消政策</h5>
+                            <p className="ms-5 mb-3">
+                              商品一經訂購完成後，即不可取消、更改訂單，亦不得請求退款
+                              <br />
+                              供應商需2-5個工作天進行取消流程，依照您購買的商品取消政策收取手續費，並於取消流程完成後14個工作天內退款。
+                            </p>
+                          </div>
+                          <hr className="d-none d-xxl-block" />
+                          <div className="d-flex d-none d-xxl-inline-flex">
+                            <div className="me-5">
+                              <h5 className="mb-5">選擇日期</h5>
+                              <div className="text-center">
+                                <Calendar
+                                  sellStartDate={sellStartDate}
+                                  sellEndDate={sellEndDate}
+                                  setSelectDate={setSelectDate} />
+
+                              </div>
+                            </div>
+                            <div>
+                              <h5 className="mb-5">選擇時間</h5>
+                              <button className="store fs-5 p-2 btn btn-primary-deep"
+                                onClick={handleTime}
+                              >
+                                {sellTime}
+                              </button>
+                              <h5 className="my-5">數量</h5>
+                              <div className="d-flex align-items-center">
+                                <i
+                                  type="button"
+                                  className="bi bi-dash-circle me-2 icon"
+                                  onClick={handleDecrease}
+                                />
+                                <h5 className="px-3 py-2 bg-dark rounded">{v.qty}</h5>
+                                <i
+                                  type="button"
+                                  className="bi bi-plus-circle ms-2 icon"
+                                  onClick={() => { handleIncrease(eventInfo, v.id) }}
+                                />
+                              </div>
+                              <div className="d-flex my-5">
+                                <h5 className="">總金額</h5>
+                                <h4 className="dollar">NT$ {(v.price) * v.qty
+                                }</h4>
+                              </div>
+                              <div className="d-flex justify-content-end mb-3">
+                                <Link href={`/cart`}>
+                                  <button className="store fs-5 me-2 p-2 btn btn-primary-deep"
+                                    onClick={() => {
+                                      console.log(v)
+                                      addItem(v)
+                                    }}
+                                  >
+                                    加入購物車
+                                  </button>
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
-                  <div>
-                    <h5 className="mb-5">選擇時間</h5>
-                    <button className="store fs-5 p-2 btn btn-primary-deep"
-                      onClick={handleTime}
-                    >
-                      {sellTime}
-                    </button>
-                    <h5 className="my-5">數量</h5>
-                    <div className="d-flex align-items-center">
-                      <i
-                        type="button"
-                        className="bi bi-dash-circle me-2 icon"
-                        onClick={handleDecrease}
-                      />
-                      <h5 className="px-3 py-2 bg-dark rounded">{v.qty}</h5>
-                      <i
-                        type="button"
-                        className="bi bi-plus-circle ms-2 icon"
-                        onClick={() => {handleIncrease(eventInfo,v.id)}}
-                      />
-                    </div>
-                    <div className="d-flex my-5">
-                      <h5 className="">總金額</h5>
-                      <h4 className="dollar">NT$ { (v.price) * v.qty
-}</h4>
-                    </div>
-                    <div className="d-flex justify-content-end mb-3">
-                      <Link href={`/cart`}>
-                        <button className="store fs-5 me-2 p-2 btn btn-primary-deep" 
-                        onClick={() => {
-                          console.log(v)
-                          addItem(v)
-                        }}
-                        >
-                          加入購物車
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              </div>
-              )
-            })}
+                )
+              })}
             </section>
 
 
@@ -388,17 +383,17 @@ export default function Detail() {
                     活動介紹
                   </h5>
                 </a>
-                <a type="button" className="d-flex align-items-center mt-3">
+                <a href="#eventIntro2" type="button" className="d-flex align-items-center mt-3">
                   <h5 className="border-5 border-start border-primary px-2 text-white">
                     購買須知
                   </h5>
                 </a>
-                <a type="button" className="d-flex align-items-center mt-3">
+                <a href="#eventIntro3" type="button" className="d-flex align-items-center mt-3">
                   <h5 className="border-5 border-start border-primary px-2 text-white">
                     使用方式
                   </h5>
                 </a>
-                <a type="button" className="d-flex align-items-center mt-3">
+                <a href="#eventIntro4" type="button" className="d-flex align-items-center mt-3">
                   <h5 className="border-5 border-start border-primary px-2 text-white">
                     活動評價
                   </h5>
@@ -407,7 +402,7 @@ export default function Detail() {
             </section>
             <section className="left col-lg-8 col-sm-12">
               <div className="d-flex align-items-center mt-5">
-                <h4 className="border-5 border-start border-primary px-2">
+                <h4 id="eventIntro2" className="border-5 border-start border-primary px-2">
                   購買須知
                 </h4>
               </div>
@@ -427,8 +422,8 @@ export default function Detail() {
             </section>
             <section className="left col-lg-8 col-sm-12">
               <div className="d-flex align-items-center mt-5">
-                <h4 className="border-5 border-start border-primary px-2">
-                  使用方法
+                <h4 id="eventIntro3" className="border-5 border-start border-primary px-2">
+                  使用方式
                 </h4>
               </div>
               <p className="my-4">
@@ -439,7 +434,7 @@ export default function Detail() {
 
             <section className="left col-lg-8 col-sm-12">
               <div className="d-flex align-items-center mt-5 mb-4">
-                <h4 className="border-5 border-start border-primary px-2">
+                <h4 id="eventIntro4" className="border-5 border-start border-primary px-2">
                   活動評價
                 </h4>
               </div>
@@ -650,15 +645,6 @@ export default function Detail() {
                   <button type="button" className="btn btn-secondary">
                     3
                   </button>
-                  <button type="button" className="btn btn-secondary">
-                    4
-                  </button>
-                  <button type="button" className="btn btn-secondary">
-                    5
-                  </button>
-                  <button type="button" className="btn btn-secondary">
-                    6
-                  </button>
                   <button
                     type="button"
                     className="btn btn-normal-gray"
@@ -760,7 +746,7 @@ export default function Detail() {
           </div>
         </main>
       </>
-      
+
 
       <style global jsx>
         {`
