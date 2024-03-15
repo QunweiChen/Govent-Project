@@ -13,8 +13,8 @@ export default function CartCard({
   decrementOne = () => {},
   setCartItems = () => {},
   newtoggleCheckbox = () => {},
-  cartItems,
-  MerchantIds,
+  cartItems = [],
+  MerchantIds = [],
   handleToggleSelectedAll = () => {},
 }) {
   const [showModal, setShowModal] = useState(false)

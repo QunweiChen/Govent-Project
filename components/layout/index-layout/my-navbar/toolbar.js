@@ -1,11 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './toolbar.module.scss'
+import dynamic from 'next/dynamic'
 import { useAuth } from '@/hooks/use-auth'
-import { useCart } from '@/hooks/use-cart'
+const Carttoolbar = dynamic(() => import('@/components/cart/carttoolbar'), {
+  ssr: false,
+})
 
 export default function Toolbar({ handleShow }) {
-  const { NavbaralcTotalItemstotal } = useCart()
   const { isAuthenticated, signOut, auth } = useAuth()
   // console.log(auth)
   // console.log(NavbaralcTotalItemstotal)
@@ -17,7 +19,8 @@ export default function Toolbar({ handleShow }) {
   return (
     <ul className="navbar-nav pe-2 ms-auto">
       <li className="nav-item">
-        <Link className="nav-link" href="/cart" role="button" title="購物車">
+        <Carttoolbar />
+        {/* <Link className="nav-link" href="/cart" role="button" title="購物車">
           <div className="d-flex justify-content-center align-items-center">
             <i className="bi bi-cart-fill"></i>
             <div className="bg-white text-center rounded-circle ms-2">
@@ -28,7 +31,7 @@ export default function Toolbar({ handleShow }) {
           </div>
 
           <p className="d-none d-md-inline d-lg-none"> 購物車</p>
-        </Link>
+        </Link> */}
       </li>
       <li
         // className="nav-item dropdown"

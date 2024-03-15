@@ -184,7 +184,7 @@ export function CartProvider({
     } else {
       // 強制修改所有項目的checked屬性
       const nextPetsX = cartItems.map((v, i) => {
-        if (v.mid === mid) return { ...v, checked: nextChecked }
+        if (v.merchantId === mid) return { ...v, checked: nextChecked }
         else return v
       })
 
