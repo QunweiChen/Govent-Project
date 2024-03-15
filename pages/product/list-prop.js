@@ -32,7 +32,7 @@ import useEvents from '@/hooks/use-event'
 export default function List() {
   const { data } = useEvents()
 
-  console.log(data)
+  // console.log(data)
 
   //活動資料
   // 1. 從伺服器來的原始資料
@@ -41,12 +41,19 @@ export default function List() {
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
 
+  //增加屬性質
+  const initState = events.map((v, i) => {
+    return { ...v, fav: false }
+  })
+
+  const [newEvents, setNewEvents] = useState(initState)
+
   useEffect(() => {
     if (data) {
       setEvents(data)
     }
   }, [data])
-  console.log(events)
+  // console.log(events)
 
   //回調函式
   // 筛选结果状态
@@ -110,7 +117,9 @@ export default function List() {
       <nav className="header container navbar-expand mt-5 w-1200">
         <h5 className="d-flex justify-content-between">
           <div className="bg-bg-gray-secondary rounded-3">
-            <p className="mx-4 my-2">目前共有 {newFilteredEvents?.length} 筆 結果</p>
+            <p className="mx-4 my-2">
+              目前共有 {newFilteredEvents?.length} 筆 結果
+            </p>
           </div>
           <section>
             <NavbarTopRwd
@@ -141,7 +150,7 @@ export default function List() {
               {currentEvents.map((v) => (
                 <div key={v.id} className="col-md-4 col-sm-6 ">
                   <Link
-                    href={`/product/product-info?id=${v.id}`}
+                    href={`/product/${v.id}`}
                     className="col-md-4 col-sm-6"
                     key={v.id}
                     style={{ textDecoration: 'none' }}
@@ -154,7 +163,7 @@ export default function List() {
                           className="card-img-top"
                         />
                       </figure>
-                      <FavIcon id={v.id} />
+                      {/* <FavIcon id={v.id} /> */}
                       {/* <FavFcon/> */}
 
                       <div className="card-body">
