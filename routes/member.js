@@ -5,12 +5,18 @@ import authenticate from '##/middlewares/authenticate.js'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import multer from 'multer'
+import path from 'path'
+import bodyParser from 'body-parser'
 dotenv.config()
 
 const app = express()
 
 const router = express.Router()
 app.use(express.json())
+
+app.use(bodyParser.json({ limit: '10mb' }))
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
 
 const corsOptions = {
   origin: 'http://localhost:3000', // Adjust according to your frontend's origin
@@ -126,10 +132,8 @@ router.post('/add-coupon', authenticate, async (req, res) => {
     'Coupon',
     {
       coupon_code: DataTypes.STRING,
-      // 只定义需要的字段，可以根据实际需求添加其他字段
     },
     {
-      // 指定表格名稱
       tableName: 'coupon',
       timestamps: false,
     }
@@ -139,10 +143,12 @@ router.post('/add-coupon', authenticate, async (req, res) => {
     {
       coupon_id: DataTypes.INTEGER,
       user_id: DataTypes.INTEGER,
-      // 只定义需要的字段，可以根据实际需求添加其他字段
+      valid: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1, // 將 valid 欄位預設為 1
+      },
     },
     {
-      // 指定表格名稱
       tableName: 'member_coupon',
       timestamps: false,
     }
@@ -228,7 +234,6 @@ router.get('/order', authenticate, async function (req, res) {
 })
 
 router.get('/order/:orderId', authenticate, async (req, res) => {
-
   try {
     const orderId = req.params.orderId
     const result = await sequelize.query(
@@ -236,25 +241,21 @@ router.get('/order/:orderId', authenticate, async (req, res) => {
         'FROM `user_order` ' +
         'JOIN `event` ON event.event_id = user_order.event_id ' +
         'JOIN `organizer` ON organizer.id = event.merchat_id ' +
-        'WHERE user_order.order_number = :orderId',
+        'WHERE user_order.order_number = :orderId ',
       {
         type: QueryTypes.SELECT,
         replacements: { orderId: orderId },
       }
     )
-    if(result[0].user_id == req.user.id){
+    if (result[0].user_id == req.user.id) {
       res.json({ status: 'success', data: { result } })
-    }else{
-      res
-      .status(403)
-      .json({ status: 'error', message: '403' })
+    } else {
+      res.status(403).json({ status: 'error', message: '403' })
     }
     // 将订单数据发送给前端
   } catch (error) {
     console.error('Error fetching order data:', error)
-    res
-      .status(500)
-      .json({ status: 'error', message: '500' })
+    res.status(500).json({ status: 'error', message: '500' })
   }
 })
 
@@ -282,5 +283,42 @@ router.get('/ticket/:orderId', async (req, res) => {
       .json({ status: 'error', message: 'Failed to fetch order data.' })
   }
 })
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/avatar')
+  },
+  filename: function (req, file, cb) {
+    cb(null, 'avatar_' + Date.now() + path.extname(file.originalname))
+  },
+})
+
+const upload = multer({ storage: storage })
+
+router.post(
+  '/avatar',
+  upload.single('avatar'),
+  authenticate,
+  async (req, res) => {
+    try {
+      console.log(req.file.filename)
+      // 使用 Sequelize 更新用户资料
+      const updateAvatar = await sequelize.query(
+        'UPDATE `member` SET avatar = :avatar WHERE id = :id',
+        {
+          replacements: { avatar: req.file.filename, id: req.user.id },
+          type: QueryTypes.UPDATE,
+        }
+      )
+
+      res.json({ status: 'success', message: { updateAvatar } })
+    } catch (error) {
+      console.error('Error updating user avatar:', error)
+      res
+        .status(500)
+        .json({ status: 'error', message: 'Failed to update user avatar' })
+    }
+  }
+)
 
 export default router
