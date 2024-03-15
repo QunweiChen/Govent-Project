@@ -150,7 +150,7 @@ export default function List() {
               {currentEvents.map((v) => (
                 <div key={v.id} className="col-md-4 col-sm-6 ">
                   <Link
-                    href={`/product/${v.id}`}
+                    href={`/product/${v.pid}`}//以防混亂，只有路由使用pid引導
                     className="col-md-4 col-sm-6"
                     key={v.id}
                     style={{ textDecoration: 'none' }}
@@ -158,7 +158,7 @@ export default function List() {
                     <div className="card  stretched-link bg-bg-gray-secondary text-white px-0 no-border">
                       <figure>
                         <img
-                          src={`/images/product/list/${v.image?.split(',')[0]}`}
+                          src={`/images/product/list/${v.banner?.split(',')[0]}`}
                           alt=""
                           className="card-img-top"
                         />

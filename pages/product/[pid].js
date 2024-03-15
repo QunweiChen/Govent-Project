@@ -13,9 +13,9 @@ export default function Detail() {
 
   //接受list來的id 並且fetch相對應的活動資料(包含票卷資料庫)
   //因list以id當key，後續可同步修改為pid當key?
-  const getProducts = async (id) => {
+  const getProducts = async (pid) => {
     try {
-      const res = await fetch(`http://localhost:3005/api/events/${id}`)
+      const res = await fetch(`http://localhost:3005/api/events/${pid}`)
       const data = await res.json()
       console.log('Received data:', data)
       setEventInfo(data.data.posts) //轉換成eventInfo
@@ -195,7 +195,9 @@ export default function Detail() {
 
           <div>
             <img
-              src={`/images/product/list/${eventInfo[0]?.image?.split(',')[0]}`}
+              src={`/images/product/list/${
+                eventInfo[0]?.banner?.split(',')[0]
+              }`}
               className="object-fit-cover"
               alt=""
             />
