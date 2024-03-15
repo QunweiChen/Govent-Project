@@ -1,27 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import Link from 'next/link'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function Confirm() {
-  const [state, setState] = useState({
-    result: {
-      returnCode: '0000',
-      returnMessage: 'Success.',
-      info: {
-        transactionId: 2024031502070335500,
-        orderId: 'cb9e11bb-27af-457e-90f4-d8206a4cdc8b',
-        payInfo: [
-          {
-            method: 'CREDIT_CARD',
-            amount: 50000,
-            maskedCreditCardNumber: '************1111',
-          },
-        ],
-      },
-    },
-  })
+  const [state, setState] = useState({})
   console.log(state)
   //付款完成之後會轉到這裡，在使用fetch在確認訂單是否有支付成功
   const router = useRouter()
@@ -55,9 +39,12 @@ export default function Confirm() {
         })
     }
   }, [router.isReady])
+
+  const { auth } = useAuth()
+  console.log(auth)
   return (
     <>
-      {state.result.returnCode == '0000' && (
+      {state.result?.returnCode == '0000' && (
         <Card className="text-center ">
           <Card.Header>完成付款</Card.Header>
           <Card.Body>

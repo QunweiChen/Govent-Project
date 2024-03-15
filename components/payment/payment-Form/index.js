@@ -30,12 +30,31 @@ export default function PaymentForm({
   } = useForm()
   //結帳之後將資料傳送至後端
   const postSubmit = (data) => {
+    let discountObj = discount
+    //判斷是否有勾選優惠或點數折抵
+    switch (true) {
+      case discountState.point == false && discountState.coupon == true:
+        discountObj = { ...discount, point: '0' }
+        break
+      case discountState.point == true && discountState.coupon == false:
+        discountObj = { ...discount, coupon: { name: '', value: '0', id: '' } }
+        break
+      case discountState.coupon == false && discountState.coupon == false:
+        discountObj = {
+          ...discount,
+          point: '0',
+          coupon: { name: '', value: '0', id: '' },
+        }
+        break
+      default:
+        break
+    }
     let result = {
       ...data,
       money: money,
       productData: productData,
       redeem: redeem(),
-      discount: discount,
+      discount: discountObj,
       coupon: coupon(),
     }
     fetch('http://localhost:3005/api/payment-line-pay', {
@@ -49,7 +68,6 @@ export default function PaymentForm({
         return response.json()
       })
       .then((response) => {
-        console.log(response)
         window.location.replace(response.url)
       })
       .catch((err) => {
@@ -78,8 +96,10 @@ export default function PaymentForm({
         coupon: {
           name: e.target.options[e.target.selectedIndex].text,
           value: e.target.value,
+          id: e.target.options[e.target.selectedIndex].id,
         },
       }
+      console.log(e.target.options[e.target.selectedIndex].id)
       setDiscount(setConnectionData)
       return
     }
@@ -153,6 +173,26 @@ export default function PaymentForm({
       }
     }
   }
+  const [couponData, setCouponData] = useState([])
+  //拿取會員的優惠券資料
+  useEffect(() => {
+    fetch('http://localhost:3005/api/payment/coupon', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response.data.result)
+        setCouponData(response.data.result)
+        return
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
 
   return (
     <>
@@ -349,15 +389,15 @@ export default function PaymentForm({
                   onChange={formChange}
                 >
                   <option value="0">選擇優惠券</option>
-                  <option value="0.9" label="九折">
-                    九折
-                  </option>
-                  <option value="200" label="折抵200">
-                    折抵200
-                  </option>
-                  <option value="500" label="折抵500">
-                    增加200
-                  </option>
+                  {couponData.map((v, i) => {
+                    return (
+                      <>
+                        <option key={i} value={v.discount_valid} id={v.id}>
+                          {v.coupon_name}
+                        </option>
+                      </>
+                    )
+                  })}
                 </select>
               </div>
             </div>
