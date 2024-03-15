@@ -3,8 +3,28 @@ import multer from 'multer'
 import path from 'path'
 import sequelize from '#configs/db.js'
 import { QueryTypes, DataTypes } from 'sequelize'
+import authenticate from '##/middlewares/authenticate.js'
+import dotenv from 'dotenv'
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import bodyParser from 'body-parser'
+dotenv.config()
+
+const app = express()
+
+app.use(express.json())
 
 const router = express.Router()
+
+const corsOptions = {
+  origin: 'http://localhost:3000', // Adjust according to your frontend's origin
+  credentials: true, // Allows cookies to be sent across origins
+}
+
+app.use(cors(corsOptions))
+
+// Use cookieParser middleware
+app.use(cookieParser())
 
 // 处理 quill 编辑器上传的图片
 const storage = multer.diskStorage({
@@ -27,6 +47,30 @@ const bannerStorage = multer.diskStorage({
   },
 })
 const bannerUpload = multer({ storage: bannerStorage })
+
+router.get('/', authenticate, async function (req, res) {
+  // const { Cart } = sequelize.models
+  try {
+    // findAll 是回傳所有資料
+    const result = await sequelize.query(
+      'SELECT event.*, organizer.user_id ' +
+    'FROM `event` ' +
+    'JOIN `organizer` ON organizer.id = event.merchat_id ' +
+    'WHERE organizer.user_id = ? ',
+    {
+      replacements: [req.user.id], // 使用占位符传递参数
+      type: QueryTypes.SELECT,
+    })
+
+    // 標準回傳 JSON
+    return res.json({ status: 'success', data: { result } })
+  } catch (error) {
+    console.error('Error fetching user data:', error)
+    res
+      .status(500)
+      .json({ status: 'error', message: 'Failed to fetch user data.' })
+  }
+})
 
 // 处理 quill 编辑器上传的图片的路由
 router.post('/contain-image', upload.single('upload'), (req, res) => {
