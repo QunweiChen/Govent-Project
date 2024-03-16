@@ -8,7 +8,8 @@ import {
   ToggleButtonGroup,
   Button,
   ButtonGroup,
-  ButtonToolbar
+  ButtonToolbar,
+  Badge
 } from 'react-bootstrap'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -18,15 +19,22 @@ import OrganizerSidebar from '@/components/organizer/organizer-sidebar'
 import OrganizerTopBar from '@/components/organizer/organizer-top-bar'
 
 export default function OrganizerEvent() {
-  const [eventList, setEventList] = useState([])
-  const [availableEventList, setAvailableEventList] = useState([]);
+  const [availableEventList, setAvailableEventList] = useState([])
   const [underRiviewEvents, setUnderRiviewEvents] = useState([])
-  const [currentPage, setCurrentPage] = useState(0);
+  const [expiredEvents, setExpiredEvents] = useState([])
+
+  const [searchKeyword, setSearchKeyword] = useState('')
+
+  const [showNumber, setShowNumber]= useState(0)
+  const [currentNumberA, setCurrentNumberA]= useState(0)
+  const [currentNumberU, setCurrentNumberU]= useState(0)
+  const [currentNumberE, setCurrentNumberE]= useState(0)
+
+  const [currentPageA, setCurrentPageA] = useState(0)
+  const [currentPageU, setCurrentPageU] = useState(0)
+  const [currentPageE, setCurrentPageE] = useState(0)
 
   const [selectedButton, setSelectedButton] = useState(1)
-  const handleRadioChange = (value) => {
-    setSelectedButton(value)
-  }
 
   useEffect(() => {
     fetch('http://localhost:3005/api/organizer', {
@@ -40,34 +48,85 @@ export default function OrganizerEvent() {
       .then((data) => {
         // 檢查是否有資料並設定到 state 中
         if (data && data.data && data.data.result) {
-          const events = data.data.result
-          const availableEvents = events.filter(event => event.valid === 1).reduce((acc, curr, index) => {
-            const groupIndex = Math.floor(index / 4);
-            if (!acc[groupIndex]) {
-              acc[groupIndex] = [];
-            }
-            acc[groupIndex].push(curr);
-            return acc;
-          }, []);
-          const underRiviewEvents = events.filter(event => event.valid === 0).reduce((acc, curr, index) => {
-            const groupIndex = Math.floor(index / 4);
-            if (!acc[groupIndex]) {
-              acc[groupIndex] = [];
-            }
-            acc[groupIndex].push(curr);
-            return acc;
-          }, []);
-          setAvailableEventList(availableEvents)
-          setUnderRiviewEvents(underRiviewEvents)
-          
+          if (searchKeyword !== '') {
+            const events = data.data.result
+            const availableEvents = events.filter(event => {
+              return event.valid === 1 && new Date(event.end_date) > new Date() && event.event_name.toLowerCase().includes(searchKeyword.toLowerCase())
+            }).reduce((acc, curr, index) => {
+              const groupIndex = Math.floor(index / 4);
+              if (!acc[groupIndex]) {
+                acc[groupIndex] = [];
+              }
+              acc[groupIndex].push(curr);
+              return acc;
+            }, []);
+            const underRiviewEvents = events.filter(event => {
+              return event.valid === 0 && new Date(event.end_date) > new Date() && event.event_name.toLowerCase().includes(searchKeyword.toLowerCase())
+            }).reduce((acc, curr, index) => {
+              const groupIndex = Math.floor(index / 4);
+              if (!acc[groupIndex]) {
+                acc[groupIndex] = [];
+              }
+              acc[groupIndex].push(curr);
+              return acc;
+            }, []);
+            const expiredEvents = events.filter(event => {
+              return new Date(event.end_date) < new Date() && event.event_name.toLowerCase().includes(searchKeyword.toLowerCase())
+            }).reduce((acc, curr, index) => {
+              const groupIndex = Math.floor(index / 4);
+              if (!acc[groupIndex]) {
+                acc[groupIndex] = [];
+              }
+              acc[groupIndex].push(curr);
+              return acc;
+            }, []);
+
+            setAvailableEventList(availableEvents)
+            setUnderRiviewEvents(underRiviewEvents)
+            setExpiredEvents(expiredEvents)
+          }else{
+            const events = data.data.result
+            const availableEvents = events.filter(event => event.valid === 1 && new Date(event.end_date) > new Date()).reduce((acc, curr, index) => {
+              const groupIndex = Math.floor(index / 4);
+              if (!acc[groupIndex]) {
+                acc[groupIndex] = [];
+              }
+              acc[groupIndex].push(curr);
+              return acc;
+            }, []);
+            const underRiviewEvents = events.filter(event => event.valid === 0 && new Date(event.end_date) > new Date()).reduce((acc, curr, index) => {
+              const groupIndex = Math.floor(index / 4);
+              if (!acc[groupIndex]) {
+                acc[groupIndex] = [];
+              }
+              acc[groupIndex].push(curr);
+              return acc;
+            }, []);
+            const expiredEvents = events.filter(event => new Date(event.end_date) < new Date()).reduce((acc, curr, index) => {
+              const groupIndex = Math.floor(index / 4);
+              if (!acc[groupIndex]) {
+                acc[groupIndex] = [];
+              }
+              acc[groupIndex].push(curr);
+              return acc;
+            }, []);
+  
+            setAvailableEventList(availableEvents)
+            setUnderRiviewEvents(underRiviewEvents)
+            setExpiredEvents(expiredEvents)
+          }
         } else {
           console.warn('No favorites data received from the server.')
         }
       })
       .catch((error) => console.error('Error fetching data:', error))
-  }, [])
+  }, [searchKeyword])
 
-
+  // 处理搜索关键字变化
+  const handleSearchKeywordChange = (event) => {
+    setSearchKeyword(event.target.value);
+  }
+  
 
   return (
     <>
@@ -80,49 +139,20 @@ export default function OrganizerEvent() {
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.4 }}
             className="event-nav flex-grow-1 d-flex flex-column">
-            <div className="d-flex justify-content-between align-items-center px-4 text-normal-gray-light mb-3">
-              <div>共列出17檔活動</div>
+            <div className="d-flex justify-content-between align-items-center px-4 text-normal-gray-light mb-4">
               <div className="d-flex align-items-center">
-                <div className="pe-4">
-                  <ToggleButtonGroup
-                    type="radio"
-                    name="options"
-                    value={selectedButton}
-                    onChange={handleRadioChange}
-                    defaultValue={1}
-                    size="sm"
-                  >
-                    <ToggleButton
-                      id="tbg-radio-1"
-                      value={1}
-                      variant={
-                        selectedButton === 1 ? 'primary' : 'secondary'
-                      }
-                    >
-                      活動時間<i className="bi bi-sort-down ps-2"></i>
-                    </ToggleButton>
-                    <ToggleButton
-                      id="tbg-radio-2"
-                      value={2}
-                      variant={
-                        selectedButton === 2 ? 'primary' : 'secondary'
-                      }
-                    >
-                      建立時間<i className="bi bi-sort-down ps-2"></i>
-                    </ToggleButton>
-                  </ToggleButtonGroup>
-                </div>
+                
+              </div>
+              <div className='d-flex align-items-center'>
                 <i className="bi bi-search pe-3"></i>
-                <input className="form-control on-search" />
-                <button className="btn btn-sm btn-outline-normal-white ms-2">
-                  搜尋
-                </button>
+                <input type='text' value={searchKeyword} onChange={handleSearchKeywordChange} className="form-control on-search me-2" placeholder='搜尋'/>
               </div>
             </div>
             <Tabs
               id="uncontrolled-tab-example"
               className="border-0"
               defaultActiveKey="onSale"
+              fill
             >
               <Tab
                 eventKey="onSale"
@@ -131,16 +161,17 @@ export default function OrganizerEvent() {
               >
                 <div className='d-flex flex-column h-100'>
                   <div>
-                    {availableEventList[currentPage] && availableEventList[currentPage].map((event, eventIndex) => (
+                    {availableEventList[currentPageA] && availableEventList[currentPageA].map((event, eventIndex) => (
                       <div key={eventIndex}>
                         <motion.div
                           initial={{ y: 10, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
-                          transition={{ duration: 0.3, delay: eventIndex * 0.05 }}
-                          key={currentPage}
+                          transition={{ duration: 0.3, delay: eventIndex * 0.1 }}
+                          key={currentPageA}
                         >
                           <Row className="mx-1 on-list align-items-center gx-5 mt-2">
-                            <Col sm="auto" className="on-list-img p-0 ms-3">
+                            <Col sm="auto" className="on-list-img p-0 ms-4 banner">
+                              <Badge bg="success" className='badge'>上架中</Badge>
                               <img
                                 src={`http://localhost:3005/images/banner/${event.banner}`}
                                 alt=""
@@ -192,7 +223,7 @@ export default function OrganizerEvent() {
                     <ul className='d-flex'>
                       {availableEventList.map((page, index) => (
                         <li key={index} className='list-unstyled mx-1'>
-                          <button className={`btn ${currentPage === index ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setCurrentPage(index)}>
+                          <button className={`btn ${currentPageA === index ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setCurrentPageA(index)}>
                             {index + 1}
                           </button>
                         </li>
@@ -208,16 +239,95 @@ export default function OrganizerEvent() {
               >
                 <div className='d-flex flex-column h-100'>
                   <div>
-                    {underRiviewEvents[currentPage] && underRiviewEvents[currentPage].map((event, eventIndex) => (
+                    {underRiviewEvents[currentPageU] && underRiviewEvents[currentPageU].map((event, eventIndex) => (
                       <div key={eventIndex}>
                         <motion.div
                           initial={{ y: 10, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
-                          transition={{ duration: 0.3, delay: eventIndex * 0.05 }}
-                          key={currentPage}
+                          transition={{ duration: 0.3, delay: eventIndex * 0.1 }}
+                          key={currentPageU}
                         >
                           <Row className="mx-1 on-list align-items-center gx-5 mt-2">
-                            <Col sm="auto" className="on-list-img p-0 ms-3">
+                            <Col sm="auto" className="on-list-img p-0 ms-4 banner">
+                              <Badge bg="primary" className='badge'>審核中</Badge>
+                              <img
+                                src={`http://localhost:3005/images/banner/${event.banner}`}
+                                alt=""
+                              />
+                            </Col>
+                            <Col className="d-flex align-items-center border-end border-normal-gray h-75 ">
+                              <h6 className="m-0">
+                                {event.event_name}<Badge bg="primary" className='ms-2'>審核中</Badge>
+                              </h6>
+                            </Col>
+                            <Col sm="auto" className="d-flex flex-column justify-content-center align-items-center border-end border-normal-gray h-75 ">
+                              <div>
+                                <div className="sm-p mb-1">活動時間</div>
+                                <div className='d-flex'>
+                                  <div>
+                                    <h6 className='m-0'>{event.start_date.split('T')[0]}</h6>
+                                    <p>{event.start_date.split('T')[1].slice(0, 5)}</p>
+                                  </div>
+                                  <div className='mx-3'>
+                                    <h6 className='m-0'>－</h6>
+                                  </div>
+                                  <div>
+                                    <h6 className='m-0'>{event.end_date.split('T')[0]}</h6>
+                                    <p>{event.end_date.split('T')[1].slice(0, 5)}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </Col>
+                            <Col
+                              sm="auto"
+                              className="d-flex flex-column justify-content-center border-end border-normal-gray h-75 "
+                            >
+                              <div className="sm-p mb-1">建立時間</div>
+                              <div className="sm-p">{event.create_at.split('T')[0]}</div>
+                            </Col>
+                            <Col sm="auto" className="text-center mx-3">
+                              <Link href="event/event-info" className="text-link">
+                                <i className="bi bi-three-dots"></i>
+                                <br />
+                                更多
+                              </Link>
+                            </Col>
+                          </Row>
+                        </motion.div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex justify-content-center pt-2 mt-auto">
+                    <ul className='d-flex'>
+                      {underRiviewEvents.map((page, index) => (
+                        <li key={index} className='list-unstyled mx-1'>
+                          <button className={`btn ${currentPageU === index ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setCurrentPageU(index)}>
+                            {index + 1}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </Tab>
+              <Tab
+                eventKey="end"
+                title="已結束"
+                className="bg-bg-gray-secondary"
+              >
+                <div className='d-flex flex-column h-100'>
+                  <div>
+                    {expiredEvents[currentPageE] && expiredEvents[currentPageE].map((event, eventIndex) => (
+                      <div key={eventIndex}>
+                        <motion.div
+                          initial={{ y: 10, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={{ duration: 0.4, delay: eventIndex * 0.1 }}
+                          key={currentPageE}
+                        >
+                          <Row className="mx-1 on-list align-items-center gx-5 mt-2">
+                            <Col sm="auto" className="on-list-img p-0 ms-4 banner">
+                              <Badge bg="danger" className='badge'>已過期</Badge>
                               <img
                                 src={`http://localhost:3005/images/banner/${event.banner}`}
                                 alt=""
@@ -267,9 +377,9 @@ export default function OrganizerEvent() {
                   </div>
                   <div className="d-flex justify-content-center pt-2 mt-auto">
                     <ul className='d-flex'>
-                      {underRiviewEvents.map((page, index) => (
+                      {expiredEvents.map((page, index) => (
                         <li key={index} className='list-unstyled mx-1'>
-                          <button className={`btn ${currentPage === index ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setCurrentPage(index)}>
+                          <button className={`btn ${currentPageE === index ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setCurrentPageE(index)}>
                             {index + 1}
                           </button>
                         </li>
@@ -277,13 +387,6 @@ export default function OrganizerEvent() {
                     </ul>
                   </div>
                 </div>
-              </Tab>
-              <Tab
-                eventKey="end"
-                title="已結束"
-                className="bg-bg-gray-secondary"
-              >
-                Tab content for Contact
               </Tab>
             </Tabs>
           </motion.div>
@@ -315,7 +418,6 @@ export default function OrganizerEvent() {
               border-radius: 5px 5px 0 0;
               .nav-link {
                 color: white;
-                width: 130px;
                 border: 0px;
                 border-top: 4px solid var(--none);
               }
@@ -344,8 +446,8 @@ export default function OrganizerEvent() {
             }
           }
           .on-search {
-            width: 180px;
-            height: 31px;
+            width: 250px;
+            height: 30px;
           }
           .on-list {
             border: 1px solid var(--normal-gray-color);
@@ -355,16 +457,21 @@ export default function OrganizerEvent() {
               border-radius: 5px;
               width: 160px;
               height: 100px;
-              overflow: hidden;
               img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+                border-radius: 5px;
               }
             }
           }
-          .flex-1{
-            flex: 1;
+          .banner{
+            position: relative;
+            .badge{
+              position: absolute;
+              top: 12px;
+              left: -8px;
+            }
           }
         `}
       </style>

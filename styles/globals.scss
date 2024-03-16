@@ -3,7 +3,7 @@
 // 全站配色 colors
 $primary: #f16e0f;
 $secondary: rgba(41, 41, 40, 0.5);
-$success: #66fd63;
+$success: #3c873b;
 $danger: #ff4136;
 $info: #92e9e4;
 
@@ -125,16 +125,19 @@ h2 {
 h3 {
   font-size: 36px;
   font-weight: 600;
+  line-height: 1.5;
 }
 
 h4 {
   font-size: 26px;
   font-weight: 600;
+  line-height: 1.5;
 }
 
 h5 {
   font-size: 20px;
   font-weight: 600;
+  line-height: 1.5;
 }
 
 h6 {

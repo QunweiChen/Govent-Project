@@ -19,62 +19,15 @@ export default function OrganizerEvent() {
         <div className="w-100 bg-bg-gray organizer-main d-flex flex-column">
           <OrganizerTopBar title="活動資訊總覽" />
           <div className='p-4'>
-            <Row className="gx-3">
-              <Col sm="7">
-                <Row className="g-3">
-                  <Col sm="12">
-                    <div className="object-fit">
-                      <img src="https://i.kfs.io/article5_cover/global/9415739v2/fit/800x420.jpg" />
-                    </div>
-                  </Col>
-                  <Col sm="12">
-                    <div>
-                      <Row className="g-3">
-                        <Col sm="12">
-                          <div className="control-bgc p-20">
-                            <div className="sm-p mb-2">活動名稱</div>
-                            <h5>
-                              YOASOBI演唱會2024台北站｜YOASOBI ASIA TOUR
-                              2023-2024 Solo Concert in Taipei
-                            </h5>
-                          </div>
-                        </Col>
-                        <Col sm="6">
-                          <div className="control-bgc p-20">
-                            <div className="sm-p mb-2">活動類別</div>
-                            <h6 className="m-0">演唱會</h6>
-                          </div>
-                        </Col>
-                        <Col sm="6">
-                          <div className="control-bgc p-20">
-                            <div className="sm-p mb-2">活動時間</div>
-                            <h6 className="m-0">2024/01/21 － 2024/01/22</h6>
-                          </div>
-                        </Col>
-                        <Col sm="6">
-                          <div className="control-bgc p-20">
-                            <div className="sm-p mb-2">售票時間</div>
-                            <h6 className="m-0">2024/01/21 － 2024/01/22</h6>
-                          </div>
-                        </Col>
-                        <Col sm="6">
-                          <div className="control-bgc p-20">
-                            <div className="sm-p mb-2">活動建立時間</div>
-                            <h6 className="m-0">2024/01/21 12:36:21</h6>
-                          </div>
-                        </Col>
-                      </Row>
-                    </div>
-                  </Col>
-                </Row>
-              </Col>
-              <Col sm="5">
-                <Row className="g-3">
-                  <Col sm="6">
+            <Row className="gx-4">
+              <Col sm="6">
+                <div className="object-fit">
+                  <img src="https://i.kfs.io/article5_cover/global/9415739v2/fit/800x420.jpg" />
+                </div>
+                <Row className='mt-4'>
+                  <Col sm="3">
                     <div className="control-bgc">
-                      <div className="text-normal-gray-light py-2 bottom-line text-center">
-                        活動狀態
-                      </div>
+                      
                       <div className="text-center py-4">
                         <h4>
                           <i className="bi bi-lightning-fill text-success"></i>
@@ -83,11 +36,9 @@ export default function OrganizerEvent() {
                       </div>
                     </div>
                   </Col>
-                  <Col sm="6">
+                  <Col sm="3">
                     <div className="control-bgc">
-                      <div className="text-normal-gray-light py-2 bottom-line text-center">
-                        活動收藏數
-                      </div>
+                      
                       <div className="text-center py-4">
                         <h4>
                           <i className="bi bi-bookmark-fill text-normal-gray-light"></i>
@@ -96,29 +47,54 @@ export default function OrganizerEvent() {
                       </div>
                     </div>
                   </Col>
-                  <Col sm="12">
-                    <div className="control-bgc">
-                      <div className="text-normal-gray-light py-2 bottom-line text-center">
-                        販售數量
-                      </div>
+                  <Col sm="3">
+                    <div className="control-bgc ratio ratio-1x1">
+                      
                       <div className="text-center py-4">
                         <h4>2,412</h4>
                       </div>
                     </div>
                   </Col>
-                  <Col sm="12">
-                    <div className="control-bgc">
-                      <div className="text-normal-gray-light py-2 bottom-line text-center">
-                        總銷售額
-                      </div>
-                      <div className="text-center py-4">
+                  <Col sm="3">
+                    <div className="control-bgc d-flex align-items-center h-100">
+                      <div className="text-center">
                         <h4>7,718,400</h4>
                       </div>
                     </div>
                   </Col>
                 </Row>
               </Col>
+              <Col sm="6">
+                <div>
+                  <h4>
+                    YOASOBI演唱會2024台北站｜YOASOBI ASIA TOUR
+                    2023-2024 Solo Concert in Taipei
+                  </h4>
+                  <div className='sm-p mb-3 pb-1'>活動編號：33169126</div>
+                  <div className="d-flex align-items-center">
+                    <p className="me-3 tabs">活動地點</p>
+                    <div>
+                      <h6 className="m-0">ZAPP TAIPEI</h6>
+                      <p className='sm-p'>台北市中正區中山南路21號</p>
+                    </div>
+                  </div>
+                </div>
+                <hr className='my-3' />
+                <div className="d-flex align-items-center mb-3">
+                  <p className="me-3 tabs">活動類別</p>
+                  <h6 className="m-0">演唱會</h6>
+                </div>
+                <div className="d-flex align-items-center mb-3">
+                  <p className="me-3 tabs">活動時間</p>
+                  <h6 className="m-0">2024/01/21 12:00 － 2024/01/22 12:00</h6>
+                </div>
+                <div className="d-flex align-items-center">
+                  <p className="me-3 tabs">售票時間</p>
+                  <h6 className="m-0">2024/01/21 12:00 － 2024/01/22 12:00</h6>
+                </div>
+              </Col>
             </Row>
+
           </div>
         </div>
       </div>
@@ -155,6 +131,12 @@ export default function OrganizerEvent() {
               height: 100%;
               object-fit: cover;
             }
+          }
+          .tabs{
+            background-color: var(--bg-gray-secondary-color);
+            padding: 7px 10px;
+            border-radius: 5px;
+            color: var(--normal-gray-light-color);
           }
         `}
       </style>
