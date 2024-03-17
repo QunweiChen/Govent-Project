@@ -49,13 +49,16 @@ export default function PaymentForm({
       default:
         break
     }
+    console.log(discountObj)
+    let newPoint = pointData - discountObj.point
+    console.log(newPoint)
     let result = {
       ...data,
       money: money,
       productData: productData,
       redeem: redeem(),
       discount: discountObj,
-      coupon: coupon(),
+      newPoint: newPoint,
     }
     fetch('http://localhost:3005/api/payment-line-pay', {
       method: 'POST',
@@ -104,7 +107,13 @@ export default function PaymentForm({
       return
     }
     let setConnectionData = { ...discount, [e.target.name]: e.target.value }
-
+    if (e.target.name == 'point' && e.target.value > pointData) {
+      alert('超過範圍')
+      setConnectionData = { ...discount, [e.target.name]: '0' }
+      setDiscount(setConnectionData)
+      pointInputRef.current.value = ''
+      return
+    }
     setDiscount(setConnectionData)
   }
   //監聽點數及優惠券是否被勾選
@@ -174,9 +183,11 @@ export default function PaymentForm({
     }
   }
   const [couponData, setCouponData] = useState([])
-  //拿取會員的優惠券資料
+  const [pointData, setPointData] = useState(0)
+  console.log(pointData)
+  //拿取會員的優惠券及點數資料
   useEffect(() => {
-    fetch('http://localhost:3005/api/payment/coupon', {
+    fetch('http://localhost:3005/api/payment/number', {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
@@ -185,8 +196,10 @@ export default function PaymentForm({
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response.data.result)
-        setCouponData(response.data.result)
+        console.log()
+        let point = Number(response.data.point[0].point)
+        setPointData(point)
+        setCouponData(response.data.coupon)
         return
       })
       .catch((err) => {
@@ -345,7 +358,7 @@ export default function PaymentForm({
           <div className="point bg-bg-gray-secondary rounded-4  col me-2 py-3 px-4 ">
             <div className="point-title  mb-1">
               <CheckboxInput
-                Content={'我要使用點數折抵（目前尚餘 583 點）'}
+                Content={`我要使用點數折抵（目前尚餘${pointData}點）`}
                 inputID="point"
                 change={handlePointCheckboxChange}
               />
