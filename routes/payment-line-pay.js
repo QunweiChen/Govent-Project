@@ -10,13 +10,14 @@ const upload = multer()
 
 router.post('/', upload.none(), async (req, res) => {
   let body = req.body
+  console.log(body)
   const orderId = uuidv4()
 
   //傳送給linePay API的資料，必須按照LinePay的規則
   const LinePayData = {
     amount: body.money,
     productName: 'govent',
-    confirmUrl: `http://localhost:3000/payment/confirm?orderID=${orderId}`,
+    confirmUrl: `http://localhost:3000/payment/confirm?orderID=${orderId}&point=${body.newPoint}&couponID=${body.discount.coupon.id}`,
     orderId: orderId,
     currency: 'TWD',
   }
@@ -37,7 +38,7 @@ router.post('/', upload.none(), async (req, res) => {
       return response.json()
     })
     .then((response) => {
-      console.log(response)
+      // console.log(response)
       //寫進去資料庫的資料
       const dbData = {
         order_id: orderId,
@@ -45,7 +46,7 @@ router.post('/', upload.none(), async (req, res) => {
         event_id: '1234',
         payment_method: body.paymentType,
         total: body.money,
-        coupon_discount: body.coupon,
+        coupon_discount: body.discount.coupon.value,
         points_discount: body.discount.point,
         points_rebate: body.redeem,
         order_info: JSON.stringify(body.productData),
@@ -70,11 +71,12 @@ router.get('/confirm', async (req, res) => {
   const orderID = req.query.orderID
   //使用訂單編號拿取資料庫的金額
   const dbData = await sequelize.query(
-    `SELECT * FROM test_order WHERE order_id = '${orderID}'`,
+    `SELECT * FROM user_order WHERE order_id = '${orderID}'`,
     {
       type: QueryTypes.SELECT,
     }
   )
+  console.log(dbData)
   let money = dbData[0].total
   let json = { amount: money, currency: 'TWD' }
   //驗證訂單是否有付款成功
@@ -97,7 +99,7 @@ router.get('/confirm', async (req, res) => {
       //訂單成功付款的話就將line pay回傳的資料更新到資料庫
       let json = JSON.stringify(response)
       sequelize.query(
-        'UPDATE `test_order` SET line_pay_return_data = :json WHERE order_id = :orderID',
+        'UPDATE `user_order` SET line_pay_return_data = :json WHERE order_id = :orderID',
         {
           replacements: { orderID, json },
           type: QueryTypes.UPDATE,
