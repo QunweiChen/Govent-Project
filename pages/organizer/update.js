@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Image } from 'react-bootstrap'
+import { Image, Form, Row, Col } from 'react-bootstrap'
 import { motion } from 'framer-motion'
 
 import OrganizerLayout from '@/components/layout/organizer-layout'
@@ -8,6 +8,32 @@ import OrganizerTopBar from '@/components/organizer/organizer-top-bar'
 export default function OrganizerEvent() {
   const [page, setPage] = useState(1)
   const [organizerType, setOrganizerType] = useState(0)
+  const [formData, setFormData] = useState({
+    organizer_type: '',
+    name: '',
+    bank_code: '',
+    bank_branch: '',
+    bank_name: '',
+    amount_number: '',
+    owner_name: '',
+    business_invoice: '',
+  })
+
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      organizer_type: organizerType
+    });
+  }, [organizerType])
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+    console.log(formData)
+  }
 
   const previousPage = () => {
     if (page > 1) {
@@ -76,11 +102,10 @@ export default function OrganizerEvent() {
                   <h5 className="mb-4">選擇主辦單位類型</h5>
                   <div className="d-flex">
                     <button
-                      className={`text-center choice-btn btn company text-center ${
-                        organizerType === 0
+                      className={`text-center choice-btn btn company text-center ${organizerType === 0
                           ? 'btn-primary'
                           : 'btn-bg-gray-light'
-                      }`}
+                        }`}
                       onClick={() => {
                         setOrganizerType(0)
                       }}
@@ -95,11 +120,10 @@ export default function OrganizerEvent() {
                       <h4 className="mb-4">個人</h4>
                     </button>
                     <button
-                      className={`text-center choice-btn btn company ms-4 text-center ${
-                        organizerType === 1
+                      className={`text-center choice-btn btn company ms-4 text-center ${organizerType === 1
                           ? 'btn-primary'
                           : 'btn-bg-gray-light'
-                      }`}
+                        }`}
                       onClick={() => {
                         setOrganizerType(1)
                       }}
@@ -113,6 +137,116 @@ export default function OrganizerEvent() {
                     </button>
                   </div>
                 </motion.div>
+              )}
+              {page === 3 && (
+                <Form className='w-100 update-form' data-bs-theme="dark">
+                  <Row>
+                    <Col sm="8">
+                    <Form.Group className="mb-3" controlId="name">
+                    <Form.Label>主辦單位名稱</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      placeholder="請填寫主辦單位名稱"
+                    />
+                  </Form.Group>
+                    </Col>
+                    <Col sm="4">
+                    <Form.Group className="mb-3" controlId="organizer_type">
+                    <Form.Label>主辦單位類別</Form.Label>
+                    <Form.Select
+                        name="organizer_type"
+                        value={formData.organizer_type}
+                        className='text-normal-gray'
+                        disabled
+                      >
+                        <option value="0">個人</option>
+                        <option value="1">公司／法人</option>
+                    </Form.Select>
+                  </Form.Group>
+                    </Col>
+                    {organizerType === 1 ? (
+                      <>
+                      <Col sm="6">
+                      <Form.Group className="mb-3" controlId="owner_name">
+                      <Form.Label>公司抬頭</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="owner_name"
+                        value={formData.owner_name}
+                        onChange={handleInputChange}
+                        placeholder="請填寫公司抬頭"
+                      />
+                    </Form.Group>
+                      </Col>
+                      <Col sm="6">
+                      <Form.Group className="mb-3" controlId="business_invoice">
+                      <Form.Label>統一編號</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="business_invoice"
+                        value={formData.business_invoice}
+                        onChange={handleInputChange}
+                        placeholder="請填寫統一編號"
+                      />
+                    </Form.Group>
+                      </Col>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                    <Col sm="3">
+                    <Form.Group className="mb-3" controlId="bank_code">
+                    <Form.Label>銀行代碼</Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="bank_code"
+                      value={formData.bank_code}
+                      onChange={handleInputChange}
+                      placeholder="請填寫銀行代碼"
+                    />
+                  </Form.Group>
+                    </Col>
+                    <Col sm="3">
+                    <Form.Group className="mb-3" controlId="bank_branch">
+                    <Form.Label>分行名稱</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="bank_branch"
+                      value={formData.bank_branch}
+                      onChange={handleInputChange}
+                      placeholder="請填寫分行名稱"
+                    />
+                  </Form.Group>
+                    </Col>
+                    <Col sm="6">
+                    <Form.Group className="mb-3" controlId="bank_name">
+                    <Form.Label>帳戶名稱</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="bank_name"
+                      value={formData.bank_name}
+                      onChange={handleInputChange}
+                      placeholder="請填寫銀行帳號"
+                    />
+                  </Form.Group>
+                    </Col>
+                    <Col sm="12">
+                    <Form.Group className="mb-3" controlId="amount_number">
+                    <Form.Label>銀行帳號</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="amount_number"
+                      value={formData.amount_number}
+                      onChange={handleInputChange}
+                      placeholder="請填寫銀行帳號"
+                    />
+                  </Form.Group>
+                    </Col>
+                  </Row>
+                </Form>
               )}
             </div>
             <div className="text-center steps">
@@ -155,13 +289,29 @@ export default function OrganizerEvent() {
             height: 500px;
           }
           .steps {
-            position: relative;
-            bottom: -40px;
+
           }
           .choice-btn {
             border-radius: 20px;
             width: 400px;
             height: 360px;
+          }
+          .update-form{
+            .form-control,
+          .form-select {
+            background-color: var(--bg-gray-light-color);
+            border: 1px solid var(--normal-gray-color);
+            resize: none;
+            &:disabled {
+              background-color: var(--bg-gray-secondary-color);
+            }
+            &::placeholder {
+              color: var(--normal-gray-color);
+            }
+            .form-label{
+              font-size: 12px;
+            }
+          }
           }
         `}
       </style>

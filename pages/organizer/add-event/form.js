@@ -13,7 +13,6 @@ import { useRouter } from 'next/router'
 const QuillNoSSRWrapper = dynamic(
   async () => {
     const { default: RQ } = await import('react-quill')
-    // eslint-disable-next-line react/display-name
     return ({ forwardedRef, ...props }) => <RQ ref={forwardedRef} {...props} />
   },
   { ssr: false }
@@ -59,12 +58,6 @@ function OrganizerForm() {
       ...prevState,
       [name]: value,
     }))
-    console.log('這是其他內容')
-    console.log(otherFormData)
-    console.log('這是quill')
-    console.log(quillContent)
-    console.log('這是banner')
-    console.log(banner)
   }
 
   const handleSubmit = async (e) => {
