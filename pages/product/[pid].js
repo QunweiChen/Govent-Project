@@ -11,7 +11,28 @@ export default function Detail() {
   //引入鉤子 
   const { addItem, items } = useCart()
   const router = useRouter()
-  const { pid } = router.query
+
+
+   //接受list來的id 並且fetch相對應的活動資料(包含票卷資料庫)
+  //因list以id當key，後續可同步修改為pid當key?
+  const getProducts = async (pid) => {
+    try {
+      const res = await fetch(`http://localhost:3005/api/events/${pid}`)
+      const data = await res.json()
+      console.log('Received data:', data)
+      setEventInfo(data.data.posts) //轉換成eventInfo
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  //回傳fetch到的資料
+  useEffect(() => {
+    if (router.isReady) {
+      const { pid } = router.query
+      console.log('PID', pid)
+      getProducts(pid)
+    }
+  }, [])
 
   // 假設初始狀態是未選擇
   const [selected, setSelected] = useState(false);
@@ -68,45 +89,45 @@ export default function Detail() {
   //   "event_id":6454685
   // }
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    fetch('http://localhost:3005/api/info')
-      .then((response) => response.json())
-      .then((data) => {
-        // 檢查是否有資料並設定到 state 中
-        if (data && data.data) {
-          console.log('success:', data?.data.posts);
-          const newPostsData = data?.data.posts.map((v) => {
-            return { ...v, qty: 1 }
-          })
-          setEventInfo(newPostsData)
+  //   fetch('http://localhost:3005/api/info')
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       // 檢查是否有資料並設定到 state 中
+  //       if (data && data.data) {
+  //         console.log('success:', data?.data.posts);
+  //         const newPostsData = data?.data.posts.map((v) => {
+  //           return { ...v, qty: 1 }
+  //         })
+  //         setEventInfo(newPostsData)
 
-          // 建立日期物件 // 因為eventInfo 尚未設定好不能使用, 故用data?.data.posts[0]
-          const startDate = data?.data.posts[0].start_date;
-          const endDate = data?.data.posts[0].end_date;
-          const sellStartDate = data?.data.posts[0].sell_start_date;
-          // console.log(startDate);
-          // console.log(endDate);
+  //         // 建立日期物件 // 因為eventInfo 尚未設定好不能使用, 故用data?.data.posts[0]
+  //         const startDate = data?.data.posts[0].start_date;
+  //         const endDate = data?.data.posts[0].end_date;
+  //         const sellStartDate = data?.data.posts[0].sell_start_date;
+  //         // console.log(startDate);
+  //         // console.log(endDate);
 
-          [date1, time1] = startDate.split('T');
-          [date2, time2] = endDate.split('T');
-          [date3, time3] = sellStartDate.split('T');
-          time3 = time3.substring(0, 5);
+  //         [date1, time1] = startDate.split('T');
+  //         [date2, time2] = endDate.split('T');
+  //         [date3, time3] = sellStartDate.split('T');
+  //         time3 = time3.substring(0, 5);
 
-          setSellStartDate(data?.data.posts[0].sell_start_date)
-          setSellEndDate(data?.data.posts[0].sell_end_date)
+  //         setSellStartDate(data?.data.posts[0].sell_start_date)
+  //         setSellEndDate(data?.data.posts[0].sell_end_date)
 
-          //狀態接變數值
-          setDateStart(date1)
-          setDateEnd(date2)
-          setTimeStart(time1)
-          setTimeEnd(time2)
-          setSellTime(time3)
-        }
-      })
-      .catch((error) => console.error('Error fetching data:', error))
+  //         //狀態接變數值
+  //         setDateStart(date1)
+  //         setDateEnd(date2)
+  //         setTimeStart(time1)
+  //         setTimeEnd(time2)
+  //         setSellTime(time3)
+  //       }
+  //     })
+  //     .catch((error) => console.error('Error fetching data:', error))
 
-  }, [])
+  // }, [])
   // console.log(eventInfo);
   //console.log(sellStartDate);
   // console.log(sellTime);
@@ -144,7 +165,7 @@ export default function Detail() {
   }
 
   // const totalAmount = eventInfo[0]?.price * qty
-  // console.log(selectTime);
+
 
 
   return (
@@ -191,21 +212,23 @@ export default function Detail() {
 
           <div>
             <img
-              src={`/images/product/list/${eventInfo[0]?.image?.split(',')}`}
+              src={`/images/product/list/${
+                eventInfo[0]?.banner?.split(',')[0]
+              }`}
               className="object-fit-cover"
               alt=""
             />
           </div>
         </section>
-
-        <main>
+        {eventInfo.map((eventInfo) => (
+        <main key={eventInfo.id}>
           <div className="wrapper">
             <section className="title">
               <div
-                key={eventInfo[0]?.id}
+                key={eventInfo.id}
                 className="d-flex align-items-center justify-content-between mt-3">
                 <h5 className="border-5 border-start border-primary px-2">
-                  {eventInfo[0]?.event_name}
+                  {eventInfo.event_name}
                 </h5>
                 <button
                   type="button"
@@ -217,18 +240,20 @@ export default function Detail() {
               </div>
               <div>
                 <h3 className="my-4">
-                  {eventInfo[0]?.event_name}
+                  {eventInfo.event_name}
                 </h3>
                 <h6 className="text-normal-gray-light">
                   <i className="bi bi-calendar me-2 d-none d-xxl-inline-flex" />
-                  {dateStart}~{dateEnd}
+                  {/* {dateStart}~{dateEnd} */}
+                  {eventInfo.start_date.substring(0, 10)}~
+                    {eventInfo.end_date.substring(0, 10)}
                 </h6>
                 <h6>
                   <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" />
-                  {eventInfo[0]?.place}
+                  {eventInfo.place}
                 </h6>
                 <p className="mx-4 text-secondary-02">
-                  {eventInfo[0]?.address}
+                  {eventInfo.address}
                 </p>
                 <hr className="d-none d-xxl-block" />
               </div>
@@ -244,6 +269,7 @@ export default function Detail() {
               </div>
               <hr />
             </section>
+            
             <div className="d-flex align-items-center mt-5">
               <h4 className="border-5 border-start border-primary px-2">
                 選擇方案
@@ -745,6 +771,7 @@ export default function Detail() {
             </div>
           </div>
         </main>
+        ))}
       </>
 
 
