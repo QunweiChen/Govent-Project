@@ -25,7 +25,7 @@ export default function useEvents() {
   //         // console.log(result);
   //         setData(result)
   //       }
-    
+
   //       fetchData()
   //       console.log(data);
   //   // const uri = 'http://localhost:3005/api/events'

@@ -2,8 +2,10 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import useEvents from '@/hooks/use-event'
 import TestPorps from '@/components/layout/list-layout/test'
+import FavIcon from '@/components/layout/list-layout/fav-icon'
 
 export default function Test() {
+  
   //裝取資料設定狀態
   const { data } = useEvents()
   const [events, setEvents] = useState([])
@@ -25,6 +27,7 @@ export default function Test() {
     <>
       <h1>Hello Govent.</h1>
       <TestPorps datas={events} onDataFromChild={handleDataFromChild} />
+      <FavIcon />
     </>
   )
 }

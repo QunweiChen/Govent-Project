@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { addFav, removeFav } from '@/services/user'
 import toast from 'react-hot-toast'
 
-
-
- // 愛心設定
- const Heart = ({ size = 20, color = 'red' }) => (
+// 愛心設定
+const Heart = ({ size = 20, color = 'red' }) => (
   <svg
     className="heart"
     viewBox="0 0 32 29.6"
@@ -16,29 +14,27 @@ import toast from 'react-hot-toast'
   </svg>
 )
 
-
 export default function FavIcon({id}) {
   // const [activeButton, setActiveButton] = useState(0)
   // const handleClick = () => {
   //   setActiveButton(activeButton === 0 ? 1 : 0)
   // }
 
-   // 由context取得auth-判斷是否能執行add或remove用，favorites決定愛心圖案用
-   const { auth, favorites, setFavorites } = useAuth()
+  // 由context取得auth-判斷是否能執行add或remove用，favorites決定愛心圖案用
+  const { auth, favorites, setFavorites } = useState()
 
-   const handleTriggerFav = (pid) => {
-     // 在陣列中->移出
-     if (favorites.includes(pid)) {
-       setFavorites(favorites.filter((v) => v !== pid))
-     } else {
-       //不在陣列中加入
-       setFavorites([...favorites, pid])
-     }
-   }
+  const handleTriggerFav = (pid) => {
+    // 在陣列中->移出
+    if (favorites.includes(pid)) {
+      setFavorites(favorites.filter((v) => v !== pid))
+    } else {
+      //不在陣列中加入
+      setFavorites([...favorites, pid])
+    }
+  }
 
-   
   //  新增
-   const handleAddFav = async (pid) => {
+  const handleAddFav = async (pid) => {
     const res = await addFav(pid)
 
     if (res.data.status === 'success') {
@@ -61,11 +57,18 @@ export default function FavIcon({id}) {
 
   return (
     <>
-     {/* 由favorites狀態決定呈現實心or空心愛愛圖示 */}
-     {favorites.includes(id) ? (
+      {/* 由favorites狀態決定呈現實心or空心愛愛圖示 */}
+      {favorites.includes(id) ? (
         <button
           className={`btn bg-bg-gray`}
-          style={{ position: 'absolute', right: 5, top:5, padding: 0, border: 'none', background: 'none' }}
+          style={{
+            position: 'absolute',
+            right: 5,
+            top: 5,
+            padding: 0,
+            border: 'none',
+            // background: 'none',
+          }}
           onClick={() => {
             // 沒登入不能用
             if (!auth.isAuth) {
@@ -77,12 +80,17 @@ export default function FavIcon({id}) {
         >
           <Heart />
         </button>
-      ):(
-      <button
-        className={`btn bg-bg-gray`}
-        style={{ position: 'absolute', right: 5, top:5,
-        padding: 0, border: 'none' }}
-        onClick={() => {
+      ) : (
+        <button
+          className={`btn bg-bg-gray`}
+          style={{
+            position: 'absolute',
+            right: 5,
+            top: 5,
+            padding: 0,
+            border: 'none',
+          }}
+          onClick={() => {
             // 沒登入不能用
             if (!auth.isAuth) {
               return toast.error('會員才能使用!')
@@ -90,16 +98,14 @@ export default function FavIcon({id}) {
 
             handleAddFav(id)
           }}
-
-      >
-        {/* <i
+        >
+          {/* <i
           style={{ opacity: 0.8 }}
           className="px-2 py-1 rounded-3 bi bi-heart-fill fs-5"
         ></i> */}
-        <Heart color='white'/>
-      </button>
+          <Heart color="white" />
+        </button>
       )}
     </>
   )
 }
-
