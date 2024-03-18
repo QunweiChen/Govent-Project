@@ -25,7 +25,7 @@ router.get('/', async function(req, res){
             SELECT event_type.*, event.*
             FROM event_type
             JOIN event ON event_id = event.id
-            WHERE event_id = 73
+            WHERE event_id = id
         `, {
             type: QueryTypes.SELECT,
         });
