@@ -13,11 +13,10 @@ import { RxPerson } from 'react-icons/rx'
 //引入components
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
-// import FavIcon from '@/components/layout/list-layout/fav-icon'
+import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import Sidebar from '@/components/layout/list-layout/sidebar'
-import PageBar from '@/components/layout/list-layout/pagebar'
 
 //篩選用components
 import FilterBar from '@/components/layout/list-layout/FilterBar'
@@ -32,8 +31,9 @@ import useEvents from '@/hooks/use-event'
 
 export default function List() {
   const { data } = useEvents()
-
-  console.log(data)
+  // 引入路由
+  const { router } = useRouter()
+  // console.log(data)
 
   //活動資料
   // 1. 從伺服器來的原始資料
@@ -42,12 +42,19 @@ export default function List() {
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
 
+  //增加屬性質
+  const initState = events.map((v, i) => {
+    return { ...v, fav: false }
+  })
+
+  const [newEvents, setNewEvents] = useState(initState)
+
   useEffect(() => {
     if (data) {
       setEvents(data)
     }
   }, [data])
-  console.log(events)
+  // console.log(events)
 
   //回調函式
   // 筛选结果状态
@@ -111,7 +118,9 @@ export default function List() {
       <nav className="header container navbar-expand mt-5 w-1200">
         <h5 className="d-flex justify-content-between">
           <div className="bg-bg-gray-secondary rounded-3">
-            <p className="mx-4 my-2">目前共有 {data?.length} 筆 結果</p>
+            <p className="mx-4 my-2">
+              目前共有 {newFilteredEvents?.length} 筆 結果
+            </p>
           </div>
           <section>
             <NavbarTopRwd
@@ -142,22 +151,36 @@ export default function List() {
               {currentEvents.map((v) => (
                 <div key={v.id} className="col-md-4 col-sm-6 ">
                   <Link
-                    href={`/product/product-info?id=${v.id}`}
+                    href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
                     className="col-md-4 col-sm-6"
                     key={v.id}
                     style={{ textDecoration: 'none' }}
                   >
+                    {/* <div onClick={()=>{router.push(``)}} */}
                     <div className="card  stretched-link bg-bg-gray-secondary text-white px-0 no-border">
                       <figure>
                         <img
-                          src={`/images/product/list/${v.image?.split(',')[0]}`}
+                          src={`/images/product/list/${
+                            v.banner?.split(',')[0]
+                          }`}
                           alt=""
                           className="card-img-top"
                         />
                       </figure>
-                      {/* <FavIcon id={v.id} /> */}
-                      {/* <FavFcon/> */}
-
+                      <button
+                        className={`btn bg-bg-gray`}
+                        style={{
+                          position: 'absolute',
+                          right: 5,
+                          top: 5,
+                          padding: 0,
+                          border: 'none',
+                          background: 'none',
+                        }}
+                      >
+                        <FavIcon />
+                        {/* <FavFcon/> */}
+                      </button>
                       <div className="card-body">
                         <p className=" text-normal-gray-light">
                           {v.category_name}

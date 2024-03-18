@@ -62,9 +62,64 @@ export function CartProvider({
     }
     setCartItems(cartItems)
     // eslint-disable-next-line
-}, [cartItems])
+}, [cartItems,merchantItems])
+}, [cartItems,merchantItems])
 
-
+  //checkbox內容
+  //切換
+  // 依傳入id進行切換completed屬性改變
+  const toggleCheckbox = (newmerchantItems, id) => {
+    const news = newmerchantItems.map((merchant) => {
+      return {
+        ...merchant,
+        items: merchant.items.map((item) => {
+          if (item.id === id) {
+            return { ...item, checked: !item.checked }
+          } else {
+            return item
+          }
+        }),
+      }
+    })
+    setMerchantItems(news)
+  }
+  const handleToggleCompleted = (id) => {
+    toggleCheckbox(merchantItems, id)
+  }
+  //全選
+  const toggleSelectedAll = (MerchantItems, isSelectedAll) => {
+    const news = MerchantItems.map((merchant) => {
+      return {
+        ...merchant,
+        items: merchant.items.map((item) => {
+          return { ...item, checked: isSelectedAll }
+        }),
+      }
+    })
+    setMerchantItems(news)
+  }
+  const handleToggleSelectedAll = (isSelectedAll) => {
+    toggleSelectedAll(merchantItems, isSelectedAll)
+  }
+  //商家全選
+  const toggleSelectedMt = (merchantItems, isSelectedMt, MtId) => {
+    const news = merchantItems.map((merchant) => {
+      if (merchant.merchantId === MtId) {
+        return {
+          ...merchant,
+          items: merchant.items.map((item) => {
+            return { ...item, checked: isSelectedMt }
+          }),
+        }
+      } else {
+        return merchant
+      }
+    })
+    setMerchantItems(news)
+  }
+  const handleToggleSelectedMt = (isSelectedMt, MtId) => {
+    toggleSelectedMt(merchantItems, isSelectedMt, MtId)
+  }
   //資料庫-用id尋找商家name
   const foundMt = (MtId) => {
     const foundItem = Mt.find((item) => item.id === MtId)
