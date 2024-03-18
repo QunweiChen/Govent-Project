@@ -30,13 +30,35 @@ export default function PaymentForm({
   } = useForm()
   //結帳之後將資料傳送至後端
   const postSubmit = (data) => {
+    let discountObj = discount
+    //判斷是否有勾選優惠或點數折抵
+    switch (true) {
+      case discountState.point == false && discountState.coupon == true:
+        discountObj = { ...discount, point: '0' }
+        break
+      case discountState.point == true && discountState.coupon == false:
+        discountObj = { ...discount, coupon: { name: '', value: '0', id: '' } }
+        break
+      case discountState.coupon == false && discountState.coupon == false:
+        discountObj = {
+          ...discount,
+          point: '0',
+          coupon: { name: '', value: '0', id: '' },
+        }
+        break
+      default:
+        break
+    }
+    console.log(discountObj)
+    let newPoint = pointData - discountObj.point
+    console.log(newPoint)
     let result = {
       ...data,
       money: money,
       productData: productData,
       redeem: redeem(),
-      discount: discount,
-      coupon: coupon(),
+      discount: discountObj,
+      newPoint: newPoint,
     }
     fetch('http://localhost:3005/api/payment-line-pay', {
       method: 'POST',
@@ -49,7 +71,6 @@ export default function PaymentForm({
         return response.json()
       })
       .then((response) => {
-        console.log(response.url)
         window.location.replace(response.url)
       })
       .catch((err) => {
@@ -78,13 +99,21 @@ export default function PaymentForm({
         coupon: {
           name: e.target.options[e.target.selectedIndex].text,
           value: e.target.value,
+          id: e.target.options[e.target.selectedIndex].id,
         },
       }
+      console.log(e.target.options[e.target.selectedIndex].id)
       setDiscount(setConnectionData)
       return
     }
     let setConnectionData = { ...discount, [e.target.name]: e.target.value }
-
+    if (e.target.name == 'point' && e.target.value > pointData) {
+      alert('超過範圍')
+      setConnectionData = { ...discount, [e.target.name]: '0' }
+      setDiscount(setConnectionData)
+      pointInputRef.current.value = ''
+      return
+    }
     setDiscount(setConnectionData)
   }
   //監聽點數及優惠券是否被勾選
@@ -153,6 +182,30 @@ export default function PaymentForm({
       }
     }
   }
+  const [couponData, setCouponData] = useState([])
+  const [pointData, setPointData] = useState(0)
+  console.log(pointData)
+  //拿取會員的優惠券及點數資料
+  useEffect(() => {
+    fetch('http://localhost:3005/api/payment/number', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log()
+        let point = Number(response.data.point[0].point)
+        setPointData(point)
+        setCouponData(response.data.coupon)
+        return
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
 
   return (
     <>
@@ -305,7 +358,7 @@ export default function PaymentForm({
           <div className="point bg-bg-gray-secondary rounded-4  col me-2 py-3 px-4 ">
             <div className="point-title  mb-1">
               <CheckboxInput
-                Content={'我要使用點數折抵（目前尚餘 583 點）'}
+                Content={`我要使用點數折抵（目前尚餘${pointData}點）`}
                 inputID="point"
                 change={handlePointCheckboxChange}
               />
@@ -349,15 +402,15 @@ export default function PaymentForm({
                   onChange={formChange}
                 >
                   <option value="0">選擇優惠券</option>
-                  <option value="0.9" label="九折">
-                    九折
-                  </option>
-                  <option value="200" label="折抵200">
-                    折抵200
-                  </option>
-                  <option value="500" label="折抵500">
-                    增加200
-                  </option>
+                  {couponData.map((v, i) => {
+                    return (
+                      <>
+                        <option key={i} value={v.discount_valid} id={v.id}>
+                          {v.coupon_name}
+                        </option>
+                      </>
+                    )
+                  })}
                 </select>
               </div>
             </div>

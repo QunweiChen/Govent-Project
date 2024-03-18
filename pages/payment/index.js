@@ -2,6 +2,7 @@ import React, { use, useEffect, useState } from 'react'
 import ProductInfo from '@/components/payment/product-info/index.js'
 import DefaultLayout from '@/components/layout/default-layout'
 import PaymentForm from '@/components/payment/payment-Form'
+import { useCart } from '@/hooks/use-cart'
 
 export default function Payment() {
   //總金額
@@ -9,7 +10,7 @@ export default function Payment() {
   //點數及優惠券的值
   const [discount, setDiscount] = useState({
     point: 0,
-    coupon: { name: '', value: 0 },
+    coupon: { name: '', value: 0, id: '' },
   })
   console.log(discount)
   //點數及優惠券是否被勾選
@@ -21,15 +22,15 @@ export default function Payment() {
   //購物車資料
   const [productData, setProductData] = useState([])
   // 從 localStorage 中獲取 MtItems 資料
-  const MtItemsString =
-    typeof window !== 'undefined'
-      ? window.localStorage.getItem('MtItems')
-      : '[]'
+  const { cartItems } = useCart()
+  // const MtItemsString =
+  //   typeof window !== 'undefined'
+  //     ? window.localStorage.getItem('MtItems')
+  //     : '[]'
   //轉成物件
-  var MtItems = JSON.parse(MtItemsString)
   // 過濾出所有符合條件的項目
-  const news = MtItems.flatMap((merchant) => {
-    return merchant.items.filter((item) => item.checked === true)
+  const news = cartItems.flatMap((merchant) => {
+    return merchant
   })
   //計算總金額
   const TotalPrice = () => {
