@@ -7,7 +7,6 @@ import authenticate from '##/middlewares/authenticate.js'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import bodyParser from 'body-parser'
 dotenv.config()
 
 const app = express()
@@ -54,13 +53,14 @@ router.get('/', authenticate, async function (req, res) {
     // findAll 是回傳所有資料
     const result = await sequelize.query(
       'SELECT event.*, organizer.user_id ' +
-    'FROM `event` ' +
-    'JOIN `organizer` ON organizer.id = event.merchat_id ' +
-    'WHERE organizer.user_id = ? ',
-    {
-      replacements: [req.user.id], // 使用占位符传递参数
-      type: QueryTypes.SELECT,
-    })
+        'FROM `event` ' +
+        'JOIN `organizer` ON organizer.id = event.merchat_id ' +
+        'WHERE organizer.user_id = ? ',
+      {
+        replacements: [req.user.id], // 使用占位符传递参数
+        type: QueryTypes.SELECT,
+      }
+    )
 
     // 標準回傳 JSON
     return res.json({ status: 'success', data: { result } })
@@ -178,6 +178,71 @@ router.post('/add-options', async (req, res) => {
     res
       .status(500)
       .json({ status: 'error', message: 'Failed to create option.' })
+  }
+})
+
+router.get('/event/:eid', authenticate, async (req, res) => {
+  try {
+    const eid = req.params.eid
+    const result = await sequelize.query(
+      'SELECT event.* , activity_category.activity_name ' +
+        'FROM `event` ' +
+        'JOIN `activity_category` ON activity_category.id = event.event_type_id ' +
+        'WHERE event.event_id = :eid ',
+      {
+        type: QueryTypes.SELECT,
+        replacements: { eid: eid },
+      }
+    )
+    res.json({ status: 'success', data: { result } })
+    // 将订单数据发送给前端
+  } catch (error) {
+    console.error('Error fetching order data:', error)
+    res.status(500).json({ status: 'error', message: '500' })
+  }
+})
+
+router.get('/event/option/:eid', authenticate, async (req, res) => {
+  try {
+    const eid = req.params.eid
+    const result = await sequelize.query(
+      'SELECT event_options.* ' +
+        'FROM `event_options` ' +
+        'WHERE event_options.event_id = :eid ',
+      {
+        type: QueryTypes.SELECT,
+        replacements: { eid: eid },
+      }
+    )
+    res.json({ status: 'success', data: { result } })
+    // 将订单数据发送给前端
+  } catch (error) {
+    console.error('Error fetching order data:', error)
+    res.status(500).json({ status: 'error', message: '500' })
+  }
+})
+
+router.get('/event/ticket/:eid', authenticate, async (req, res) => {
+  try {
+    const eid = req.params.eid
+    const result = await sequelize.query(
+      'SELECT ticket.* , event_options.event_id, event_options.option_name, event.event_id, user_order.order_number, user_order.user_id, user_order.create_at, member.name ' +
+        'FROM `ticket` ' +
+        'JOIN `event_options` ON ticket.event_option_id = event_options.id ' +
+        'JOIN `event` ON event.event_id = event_options.event_id ' +
+        'JOIN `user_order` ON user_order.order_number = ticket.order_number ' +
+        'JOIN `member` ON user_order.user_id = member.id ' +
+        'WHERE event.event_id = :eid ',
+      {
+        type: QueryTypes.SELECT,
+        replacements: { eid: eid },
+      }
+    )
+    res.json({ status: 'success', data: { result } })
+    // 将订单数据发送给前端
+  } catch (error) {
+    console.error('Error fetching order data:', error)
+    res.status(500).json({ status: 'error', message: '500' })
   }
 })
 

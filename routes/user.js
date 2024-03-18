@@ -95,7 +95,10 @@ router.post('/signin', upload.none(), async (req, res) => {
 
   try {
     const user = await sequelize.query(
-      'SELECT * FROM member WHERE username = :username AND password = :password',
+      'SELECT member.*, organizer.id AS merchat_id ' +
+        'FROM member ' +
+        'LEFT JOIN organizer ON organizer.user_id = member.id ' +
+        'WHERE username = :username AND password = :password ',
       {
         replacements: { username, password },
         type: QueryTypes.SELECT,
@@ -113,6 +116,7 @@ router.post('/signin', upload.none(), async (req, res) => {
           phone: user[0].phone,
           address: user[0].address,
           avatar: user[0].avatar,
+          organizer: user[0].merchat_id,
         },
         process.env.JWT_SECRET_KEY,
         { expiresIn: '120m' }
