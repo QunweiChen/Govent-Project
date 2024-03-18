@@ -21,6 +21,7 @@ export default function PaymentForm({
 }) {
   //引入會員資料hook
   const { auth } = useAuth()
+  console.log(auth.user.id)
   //使用react-hook-form套件檢查form表單
   const {
     register,
@@ -30,6 +31,7 @@ export default function PaymentForm({
   } = useForm()
   //結帳之後將資料傳送至後端
   const postSubmit = (data) => {
+    console.log(productData)
     let discountObj = discount
     //判斷是否有勾選優惠或點數折抵
     switch (true) {
@@ -37,19 +39,20 @@ export default function PaymentForm({
         discountObj = { ...discount, point: '0' }
         break
       case discountState.point == true && discountState.coupon == false:
-        discountObj = { ...discount, coupon: { name: '', value: '0', id: '' } }
+        discountObj = { ...discount, coupon: { name: '', value: '0', id: '0' } }
         break
       case discountState.coupon == false && discountState.coupon == false:
         discountObj = {
           ...discount,
           point: '0',
-          coupon: { name: '', value: '0', id: '' },
+          coupon: { name: '', value: '0', id: '0' },
         }
         break
       default:
         break
     }
     console.log(discountObj)
+
     let newPoint = pointData - discountObj.point
     console.log(newPoint)
     let result = {
@@ -59,7 +62,9 @@ export default function PaymentForm({
       redeem: redeem(),
       discount: discountObj,
       newPoint: newPoint,
+      userID: auth.user.id,
     }
+    console.log(result)
     fetch('http://localhost:3005/api/payment-line-pay', {
       method: 'POST',
       headers: {

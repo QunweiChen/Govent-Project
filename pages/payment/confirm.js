@@ -50,19 +50,51 @@ export default function Confirm() {
         console.log(err)
       })
   }
-  function qrCode() {}
+  async function qrCode(orderID) {
+    const data = await fetch(
+      `http://localhost:3005/api/qrcode/data?orderID=${orderID}`,
+      {
+        method: 'GET',
+      }
+    )
+      .then((response) => {
+        return response.json()
+      })
+      .then((response) => {
+        return response.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    let arr = JSON.parse(data[0].order_info)
+    arr.map((e) => {
+      console.log(e)
+      let eventID = e.event_id
+      fetch(`http://localhost:3005/api/qrcode`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ eventID, orderID }),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    })
+  }
   function handleCheckout() {
     console.log('清除購物車')
     // 將符合條件的項目從 cartItems 中移除
     // 過濾掉支付清單中的項目
-    console.log(cartItems)
     const updatedcartItems = cartItems
       .filter((item) => !pay.some((p) => p.id === item.id))
       // 如果商家中的票券不為空，則返回該商家
-
       .filter(Boolean) // 去除為空的商家
     // 將更新後的 cartItems 存回 localStorage
-    console.log(updatedcartItems)
     window.localStorage.setItem('cartItems', JSON.stringify(updatedcartItems))
     setCartItems(updatedcartItems)
     setPay([])
@@ -91,14 +123,14 @@ export default function Confirm() {
           //成功之後將優惠券及點數扣除
           setState(response)
           delCoupon(couponID, point)
-          // qrCode(orderID)
-          handleCheckout()
+          qrCode(orderID)
+          // handleCheckout()
           mail(orderID)
           // handleCheckout()
           //如果成功五秒後跳轉回主頁
-          setTimeout(() => {
-            window.location.replace('http://localhost:3000/')
-          }, 5000)
+          // setTimeout(() => {
+          //   window.location.replace('http://localhost:3000/')
+          // }, 5000)
           return response
         })
         .catch((err) => {
