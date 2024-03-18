@@ -50,7 +50,7 @@ const MyNavbar = () => {
         >
           <div className={`bg-change ${scrolled ? 'scrolled' : ''}`}></div>
           <div className="container width-1200">
-            <Link className="navbar-brand ps-4" href="/">
+            <Link className="navbar-brand ps-4 d-flex align-items-center" href="/">
               <Image
                 src="/govent-logo.png"
                 alt=""
@@ -58,40 +58,14 @@ const MyNavbar = () => {
                 height={24}
                 priority
               />
+              <h6 className='ms-2 mb-1'>會員中心</h6>
             </Link>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasNavbar"
-              aria-controls="offcanvasNavbar"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
             <div
               className="offcanvas offcanvas-end"
               tabIndex="-1"
               id="offcanvasNavbar"
               aria-labelledby="offcanvasNavbarLabel"
             >
-              <div className="offcanvas-header">
-                <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-                  <Image
-                    src="/next.svg"
-                    alt=""
-                    width={80}
-                    height={20}
-                    priority
-                  />
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="offcanvas"
-                  aria-label="Close"
-                ></button>
-              </div>
-
               <motion.div
                 initial={{ y: 10, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}

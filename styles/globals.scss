@@ -190,6 +190,9 @@ p,
 .bottom-line {
   border-bottom: 1px solid var(--normal-gray-color);
 }
+.right-line {
+  border-right: 1px solid var(--normal-gray-color);
+}
 
 .text-link {
   color: white;
@@ -217,7 +220,7 @@ p,
   }
 }
 
-.text-shadow{
+.text-shadow {
   text-shadow: 0 0 3px black;
 }
 

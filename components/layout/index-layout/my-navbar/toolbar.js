@@ -102,6 +102,11 @@ export default function Toolbar({ handleShow }) {
               </Link>
             </li>
             <li>
+              <Link className="dropdown-item text-center " href="/organizer">
+                主辦中心
+              </Link>
+            </li>
+            <li>
               <button
                 className="dropdown-item text-center "
                 onClick={handleSignOut}
