@@ -32,7 +32,7 @@ router.get('/number', authenticate, async function (req, res) {
       `SELECT point FROM member WHERE id = :userID`,
       { replacements: { userID }, type: QueryTypes.SELECT }
     )
-    console.log(point)
+    // console.log(point)
     return res.send({
       status: 'success link cost',
       data: { coupon, point },
@@ -47,11 +47,12 @@ router.put('/delete', authenticate, (req, res) => {
   const userID = req.user.id
   const couponID = req.body.couponID
   const point = req.body.point
-  console.log(point)
-  console.log(userID)
-  console.log(couponID)
+  // console.log(point)
+  // console.log(userID)
+  // console.log(couponID)
   if (couponID == 0) {
     res.send({ status: 'success', message: '使用者無使用優惠券' })
+    return
   }
   try {
     sequelize.query(

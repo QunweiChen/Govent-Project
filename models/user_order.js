@@ -18,10 +18,6 @@ export default async function (sequelize) {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      event_id: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
       payment_method: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -32,7 +28,7 @@ export default async function (sequelize) {
         allowNull: true,
       },
       order_info: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: true,
       },
       coupon_discount: {

@@ -6,12 +6,12 @@ const router = express.Router()
 
 /* 寄送email的路由 */
 router.post('/send', function (req, res, next) {
-  console.log(req.body)
+  // console.log(req.body)
   // email內容
   const mailOptions = {
     from: `<${process.env.SMTP_TO_EMAIL}>`,
     to: 'goventmfee44@gmail.com',
-    subject: '這是一封測試電子郵件',
+    subject: 'Govent訂單完成',
     text: `你好， \r\n通知你有關第一封郵件的事。\r\n\r\n敬上\r\n開發團隊`,
     html: `<!DOCTYPE html>
     <html lang="en">

@@ -10,7 +10,8 @@ const upload = multer()
 
 router.post('/', upload.none(), async (req, res) => {
   let body = req.body
-  console.log(body)
+  console.log(body.newPoint)
+  console.log(body.discount.coupon)
   const orderId = uuidv4()
 
   //傳送給linePay API的資料，必須按照LinePay的規則
@@ -42,8 +43,7 @@ router.post('/', upload.none(), async (req, res) => {
       //寫進去資料庫的資料
       const dbData = {
         order_id: orderId,
-        user_id: '1234',
-        event_id: '1234',
+        user_id: body.userID,
         payment_method: body.paymentType,
         total: body.money,
         coupon_discount: body.discount.coupon.value,
@@ -76,7 +76,7 @@ router.get('/confirm', async (req, res) => {
       type: QueryTypes.SELECT,
     }
   )
-  console.log(dbData)
+  // console.log(dbData)
   let money = dbData[0].total
   let json = { amount: money, currency: 'TWD' }
   //驗證訂單是否有付款成功
