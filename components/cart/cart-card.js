@@ -26,12 +26,12 @@ export default function CartCard({
     cartItems.forEach((Items) => {
       if (Items.checked) {
         allUnchecked = false
-        return // 如果有一个选中了就跳出循环
+        return // 如果有一个選中了就跳出循環
       }
     })
 
-    setShowModal(allUnchecked) // 如果所有选项都未选中，则显示模态框
-    return !allUnchecked // 返回是否有任何选项被选中
+    setShowModal(allUnchecked) // 如果所有選項都未選中，則顯示
+    return !allUnchecked // 是否有任何選項被選中
   }
   // console.log(cartItems)
   // console.log(MerchantIds)
@@ -43,7 +43,7 @@ export default function CartCard({
         {MerchantIds.map((v, i) => {
           return (
             <div key={i}>
-              <div className="border-0 cart-card border-bottom border-top border-normal-gray">
+              <div className="border-0 cart-card border-bottom border-normal-gray">
                 <div className="d-flex align-items-center justify-content-between my-3 text-center">
                   <div className="d-flex align-items-center">
                     <input
@@ -52,7 +52,7 @@ export default function CartCard({
                         .filter((v1) => v1.merchantId === v)
                         .every((v1) => v1.checked)}
                       onChange={(e) => {
-                        console.log(v)
+                        // console.log(v)
                         handleToggleSelectedAll(e.target.checked, v)
                       }}
                       className="ms-4 checkbox-large form-check-input"
@@ -72,8 +72,8 @@ export default function CartCard({
                   const [datePart, timePart] = v.holdingTime.split(' ')
                   return (
                     <div key={i}>
-                      <div className="border-bottom border-normal-gray">
-                        <div className="border-0 cart-card row g-0 py-3 event">
+                      <div className="border-bottom border-normal-gray event">
+                        <div className="border-0 cart-card row g-0 py-3">
                           <div className="col-sm-2 col-4 d-flex align-items-center ms-4">
                             <input
                               type="checkbox"
@@ -167,12 +167,12 @@ export default function CartCard({
                         <div className="modal-dialog modal-dialog-centered">
                           <div className="modal-content">
                             <div className="modal-header ">
-                              <h1
-                                className="modal-title fs-5 "
+                              <h6
+                                className="modal-title"
                                 id="staticBackdropLabel"
                               >
                                 是否要移除此張票券?
-                              </h1>
+                              </h6>
                               <button
                                 type="button"
                                 className="btn-close"
@@ -183,14 +183,14 @@ export default function CartCard({
                             <div className="modal-footer">
                               <button
                                 type="button"
-                                className="btn btn-secondary"
+                                className="btn btn-secondary p"
                                 data-bs-dismiss="modal"
                               >
                                 再考慮一下
                               </button>
                               <button
                                 type="button"
-                                className="btn btn-primary"
+                                className="btn btn-primary p text-white"
                                 data-bs-dismiss="modal"
                                 onClick={() => {
                                   setTimeout(() => {
@@ -211,7 +211,7 @@ export default function CartCard({
           )
         })}
       </div>
-      <div className="border-0 cart-card d-none d-sm-block border-top border-normal-gray">
+      <div className="border-0 cart-card d-none d-sm-block">
         <div className="d-flex justify-content-end align-items-center m-4">
           <p className="text-primary-light ms-3">
             已選取 {calcTotalItemstotal} 張票券
@@ -238,9 +238,15 @@ export default function CartCard({
         onHide={() => setShowModal(false)} // 点击模态框外部或关闭按钮时关闭模态框
         centered
       >
-        <Modal.Body>
-          <Modal.Header closeButton>請勾選要結帳的票券</Modal.Header>
-        </Modal.Body>
+        <Modal.Header closeButton>
+          <Modal.Title
+            id="example-modal-sizes-title-lg"
+            className="h4 text-primary"
+          >
+            注意!
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body closeButton>請勾選需購買的票券</Modal.Body>
       </Modal>
     </>
   )
