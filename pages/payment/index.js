@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ProductInfo from '@/components/payment/product-info/index.js'
 import DefaultLayout from '@/components/layout/default-layout'
 import PaymentForm from '@/components/payment/payment-Form'
@@ -29,9 +29,10 @@ export default function Payment() {
   //     : '[]'
   //轉成物件
   // 過濾出所有符合條件的項目
-  const news = cartItems.flatMap((merchant) => {
-    return merchant
+  const news = cartItems.filter((merchant) => {
+    return merchant.checked === true
   })
+  console.log(news)
   //計算總金額
   const TotalPrice = () => {
     let total = 0

@@ -37,6 +37,10 @@ export function CartProvider({
   const [storedValue, setValue] = useLocalStorage(localStorageKey1, items)
   //連接資料庫
   const [Mt, setMt] = useState([])
+  //結帳
+  const [pay, setPay] = useState([])
+  // 過濾出所有符合條件的項目
+  const paynews = cartItems.filter((item) => item.checked === true)
 
   //重新定義公司
   useEffect(() => {
@@ -53,6 +57,7 @@ export function CartProvider({
       }
     }
     getCartMt()
+    setPay(paynews)
   }, [])
   // 當 cartItems 更動時 -> 更動 localStorage 中的值 -> 更動 cartState
   useEffect(() => {
@@ -276,6 +281,8 @@ export function CartProvider({
         handleToggleSelectedAll,
         newtoggleCheckbox,
         MerchantIds,
+        pay,
+        setPay,
       }}
     >
       {children}
