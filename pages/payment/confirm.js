@@ -3,8 +3,10 @@ import { useRouter } from 'next/router'
 import Card from 'react-bootstrap/Card'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
+import { useCart } from '@/hooks/use-cart'
 
 export default function Confirm() {
+  const { setCartItems, cartItems, setPay, pay } = useCart()
   const { auth } = useAuth()
   console.log(auth)
   const [state, setState] = useState({})
@@ -49,7 +51,22 @@ export default function Confirm() {
       })
   }
   function qrCode() {}
+  function handleCheckout() {
+    console.log('清除購物車')
+    // 將符合條件的項目從 cartItems 中移除
+    // 過濾掉支付清單中的項目
+    console.log(cartItems)
+    const updatedcartItems = cartItems
+      .filter((item) => !pay.some((p) => p.id === item.id))
+      // 如果商家中的票券不為空，則返回該商家
 
+      .filter(Boolean) // 去除為空的商家
+    // 將更新後的 cartItems 存回 localStorage
+    console.log(updatedcartItems)
+    window.localStorage.setItem('cartItems', JSON.stringify(updatedcartItems))
+    setCartItems(updatedcartItems)
+    setPay([])
+  }
   useEffect(() => {
     if (router.isReady) {
       let transactionId = router.query.transactionId
@@ -74,8 +91,10 @@ export default function Confirm() {
           //成功之後將優惠券及點數扣除
           setState(response)
           delCoupon(couponID, point)
-          qrCode(orderID)
-          // mail(orderID)
+          // qrCode(orderID)
+          handleCheckout()
+          mail(orderID)
+          // handleCheckout()
           //如果成功五秒後跳轉回主頁
           setTimeout(() => {
             window.location.replace('http://localhost:3000/')
