@@ -15,20 +15,18 @@ export default function EventsRecommend() {
                 <Card className="custom-card text-white bg-bg-gray">
                   <Card.Img
                     variant="top"
-                    src="./images/cart/4-03.jpg"
+                    src="./images/product/list/6-17.jpg"
                     style={{
                       objectFit: 'cover',
                       width: '100%',
                       height: '178px',
                     }}
                   />
-                  <Card.Body>
-                    <Card.Title className="h6">
-                      Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
-                    </Card.Title>
-                    <div className="d-flex justify-content-between align-items-center mt-3">
+                  <Card.Body className="d-flex justify-content-between flex-column">
+                    <Card.Title className="h6">原嶼伯樂 品酩饕宴</Card.Title>
+                    <div className="d-flex align-items-center justify-content-between w-100 mt-5">
                       <p className="text-normal-white border border-white rounded-5 py-1 px-2">
-                        市集
+                        課程講座
                       </p>
                       <p className="text-primary-light">NT $ 800 起</p>
                     </div>
@@ -39,22 +37,22 @@ export default function EventsRecommend() {
                 <Card className="custom-card text-white bg-bg-gray">
                   <Card.Img
                     variant="top"
-                    src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
+                    src="./images/product/list/2-02.jpg"
                     style={{
                       objectFit: 'cover',
                       width: '100%',
                       height: '178px',
                     }}
                   />
-                  <Card.Body>
+                  <Card.Body className="d-flex justify-content-between flex-column">
                     <Card.Title className="h6">
-                      Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
+                      HELLO KITTY 50週年特展
                     </Card.Title>
-                    <div className="d-flex justify-content-between align-items-center mt-3">
+                    <div className="d-flex align-items-center justify-content-between w-100">
                       <p className="text-normal-white border border-white rounded-5 py-1 px-2">
-                        演唱會
+                        展覽
                       </p>
-                      <p className="text-primary-light">NT $ 800 起</p>
+                      <p className="text-primary-light">NT $ 300 起</p>
                     </div>
                   </Card.Body>
                 </Card>
@@ -63,22 +61,22 @@ export default function EventsRecommend() {
                 <Card className="custom-card text-white bg-bg-gray">
                   <Card.Img
                     variant="top"
-                    src="./images/cart/4-03.jpg"
+                    src="./images/product/list/5-03.jpg"
                     style={{
                       objectFit: 'cover',
                       width: '100%',
                       height: '178px',
                     }}
                   />
-                  <Card.Body>
+                  <Card.Body className="d-flex justify-content-between flex-column">
                     <Card.Title className="h6">
-                      Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
+                      DKZ宰燦見面會2023台北站
                     </Card.Title>
-                    <div className="d-flex justify-content-between align-items-center mt-3">
+                    <div className="d-flex align-items-center justify-content-between w-100">
                       <p className="text-normal-white border border-white rounded-5 py-1 px-2">
-                        市集
+                        粉絲見面會
                       </p>
-                      <p className="text-primary-light">NT $ 800 起</p>
+                      <p className="text-primary-light">NT $ 1000 起</p>
                     </div>
                   </Card.Body>
                 </Card>
@@ -87,18 +85,18 @@ export default function EventsRecommend() {
                 <Card className="custom-card text-white bg-bg-gray">
                   <Card.Img
                     variant="top"
-                    src="https://cc.tvbs.com.tw/img/upload/2023/10/20/20231020110545-49d73a88.jpg"
+                    src="./images/product/list/1-01.jpg"
                     style={{
                       objectFit: 'cover',
                       width: '100%',
                       height: '178px',
                     }}
                   />
-                  <Card.Body>
+                  <Card.Body className="d-flex justify-content-between flex-column">
                     <Card.Title className="h6">
-                      Ed Sheeran 紅髮艾德 高雄國家體育場{' '}
+                      OneRepublic 共和世代 高雄巨蛋
                     </Card.Title>
-                    <div className="d-flex justify-content-between align-items-center mt-3">
+                    <div className="d-flex align-items-center justify-content-between w-100">
                       <p className="text-normal-white border border-white rounded-5 py-1 px-2">
                         演唱會
                       </p>
