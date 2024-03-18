@@ -13,7 +13,7 @@ import { RxPerson } from 'react-icons/rx'
 //引入components
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
-// import FavIcon from '@/components/layout/list-layout/fav-icon'
+import FavIcon from '@/components/layout/list-layout/fav-icon'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import Sidebar from '@/components/layout/list-layout/sidebar'
@@ -158,7 +158,7 @@ export default function List() {
                           className="card-img-top"
                         />
                       </figure>
-                      {/* <FavIcon id={v.id} /> */}
+                      {/* <FavIcon id={v.pid} /> */}
                       {/* <FavFcon/> */}
 
                       <div className="card-body">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { addFav, removeFav } from '@/services/user'
 import toast from 'react-hot-toast'
@@ -14,44 +14,44 @@ const Heart = ({ size = 20, color = 'red' }) => (
   </svg>
 )
 
-export default function FavIcon(props) {
+export default function FavIcon({id}) {
   // const [activeButton, setActiveButton] = useState(0)
   // const handleClick = () => {
   //   setActiveButton(activeButton === 0 ? 1 : 0)
   // }
 
   // 由context取得auth-判斷是否能執行add或remove用，favorites決定愛心圖案用
-  const { auth, favorites, setFavorites } = useAuth()
+  const { auth, favorites, setFavorites } = useState()
 
-  const handleTriggerFav = (eid) => {
+  const handleTriggerFav = (pid) => {
     // 在陣列中->移出
-    if (favorites.includes(eid)) {
-      setFavorites(favorites.filter((v) => v !== eid))
+    if (favorites.includes(pid)) {
+      setFavorites(favorites.filter((v) => v !== pid))
     } else {
       //不在陣列中加入
-      setFavorites([...favorites, eid])
+      setFavorites([...favorites, pid])
     }
   }
 
   //  新增
-  const handleAddFav = async (eid) => {
-    const res = await addFav(eid)
+  const handleAddFav = async (pid) => {
+    const res = await addFav(pid)
 
     if (res.data.status === 'success') {
       // 伺服器成功後，更新context中favorites的狀態，頁面上的圖示才會對應更動
-      handleTriggerFav(eid)
-      toast.success(`商品 id=${eid} 新增成功!`)
+      handleTriggerFav(pid)
+      toast.success(`商品 id=${pid} 新增成功!`)
     }
   }
 
   // 刪除
-  const handleRemoveFav = async (eid) => {
-    const res = await removeFav(eid)
+  const handleRemoveFav = async (pid) => {
+    const res = await removeFav(pid)
 
     if (res.data.status === 'success') {
       // 伺服器成功後，更新context中favorites的狀態，頁面上的圖示才會對應更動
-      handleTriggerFav(eid)
-      toast.success(`商品 id=${eid} 刪除成功!`)
+      handleTriggerFav(pid)
+      toast.success(`商品 id=${pid} 刪除成功!`)
     }
   }
 
@@ -67,7 +67,7 @@ export default function FavIcon(props) {
             top: 5,
             padding: 0,
             border: 'none',
-            background: 'none',
+            // background: 'none',
           }}
           onClick={() => {
             // 沒登入不能用

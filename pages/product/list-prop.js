@@ -13,7 +13,7 @@ import { RxPerson } from 'react-icons/rx'
 //引入components
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
-import FavIcon from '@/components/layout/list-layout/fav-icon'
+import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import Sidebar from '@/components/layout/list-layout/sidebar'
@@ -31,7 +31,8 @@ import useEvents from '@/hooks/use-event'
 
 export default function List() {
   const { data } = useEvents()
-
+  // 引入路由
+  const { router } = useRouter()
   // console.log(data)
 
   //活動資料
@@ -150,22 +151,36 @@ export default function List() {
               {currentEvents.map((v) => (
                 <div key={v.id} className="col-md-4 col-sm-6 ">
                   <Link
-                    href={`/product/${v.pid}`}//以防混亂，只有路由使用pid引導
+                    href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
                     className="col-md-4 col-sm-6"
                     key={v.id}
                     style={{ textDecoration: 'none' }}
                   >
+                    {/* <div onClick={()=>{router.push(``)}} */}
                     <div className="card  stretched-link bg-bg-gray-secondary text-white px-0 no-border">
                       <figure>
                         <img
-                          src={`/images/product/list/${v.banner?.split(',')[0]}`}
+                          src={`/images/product/list/${
+                            v.banner?.split(',')[0]
+                          }`}
                           alt=""
                           className="card-img-top"
                         />
                       </figure>
-                      {/* <FavIcon id={v.id} /> */}
-                      {/* <FavFcon/> */}
-
+                      <button
+                        className={`btn bg-bg-gray`}
+                        style={{
+                          position: 'absolute',
+                          right: 5,
+                          top: 5,
+                          padding: 0,
+                          border: 'none',
+                          background: 'none',
+                        }}
+                      >
+                        <FavIcon />
+                        {/* <FavFcon/> */}
+                      </button>
                       <div className="card-body">
                         <p className=" text-normal-gray-light">
                           {v.category_name}
