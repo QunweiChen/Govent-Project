@@ -14,7 +14,7 @@ const Heart = ({ size = 20, color = 'red' }) => (
   </svg>
 )
 
-export default function FavIcon({id}) {
+export default function FavIcon({ id }) {
   // const [activeButton, setActiveButton] = useState(0)
   // const handleClick = () => {
   //   setActiveButton(activeButton === 0 ? 1 : 0)
@@ -60,7 +60,7 @@ export default function FavIcon({id}) {
       {/* 由favorites狀態決定呈現實心or空心愛愛圖示 */}
       {favorites.includes(id) ? (
         <button
-          className={`btn bg-bg-gray`}
+          className={`btn bg-bg-gray `}
           style={{
             position: 'absolute',
             right: 5,

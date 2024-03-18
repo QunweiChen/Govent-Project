@@ -4,7 +4,6 @@ import NoCart from '@/components/cart/no-cart'
 import EventsRecommend from '@/components/events-recommend'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import NavbarBottomRwd from '@/components/layout/default-layout/navbar-bottom-rwd'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Modal } from 'react-bootstrap'
@@ -182,8 +181,11 @@ export default function CartIndex() {
             margin: 0 auto;
             padding: 0;
           }
-
+          .event {
+            transition: transform 0.3s ease;
+          }
           .event:hover {
+            transform: translateY(-5px);
             background-color: #151515;
           }
           .cart-logo {

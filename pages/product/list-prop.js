@@ -29,6 +29,8 @@ import useEvents from '@/hooks/use-event'
 // import event from '@/data/event/event.json'
 // console.log(event)
 
+import SearchForm from '@/components/layout/list-layout/search-form'
+
 export default function List() {
   const { data } = useEvents()
   // 引入路由
@@ -42,11 +44,10 @@ export default function List() {
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
 
-  //增加屬性質
+  //增加屬性質(收藏)
   const initState = events.map((v, i) => {
     return { ...v, fav: false }
   })
-
   const [newEvents, setNewEvents] = useState(initState)
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function List() {
 
   const [selectedCategories, setSelectedCategories] = useState([])
   const [selectedRegions, setSelectedRegions] = useState([])
+  const [searchWord, setSearchWord] = useState('') // 新增搜索关键字状态
 
   // 处理升降密排序的回调函数
   const handleSortEvents = (sortedEvents) => {
@@ -79,15 +81,15 @@ export default function List() {
   const handlePriceEvents = (priceSortedEvents) => {
     setFilteredEvents(priceSortedEvents)
   }
+
   // sidebar回調
   const handleFilterChange = (selectedCategories, selectedRegions) => {
-    console.log('Selected categories:', selectedCategories)
-    console.log('Selected regions:', selectedRegions)
+    // console.log('Selected categories:', selectedCategories)
+    // console.log('Selected regions:', selectedRegions)
     setSelectedCategories(selectedCategories)
     setSelectedRegions(selectedRegions)
   }
 
-  // 根据筛选条件过滤事件
   const getFilteredEvents = () => {
     return events.filter((event) => {
       const categoryMatch =
@@ -99,7 +101,29 @@ export default function List() {
     })
   }
 
+  const handleSearch = (searchWord) => {
+    if (typeof searchWord !== 'string' || searchWord.length === 0) {
+      console.log('Search keyword is empty')
+      return events
+    } else {
+      console.log('Searching for:', searchWord)
+      const filteredEventsA = events.filter((event) => {
+        return event.event_name.toLowerCase().includes(searchWord.toLowerCase())
+      })
+      console.log('Filtered Events:', filteredEventsA)
+      return filteredEventsA
+    }
+  }
+  useEffect(() => {
+    if (searchWord) {
+      // 只傳遞 searchWord 參數
+      const filteredEvents = handleSearch(searchWord)
+      setFilteredEvents(filteredEvents)
+    }
+  }, [events, searchWord])
+
   const newFilteredEvents = getFilteredEvents()
+  console.log(newFilteredEvents)
 
   // Get current events for pagination
   const indexOfLastEvent = currentPage * postsPerPage
@@ -109,6 +133,40 @@ export default function List() {
     indexOfLastEvent
   )
 
+  // 關鍵字搜尋
+  // const handleSearch = (searchWord) => {
+  //   if (typeof searchWord !== 'string' || searchWord.length === 0) {
+  //     console.log('Search keyword is empty')
+  //     return events
+  //   } else {
+  //     console.log('Searching for:', searchWord)
+  //     const filteredEventsA = events.filter((event) => {
+  //       return event.event_name.toLowerCase().includes(searchWord.toLowerCase())
+  //     })
+  //     console.log('Filtered Events:', filteredEventsA)
+  //     return filteredEventsA
+  //   }
+  // }
+
+  // 在组件中调用 handleSearch 函数并存储筛选后的事件列表
+  // useEffect(() => {
+  //   if (searchWord) {
+  //     // 只傳遞 searchWord 參數
+  //     const filteredEvents = handleSearch(searchWord)
+  //     setFilteredEvents(filteredEvents)
+  //   }
+  // }, [events, searchWord])
+
+  // 现在，我们可以在 filteredEvents 中访问筛选后的事件列表
+  console.log(filteredEvents)
+
+  // 通过搜索关键字筛选事件
+  const searchFilteredEvents = handleSearch(events, searchWord)
+
+  // 获取所有符合筛选条件的事件
+  const allFilteredEvents = [...newFilteredEvents, ...searchFilteredEvents]
+
+  console.log(currentEvents)
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
@@ -123,6 +181,11 @@ export default function List() {
             </p>
           </div>
           <section>
+            <SearchForm
+              searchWord={searchWord}
+              onSearch={handleSearch} // 正确传递搜索回调函数
+            />
+
             <NavbarTopRwd
               events={events} //傳原始資料至props
               setEvents={setEvents} // 将更新事件列表的函数传递给子组件

@@ -32,6 +32,8 @@ export default function FavIcon({ handleClick }) {
           position: 'absolute',
           right: 5,
           top: 5,
+          height: 20,
+          width: 20,
           padding: 0,
           border: 'none',
           background: 'none',
