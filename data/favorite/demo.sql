@@ -4,21 +4,21 @@ SET @uid = 1;
 -- TEST
 SELECT p.*,
     f.id AS favorite_id
-FROM products AS p
+FROM event AS p
     LEFT JOIN favorites AS f ON f.pid = p.id
     AND f.uid = @uid
 ORDER BY p.id ASC;
 --
 -- TEST
 SELECT p.*, IF(f.id, 'true', 'false') AS is_favorite
-    FROM products AS p
+    FROM event AS p
     LEFT JOIN favorites AS f ON f.pid = p.id
     AND f.uid = @uid
     ORDER BY p.id ASC;
 --
 -- 只有會員有加入到我的最愛的商品清單
 SELECT p.*
-FROM product AS p
+FROM event AS p
     INNER JOIN favorites AS f ON f.pid = p.id
     AND f.uid = @uid
 ORDER BY p.id ASC;
