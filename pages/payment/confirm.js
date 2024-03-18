@@ -48,6 +48,7 @@ export default function Confirm() {
         console.log(err)
       })
   }
+  function qrCode() {}
 
   useEffect(() => {
     if (router.isReady) {
@@ -72,8 +73,9 @@ export default function Confirm() {
         .then((response) => {
           //成功之後將優惠券及點數扣除
           setState(response)
-          // delCoupon(couponID, point)
-          mail(orderID)
+          delCoupon(couponID, point)
+          qrCode(orderID)
+          // mail(orderID)
           //如果成功五秒後跳轉回主頁
           setTimeout(() => {
             window.location.replace('http://localhost:3000/')

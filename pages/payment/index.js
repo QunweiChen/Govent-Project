@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ProductInfo from '@/components/payment/product-info/index.js'
 import DefaultLayout from '@/components/layout/default-layout'
 import PaymentForm from '@/components/payment/payment-Form'
@@ -32,6 +32,7 @@ export default function Payment() {
   const news = cartItems.flatMap((merchant) => {
     return merchant
   })
+  console.log(news)
   //計算總金額
   const TotalPrice = () => {
     let total = 0
