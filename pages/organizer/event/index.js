@@ -30,7 +30,7 @@ export default function OrganizerEvent() {
   const [currentPageE, setCurrentPageE] = useState(0)
 
   useEffect(() => {
-    fetch('http://localhost:3005/api/organizer', {
+    fetch('http://localhost:3005/api/organizer/event', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

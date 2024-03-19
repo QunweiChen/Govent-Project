@@ -13,6 +13,8 @@ export default function OrganizerIndex() {
   const [isVisible, setIsVisible] = useState(false)
   const [progressNumber, setProgressNumber] = useState(0)
 
+  const [organizerValid, setOrganizerValid] = useState(0)
+
   const incrementNumber = (currentNumber, setNumber, incrementSpeed, max) => {
     if (currentNumber < max) {
       setNumber((prevNumber) => prevNumber + incrementSpeed)
@@ -28,14 +30,30 @@ export default function OrganizerIndex() {
   }, [progressNumber])
 
   useEffect(() => {
-    // 设置一个3秒的定时器
+    fetch('http://localhost:3005/api/organizer/', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // 檢查是否有資料並設定到 state 中
+        console.log(data.data.result[0])
+        if (data.data.result[0].valid === 1) {
+          setOrganizerValid(1)
+        } else {
+          console.log('no organizer data or in review')
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error))
     const timer = setTimeout(() => {
-      setIsVisible(true) // 3秒后将 isVisible 设置为 true
+      setIsVisible(true)
     }, 2000)
 
-    // 组件卸载时清除定时器，以避免内存泄漏
     return () => clearTimeout(timer)
-  }, []) // 空数组作为第二个参数，表示只在组件挂载时运行一次
+  }, [])
 
   useEffect(() => {
     if (isVisible) {
@@ -43,11 +61,11 @@ export default function OrganizerIndex() {
         router.push('/user/signin')
         return
       }
-      if(auth.user.organizer === null){
-        router.push('/organizer/update')
+      if(organizerValid === 1){
+        router.push('/organizer/event')
         return
       }
-      router.push('/organizer/event')
+      router.push('/organizer/update')
     }
   }, [isVisible, router])
 

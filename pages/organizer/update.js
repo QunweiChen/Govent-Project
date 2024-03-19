@@ -8,6 +8,7 @@ import OrganizerTopBar from '@/components/organizer/organizer-top-bar'
 export default function OrganizerEvent() {
   const [page, setPage] = useState(1)
   const [organizerType, setOrganizerType] = useState(0)
+
   const [formData, setFormData] = useState({
     organizer_type: '',
     name: '',
@@ -18,6 +19,25 @@ export default function OrganizerEvent() {
     owner_name: '',
     business_invoice: '',
   })
+
+useEffect(()=>{
+  fetch('http://localhost:3005/api/organizer/', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          console.log('尚未申請主辦單位')
+        } else if (data.data.result[0].valid) {
+          setPage(4)
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error))
+},[])
 
   useEffect(() => {
     setFormData({
@@ -35,13 +55,57 @@ export default function OrganizerEvent() {
     console.log(formData)
   }
 
+  const titleChange = (e) => {
+    const { name, value } = e.target
+    if (value.length <= 8) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }))
+    }
+    console.log(formData)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const response = await fetch('http://localhost:3005/api/organizer/add-organizer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+        credentials: 'include',
+      })
+
+      if (response.ok) {
+        console.log('Organizer add successfully!')
+        setPage(4)
+      } else {
+        console.error('Failed to update user.')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
+  const setPersonal = () => {
+    setOrganizerType(0)
+    setFormData((prevState) => ({
+      ...prevState,
+      owner_name: '',
+      business_invoice: '',
+    }))
+  }
+
   const previousPage = () => {
     if (page > 1) {
       setPage(page - 1)
     }
   }
   const nextPage = () => {
-    if (page < 5) {
+    if (page < 3) {
       setPage(page + 1)
     }
   }
@@ -56,6 +120,7 @@ export default function OrganizerEvent() {
           key={previousPage}
           className="organizer-main d-flex flex-column"
         >
+          <Form onSubmit={handleSubmit}>
           <OrganizerTopBar title="升級主辦單位" />
           <div className="content bg-bg-gray rounded-4 p-4 h-100 d-flex flex-column justify-content-center align-items-center">
             <div className="step-window d-flex justify-content-center align-items-center">
@@ -106,8 +171,9 @@ export default function OrganizerEvent() {
                           ? 'btn-primary'
                           : 'btn-bg-gray-light'
                         }`}
+                        type='button'   
                       onClick={() => {
-                        setOrganizerType(0)
+                        setPersonal()
                       }}
                     >
                       <Image
@@ -124,6 +190,7 @@ export default function OrganizerEvent() {
                           ? 'btn-primary'
                           : 'btn-bg-gray-light'
                         }`}
+                        type='button'
                       onClick={() => {
                         setOrganizerType(1)
                       }}
@@ -139,7 +206,12 @@ export default function OrganizerEvent() {
                 </motion.div>
               )}
               {page === 3 && (
-                <Form className='w-100 update-form' data-bs-theme="dark">
+                <motion.div
+                initial={{ opacity: 0, y: -30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className='w-100 update-form' data-bs-theme="dark">
                   <Row>
                     <Col sm="8">
                     <Form.Group className="mb-3" controlId="name">
@@ -148,8 +220,9 @@ export default function OrganizerEvent() {
                       type="text"
                       name="name"
                       value={formData.name}
-                      onChange={handleInputChange}
+                      onChange={titleChange}
                       placeholder="請填寫主辦單位名稱"
+                      required
                     />
                   </Form.Group>
                     </Col>
@@ -178,6 +251,7 @@ export default function OrganizerEvent() {
                         value={formData.owner_name}
                         onChange={handleInputChange}
                         placeholder="請填寫公司抬頭"
+                        required
                       />
                     </Form.Group>
                       </Col>
@@ -190,6 +264,7 @@ export default function OrganizerEvent() {
                         value={formData.business_invoice}
                         onChange={handleInputChange}
                         placeholder="請填寫統一編號"
+                        required
                       />
                     </Form.Group>
                       </Col>
@@ -206,6 +281,7 @@ export default function OrganizerEvent() {
                       value={formData.bank_code}
                       onChange={handleInputChange}
                       placeholder="請填寫銀行代碼"
+                      required
                     />
                   </Form.Group>
                     </Col>
@@ -218,6 +294,7 @@ export default function OrganizerEvent() {
                       value={formData.bank_branch}
                       onChange={handleInputChange}
                       placeholder="請填寫分行名稱"
+                      required
                     />
                   </Form.Group>
                     </Col>
@@ -230,6 +307,7 @@ export default function OrganizerEvent() {
                       value={formData.bank_name}
                       onChange={handleInputChange}
                       placeholder="請填寫銀行帳號"
+                      required
                     />
                   </Form.Group>
                     </Col>
@@ -242,25 +320,44 @@ export default function OrganizerEvent() {
                       value={formData.amount_number}
                       onChange={handleInputChange}
                       placeholder="請填寫銀行帳號"
+                      required
                     />
                   </Form.Group>
                     </Col>
                   </Row>
-                </Form>
+                </div>
+                </motion.div>
+              )}
+              {page === 4 && (
+                <div className='text-center'>
+                  <Image src='/success-add-organizer.webp' width={600}/>
+                  <h3>您的申請正在審核中</h3>
+                  <h6>約需2-3個工作天，請耐心等候</h6>
+                </div>
               )}
             </div>
             <div className="text-center steps">
               <button
-                className={`btn btn-primary me-3 ${page === 1 ? 'd-none' : ''}`}
+                className={`btn btn-primary me-3 ${page <= 1 || page > 3 ? 'd-none' : ''}`}
+                type='button'
                 onClick={previousPage}
               >
                 上一步
               </button>
-              <button className="btn btn-primary" onClick={nextPage}>
+              <button className={`btn btn-primary ${page >= 3 ? 'd-none' : ''}`}
+              type='button'
+              onClick={nextPage}
+              >
                 下一步
+              </button>
+              <button className={`btn btn-primary ${page === 3 ? '' : 'd-none'}`}
+              type='sumbit'
+              >
+                完成輸入，送出
               </button>
             </div>
           </div>
+          </Form>
         </motion.div>
       </div>
       <style global jsx>
