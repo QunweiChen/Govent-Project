@@ -3,6 +3,9 @@ import { useAuth } from '@/hooks/use-auth'
 import { addFav, removeFav } from '@/services/user'
 import toast from 'react-hot-toast'
 
+import { FaHeart } from "react-icons/fa6";
+import { CiHeart } from 'react-icons/ci'
+
 // 愛心設定
 const Heart = ({ size = 20, color = 'red' }) => (
   <svg

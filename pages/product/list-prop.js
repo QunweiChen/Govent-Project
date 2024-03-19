@@ -3,12 +3,14 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 // 引入icon
-import { CiHeart } from 'react-icons/ci'
 import { GoSortDesc } from 'react-icons/go'
 import { FaHouse } from 'react-icons/fa6'
 import { FaRegStar } from 'react-icons/fa'
 import { FaTicket } from 'react-icons/fa6'
 import { RxPerson } from 'react-icons/rx'
+//愛心
+import { FaHeart } from 'react-icons/fa6'
+import { CiHeart } from 'react-icons/ci'
 
 //引入components
 import MyFooter from '@/components/layout/default-layout/my-footer'
@@ -44,18 +46,27 @@ export default function List() {
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
 
-  //增加屬性質(收藏)
-  const initState = events.map((v, i) => {
-    return { ...v, fav: false }
-  })
-  const [newEvents, setNewEvents] = useState(initState)
+  // useEffect(() => {
+  //   if (data) {
+  //     setEvents(data)
+  //   }
+  // }, [data])
+  // console.log(events)
 
+  //增加擴充屬性質(收藏)
   useEffect(() => {
     if (data) {
-      setEvents(data)
+      const initState = data.map((v2, i) => {
+        return { ...v2, fav: false }
+      })
+      setEvents(initState)
     }
   }, [data])
-  // console.log(events)
+
+  console.log(events)
+  const handleSetEvents = (newEvents) => {
+    setEvents(newEvents)
+  } //傳回收藏函式
 
   //回調函式
   // 筛选结果状态
@@ -65,19 +76,19 @@ export default function List() {
   const [selectedRegions, setSelectedRegions] = useState([])
   const [searchWord, setSearchWord] = useState('') // 新增搜索关键字状态
 
-  // 处理升降密排序的回调函数
+  // 升降密排序的回调函数
   const handleSortEvents = (sortedEvents) => {
     setFilteredEvents(sortedEvents)
   }
-  // 处理地区排序的回调函数
+  // 地區排序的回调函数
   const handleCityEvents = (citySortedEvents) => {
     setFilteredEvents(citySortedEvents)
   }
-  // 处理日期排序的回调函数
+  // 日期排序的回调函数
   const handleDateEvents = (dateSortedEvents) => {
     setFilteredEvents(dateSortedEvents)
   }
-  // 处理价格排序的回调函数
+  // 價格排序的回调函数
   const handlePriceEvents = (priceSortedEvents) => {
     setFilteredEvents(priceSortedEvents)
   }
@@ -101,17 +112,18 @@ export default function List() {
     })
   }
 
+  //搜尋
   const handleSearch = (searchWord) => {
     if (typeof searchWord !== 'string' || searchWord.length === 0) {
       console.log('Search keyword is empty')
       return events
     } else {
       console.log('Searching for:', searchWord)
-      const filteredEventsA = events.filter((event) => {
+      const filteredEvents = events.filter((event) => {
         return event.event_name.toLowerCase().includes(searchWord.toLowerCase())
       })
-      console.log('Filtered Events:', filteredEventsA)
-      return filteredEventsA
+      console.log('Filtered Events:', filteredEvents)
+      return filteredEvents
     }
   }
   useEffect(() => {
@@ -210,17 +222,26 @@ export default function List() {
             />
           </div>
           <div className="col">
+            <button
+              className={`btn bg-bg-gray text-white`}
+              style={{
+                right: 5,
+                top: 5,
+              }}
+            >
+              {<CiHeart />}
+            </button>
             <div className="cardList row g-3">
               {currentEvents.map((v) => (
                 <div key={v.id} className="col-md-4 col-sm-6 ">
-                  <Link
+                  <div
                     href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
-                    className="col-md-4 col-sm-6"
+                    className=""
                     key={v.id}
                     style={{ textDecoration: 'none' }}
                   >
                     {/* <div onClick={()=>{router.push(``)}} */}
-                    <div className="card  stretched-link bg-bg-gray-secondary text-white px-0 no-border">
+                    <div className="card bg-bg-gray-secondary text-white px-0 no-border">
                       <figure>
                         <img
                           src={`/images/product/list/${
@@ -229,21 +250,15 @@ export default function List() {
                           alt=""
                           className="card-img-top"
                         />
+                        {/* <FavIcon datas={events} setEvents={handleSetEvents} /> */}
+                        <FavIcon
+                          pid={v.pid}
+                          events={events}
+                          setEvents={setEvents}
+                        />{' '}
+                        {/* 传递事件对象及更新函数 */}
                       </figure>
-                      <button
-                        className={`btn bg-bg-gray`}
-                        style={{
-                          position: 'absolute',
-                          right: 5,
-                          top: 5,
-                          padding: 0,
-                          border: 'none',
-                          background: 'none',
-                        }}
-                      >
-                        <FavIcon />
-                        {/* <FavFcon/> */}
-                      </button>
+
                       <div className="card-body">
                         <p className=" text-normal-gray-light">
                           {v.category_name}
@@ -264,7 +279,7 @@ export default function List() {
                         </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               ))}
             </div>
@@ -339,7 +354,9 @@ export default function List() {
         figure img {
           width: 268px;
           height: 180px;
-          overflow: hidden;
+           {
+            /* overflow: hidden; */
+          }
           object-fit: cover;
           width: 100%;
         }
