@@ -66,7 +66,6 @@ export default function Detail() {
       const { pid } = router.query
       console.log('PID', pid)
       getProducts(pid)
-      // setSelectTime(time3)
     }
   }, [])
 
@@ -190,13 +189,10 @@ export default function Detail() {
 
     })
     setTicketInfo(newItems)
-    // const newItem = {...item, qty: qty}
-    // const newItems = {...items}
-    // setEventInfo([...eventInfo, newItem])
   }
 
   const handleIncrease = (items, id) => {
-    const newItems = eventInfo.map((v) => {
+    const newItems = ticketInfo.map((v) => {
       if (id === v.id) {
         return { ...v, qty: v.qty + 1 }
       } else {
@@ -376,7 +372,7 @@ export default function Detail() {
                                 <i
                                   type="button"
                                   className="bi bi-dash-circle me-2 icon"
-                                  onClick={handleDecrease}
+                                  onClick={() => { handleDecrease(ticketInfo, v.id) }}
                                 />
                                 <h5 className="px-3 py-2 bg-dark rounded">{v.qty}</h5>
                                 <i
