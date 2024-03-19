@@ -52,6 +52,31 @@ router.get('/', authenticate, async function (req, res) {
   try {
     // findAll 是回傳所有資料
     const result = await sequelize.query(
+      'SELECT organizer.* ' +
+        'FROM `organizer` ' +
+        'WHERE organizer.user_id = ? ',
+      {
+        replacements: [req.user.id], // 使用占位符传递参数
+        type: QueryTypes.SELECT,
+      }
+    )
+    if(result.length > 0){
+      return res.json({ status: 'success', message: 'success', data: { result } })
+    }
+    return res.json({ status: 'success', message: 'noDataFound' })
+  } catch (error) {
+    console.error('Error fetching user data:', error)
+    res
+      .status(500)
+      .json({ status: 'error', message: 'Failed to fetch user data.' })
+  }
+})
+
+router.get('/event', authenticate, async function (req, res) {
+  // const { Cart } = sequelize.models
+  try {
+    // findAll 是回傳所有資料
+    const result = await sequelize.query(
       'SELECT event.*, organizer.user_id ' +
         'FROM `event` ' +
         'JOIN `organizer` ON organizer.id = event.merchat_id ' +
@@ -243,6 +268,46 @@ router.get('/event/ticket/:eid', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Error fetching order data:', error)
     res.status(500).json({ status: 'error', message: '500' })
+  }
+})
+
+router.post('/add-organizer', authenticate, async (req, res) => {
+  const { 
+    organizer_type,
+    name,
+    bank_code,
+    bank_branch,
+    bank_name,
+    amount_number,
+    owner_name,
+    business_invoice,
+   } = req.body
+
+  try {
+    const addOrganizer = await sequelize.query(
+      'INSERT INTO `organizer` (user_id, organizer_type, name, bank_code, bank_branch, bank_name, amount_number, owner_name, business_invoice, created_at, update_at, valid) VALUES (:user_id, :organizer_type, :name, :bank_code, :bank_branch, :bank_name, :amount_number, :owner_name, :business_invoice, :created_at, :update_at, 0)',
+      {
+        replacements: { 
+          user_id: req.user.id,
+          organizer_type,
+          name,
+          bank_code,
+          bank_branch,
+          bank_name,
+          amount_number,
+          owner_name,
+          business_invoice,
+          created_at: new Date(),
+          update_at: new Date(),
+         },
+        type: QueryTypes.INSERT,
+      }
+    )
+
+    res.json({ status: 'success', data: { addOrganizer } })
+  } catch (error) {
+    console.error('Error updating user:', error)
+    res.status(500).json({ status: 'error', message: 'Failed to update user.' })
   }
 })
 
