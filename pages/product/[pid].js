@@ -22,11 +22,6 @@ export default function Detail() {
   const [endDate, setEndDate] = useState('');
 
   const [sellTime, setSellTime] = useState('')
-  let date3, time3;
-  if (startDate.includes('T')) {
-    [date3, time3] = startDate.split('T');
-    time3 = time3.substring(0, 5);
-  }
 
    //存取選取日期和時間
    const [selectDate, setSelectDate] = useState('')
@@ -44,17 +39,26 @@ export default function Detail() {
       setEventInfo(data.data.posts) //轉換成eventInfo
       setTicketInfo(data.data.posts) //轉換成ticketInfo
       
-      setStartDate(data?.data.posts[0].start_date)
+      const startDate = data?.data.posts[0].start_date;
+      setStartDate(startDate)
       setEndDate(data?.data.posts[0].end_date)
       
       setSellStartDate(data?.data.posts[0].sell_start_date)
       setSellEndDate(data?.data.posts[0].sell_end_date)
+  
+      let date3, time3;
+      if (startDate.includes('T')) {
+        [date3, time3] = startDate.split('T');
+        time3 = time3.substring(0, 5);
+      }
       setSellTime(time3)
-
+  
     } catch (e) {
       console.log(e)
     }
   }
+ 
+  
 
   //回傳fetch到的資料
   useEffect(() => {
