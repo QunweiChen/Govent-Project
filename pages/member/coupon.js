@@ -76,7 +76,6 @@ export default function MemberCoupon() {
       if (response.ok) {
         const data = await response.json()
         console.log(data)
-
         successSwal()
       } else {
         const errorData = await response.json()

@@ -266,7 +266,7 @@ export default function OrganizerEvent() {
                                 </Col>
                                 <Col sm="auto" className="text-center mx-3">
                                   <Link
-                                    href={`organizer/${event.event_id}`}
+                                    href={`event/${event.event_id}`}
                                     className="text-link"
                                   >
                                     <i className="bi bi-three-dots"></i>
@@ -385,7 +385,7 @@ export default function OrganizerEvent() {
                                 </Col>
                                 <Col sm="auto" className="text-center mx-3">
                                   <Link
-                                    href={`organizer/${event.event_id}`}
+                                    href={`event/${event.event_id}`}
                                     className="text-link"
                                   >
                                     <i className="bi bi-three-dots"></i>

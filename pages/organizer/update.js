@@ -30,9 +30,10 @@ useEffect(()=>{
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data) {
+        console.log(data.message)
+        if (data.message == 'noDataFound') {
           console.log('尚未申請主辦單位')
-        } else if (data.data.result[0].valid) {
+        } else if (data.data.result[0]) {
           setPage(4)
         }
       })
@@ -52,18 +53,46 @@ useEffect(()=>{
       ...prevState,
       [name]: value,
     }))
-    console.log(formData)
   }
 
   const titleChange = (e) => {
     const { name, value } = e.target
-    if (value.length <= 8) {
+    if (value.length <= 20) {
       setFormData((prevState) => ({
         ...prevState,
         [name]: value,
       }))
     }
-    console.log(formData)
+  }
+
+  const businessInvoiceInputChange = (e) => {
+    const { name, value } = e.target
+    if (/^\d*$/.test(value) && value.length <= 8) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }))
+    }
+  }
+
+  const bankCodeInputChange = (e) => {
+    const { name, value } = e.target
+    if (/^\d*$/.test(value) && value.length <= 3) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }))
+    }
+  }
+
+  const bankAmountInputChange = (e) => {
+    const { name, value } = e.target
+    if (/^\d*$/.test(value)) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }))
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -224,6 +253,7 @@ useEffect(()=>{
                       placeholder="請填寫主辦單位名稱"
                       required
                     />
+                    <Form.Text className='sm-p'>不可超過20字元</Form.Text>
                   </Form.Group>
                     </Col>
                     <Col sm="4">
@@ -262,7 +292,7 @@ useEffect(()=>{
                         type="text"
                         name="business_invoice"
                         value={formData.business_invoice}
-                        onChange={handleInputChange}
+                        onChange={businessInvoiceInputChange}
                         placeholder="請填寫統一編號"
                         required
                       />
@@ -279,7 +309,7 @@ useEffect(()=>{
                       type="number"
                       name="bank_code"
                       value={formData.bank_code}
-                      onChange={handleInputChange}
+                      onChange={bankCodeInputChange}
                       placeholder="請填寫銀行代碼"
                       required
                     />
@@ -296,29 +326,30 @@ useEffect(()=>{
                       placeholder="請填寫分行名稱"
                       required
                     />
+                    <Form.Text className='sm-p'>ex: 台南分行</Form.Text>
                   </Form.Group>
                     </Col>
                     <Col sm="6">
                     <Form.Group className="mb-3" controlId="bank_name">
-                    <Form.Label>帳戶名稱</Form.Label>
+                    <Form.Label>收款帳戶名稱</Form.Label>
                     <Form.Control
                       type="text"
                       name="bank_name"
                       value={formData.bank_name}
                       onChange={handleInputChange}
-                      placeholder="請填寫銀行帳號"
+                      placeholder="請填寫銀行名稱"
                       required
                     />
                   </Form.Group>
                     </Col>
                     <Col sm="12">
                     <Form.Group className="mb-3" controlId="amount_number">
-                    <Form.Label>銀行帳號</Form.Label>
+                    <Form.Label>收款銀行帳號</Form.Label>
                     <Form.Control
                       type="text"
                       name="amount_number"
                       value={formData.amount_number}
-                      onChange={handleInputChange}
+                      onChange={bankAmountInputChange}
                       placeholder="請填寫銀行帳號"
                       required
                     />

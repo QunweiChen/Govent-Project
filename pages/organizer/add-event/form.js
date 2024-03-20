@@ -9,6 +9,10 @@ import 'react-quill/dist/quill.core.css'
 import 'react-quill/dist/quill.snow.css'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+import { counties } from '@/data/township'
 
 const QuillNoSSRWrapper = dynamic(
   async () => {
@@ -21,11 +25,16 @@ const QuillNoSSRWrapper = dynamic(
 function OrganizerForm() {
   const router = useRouter()
   const editorRef = useRef(null)
+
   const [banner, setBanner] = useState(null)
   const [previewBanner, setPreviewBanner] = useState(null)
   const [quillContent, setQuillContent] = useState('')
+
+  const [sellStartDate, checkSellStartDate] = useState(false)
+  const [sellEndDate, checkSellEndDate] = useState(false)
+
   const [otherFormData, setOtherFormData] = useState({
-    merchat_id: '69',
+    merchat_id: '',
     event_name: '',
     event_type_id: '',
     place: '',
@@ -37,20 +46,60 @@ function OrganizerForm() {
     sell_start_date: '',
     sell_end_date: '',
   })
+  
+
+  useEffect(()=>{
+    fetch('http://localhost:3005/api/organizer/', {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        credentials: 'include',
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setOtherFormData((prevState) => ({
+            ...prevState,
+            merchat_id: data.data.result[0].id,
+          }))
+          // console.log('id', data.data.result[0].id, otherFormData.merchat_id)
+        })
+        .catch((error) => console.error('Error fetching data:', error))
+  },[])
 
   const bannerChange = (event) => {
     const selectedFile = event.target.files[0]
 
-    if (selectedFile) {
-      setBanner(selectedFile)
-
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setPreviewBanner(reader.result)
-      }
-      reader.readAsDataURL(selectedFile)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (selectedFile.size > maxSize) {
+        popAlert('檔案尺寸太大', '最大尺寸限制5MB，請壓縮圖片或重新選擇')
+        return;
     }
-  }
+
+    // 文件格式
+    const allowedFormats = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedFormats.includes(selectedFile.type)) {
+        popAlert('檔案格式錯誤', '兼容格式 jpg/jpeg/png/webp')
+        return;
+    }
+
+    if (selectedFile) {
+        setBanner(selectedFile)
+
+        const reader = new FileReader()
+        reader.onloadend = () => {
+            setPreviewBanner(reader.result)
+        }
+        reader.readAsDataURL(selectedFile)
+    }
+}
+const popAlert = (title, text) => {
+  withReactContent(Swal).fire({
+    icon: 'error',
+    title: title,
+    text: text
+  })
+}
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -59,6 +108,20 @@ function OrganizerForm() {
       [name]: value,
     }))
   }
+
+  const sellInputChange = (e) => {
+    checkSellStartDate(false)
+    const { name, value } = e.target
+    if(new Date(value) > new Date(otherFormData.start_date)){
+      popAlert('請重新選擇', '不可晚於＂活動開始時間＂')
+      return
+    }
+    setOtherFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -204,7 +267,7 @@ function OrganizerForm() {
                         {previewBanner && (
                           <motion.img
                             initial={{ y: 30, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
+                            animate={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.7 }}
                             src={previewBanner}
                             alt="Preview"
@@ -229,6 +292,7 @@ function OrganizerForm() {
                         value={otherFormData.event_name}
                         onChange={handleInputChange}
                         placeholder="請填寫活動名稱"
+                        required
                       />
                     </Form.Group>
                   </Col>
@@ -240,10 +304,17 @@ function OrganizerForm() {
                         value={otherFormData.event_type_id}
                         onChange={handleInputChange}
                       >
-                        <option value="" disabled selected>
+                        <option value="" disabled defaultValue>
                           請選擇
                         </option>
                         <option value="1">演唱會</option>
+                        <option value="2">展覽</option>
+                        <option value="3">快閃期間限定活動</option>
+                        <option value="4">市集</option>
+                        <option value="5">粉絲見面會</option>
+                        <option value="6">課程講座</option>
+                        <option value="7">體育賽事</option>
+                        <option value="8">景點門票</option>
                       </Form.Select>
                     </Form.Group>
                   </Col>
@@ -268,17 +339,18 @@ function OrganizerForm() {
                         value={otherFormData.str}
                         onChange={handleInputChange}
                       >
-                        <option disabled selected>
+                        <option disabled defaultValue>
                           請選擇
                         </option>
-                        <option value="1">台北市</option>
-                        <option value="2">新北市</option>
+                        {counties.map((city)=>(
+                          <option value={city}>{city}</option>
+                        ))}
                       </Form.Select>
                     </Form.Group>
                   </Col>
                   <Col sm="9">
                     <Form.Group className="mb-3" controlId="address">
-                      <Form.Label id="address" muted>
+                      <Form.Label id="address">
                         <div>詳細地址</div>
                       </Form.Label>
                       <Form.Control
@@ -322,7 +394,7 @@ function OrganizerForm() {
                   <h5 className="my-5 text-center">時間資訊</h5>
                   <Col sm="6">
                     <Form.Group className="mb-5" controlId="startTime">
-                      <Form.Label id="startTime" muted>
+                      <Form.Label id="startTime">
                         <div className="mb-2">活動開始時間</div>
                       </Form.Label>
                       <Form.Control
@@ -335,7 +407,7 @@ function OrganizerForm() {
                   </Col>
                   <Col sm="6">
                     <Form.Group className="mb-5" controlId="endTime">
-                      <Form.Label id="endTime" muted>
+                      <Form.Label id="endTime">
                         <div className="mb-2">活動結束時間</div>
                       </Form.Label>
                       <Form.Control
@@ -346,32 +418,50 @@ function OrganizerForm() {
                       />
                     </Form.Group>
                   </Col>
-                  <Col sm="6">
-                    <Form.Group className="mb-3" controlId="startSellTime">
-                      <Form.Label id="startSellTime" muted>
+                  {otherFormData.start_date && otherFormData.end_date && (
+                    <Col sm="6">
+                    <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                    >
+                    <Form.Group className="mb-1" controlId="startSellTime">
+                      <Form.Label id="startSellTime">
                         <div className="mb-2">開始售票時間</div>
                       </Form.Label>
                       <Form.Control
                         type="datetime-local"
                         name="sell_start_date"
                         value={otherFormData.sell_start_date}
-                        onChange={handleInputChange}
+                        onChange={sellInputChange}
                       />
+                      <Form.Text className={`sm-p`}>不可晚於＂活動開始時間＂</Form.Text>
                     </Form.Group>
+                    </motion.div>
                   </Col>
-                  <Col sm="6">
-                    <Form.Group className="mb-3" controlId="endSellTime">
-                      <Form.Label id="event-address" muted>
+                  )}
+                  {otherFormData.start_date && otherFormData.end_date && (
+                    <Col sm="6">
+                      <motion.div
+                      initial={{ y: 10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                      >
+                    <Form.Group className="mb-1" controlId="endSellTime">
+                      <Form.Label id="event-address">
                         <div className="mb-2">結束售票時間</div>
                       </Form.Label>
                       <Form.Control
                         type="datetime-local"
                         name="sell_end_date"
                         value={otherFormData.sell_end_date}
-                        onChange={handleInputChange}
+                        onChange={sellInputChange}
                       />
+                      <Form.Text className='sm-p'>不可晚於＂活動開始時間＂</Form.Text>
                     </Form.Group>
+                    </motion.div>
                   </Col>
+                  )}
                   <div className="my-5 d-flex justify-content-center">
                     <Button className='px-5' variant="primary" type="submit">
                       <h6 className='m-0'>下一步，填寫規格</h6>
