@@ -1,12 +1,36 @@
+/* eslint-disable import/no-unresolved */
 import express from 'express'
 import sequelize from '##/configs/db.js'
 import { QueryTypes } from 'sequelize'
+import QRCode from 'qrcode'
+
+const { ticket } = sequelize.models
 
 const router = express.Router()
-
 router.post('/', (req, res) => {
-  console.log(req.body)
-  res.send({ message: 'success' })
+  let number = Math.floor(Math.random() * 100000)
+  const body = req.body
+  let json = {
+    ticket_code: `${body.eventID}-${number}`,
+    order_number: body.orderID,
+    event_option_name: body.ticketName,
+  }
+  ticket.create(json)
+  QRCode.toFile(
+    `public/images/qrcode/${body.eventID}-${number}.png`,
+    `${body.eventID}-${number}`,
+    {
+      color: {
+        dark: '#ffffff',
+        light: '#000000',
+      },
+      function(err) {
+        if (err) throw err
+        console.log('done')
+      },
+    }
+  )
+  res.send({ message: 'success', tickCode: `${body.eventID}-${number}` })
 })
 
 router.get('/data', async (req, res) => {
@@ -15,7 +39,6 @@ router.get('/data', async (req, res) => {
     `SELECT order_info FROM user_order WHERE order_id = :orderID`,
     { replacements: { orderID }, type: QueryTypes.SELECT }
   )
-  console.log(result)
   res.send({ message: 'success', data: result })
 })
 
