@@ -1,4 +1,4 @@
-import { useState, useContext, createContext, useEffect} from 'react'
+import { useState, useContext, createContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 const AuthContext = createContext(null)

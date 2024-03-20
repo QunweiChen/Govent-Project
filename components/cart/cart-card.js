@@ -37,8 +37,6 @@ export default function CartCard({
   // console.log(MerchantIds)
   return (
     <>
-      {/* ------- */}
-      {/* <h4 className="text-white">測試</h4> */}
       <div className="rwd-text">
         {MerchantIds.map((v, i) => {
           return (
@@ -69,7 +67,9 @@ export default function CartCard({
                 .filter((item) => item.merchantId === v)
                 .map((v, i) => {
                   /* 使用 split() 方法分割日期時間字串 */
-                  const [datePart, timePart] = v.holdingTime.split(' ')
+                  {
+                    /* const [datePart, timePart] = v.holdingTime.split(' ') */
+                  }
                   return (
                     <div key={i}>
                       <div className="border-bottom border-normal-gray event">
@@ -104,11 +104,15 @@ export default function CartCard({
                               <div className="iconbar text-white d-flex align-items-center mt-2 row">
                                 <div className="col-sm-6 col-12 d-flex justify-content-start align-items-center">
                                   <i className="bi bi-calendar-week text-primary-light"></i>
-                                  <p className="text-white ms-2">{datePart}</p>
+                                  <p className="text-white ms-2">
+                                    {v.holdingTime.split(' ')[0]}
+                                  </p>
                                 </div>
                                 <div className="col-sm-6 col-12 d-flex justify-content-start align-items-center">
                                   <i className="bi bi-clock text-primary-light"></i>
-                                  <p className="text-white ms-2">{timePart}</p>
+                                  <p className="text-white ms-2">
+                                    {v.holdingTime.split(' ')[1]}
+                                  </p>
                                 </div>
                               </div>
                             </div>

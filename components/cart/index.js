@@ -83,6 +83,7 @@ export default function CartIndex() {
                 <TodoAll
                   handleToggleSelectedAll={handleToggleSelectedAll}
                   cartItems={cartItems}
+                  setCartItems={setCartItems}
                 />
               </Row>
             </div>
