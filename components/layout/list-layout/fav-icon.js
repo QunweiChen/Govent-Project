@@ -1,6 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { addFav, removeFav } from '@/services/user'
+//* 獲得會員有加在我的最愛的商品id，回傳為id陣列
+//  */
+// export const getFavs = async () => {
+//   return await axiosInstance.get('/favorites')
+// }
+// /**
+//  * 新增商品id在該會員的我的最愛清單中的
+//  */
+// export const addFav = async (pid) => {
+//   return await axiosInstance.put(`/favorites/${pid}`)
+// }
+// /**
+//  * 移除商品id在該會員的我的最愛清單中的
+//  */
+// export const removeFav = async (pid) => {
+//   return await axiosInstance.delete(`/favorites/${pid}`)
+// }
 import toast from 'react-hot-toast'
 
 import { FaHeart } from "react-icons/fa6";

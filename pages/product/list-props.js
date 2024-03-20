@@ -1,3 +1,4 @@
+// 父组件代码
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -42,9 +43,12 @@ export default function List() {
   //活動資料
   // 1. 從伺服器來的原始資料
   const [events, setEvents] = useState([])
+
+  
   // 分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
+
 
   // useEffect(() => {
   //   if (data) {
@@ -56,8 +60,8 @@ export default function List() {
   //增加擴充屬性質(收藏)
   useEffect(() => {
     if (data) {
-      const initState = data.map((v2, i) => {
-        return { ...v2, fav: false }
+      const initState = data.map((v, i) => {
+        return { ...v, fav: false }
       })
       setEvents(initState)
     }
@@ -222,15 +226,6 @@ export default function List() {
             />
           </div>
           <div className="col">
-            <button
-              className={`btn bg-bg-gray text-white`}
-              style={{
-                right: 5,
-                top: 5,
-              }}
-            >
-              {<CiHeart />}
-            </button>
             <div className="cardList row g-3">
               {currentEvents.map((v) => (
                 <div key={v.id} className="col-md-4 col-sm-6 ">
@@ -250,12 +245,7 @@ export default function List() {
                           alt=""
                           className="card-img-top"
                         />
-                        {/* <FavIcon datas={events} setEvents={handleSetEvents} /> */}
-                        <FavIcon
-                          pid={v.pid}
-                          events={events}
-                          setEvents={setEvents}
-                        />
+                        <FavIcon pid={v.pid} events={events} setEvents={setEvents} /> {/* 传递事件对象及更新函数 */}
                       </figure>
 
                       <div className="card-body">
