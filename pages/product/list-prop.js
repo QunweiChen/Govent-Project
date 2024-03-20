@@ -13,6 +13,7 @@ import { RxPerson } from 'react-icons/rx'
 //引入components
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
+import FavIcon from '@/components/layout/list-layout/fav-icon'
 import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
@@ -151,6 +152,7 @@ export default function List() {
               {currentEvents.map((v) => (
                 <div key={v.id} className="col-md-4 col-sm-6 ">
                   <Link
+                    href={`/product/${v.pid}`}//以防混亂，只有路由使用pid引導
                     href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
                     className="col-md-4 col-sm-6"
                     key={v.id}
@@ -160,6 +162,7 @@ export default function List() {
                     <div className="card  stretched-link bg-bg-gray-secondary text-white px-0 no-border">
                       <figure>
                         <img
+                          src={`/images/product/list/${v.banner?.split(',')[0]}`}
                           src={`/images/product/list/${
                             v.banner?.split(',')[0]
                           }`}
