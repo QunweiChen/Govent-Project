@@ -13,8 +13,12 @@ const TodoAll = dynamic(() => import('@/components/cart/todo-all'), {
 const CartCard = dynamic(() => import('@/components/cart/cart-card'), {
   ssr: false,
 })
+const AuthCart = dynamic(() => import('@/components/cart/auth-cart'), {
+  ssr: false,
+})
 //勾子
 import { useCart } from '@/hooks/use-cart'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function CartIndex() {
   //--------
@@ -32,8 +36,10 @@ export default function CartIndex() {
     newtoggleCheckbox,
     MerchantIds,
   } = useCart()
-
+  const { auth } = useAuth()
   const [hasMtItems, setHasMtItems] = useState(false)
+  console.log(auth)
+  console.log(auth.isAuthenticated)
 
   useEffect(() => {
     const mtItems = window.localStorage.getItem('cartItems')
@@ -65,92 +71,100 @@ export default function CartIndex() {
   }
   return (
     <>
-      <div className="container width-1200">
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className=""
-        >
-          <div className="cart-area card bg-bg-gray-secondary">
-            <div className="border-0 cart-card border-bottom border-normal-gray">
-              <Row className="my-4">
-                <Col className="text-white d-flex align-items-center">
-                  <Link href="../cart/event-list">
-                    <h4 className="ms-4 text-white">購物車</h4>
-                  </Link>
-                </Col>
-                <TodoAll
-                  handleToggleSelectedAll={handleToggleSelectedAll}
-                  cartItems={cartItems}
-                  setCartItems={setCartItems}
-                />
-              </Row>
-            </div>
-            {/* 到時候return資料用這一層 */}
-            {/* 沒購物車內容 判斷*/}
+      {auth.isAuthenticated ? (
+        <div>
+          {' '}
+          <div className="container width-1200">
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className=""
+            >
+              <div className="cart-area card bg-bg-gray-secondary">
+                <div className="border-0 cart-card border-bottom border-normal-gray">
+                  <Row className="my-4">
+                    <Col className="text-white d-flex align-items-center">
+                      <Link href="../cart/event-list">
+                        <h4 className="ms-4 text-white">購物車</h4>
+                      </Link>
+                    </Col>
+                    <TodoAll
+                      handleToggleSelectedAll={handleToggleSelectedAll}
+                      cartItems={cartItems}
+                      setCartItems={setCartItems}
+                    />
+                  </Row>
+                </div>
+                {/* 到時候return資料用這一層 */}
+                {/* 沒購物車內容 判斷*/}
+                {cartItems && cartItems.length > 0 ? (
+                  <CartCard
+                    foundMt={foundMt}
+                    removeItem={removeItem}
+                    calcTotalItemstotal={calcTotalItemstotal}
+                    calcTotalPricetotal={calcTotalPricetotal}
+                    incrementOne={incrementOne}
+                    decrementOne={decrementOne}
+                    handleToggleSelectedAll={handleToggleSelectedAll}
+                    cartItems={cartItems}
+                    MerchantIds={MerchantIds}
+                    setCartItems={setCartItems}
+                    newtoggleCheckbox={newtoggleCheckbox}
+                  />
+                ) : (
+                  <NoCart />
+                )}
+              </div>
+            </motion.div>
+          </div>
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className=""
+          >
+            <EventsRecommend />
+          </motion.div>
+          {/* <NavbarBottomRwd /> */}
+          <div className="border-0 cart-card d-block d-sm-none border-top border-normal-gray bg-normal-gray-deep fixed-bottom">
             {cartItems && cartItems.length > 0 ? (
-              <CartCard
-                foundMt={foundMt}
-                removeItem={removeItem}
-                calcTotalItemstotal={calcTotalItemstotal}
-                calcTotalPricetotal={calcTotalPricetotal}
-                incrementOne={incrementOne}
-                decrementOne={decrementOne}
-                handleToggleSelectedAll={handleToggleSelectedAll}
-                cartItems={cartItems}
-                MerchantIds={MerchantIds}
-                setCartItems={setCartItems}
-                newtoggleCheckbox={newtoggleCheckbox}
-              />
+              <div className="d-flex justify-content-between align-items-center m-2">
+                <p className="text-primary-light ms-3">
+                  合計{calcTotalItemstotal}件商品
+                </p>
+                <div className="d-flex justify-content-center align-items-center">
+                  <p className="text-white ms-3">
+                    總金額 NT {calcTotalPricetotal}
+                  </p>
+                  <h6 className="btn btn-primary-deep text-white ms-4 m-0">
+                    <Link
+                      href="/payment"
+                      className="text-white"
+                      onClick={(e) => {
+                        if (!checkAllChecked(cartItems)) {
+                          e.preventDefault() // 阻止默认行为
+                        }
+                      }}
+                    >
+                      前往結帳
+                    </Link>
+                  </h6>
+                </div>
+              </div>
             ) : (
-              <NoCart />
+              <div className="container d-flex justify-content-center bg-primary-deep">
+                <Link href="/product/list" className="text-white my-2">
+                  瀏覽最新活動!
+                </Link>
+              </div>
             )}
           </div>
-        </motion.div>
-      </div>
+        </div>
+      ) : (
+        <AuthCart />
+      )}
 
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.4 }}
-        className=""
-      >
-        <EventsRecommend />
-      </motion.div>
-
-      {/* <NavbarBottomRwd /> */}
-      <div className="border-0 cart-card d-block d-sm-none border-top border-normal-gray bg-normal-gray-deep fixed-bottom">
-        {cartItems && cartItems.length > 0 ? (
-          <div className="d-flex justify-content-between align-items-center m-2">
-            <p className="text-primary-light ms-3">
-              合計{calcTotalItemstotal}件商品
-            </p>
-            <div className="d-flex justify-content-center align-items-center">
-              <p className="text-white ms-3">總金額 NT {calcTotalPricetotal}</p>
-              <h6 className="btn btn-primary-deep text-white ms-4 m-0">
-                <Link
-                  href="/payment"
-                  className="text-white"
-                  onClick={(e) => {
-                    if (!checkAllChecked(cartItems)) {
-                      e.preventDefault() // 阻止默认行为
-                    }
-                  }}
-                >
-                  前往結帳
-                </Link>
-              </h6>
-            </div>
-          </div>
-        ) : (
-          <div className="container d-flex justify-content-center bg-primary-deep">
-            <Link href="/product/list" className="text-white my-2">
-              瀏覽最新活動!
-            </Link>
-          </div>
-        )}
-      </div>
       {/* 吐司 */}
       <Modal
         show={showModal} // 控制模态框显示
@@ -161,6 +175,33 @@ export default function CartIndex() {
           <Modal.Header closeButton>請勾選要結帳的票券</Modal.Header>
         </Modal.Body>
       </Modal>
+
+      {/* 判斷登入
+      <div
+        className="modal show"
+        style={{ display: 'block', position: 'initial' }}
+      >
+        <Modal.Dialog>
+          <Modal.Header closeButton>
+            <Modal.Title>請先登入會員</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <p>
+              是否有註冊會員?
+              <Link href="">
+                <span className="text-primary"> 前往註冊會員</span>
+              </Link>
+            </p>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button variant="primary" className="text-white">
+              已有會員-登入
+            </Button>
+          </Modal.Footer>
+        </Modal.Dialog>
+      </div> */}
       <style global jsx>
         {`
           body {

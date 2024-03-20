@@ -26,7 +26,6 @@ export default function Toolbar({ handleShow }) {
               </p>
             </div>
           </div>
-
           <p className="d-none d-md-inline d-lg-none"> 購物車</p>
         </Link>
       </li>

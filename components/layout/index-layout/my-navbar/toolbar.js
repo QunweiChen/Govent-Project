@@ -2,12 +2,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from './toolbar.module.scss'
 import dynamic from 'next/dynamic'
+import { useCart } from '@/hooks/use-cart'
 import { useAuth } from '@/hooks/use-auth'
+
 const Carttoolbar = dynamic(() => import('@/components/cart/carttoolbar'), {
   ssr: false,
 })
 
 export default function Toolbar({ handleShow }) {
+  const { NavbaralcTotalItemstotal } = useCart()
   const { isAuthenticated, signOut, auth } = useAuth()
   // console.log(auth)
   // console.log(NavbaralcTotalItemstotal)

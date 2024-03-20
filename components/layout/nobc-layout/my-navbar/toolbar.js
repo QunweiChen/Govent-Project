@@ -2,8 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from './toolbar.module.scss'
 import { useAuth } from '@/hooks/use-auth'
+import { useCart } from '@/hooks/use-cart'
 
 export default function Toolbar({ handleShow }) {
+  const { NavbaralcTotalItemstotal } = useCart()
   const { isAuthenticated, signOut, auth } = useAuth()
   console.log(auth)
 
