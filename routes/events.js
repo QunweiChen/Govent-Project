@@ -52,7 +52,7 @@ router.get('/:id', async (req, res) => {
     FROM \`event\`
     INNER JOIN \`activity_category\`
     ON event.event_type_id = activity_category.id
-    LEFT JOIN \`event_options\` ON event.id = event_options.event_id
+    LEFT JOIN \`event_options\` ON event.event_id = event_options.event_id
     WHERE event.event_id = :eventId
     GROUP BY event.id;
     `,
