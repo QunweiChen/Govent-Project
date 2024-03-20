@@ -127,7 +127,7 @@ router.post('/add-event', bannerUpload.single('banner'), async (req, res) => {
     // 使用 Sequelize 或其他方式新增活动数据
     const randomNumber = Math.floor(10000000 + Math.random() * 90000000)
     await sequelize.query(
-      'INSERT INTO `event` (event_id, merchat_id, event_name, event_type_id, place, banner, str, address, ticket_ins, start_date, end_date, sell_start_date, sell_end_date, content, vaild) VALUES (:event_id, :merchat_id, :event_name, :event_type_id, :place, :banner, :str, :address, :ticket_ins, :start_date, :end_date, :sell_start_date, :sell_end_date, :content, 0)',
+      'INSERT INTO `event` (event_id, merchat_id, event_name, event_type_id, place, banner, str, address, ticket_ins, start_date, end_date, sell_start_date, sell_end_date, content, create_at, valid) VALUES (:event_id, :merchat_id, :event_name, :event_type_id, :place, :banner, :str, :address, :ticket_ins, :start_date, :end_date, :sell_start_date, :sell_end_date, :content, :create_at, 0)',
       {
         replacements: {
           event_id: randomNumber,
@@ -144,6 +144,7 @@ router.post('/add-event', bannerUpload.single('banner'), async (req, res) => {
           sell_start_date,
           sell_end_date,
           content,
+          create_at: new Date(),
         },
         type: QueryTypes.INSERT,
       }
