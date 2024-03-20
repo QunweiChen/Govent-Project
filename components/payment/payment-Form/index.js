@@ -21,7 +21,6 @@ export default function PaymentForm({
 }) {
   //引入會員資料hook
   const { auth } = useAuth()
-  console.log(auth.user.id)
   //使用react-hook-form套件檢查form表單
   const {
     register,
@@ -31,7 +30,7 @@ export default function PaymentForm({
   } = useForm()
   //結帳之後將資料傳送至後端
   const postSubmit = (data) => {
-    console.log(productData)
+    console.log(data)
     let discountObj = discount
     //判斷是否有勾選優惠或點數折抵
     switch (true) {
@@ -51,10 +50,8 @@ export default function PaymentForm({
       default:
         break
     }
-    console.log(discountObj)
 
     let newPoint = pointData - discountObj.point
-    console.log(newPoint)
     let result = {
       ...data,
       money: money,
@@ -64,8 +61,7 @@ export default function PaymentForm({
       newPoint: newPoint,
       userID: auth.user.id,
     }
-    console.log(result)
-    fetch('http://localhost:3005/api/payment-line-pay', {
+    fetch(`http://localhost:3005/api/payment/${data.paymentType}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -76,7 +72,10 @@ export default function PaymentForm({
         return response.json()
       })
       .then((response) => {
-        window.location.replace(response.url)
+        if (response.url) {
+          window.location.replace(response.url)
+        }
+        console.log(response)
       })
       .catch((err) => {
         console.log(err)
@@ -107,7 +106,6 @@ export default function PaymentForm({
           id: e.target.options[e.target.selectedIndex].id,
         },
       }
-      console.log(e.target.options[e.target.selectedIndex].id)
       setDiscount(setConnectionData)
       return
     }
@@ -189,10 +187,9 @@ export default function PaymentForm({
   }
   const [couponData, setCouponData] = useState([])
   const [pointData, setPointData] = useState(0)
-  console.log(pointData)
   //拿取會員的優惠券及點數資料
   useEffect(() => {
-    fetch('http://localhost:3005/api/payment/number', {
+    fetch('http://localhost:3005/api/payment-data/number', {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
@@ -201,7 +198,6 @@ export default function PaymentForm({
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log()
         let point = Number(response.data.point[0].point)
         setPointData(point)
         setCouponData(response.data.coupon)

@@ -2,20 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Card from 'react-bootstrap/Card'
 import Link from 'next/link'
-import { useAuth } from '@/hooks/use-auth'
 import { useCart } from '@/hooks/use-cart'
 
 export default function Confirm() {
   const { setCartItems, cartItems, setPay, pay } = useCart()
-  const { auth } = useAuth()
-  console.log(auth)
   const [state, setState] = useState({})
-  console.log(state)
   //付款完成之後會轉到這裡，在使用fetch在確認訂單是否有支付成功
   const router = useRouter()
   //移除使用的優惠券
   function delCoupon(couponID, point) {
-    fetch('http://localhost:3005/api/payment/delete', {
+    fetch('http://localhost:3005/api/payment-data/delete', {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
@@ -33,13 +29,13 @@ export default function Confirm() {
       })
   }
   //寄出訂購成功的email
-  function mail(orderID) {
+  function mail(orderID, tickCode) {
     fetch('http://localhost:3005/api/email/send', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({ orderID }),
+      body: JSON.stringify({ orderID, tickCode }),
     })
       .then((response) => response.json())
       .then((response) => {
@@ -66,28 +62,29 @@ export default function Confirm() {
       .catch((err) => {
         console.log(err)
       })
+
     let arr = JSON.parse(data[0].order_info)
     arr.map((e) => {
-      console.log(e)
       let eventID = e.event_id
+      let ticketName = e.ticketName
       fetch(`http://localhost:3005/api/qrcode`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ eventID, orderID }),
+        body: JSON.stringify({ eventID, orderID, ticketName }),
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log(res)
+          console.log(res.tickCode)
         })
         .catch((err) => {
           console.log(err)
         })
     })
+    mail(orderID)
   }
   function handleCheckout() {
-    console.log('清除購物車')
     // 將符合條件的項目從 cartItems 中移除
     // 過濾掉支付清單中的項目
     const updatedcartItems = cartItems
@@ -101,21 +98,21 @@ export default function Confirm() {
   }
   useEffect(() => {
     if (router.isReady) {
-      let transactionId = router.query.transactionId
+      let transactionId = ''
+      let url = ''
+      if (router.query.transactionId) {
+        transactionId = router.query.transactionId
+        url = `http://localhost:3005/api/payment/confirm?transactionId=${transactionId}&orderID=${orderID}`
+      }
       let orderID = router.query.orderID
       let couponID = router.query.couponID
       let point = router.query.point
-      console.log(point)
-      console.log(router.query)
-      fetch(
-        `http://localhost:3005/api/payment-line-pay/confirm?transactionId=${transactionId}&orderID=${orderID}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+      fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
         .then((response) => {
           return response.json()
         })
@@ -124,13 +121,11 @@ export default function Confirm() {
           setState(response)
           delCoupon(couponID, point)
           qrCode(orderID)
-          // handleCheckout()
-          mail(orderID)
-          // handleCheckout()
+          handleCheckout()
           //如果成功五秒後跳轉回主頁
-          // setTimeout(() => {
-          //   window.location.replace('http://localhost:3000/')
-          // }, 5000)
+          setTimeout(() => {
+            window.location.replace('http://localhost:3000/')
+          }, 5000)
           return response
         })
         .catch((err) => {
