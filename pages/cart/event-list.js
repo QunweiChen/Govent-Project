@@ -26,7 +26,7 @@ export default function EventList() {
               <div>
                 <button
                   onClick={() => {
-                    // console.log(v)
+                    console.log(v)
                     addItem(v)
                   }}
                 >

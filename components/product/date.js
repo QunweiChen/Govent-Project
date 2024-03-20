@@ -10,16 +10,11 @@ const chunk = (arr, size) =>
 
 export default function Calendar({ events, sellStartDate , sellEndDate = '' , setSelectDate}) {
 
-  //const [sTime, setSTime] = useState('')
-
-
 
 //時區問題(自動+8小時):創建一個新物件 sellStartDateObj，以 `sellStartDate` 作為參數。使用 `setHours` 將 `sellStartDateObj` 的小時數設定為當前小時數減 8。
   let sellStartDateObj = new Date(sellStartDate);
-  //console.log(sTime);
-  
-  
-  
+  sellStartDate= sellStartDateObj.setHours(sellStartDateObj.getHours() - 8);
+
   let sellEndDateObj = new Date(sellEndDate);
   sellEndDate= sellEndDateObj.setHours(sellEndDateObj.getHours() - 8);
 
@@ -30,9 +25,8 @@ export default function Calendar({ events, sellStartDate , sellEndDate = '' , se
   //設定售票起始日
   const now = sellStartDate ? new Date(sellStartDate) : new Date()
   // console.log(now)
-  // console.log(new Date(sellStartDate))
-   console.log(sellStartDate)
-  // console.log(sellEndDate)
+  console.log(new Date(sellStartDate))
+  //  console.log(sellEndDate)
 
 
 
@@ -160,10 +154,14 @@ const RightBtn = () => {
                       <td
                         key={idx}
                         onClick={() => {
+                          if (item) setMyDate(item)
                           setSelectDate(`${currentDate}`)
                           console.log("currentDate",currentDate);
+                          console.log(myDate, item);
                         }}
-                        className={isSelectable ? 'selectable' : ''}
+                        className={`${isSelectable ? 'selectable' : ''} ${
+                        myDate === item ? 'chosen-date' : ''
+                      }`}
                         style={isSelectable ? { cursor: 'pointer' } : { cursor: 'default' }}
                         role="presentation"
                       >

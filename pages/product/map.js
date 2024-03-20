@@ -1,7 +1,7 @@
-// import SingleMapDetail from '@/components/product/SingleMapDetail'
+import SingleMapDetail from '@/components/product/SingleMapDetail'
 import { useState, useEffect } from 'react'
 
-function GoogleMapDemo() {
+function Map() {
   // 給一個預設的中心點
   const [lat, setLat] = useState(25.033198)
   const [lng, setLng] = useState(121.543575)
@@ -28,12 +28,12 @@ function GoogleMapDemo() {
         </li>
       </ul>
       {/* <GeocodeSearch setLat={setLat} setLng={setLng} /> */}
-      {/* <SingleMapDetail
+      <SingleMapDetail
         lat={lat}
         lng={lng}
         infoTitle="測試"
         infoContent="this is a sample string"
-      /> */}
+      />
 
       {/* <h2>捷運科技大樓站</h2>
       <SingleMapDetail
@@ -46,4 +46,4 @@ function GoogleMapDemo() {
   )
 }
 
-export default GoogleMapDemo
+export default Map

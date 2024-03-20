@@ -22,7 +22,7 @@ export class MapTest extends Component {
                 lat: store.latitude,
                 lng: store.longitude
             }}
-                onClick={() => console.log("You clicked me!")} />
+            onClick={() => console.log("You clicked: " + store.name)} />
         })
     }
 
