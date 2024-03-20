@@ -5,7 +5,6 @@ import React, { Component } from 'react'
 export class MapTest extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             stores: [{ lat: 22.5789248, lng: 120.3000704 },
             { latitude: 22.7007095, longitude: 120.2960015 },

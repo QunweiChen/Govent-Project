@@ -53,14 +53,12 @@ export default function Detail() {
         time3 = time3.substring(0, 5);
       }
       setSellTime(time3)
-     
+
       // getAll(ticketInfo,selectDate)
     } catch (e) {
       console.log(e)
     }
   }
-
-  // console.log(ticketInfo);
 
 
   //回傳fetch到的資料
@@ -70,7 +68,7 @@ export default function Detail() {
       console.log('PID', pid)
       getProducts(pid)
     }
-    
+
   }, [router.isReady])
 
   useEffect(() => {
@@ -79,7 +77,7 @@ export default function Detail() {
     }
   }, [ticketInfo, selectDate]);
 
-  const getAll = (ticketInfo,selectDate) => {
+  const getAll = (ticketInfo, selectDate) => {
     console.log(selectDate);
     // 使用 Date 物件來解析原始日期字串
     const date = new Date(selectDate);
@@ -111,7 +109,7 @@ export default function Detail() {
     ]);
   }
 
-console.log(all);
+  console.log(all);
 
   // 假設初始狀態是未選擇
   const [selected, setSelected] = useState(false);
@@ -172,7 +170,7 @@ console.log(all);
               YOASOBI 演唱會 <i className="bi bi-chevron-right"></i>
             </p>
           </div>
-
+          {/* RWD 主頁按鈕 */}
           <div>
             <div className="position-relative">
               <div className="d-flex justify-content-between d-block d-xxl-none">
@@ -197,7 +195,7 @@ console.log(all);
               </div>
             </div>
           </div>
-
+          {/* 主頁圖片 */}
           <div>
             <img
               src={`/images/product/list/${eventInfo[0]?.banner?.split(',')[0]
@@ -207,6 +205,7 @@ console.log(all);
             />
           </div>
         </section>
+        {/* 主頁活動資訊 */}
         {eventInfo.map((eventInfo) => (
           <main key={eventInfo.id}>
             <div className="wrapper">
@@ -235,10 +234,16 @@ console.log(all);
                     {eventInfo.start_date.substring(0, 10)}~
                     {eventInfo.end_date.substring(0, 10)}
                   </h6>
+                  {/* 導向 Google 地圖上該地點的頁面。使用 encodeURIComponent() 函數來對地點進行編碼，以確保 URL 的正確性。target="_blank" 和 rel="noopener noreferrer" 屬性用於在新標籤中打開連結。 */}
                   <h6>
                     <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" />
-                    {eventInfo.place}
+                    <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventInfo.place)}`} target="_blank" rel="noopener noreferrer" 
+                    className='text-white border-bottom'
+                    >
+                      {eventInfo.place}
+                    </a>
                   </h6>
+
                   <p className="mx-4 text-secondary-02">
                     {eventInfo.address}
                   </p>
@@ -256,7 +261,7 @@ console.log(all);
                 </div>
                 <hr />
               </section>
-
+              {/* 活動票券 */}
               <div className="d-flex align-items-center mt-5">
                 <h4 className="border-5 border-start border-primary px-2">
                   選擇方案
@@ -352,9 +357,10 @@ console.log(all);
 
 
               <section className="row">
+                {/* left bar */}
                 <div className="left col-lg-8 col-sm-12">
                   <div className="d-flex align-items-center mt-5">
-                    <h4 className="border-5 border-start border-primary px-2">
+                    <h4 id="eventIntro" className="border-5 border-start border-primary px-2">
                       活動介紹
                     </h4>
                   </div>
@@ -385,14 +391,15 @@ console.log(all);
                   />
                   <p className="py-3 d-none d-xxl-block">出道後的第二次台灣巡迴</p>
                 </div>
+                {/* right bar */}
                 <div className="right d-none d-xxl-block col-3">
                   <div className="row seat1 mt-3">
-                    <h5 className="col-12 mb-3">NT$ 2,800 - 3200</h5>
+                    <h5 className="col-12 mb-3">NT$ {parseInt(eventInfo.price).toLocaleString()} - 3200</h5>
                     <button className="store col-12 btn btn-primary-deep">
                       立即購買
                     </button>
                   </div>
-                  <a type="button" className="d-flex align-items-center mt-5">
+                  <a href="#eventIntro" type="button" className="d-flex align-items-center mt-5">
                     <h5 className="border-5 border-start border-primary px-2 text-white">
                       活動介紹
                     </h5>
@@ -414,6 +421,7 @@ console.log(all);
                   </a>
                 </div>
               </section>
+              {/* 購買須知 */}
               <section className="left col-lg-8 col-sm-12">
                 <div className="d-flex align-items-center mt-5">
                   <h4 id="eventIntro2" className="border-5 border-start border-primary px-2">
@@ -434,6 +442,7 @@ console.log(all);
                   6.詳細實施規則請見購票頁面說明，並建議提前加入會員，於「會員專區」→「個人資料」→「信用卡資訊」登錄信用卡完成驗證手續，以便進行購票流程。
                 </p>
               </section>
+              {/* 使用方式 */}
               <section className="left col-lg-8 col-sm-12">
                 <div className="d-flex align-items-center mt-5">
                   <h4 id="eventIntro3" className="border-5 border-start border-primary px-2">
@@ -445,7 +454,7 @@ console.log(all);
                   入場專用QRCODE將會寄送到您的會員email，或請至會員中心＞訂單＞票卷內點擊出示使用。
                 </p>
               </section>
-
+              {/* 評論 */}
               <section className="left col-lg-8 col-sm-12">
                 <div className="d-flex align-items-center mt-5 mb-4">
                   <h4 id="eventIntro4" className="border-5 border-start border-primary px-2">
@@ -599,7 +608,7 @@ console.log(all);
                       </div>
                     </div>
                   </div>
-
+                  {/* RWD評論 */}
                   <div className="d-block d-xxl-none bg-bg-gray-secondary p-3 my-5 rounded-4">
                     <div className="d-flex my-2 ms-2">
                       <div>
@@ -640,6 +649,7 @@ console.log(all);
                   </div>
                 </div>
 
+                {/* 評論頁碼 */}
                 <div
                   className="btn-toolbar justify-content-center mt-5 pt-4"
                   role="toolbar"
@@ -670,10 +680,15 @@ console.log(all);
                 </div>
               </section>
 
+              {/* 推薦活動 */}
               <section className="d-none d-xxl-inline-flex">
                 <EventsRecommend />
               </section>
             </div>
+
+            {/* RWD  */}
+
+            {/* 按鈕 */}
             <div className="d-inline-flex d-xxl-none align-items-center justify-content-center col-12 bg-bg-gray-secondary p-3 rounded-3">
               <h5 className="col-8">NT$ 3,200 起</h5>
               <button
@@ -684,7 +699,7 @@ console.log(all);
                 選擇規格<i className="bi bi-chevron-bar-up"></i>
               </button>
             </div>
-
+            {/* 彈跳視窗 */}
             <div
               className="modal fade"
               id="exampleModal"
@@ -751,7 +766,7 @@ console.log(all);
                     >
                       加入購物車
                     </button>
-                    <button type="button" className="btn btn-primary text-white">
+                    <button type="button" className="btn btn-primary text-white" data-bs-dismiss="modal">
                       立即訂購
                     </button>
                   </div>
@@ -772,7 +787,7 @@ console.log(all);
 
           .object-fit-cover {
             width: 100%;
-            height: 600px;
+            height: 500px;
             object-fit: cover;
           }
 
