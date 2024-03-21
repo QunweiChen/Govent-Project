@@ -62,7 +62,7 @@ export default function Confirm() {
       .catch((err) => {
         console.log(err)
       })
-
+    console.log(data)
     let arr = JSON.parse(data[0].order_info)
     arr.map((e) => {
       let eventID = e.event_id
@@ -99,14 +99,15 @@ export default function Confirm() {
   useEffect(() => {
     if (router.isReady) {
       let transactionId = ''
-      let url = ''
+      let orderID = router.query.orderID
+      let url = `http://localhost:3005/api/payment/confirm?transactionId=${transactionId}&orderID=${orderID}`
+      let couponID = router.query.couponID
+      let point = router.query.point
       if (router.query.transactionId) {
         transactionId = router.query.transactionId
         url = `http://localhost:3005/api/payment/confirm?transactionId=${transactionId}&orderID=${orderID}`
       }
-      let orderID = router.query.orderID
-      let couponID = router.query.couponID
-      let point = router.query.point
+
       fetch(url, {
         method: 'GET',
         headers: {

@@ -22,11 +22,6 @@ export default function Payment() {
   const [productData, setProductData] = useState([])
   // 從 localStorage 中獲取 MtItems 資料
   const { cartItems } = useCart()
-  // const MtItemsString =
-  //   typeof window !== 'undefined'
-  //     ? window.localStorage.getItem('MtItems')
-  //     : '[]'
-  //轉成物件
   // 過濾出所有符合條件的項目
   const news = cartItems.filter((merchant) => {
     return merchant.checked === true

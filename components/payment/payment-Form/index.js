@@ -17,7 +17,6 @@ export default function PaymentForm({
   money = 0,
   productData = {},
   redeem = () => {},
-  coupon = () => {},
 }) {
   //引入會員資料hook
   const { auth } = useAuth()
@@ -30,7 +29,6 @@ export default function PaymentForm({
   } = useForm()
   //結帳之後將資料傳送至後端
   const postSubmit = (data) => {
-    console.log(data)
     let discountObj = discount
     //判斷是否有勾選優惠或點數折抵
     switch (true) {
@@ -75,7 +73,6 @@ export default function PaymentForm({
         if (response.url) {
           window.location.replace(response.url)
         }
-        console.log(response)
       })
       .catch((err) => {
         console.log(err)
