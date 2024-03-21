@@ -11,17 +11,17 @@ const Carttoolbar = dynamic(() => import('@/components/cart/carttoolbar'), {
 })
 
 export default function Toolbar({ handleShow }) {
-  const { NavbaralcTotalItemstotal } = useCart()
-  const { isAuthenticated, signOut, auth } = useAuth()
   const [userData, setUserData] = useState([])
-  console.log(auth)
-
+  const { setCartItems } = useCart()
+  const { isAuthenticated, signOut, auth } = useAuth()
+  // console.log(auth)
+  // console.log(NavbaralcTotalItemstotal)
   const handleSignOut = () => {
     signOut() // Call the sign out method
     // Redirect or perform additional actions after signing out if needed
   }
 
-  const getUser = () => {
+  useEffect(() => {
     fetch('http://localhost:3005/api/member', {
       method: 'GET',
       headers: {
@@ -44,14 +44,15 @@ export default function Toolbar({ handleShow }) {
         }
       })
       .catch((error) => console.error('Error fetching data:', error))
-  }
-
+  }, [])
   useEffect(() => {
-    getUser()
+    if (auth.isAuthenticated === false) {
+      setCartItems([])
+    }
   }, [])
 
   return (
-    <ul className="navbar-nav pe-2 ms-auto">
+    <ul className="navbar-nav pe-2 d-flex align-items-center">
       <li className="nav-item">
         <Carttoolbar />
       </li>
@@ -59,53 +60,63 @@ export default function Toolbar({ handleShow }) {
         // className="nav-item dropdown"
         className={`nav-item dropdown ${styles['dropdown']}`}
       >
-        <Link
-          className="nav-link dropdown-toggle d-flex align-items-center"
-          href="/member"
-          role="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-          title="會員中心"
-        >
-          <img
-            width={30}
-            className={`${styles['avatar']} rounded-circle me-2`}
-            src={`http://localhost:3005/avatar/${userData.avatar}`}
-          />
-          <h6 className="m-0 me-1">{userData.name}</h6>
-        </Link>
-        <ul
-          className={`dropdown-menu dropdown-menu-end p-4 mw-100 user ${styles['slideIn']} ${styles['dropdown-menu']}`}
-        >
-          <li>
-            {auth.isAuthenticated && auth.user ? (
-              <>
-                <img
-                  src={`http://localhost:3005/avatar/${userData.avatar}`}
-                  className="rounded-circle d-block mx-auto"
-                  alt="..."
-                  width={80}
-                  height={80}
-                />
-                <p className="text-center mt-2">{auth.user.name}</p>
-              </>
-            ) : (
-              <Link className="dropdown-item text-center" href="/user/signin">
-                請登入
-              </Link>
-            )}
-          </li>
-          <li>
-            <hr className="dropdown-divider" />
-          </li>
-          {auth.isAuthenticated && (
+        {auth.isAuthenticated && auth.user ? (
+          <Link
+            className="nav-link dropdown-toggle d-flex align-items-center"
+            href="/member"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            title="會員中心"
+          >
+            <img
+              width={30}
+              className={`${styles['avatar']} rounded-circle me-2`}
+              src={`http://localhost:3005/avatar/${userData.avatar}`}
+            />
+            <h6 className="m-0 me-1">{userData.name}</h6>
+          </Link>
+        ) : (
+          <div>
+            <div
+              className="nav-link d-flex align-items-center"
+              title="會員中心"
+            >
+              <div className="login-button">
+                <Link href="/user/signin" className="text-white">
+                  登入／註冊
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+        {auth.isAuthenticated && auth.user ? (
+          <ul
+            className={`dropdown-menu dropdown-menu-end p-4 mw-100 user ${styles['slideIn']} ${styles['dropdown-menu']}`}
+          >
             <li>
-              <Link className="dropdown-item text-center " href="/">
-                回首頁
+              <img
+                src={`http://localhost:3005/avatar/${userData.avatar}`}
+                className="rounded-circle d-block mx-auto"
+                alt="..."
+                width={80}
+                height={80}
+              />
+              <p className="text-center mt-2">{auth.user.name}</p>
+            </li>
+            <li>
+              <hr className="dropdown-divider" />
+            </li>
+            <li>
+              <Link className="dropdown-item text-center " href="/member">
+                會員中心
               </Link>
             </li>
-          )}
-          {auth.isAuthenticated && auth.user ? (
+            <li>
+              <Link className="dropdown-item text-center " href="/organizer">
+                主辦中心
+              </Link>
+            </li>
             <li>
               <button
                 className="dropdown-item text-center "
@@ -114,19 +125,13 @@ export default function Toolbar({ handleShow }) {
                 登出
               </button>
             </li>
-          ) : (
-            <Link className="dropdown-item text-center" href="/user/signup">
-              我要註冊
-            </Link>
-          )}
-        </ul>
+          </ul>
+        ) : (
+          <></>
+        )}
       </li>
       <style global jsx>
         {`
-          .cart-total {
-            width: 20px;
-            height: 20px;
-          }
           .user {
             .dropdown-item {
               border-radius: 5px;
@@ -136,6 +141,25 @@ export default function Toolbar({ handleShow }) {
                 background-color: var(--primary-50-color);
               }
             }
+          }
+          .login-button {
+            border: 1px solid white;
+            padding-block: 5px;
+            padding-inline: 15px;
+            border-radius: 5px;
+            transition: 300ms;
+            &:hover {
+              background-color: #ffffff50;
+              border: 1px solid #ffffff50;
+              a {
+                color: black !important;
+                transition: 300ms;
+              }
+            }
+          }
+          .cart-total {
+            width: 20px;
+            height: 20px;
           }
         `}
       </style>

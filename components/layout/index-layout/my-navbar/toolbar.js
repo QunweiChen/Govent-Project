@@ -12,7 +12,7 @@ const Carttoolbar = dynamic(() => import('@/components/cart/carttoolbar'), {
 
 export default function Toolbar({ handleShow }) {
   const [userData, setUserData] = useState([])
-  const { NavbaralcTotalItemstotal } = useCart()
+  const { setCartItems } = useCart()
   const { isAuthenticated, signOut, auth } = useAuth()
   // console.log(auth)
   // console.log(NavbaralcTotalItemstotal)
@@ -44,7 +44,12 @@ export default function Toolbar({ handleShow }) {
         }
       })
       .catch((error) => console.error('Error fetching data:', error))
-  },[])
+  }, [])
+  useEffect(() => {
+    if (auth.isAuthenticated === false) {
+      setCartItems([])
+    }
+  }, [])
 
   return (
     <ul className="navbar-nav pe-2 d-flex align-items-center">
@@ -77,7 +82,11 @@ export default function Toolbar({ handleShow }) {
               className="nav-link d-flex align-items-center"
               title="會員中心"
             >
-              <div className='login-button'><Link href="/user/signin" className='text-white'>登入／註冊</Link></div>
+              <div className="login-button">
+                <Link href="/user/signin" className="text-white">
+                  登入／註冊
+                </Link>
+              </div>
             </div>
           </div>
         )}
@@ -93,9 +102,7 @@ export default function Toolbar({ handleShow }) {
                 width={80}
                 height={80}
               />
-              <p className="text-center mt-2">
-                {auth.user.name}
-              </p>
+              <p className="text-center mt-2">{auth.user.name}</p>
             </li>
             <li>
               <hr className="dropdown-divider" />
@@ -122,36 +129,39 @@ export default function Toolbar({ handleShow }) {
         ) : (
           <></>
         )}
-
       </li>
       <style global jsx>
         {`
-      .user{
-        .dropdown-item{
-        border-radius: 5px;
-        margin-top: 5px;
-        transition: 300ms;
-        &:hover{
-          background-color: var(--primary-50-color);
-        }
-      }
-      }
-      .login-button{
-        border: 1px solid white;
-        padding-block: 5px;
-        padding-inline: 15px;
-        border-radius: 5px;
-        transition: 300ms;
-        &:hover{
-          background-color: #ffffff50;
-          border: 1px solid #ffffff50;
-          a{
-            color: black !important;
-            transition: 300ms;
+          .user {
+            .dropdown-item {
+              border-radius: 5px;
+              margin-top: 5px;
+              transition: 300ms;
+              &:hover {
+                background-color: var(--primary-50-color);
+              }
+            }
           }
-        }
-      }
-      `}
+          .login-button {
+            border: 1px solid white;
+            padding-block: 5px;
+            padding-inline: 15px;
+            border-radius: 5px;
+            transition: 300ms;
+            &:hover {
+              background-color: #ffffff50;
+              border: 1px solid #ffffff50;
+              a {
+                color: black !important;
+                transition: 300ms;
+              }
+            }
+          }
+          .cart-total {
+            width: 20px;
+            height: 20px;
+          }
+        `}
       </style>
     </ul>
   )

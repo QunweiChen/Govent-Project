@@ -20,10 +20,8 @@ export default function Carttoolbar() {
           <Link className="nav-link" href="/cart" role="button" title="購物車">
             <div className="d-flex justify-content-center align-items-center">
               <i className="bi bi-cart-fill"></i>
-              <div className="bg-white text-center rounded-circle ms-2">
-                <p className="cart-total text-center text-secondary">
-                  {NavbaralcTotalItemstotal}
-                </p>
+              <div className=" cart-total bg-white text-center rounded-circle ms-2 text-secondary p">
+                {NavbaralcTotalItemstotal}
               </div>
             </div>
             <p className="d-none d-md-inline d-lg-none"> 購物車</p>
@@ -38,12 +36,10 @@ export default function Carttoolbar() {
             title="購物車"
             onClick={handleShow}
           >
-            <div className="d-flex justify-content-center align-items-center">
-              <i className="bi bi-cart-fill"></i>
-              <div className="bg-white text-center rounded-circle ms-2">
-                <p className="cart-total text-center text-secondary">
-                  {NavbaralcTotalItemstotal}
-                </p>
+            <div className="d-flex justify-content-center align-items-center w-100 ">
+              <i className="bi bi-cart-fill "></i>
+              <div className="cart-total bg-white text-center rounded-circle ms-2 text-secondary p">
+                {NavbaralcTotalItemstotal}
               </div>
             </div>
             <p className="d-none d-md-inline d-lg-none"> 購物車</p>
@@ -70,6 +66,13 @@ export default function Carttoolbar() {
           </Modal>
         </div>
       )}
+      <style global jsx>
+        {`
+          .cart-total {
+            padding: 0px;
+          }
+        `}
+      </style>
     </>
   )
 }
