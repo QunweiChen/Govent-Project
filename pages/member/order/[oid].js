@@ -1,7 +1,7 @@
 // import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { Row, Col, Image, Button } from 'react-bootstrap'
+import { Row, Col, Image, Button, Container } from 'react-bootstrap'
 import TicketInfoLeft from '@/components/member/m-order-left-bar'
 import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
@@ -11,11 +11,13 @@ import Link from 'next/link'
 export default function MemberOrderInfo() {
   const [tabs, setTabs] = useState(1)
   const [order, setOrder] = useState([])
+  const [events, setEvents] = useState([])
   const [tickets, setTickets] = useState([])
 
   const router = useRouter()
   const { oid } = router.query
   const [oidLoaded, setOidLoaded] = useState(false)
+  const [eventInfo, setEventInfo] = useState(0)
 
   const [checkUser, setCheckUser] = useState(true)
   const [checkOrderNumber, setCheckOrderNumber] = useState(true)
@@ -39,8 +41,8 @@ export default function MemberOrderInfo() {
         .then((data) => {
           // 檢查是否有資料並設定到 state 中
           if (data && data.data && data.data.result) {
-            console.log('Received data:', data.data.result)
             setOrder(data.data.result[0])
+            setEvents(JSON.parse(data.data.result[0].order_info))
           } else if (data.message == 403) {
             console.warn('非用戶訂單')
             setCheckUser(false)
@@ -70,6 +72,10 @@ export default function MemberOrderInfo() {
       })
       .catch((error) => console.error('Error fetching data:', error))
   }, [])
+
+  useEffect(()=>{
+    console.log(eventInfo)
+  },[eventInfo])
 
   if (!oidLoaded) {
     return <div>Loading...</div>
@@ -121,40 +127,27 @@ export default function MemberOrderInfo() {
             <Row data-bs-theme="dark">
               <Col sm={3}>
                 <TicketInfoLeft
-                  banner={order.banner}
-                  name={order.event_name}
-                  organizer={order.name}
-                  place={order.place}
-                  address={order.address}
+                  order_id={order.order_id}
+                  payment_method={order.payment_method}
                   price={order.total}
                   coupon_discount={order.coupon_discount}
                   points_discount={order.points_discount}
                   points_rebate={order.points_rebate}
+                  created_at={order.created_at}
                 />
               </Col>
               <Col sm={9}>
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.4, delay: 0.2 }}
-                  className="member-bgc"
-                >
-                  <div className="p-3 px-4 bottom-line">
-                    <h6 className="m-0 text-primary-light">訂購詳情</h6>
-                  </div>
-                  <div className="p-3 px-4">
-                    <p className="pb-2">
-                      <i className="bi bi-person-fill pe-2"></i>訂單編號：
-                      {order.order_number}
-                    </p>
-                    <p>
-                      <i className="bi bi-person-fill pe-2"></i>訂購日期：
-                      {order && order.create_at
-                        ? order.create_at.split('T')[0]
-                        : ''}
-                    </p>
-                  </div>
-                </motion.div>
+                  <Row className='g-3'>
+                    {events.map((data, index)=>(
+                      <Col key={index} sm="6" className=''>
+                        <div>
+                        <button type='button' className='btn member-bgc event-btn px-4 py-3 w-100' onClick={()=>{setEventInfo(index)}}>
+                        {data.eventName}
+                        </button>
+                        </div>
+                      </Col>
+                ))}
+                  </Row>  
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -308,6 +301,11 @@ export default function MemberOrderInfo() {
             .order-content {
               img {
                 width: 100%;
+              }
+            }
+            .event-btn{
+              &:hover{
+               background-color: var(--primary-color); 
               }
             }
           `}
