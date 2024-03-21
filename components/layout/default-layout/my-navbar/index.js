@@ -25,7 +25,7 @@ export default function MyNavbar() {
     <>
       <header>
         <nav
-          className="navbar navbar-expand-lg fixed-top navbar-light py-3"
+          className="navbar navbar-expand-lg fixed-top navbar-light py-3 bg-secondary"
           data-bs-theme="dark"
         >
           <div className="container width-1200">

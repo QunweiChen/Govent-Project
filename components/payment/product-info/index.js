@@ -15,9 +15,10 @@ export default function ProductInfo({ productData = {} }) {
           >
             <div className="product-image col-md-3 ">
               <Image
-                src={`/images/cart/${v.images}`}
+                src={`http://localhost:3005/images/banner/${v.images}`}
                 alt=""
-                className="rounded-3 img-thumbnail"
+                className="rounded-3 overflow-hidden "
+                style={{ height: '150px', width: '100%' }}
               />
             </div>
             <div className="product-content col-md-8 d-flex flex-column justify-content-between">

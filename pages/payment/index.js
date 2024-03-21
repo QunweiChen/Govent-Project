@@ -110,7 +110,10 @@ export default function Payment() {
           />
         </div>
         <div className="col-md-4 ">
-          <div className="bg-bg-gray-secondary  rounded-4 py-3 px-4 sticky-top">
+          <div
+            className="bg-bg-gray-secondary  rounded-4 py-3 px-4 sticky-top"
+            style={{ top: '100px' }}
+          >
             {productData.map((v, i) => {
               return (
                 <div
