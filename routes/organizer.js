@@ -60,8 +60,12 @@ router.get('/', authenticate, async function (req, res) {
         type: QueryTypes.SELECT,
       }
     )
-    if(result.length > 0){
-      return res.json({ status: 'success', message: 'success', data: { result } })
+    if (result.length > 0) {
+      return res.json({
+        status: 'success',
+        message: 'success',
+        data: { result },
+      })
     }
     return res.json({ status: 'success', message: 'noDataFound' })
   } catch (error) {
@@ -273,7 +277,7 @@ router.get('/event/ticket/:eid', authenticate, async (req, res) => {
 })
 
 router.post('/add-organizer', authenticate, async (req, res) => {
-  const { 
+  const {
     organizer_type,
     name,
     bank_code,
@@ -282,13 +286,13 @@ router.post('/add-organizer', authenticate, async (req, res) => {
     amount_number,
     owner_name,
     business_invoice,
-   } = req.body
+  } = req.body
 
   try {
     const addOrganizer = await sequelize.query(
       'INSERT INTO `organizer` (user_id, organizer_type, name, bank_code, bank_branch, bank_name, amount_number, owner_name, business_invoice, created_at, update_at, valid) VALUES (:user_id, :organizer_type, :name, :bank_code, :bank_branch, :bank_name, :amount_number, :owner_name, :business_invoice, :created_at, :update_at, 0)',
       {
-        replacements: { 
+        replacements: {
           user_id: req.user.id,
           organizer_type,
           name,
@@ -300,7 +304,7 @@ router.post('/add-organizer', authenticate, async (req, res) => {
           business_invoice,
           created_at: new Date(),
           update_at: new Date(),
-         },
+        },
         type: QueryTypes.INSERT,
       }
     )
