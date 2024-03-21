@@ -101,24 +101,6 @@ export default function List() {
     setSelectedRegions(selectedRegions)
   }
 
-  const getFilteredEvents = () => {
-    return events.filter((event) => {
-      const categoryMatch =
-        selectedCategories.length === 0 ||
-        selectedCategories.includes(event.category_name)
-      const regionMatch =
-        selectedRegions.length === 0 || selectedRegions.includes(event.str)
-      const searchMatch = event.event_name.toLowerCase().includes(searchWord)
-      return categoryMatch && regionMatch && searchMatch
-    })
-  }
-
-  useEffect(() => {
-    // 当搜索词、选定的类别或地区变化时，更新筛选后的事件列表
-    const newFilteredEvents = getFilteredEvents()
-    setFilteredEvents(newFilteredEvents)
-  }, [searchWord, selectedCategories, selectedRegions, events]) // 确保在这些依赖项变化时重新筛选
-
   //搜尋
   const handleSearch = (searchWord) => {
     if (typeof searchWord !== 'string' || searchWord.length === 0) {
@@ -140,6 +122,25 @@ export default function List() {
       setFilteredEvents(filteredEvents)
     }
   }, [events, searchWord])
+
+  //結合類型、地區、搜尋的篩選結果
+  const getFilteredEvents = () => {
+    return events.filter((event) => {
+      const categoryMatch =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(event.category_name)
+      const regionMatch =
+        selectedRegions.length === 0 || selectedRegions.includes(event.str)
+      const searchMatch = event.event_name.toLowerCase().includes(searchWord)
+      return categoryMatch && regionMatch && searchMatch
+    })
+  }
+  // 依照所有的篩選結果更改內容
+  useEffect(() => {
+    // 当搜索词、选定的类别或地区变化时，更新筛选后的事件列表
+    const newFilteredEvents = getFilteredEvents()
+    setFilteredEvents(newFilteredEvents)
+  }, [searchWord, selectedCategories, selectedRegions, events]) // 确保在这些依赖项变化时重新筛选
 
   const newFilteredEvents = getFilteredEvents()
   console.log(newFilteredEvents)

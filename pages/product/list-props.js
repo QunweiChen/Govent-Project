@@ -1,4 +1,3 @@
-// 父组件代码
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -36,26 +35,15 @@ import SearchForm from '@/components/layout/list-layout/search-form'
 
 export default function List() {
   const { data } = useEvents()
-  // 引入路由
   const { router } = useRouter()
-  // console.log(data)
 
-  //活動資料
-  // 1. 從伺服器來的原始資料
   const [events, setEvents] = useState([])
-
-  
-  // 分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
-
-
-  // useEffect(() => {
-  //   if (data) {
-  //     setEvents(data)
-  //   }
-  // }, [data])
-  // console.log(events)
+  const [selectedCategories, setSelectedCategories] = useState([])
+  const [selectedRegions, setSelectedRegions] = useState([])
+  const [searchWord, setSearchWord] = useState('')
+  const [filteredEvents, setFilteredEvents] = useState([])
 
   //增加擴充屬性質(收藏)
   useEffect(() => {
@@ -67,19 +55,43 @@ export default function List() {
     }
   }, [data])
 
-  console.log(events)
-  const handleSetEvents = (newEvents) => {
-    setEvents(newEvents)
-  } //傳回收藏函式
+  //更新篩選結果
+  useEffect(() => {
+    const newFilteredEvents = getFilteredEvents()
+    setFilteredEvents(newFilteredEvents)
+  }, [searchWord, selectedCategories, selectedRegions, events])
 
-  //回調函式
-  // 筛选结果状态
-  const [filteredEvents, setFilteredEvents] = useState([])
+  //整合類別、地區、搜尋篩選結果
+  const getFilteredEvents = () => {
+    return events.filter((event) => {
+      const categoryMatch =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(event.category_name)
+      const regionMatch =
+        selectedRegions.length === 0 || selectedRegions.includes(event.str)
+      const searchMatch =
+        !searchWord ||
+        event.event_name.toLowerCase().includes(searchWord.toLowerCase())
+      return categoryMatch && regionMatch && searchMatch
+    })
+  }
 
-  const [selectedCategories, setSelectedCategories] = useState([])
-  const [selectedRegions, setSelectedRegions] = useState([])
-  const [searchWord, setSearchWord] = useState('') // 新增搜索关键字状态
+  //分頁
+  const indexOfLastEvent = currentPage * postsPerPage
+  const indexOfFirstEvent = indexOfLastEvent - postsPerPage
+  const currentEvents = filteredEvents.slice(
+    indexOfFirstEvent,
+    indexOfLastEvent
+  )
 
+  const handleFilterChange = (selectedCategories, selectedRegions) => {
+    setSelectedCategories(selectedCategories)
+    setSelectedRegions(selectedRegions)
+  }
+
+  const handleSearch = (searchWord) => {
+    setSearchWord(searchWord)
+  }
   // 升降密排序的回调函数
   const handleSortEvents = (sortedEvents) => {
     setFilteredEvents(sortedEvents)
@@ -97,93 +109,12 @@ export default function List() {
     setFilteredEvents(priceSortedEvents)
   }
 
-  // sidebar回調
-  const handleFilterChange = (selectedCategories, selectedRegions) => {
-    // console.log('Selected categories:', selectedCategories)
-    // console.log('Selected regions:', selectedRegions)
-    setSelectedCategories(selectedCategories)
-    setSelectedRegions(selectedRegions)
-  }
-
-  const getFilteredEvents = () => {
-    return events.filter((event) => {
-      const categoryMatch =
-        selectedCategories.length === 0 ||
-        selectedCategories.includes(event.category_name)
-      const regionMatch =
-        selectedRegions.length === 0 || selectedRegions.includes(event.str)
-      return categoryMatch && regionMatch
-    })
-  }
-
-  //搜尋
-  const handleSearch = (searchWord) => {
-    if (typeof searchWord !== 'string' || searchWord.length === 0) {
-      console.log('Search keyword is empty')
-      return events
-    } else {
-      console.log('Searching for:', searchWord)
-      const filteredEvents = events.filter((event) => {
-        return event.event_name.toLowerCase().includes(searchWord.toLowerCase())
-      })
-      console.log('Filtered Events:', filteredEvents)
-      return filteredEvents
-    }
-  }
+  //篩選後引導回首頁
   useEffect(() => {
-    if (searchWord) {
-      // 只傳遞 searchWord 參數
-      const filteredEvents = handleSearch(searchWord)
-      setFilteredEvents(filteredEvents)
-    }
-  }, [events, searchWord])
+    // 當篩選條件改變時，自動回到第一頁
+    setCurrentPage(1)
+  }, [selectedCategories, selectedRegions, searchWord])
 
-  const newFilteredEvents = getFilteredEvents()
-  console.log(newFilteredEvents)
-
-  // Get current events for pagination
-  const indexOfLastEvent = currentPage * postsPerPage
-  const indexOfFirstEvent = indexOfLastEvent - postsPerPage
-  const currentEvents = newFilteredEvents.slice(
-    indexOfFirstEvent,
-    indexOfLastEvent
-  )
-
-  // 關鍵字搜尋
-  // const handleSearch = (searchWord) => {
-  //   if (typeof searchWord !== 'string' || searchWord.length === 0) {
-  //     console.log('Search keyword is empty')
-  //     return events
-  //   } else {
-  //     console.log('Searching for:', searchWord)
-  //     const filteredEventsA = events.filter((event) => {
-  //       return event.event_name.toLowerCase().includes(searchWord.toLowerCase())
-  //     })
-  //     console.log('Filtered Events:', filteredEventsA)
-  //     return filteredEventsA
-  //   }
-  // }
-
-  // 在组件中调用 handleSearch 函数并存储筛选后的事件列表
-  // useEffect(() => {
-  //   if (searchWord) {
-  //     // 只傳遞 searchWord 參數
-  //     const filteredEvents = handleSearch(searchWord)
-  //     setFilteredEvents(filteredEvents)
-  //   }
-  // }, [events, searchWord])
-
-  // 现在，我们可以在 filteredEvents 中访问筛选后的事件列表
-  console.log(filteredEvents)
-
-  // 通过搜索关键字筛选事件
-  const searchFilteredEvents = handleSearch(events, searchWord)
-
-  // 获取所有符合筛选条件的事件
-  const allFilteredEvents = [...newFilteredEvents, ...searchFilteredEvents]
-
-  console.log(currentEvents)
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   return (
@@ -193,7 +124,7 @@ export default function List() {
         <h5 className="d-flex justify-content-between">
           <div className="bg-bg-gray-secondary rounded-3">
             <p className="mx-4 my-2">
-              目前共有 {newFilteredEvents?.length} 筆 結果
+              目前共有 {filteredEvents?.length} 筆 結果
             </p>
           </div>
           <section>
@@ -227,50 +158,61 @@ export default function List() {
           </div>
           <div className="col">
             <div className="cardList row g-3">
-              {currentEvents.map((v) => (
-                <div key={v.id} className="col-md-4 col-sm-6 ">
-                  <div
-                    href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
-                    className=""
-                    key={v.id}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    {/* <div onClick={()=>{router.push(``)}} */}
-                    <div className="card bg-bg-gray-secondary text-white px-0 no-border">
-                      <figure>
-                        <img
-                          src={`/images/product/list/${
-                            v.banner?.split(',')[0]
-                          }`}
-                          alt=""
-                          className="card-img-top"
-                        />
-                        <FavIcon pid={v.pid} events={events} setEvents={setEvents} /> {/* 传递事件对象及更新函数 */}
-                      </figure>
+              {/* {currentEvents.map((v) => ( */}
+              {filteredEvents
+                .slice(indexOfFirstEvent, indexOfLastEvent)
+                .map((v) => (
+                  <div key={v.id} className="col-md-4 col-sm-6 ">
+                    <Link
+                      href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
+                      className=""
+                      key={v.id}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      {/* <div onClick={()=>{router.push(``)}} */}
+                      <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                        <figure>
+                          <img
+                            // src={`/images/product/list/${
+                            //   v.banner?.split(',')[0]
+                            // }`}
+                            src={`http://localhost:3005/images/banner/${
+                              v.banner?.split(',')[0]
+                            }`}
+                            alt=""
+                            className="card-img-top"
+                          />
+                          {/* <FavIcon datas={events} setEvents={handleSetEvents} /> */}
+                          <FavIcon
+                            pid={v.pid}
+                            events={events}
+                            setEvents={setEvents}
+                          />
+                        </figure>
 
-                      <div className="card-body">
-                        <p className=" text-normal-gray-light">
-                          {v.category_name}
-                        </p>
-                        <h5 className="card-title">{v.event_name}</h5>
-                        <div className="">
-                          <h6 className="text-primary-deep">
-                            ${v.price || 0}起
-                          </h6>
-                          <div className="d-flex justify-content-between">
-                            <p className="text-normal-gray-light mb-2">
-                              {v.str}
-                            </p>
-                            <span className="text-normal-gray-light">
-                              {v.start_date.substring(0, 10)}
-                            </span>
+                        <div className="card-body">
+                          <p className=" text-normal-gray-light">
+                            {v.category_name}
+                          </p>
+                          <h5 className="card-title">{v.event_name}</h5>
+                          <div className="">
+                            <h6 className="text-primary-deep">
+                              ${v.price || 0}起
+                            </h6>
+                            <div className="d-flex justify-content-between">
+                              <p className="text-normal-gray-light mb-2">
+                                {v.str}
+                              </p>
+                              <span className="text-normal-gray-light">
+                                {v.start_date.substring(0, 10)}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
 
             <footer className="d-flex justify-content-center m-3">
@@ -292,9 +234,7 @@ export default function List() {
                   {Array.from(
                     //要用篩選後的數輛計算依據events(全)=>newFilteredEvents(篩選結果)
                     {
-                      length: Math.ceil(
-                        newFilteredEvents?.length / postsPerPage
-                      ),
+                      length: Math.ceil(filteredEvents?.length / postsPerPage),
                     },
                     (_, number) => (
                       <button
@@ -316,7 +256,7 @@ export default function List() {
                     aria-label="next"
                     onClick={() =>
                       currentPage <
-                        Math.ceil(newFilteredEvents?.length / postsPerPage) &&
+                        Math.ceil(filteredEvents?.length / postsPerPage) &&
                       paginate(currentPage + 1)
                     }
                   >

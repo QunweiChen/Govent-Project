@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import City from '@/data/event/str.json'
+import { CategoriesProvider, useCategories } from '@/hooks/use-categories'
 
 export default function Sidebar(props) {
   const categories = [
@@ -13,7 +14,9 @@ export default function Sidebar(props) {
     '景點門票',
   ]
 
-  const [selectedCategories, setSelectedCategories] = useState({})
+  const { setSelectedCategories, selectedCategories } = useCategories()
+
+  // const [selectedCategories, setSelectedCategories] = useState({})
   const [selectedRegions, setSelectedRegions] = useState({})
 
   useEffect(() => {
