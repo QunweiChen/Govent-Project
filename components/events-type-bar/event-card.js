@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { CategoriesProvider, useCategories } from '@/hooks/use-categories'
 
 const CustomEventCard = ({ backgroundImage, title, secondTitle, delay }) => {
   const [isHovered, setIsHovered] = useState(false)
-  const { setSelectedCategories, selectedCategories } = useCategories()
+
   return (
     <motion.div
       className={`custom-events-type d-flex ${isHovered ? 'flex-2' : ''}`}
@@ -22,9 +21,8 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle, delay }) => {
         }`}
       ></i>
       <Link
-        href="/product/list"
+        href="/"
         className={`text-white d-flex flex-column p-4 justify-content-end`}
-        onClick={setSelectedCategories({ 演唱會: true })}
       >
         <motion.h5
           initial={{ opacity: 0 }}

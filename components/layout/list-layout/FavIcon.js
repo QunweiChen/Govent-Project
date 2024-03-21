@@ -8,8 +8,8 @@ import { useAuth } from '@/hooks/use-auth'
 export default function FavIcon({ pid, events, setEvents }) {
   //檢查會員身份
   const { auth } = useAuth()
-  // const uid = auth.user.id //抓取登入中的id
-  const uid = 1
+  const uid = auth.user.id || 1 //抓取登入中的id
+  // const uid = 1
   // console.log(uid);//確認uid正確
   // const handleToggleFav = () => {
   //   event.stopPropagation(); // 这里阻止事件冒泡
@@ -70,7 +70,7 @@ export default function FavIcon({ pid, events, setEvents }) {
 
   //刪除
   const handleRemoveFav = async (pid, uid) => {
-    event.stopPropagation() // 阻止事件冒泡
+    // event.stopPropagation() // 阻止事件冒泡
     try {
       console.log('Removing from favorites:', pid, uid) // 確認請求
       const response = await fetch(

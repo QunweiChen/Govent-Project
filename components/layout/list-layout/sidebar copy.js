@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { useRouter } from 'next/router'
 import City from '@/data/event/str.json'
 import { CategoriesProvider, useCategories } from '@/hooks/use-categories'
 
@@ -14,30 +15,45 @@ export default function Sidebar(props) {
     '景點門票',
   ]
 
-  const { setSelectedCategories, selectedCategories } = useCategories()
+  // const [setSelectedCategories, selectedCategories] = useCategories()
 
   // const [selectedCategories, setSelectedCategories] = useState({})
-  const [selectedRegions, setSelectedRegions] = useState({})
+  const [selectedRegions, setSelectedRegions] = useState([])
 
-  useEffect(() => {
-    const selectedCategoriesArray = Object.keys(selectedCategories).filter(
-      (category) => selectedCategories[category]
-    )
-    const selectedRegionsNames = Object.keys(selectedRegions).filter(
-      (regionOrCityName) => selectedRegions[regionOrCityName]
-    )
+  // useEffect(() => {
+  //   const selectedCategoriesArray = Object.keys(selectedCategories).filter(
+  //     (category) => selectedCategories[category]
+  //   )
+  //   const selectedRegionsNames = Object.keys(selectedRegions).filter(
+  //     (regionOrCityName) => selectedRegions[regionOrCityName]
+  //   )
 
-    // 回傳選擇的篩選條件給父元素
-    props.onFilterChange(selectedCategoriesArray, selectedRegionsNames)
-  }, [selectedCategories, selectedRegions])
+  //   // 回傳選擇的篩選條件給父元素
+  //   props.onFilterChange(selectedCategoriesArray, selectedRegionsNames)
+  // }, [selectedCategories, selectedRegions])
 
+  const router = useRouter()
+  const defaultSelectedCategories = { 演唱會: true }
   const handleOnChange = (category) => {
     const newSelectedCategories = {
       ...selectedCategories,
       [category]: !selectedCategories[category],
     }
     setSelectedCategories(newSelectedCategories)
+    //查詢用參數
+    // const query = {
+    //   selectedCategories: Object.keys(newSelectedCategories).filter(
+    //     (cat) => newSelectedCategories[cat]
+    //   ),
+    // }
+    // 更新路由查詢
+    // router.push({
+    //   pathname: router.pathname,
+    //   query,
+    // })
   }
+  // props.onFilterChange(selectedCategories)
+
 
   const handleSelectAll = () => {
     const newSelection = {}

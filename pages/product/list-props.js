@@ -15,7 +15,7 @@ import { CiHeart } from 'react-icons/ci'
 //引入components
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
-import FavIcon from '@/components/layout/list-layout/FavIcon'
+import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import Sidebar from '@/components/layout/list-layout/sidebar'
@@ -36,7 +36,7 @@ import SearchForm from '@/components/layout/list-layout/search-form'
 export default function List() {
   const { data } = useEvents()
   const { router } = useRouter()
-
+  
   const [events, setEvents] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
@@ -44,6 +44,7 @@ export default function List() {
   const [selectedRegions, setSelectedRegions] = useState([])
   const [searchWord, setSearchWord] = useState('')
   const [filteredEvents, setFilteredEvents] = useState([])
+  console.log(filteredEvents)
 
   //增加擴充屬性質(收藏)
   useEffect(() => {
@@ -75,6 +76,20 @@ export default function List() {
       return categoryMatch && regionMatch && searchMatch
     })
   }
+
+  // 獲取路由的 query string，並根據特定參數設定 selectedCategories 狀態
+  // useEffect(() => {
+  //   const { selectedCategories } = router.query
+  //   if (selectedCategories) {
+  //     // 處理 query string 中的特定參數，例如將 '演唱會' 設置為 true
+  //     const categories = selectedCategories.split(',')
+  //     const selectedCategoriesObj = {}
+  //     categories.forEach((category) => {
+  //       selectedCategoriesObj[category] = true
+  //     })
+  //     setSelectedCategories(selectedCategoriesObj)
+  //   }
+  // }, [router.query.selectedCategories])
 
   //分頁
   const indexOfLastEvent = currentPage * postsPerPage

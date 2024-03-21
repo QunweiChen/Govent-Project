@@ -2,138 +2,21 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 // 載入選項用的json檔案，對應的是資料庫的資料
-import brandOptions from '@/data/product/Brand.json'
-import catOptions from '@/data/product/Category.json'
-import colorOptions from '@/data/product/Color.json'
-import sizeOptions from '@/data/product/Size.json'
-import tagOptions from '@/data/product/Tag.json'
-// 載入分頁元件
-import BS5Pagination from '@/components/common/bs5-pagination'
+import { CategoriesProvider, useCategories } from '@/hooks/use-categories'
 
 export default function ProductQueryList() {
   const router = useRouter()
+  const { setSelectedCategories, selectedCategories } = useCategories()
 
-  // 各選項的state
-  const [nameLike, setNameLike] = useState('')
-  const [brandIds, setBrandIds] = useState([])
-  const [catIds, setCatIds] = useState([]) // 數字陣列
-  const [colorIds, setColorIds] = useState([]) // 數字陣列
-  const [sizeIds, setSizeIds] = useState([]) // 數字陣列
-  const [tagIds, setTagIds] = useState([]) // 數字陣列
-  const [priceGte, setPriceGte] = useState(1500) //數字
-  const [priceLte, setPriceLte] = useState(15000) //數字
 
-  // 主分類(只是方便呈現用，不會送至伺服器)
-  const [mainCatIds, setMainCatIds] = useState([]) // 數字陣列
-
-  // 排序(前面為排序欄位，後面參數asc為從小到大，desc為從大到小排序)
-  const [orderby, setOrderby] = useState({ sort: 'id', order: 'asc' })
-
-  // 分頁用
-  const [page, setPage] = useState(1)
-  const [perpage, setPerpage] = useState(10)
-
-  // 最後得到的項目
-  const [itemTotal, setItemTotal] = useState(0)
-  const [pageCount, setPageCount] = useState(0)
-  const [items, setItems] = useState([])
-
-  // 從伺服器載入資料
-  const getProducts = async (params) => {
-    // 用URLSearchParams產生查詢字串
-    const searchParams = new URLSearchParams(params)
-
-    const res = await axios.get(
-      `http://localhost:3005/api/products?${searchParams.toString()}`
-    )
-
-    //console.log(res.data)
-
-    // json回傳
-    // {
-    //   status:'success'
-    //   data: {
-    //     total: 100,
-    //     pageCount: 10,
-    //     perpage: 10,
-    //     page: 1,
-    //     products:[
-    //       {id:123, name:'',...},
-    //       {id:123, name:'',...}
-    //     ]
-    //   }
-    // }
-    if (res.data.status === 'success') {
-      // 設定獲取頁數總合
-      setItemTotal(res.data.data.total)
-      // 設定獲取項目
-      setItems(res.data.data.products)
-      setPageCount(res.data.data.pageCount)
-    }
-  }
-
-  // 主分類要全子分類都點按才會設定
-  useEffect(() => {
-    // 如果沒有子分類，就不用設定
-    if (catIds.length === 0) return
-
-    // 先找出所有的主分類id
-    const allMainCatIds = catOptions
-      .filter((v) => !v.parent_id)
-      .map((v) => v.id)
-
-    // iterate all main cat ids
-    const existingMainCatIds = []
-
-    // 逐一比對是否有全部子分類
-    for (let i = 0; i < allMainCatIds.length; i++) {
-      const subIds1 = catOptions.filter((v) => v.parent_id === allMainCatIds[i])
-
-      const subIds2 = catOptions.filter(
-        (v) => v.parent_id === allMainCatIds[i] && catIds.includes(v.id)
-      )
-
-      if (subIds1.length === subIds2.length) {
-        existingMainCatIds.push(allMainCatIds[i])
-      }
-    }
-    // 設定主分類
-    setMainCatIds(existingMainCatIds)
-  }, [catIds])
-// !!~~~
+  // !!~~~
   useEffect(() => {
     if (router.isReady) {
       // 從router.query得到所有查詢字串參數
-      const {
-        page,
-        name_like,
-        brand_ids,
-        cat_ids,
-        color_ids,
-        size_ids,
-        tag_ids,
-        sort,
-        order,
-        perpage,
-        price_gte,
-        price_lte,
-      } = router.query
-      // 要送至伺服器的query string參數
-
-      console.log(router.query)
-
-      // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
-      setPage(Number(page) || 1)
-      setNameLike(name_like || '')
-      setCatIds(cat_ids ? cat_ids.split(',').map((v) => Number(v)) : [])
-      setBrandIds(brand_ids ? brand_ids.split(',').map((v) => Number(v)) : [])
-      setSizeIds(size_ids ? size_ids.split(',').map((v) => Number(v)) : [])
-      setTagIds(tag_ids ? tag_ids.split(',').map((v) => Number(v)) : [])
-      setColorIds(color_ids ? color_ids.split(',').map((v) => Number(v)) : [])
-      setOrderby(sort && order ? { sort, order } : { sort: 'id', order: 'asc' })
-      setPerpage(Number(perpage) || 10)
-      setPriceGte(Number(price_gte) || 1500)
-      setPriceLte(Number(price_lte) || 15000)
+      const { selectedCategories } = router.query
+      
+    }
+  }, [router.isReady, router.query, setSelectedCategories])
 
       // 主分類要全子分類都點按才會設定
       const newCatIds = cat_ids ? cat_ids.split(',').map((v) => Number(v)) : []
