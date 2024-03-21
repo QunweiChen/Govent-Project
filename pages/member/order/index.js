@@ -62,7 +62,7 @@ export default function MemberOrder() {
                   </div>
                   <div className="p-3 d-flex">
                     <div className="event-img me-4 d-flex flex-column">
-                      <div className="flex-1">
+                      <div className="flex-1 main-img">
                         <img
                           src={`http://localhost:3005/images/banner/${
                             JSON.parse(data.order_info)[0].images
@@ -157,6 +157,9 @@ export default function MemberOrder() {
           .event-img {
             position: relative;
             width: 160px;
+            .main-img{
+              max-height: 120px;
+            }
             img {
               border-radius: 5px;
               width: 100%;

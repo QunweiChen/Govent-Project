@@ -3,6 +3,7 @@ import { Row, Col } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
 import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 export default function MemberFavorites() {
   const [userData, setUserData] = useState([])
@@ -51,14 +52,18 @@ export default function MemberFavorites() {
               <div className="mb-4">您已收藏 {userData.length} 項商品</div>
               {userData.map((data) => (
                 <div key={data.div} className="event p-3 mt-2 d-flex">
-                  <div className="event-img me-3">
+                  <div className="event-img me-4">
+                  <Link href={`/product/${data.collection_activity_id}`}>
                     <img
                       src={`http://localhost:3005/images/banner/${data.banner}`}
                       alt=""
                     />
+                    </Link>
                   </div>
                   <div className="py-1 content d-flex flex-column justify-content-between">
-                    <h6>{data.event_name}</h6>
+                  <Link href={`/product/${data.collection_activity_id}`}>
+                  <h5 className='text-white'>{data.event_name}</h5>
+                  </Link>
                     <div>
                       <h6 className="text-primary-deep m-0">
                         ＄{data.min_price} 起
