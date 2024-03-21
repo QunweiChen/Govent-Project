@@ -336,9 +336,6 @@ export default function OrganizerEvent() {
                                 <Col className="d-flex align-items-center border-end border-normal-gray h-75 ">
                                   <h6 className="m-0">
                                     {event.event_name}
-                                    <Badge bg="primary" className="ms-2">
-                                      審核中
-                                    </Badge>
                                   </h6>
                                 </Col>
                                 <Col

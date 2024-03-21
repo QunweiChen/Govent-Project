@@ -170,11 +170,6 @@ export default function Memberleft() {
           text="帳戶設定"
         />
         <MemberleftOption
-          link="/member/payment"
-          icon="bi-credit-card"
-          text="管理付款方式"
-        />
-        <MemberleftOption
           link="/member/level"
           icon="bi-person-fill-up"
           text="會員等級"
