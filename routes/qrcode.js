@@ -7,6 +7,7 @@ import QRCode from 'qrcode'
 const { ticket } = sequelize.models
 
 const router = express.Router()
+
 router.post('/', (req, res) => {
   let number = Math.floor(Math.random() * 100000)
   const body = req.body
@@ -15,7 +16,10 @@ router.post('/', (req, res) => {
     order_number: body.orderID,
     event_option_name: body.ticketName,
   }
+  //把產生的資料寫入ticket資料表
   ticket.create(json)
+  //將產生的QRcode儲存在public
+  //檔案名稱對應ticket_code欄位
   QRCode.toFile(
     `public/images/qrcode/${body.eventID}-${number}.png`,
     `${body.eventID}-${number}`,
@@ -33,6 +37,7 @@ router.post('/', (req, res) => {
   res.send({ message: 'success', tickCode: `${body.eventID}-${number}` })
 })
 
+//拿取訂單資訊
 router.get('/data', async (req, res) => {
   let orderID = req.query.orderID
   let result = await sequelize.query(
