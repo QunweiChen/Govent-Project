@@ -36,7 +36,7 @@ import SearchForm from '@/components/layout/list-layout/search-form'
 export default function List() {
   const { data } = useEvents()
   const { router } = useRouter()
-  
+
   const [events, setEvents] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
@@ -44,7 +44,6 @@ export default function List() {
   const [selectedRegions, setSelectedRegions] = useState([])
   const [searchWord, setSearchWord] = useState('')
   const [filteredEvents, setFilteredEvents] = useState([])
-  console.log(filteredEvents)
 
   //增加擴充屬性質(收藏)
   useEffect(() => {
@@ -77,32 +76,25 @@ export default function List() {
     })
   }
 
-  // 獲取路由的 query string，並根據特定參數設定 selectedCategories 狀態
-  // useEffect(() => {
-  //   const { selectedCategories } = router.query
-  //   if (selectedCategories) {
-  //     // 處理 query string 中的特定參數，例如將 '演唱會' 設置為 true
-  //     const categories = selectedCategories.split(',')
-  //     const selectedCategoriesObj = {}
-  //     categories.forEach((category) => {
-  //       selectedCategoriesObj[category] = true
-  //     })
-  //     setSelectedCategories(selectedCategoriesObj)
-  //   }
-  // }, [router.query.selectedCategories])
-
-  //分頁
+  // 分頁
   const indexOfLastEvent = currentPage * postsPerPage
   const indexOfFirstEvent = indexOfLastEvent - postsPerPage
-  const currentEvents = filteredEvents.slice(
-    indexOfFirstEvent,
-    indexOfLastEvent
-  )
+  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent)
 
   const handleFilterChange = (selectedCategories, selectedRegions) => {
     setSelectedCategories(selectedCategories)
     setSelectedRegions(selectedRegions)
+    // 當篩選條件改變時，自動回到第一頁
+    setCurrentPage(1)
   }
+
+  // 在這裡計算分頁數據時使用篩選後的數據
+  const indexOfLastFilteredEvent = currentPage * postsPerPage
+  const indexOfFirstFilteredEvent = indexOfLastFilteredEvent - postsPerPage
+  const currentFilteredEvents = filteredEvents.slice(
+    indexOfFirstFilteredEvent,
+    indexOfLastFilteredEvent
+  )
 
   const handleSearch = (searchWord) => {
     setSearchWord(searchWord)

@@ -15,7 +15,7 @@ import { CiHeart } from 'react-icons/ci'
 //引入components
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
-import FavIcon from '@/components/layout/list-layout/FavIcon'
+import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import Sidebar from '@/components/layout/list-layout/sidebar'
