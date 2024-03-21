@@ -71,7 +71,7 @@ router.post('/update', async (req, res) => {
 router.get('/favorites', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
-      'SELECT collection.id, collection.collection_user_id, collection.collection_activity_id, event.event_name, event.banner, event.start_date, MIN(event_options.price) AS min_price ' +
+      'SELECT collection.*, event.event_name, event.banner, event.start_date, MIN(event_options.price) AS min_price ' +
         'FROM `collection` ' +
         'JOIN `event` ON collection.collection_activity_id = event.event_id ' +
         'JOIN `event_options` ON collection.collection_activity_id = event_options.event_id ' +
@@ -275,12 +275,12 @@ router.get('/order/:orderId', authenticate, async (req, res) => {
   }
 })
 
-router.get('/ticket/:orderId', async (req, res) => {
+router.get('/order/ticket/:orderId', async (req, res) => {
   const orderId = req.params.orderId
 
   try {
     const result = await sequelize.query(
-      'SELECT ticket.*, event_options.option_name, event_options.start_time ' +
+      'SELECT ticket.*, event_options.option_name, event_options.event_id, event_options.contain ' +
         'FROM `ticket` ' +
         'JOIN `event_options` ON ticket.event_option_id = event_options.id ' +
         'WHERE ticket.order_number = :orderId',
