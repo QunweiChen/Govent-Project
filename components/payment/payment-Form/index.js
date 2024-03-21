@@ -17,7 +17,6 @@ export default function PaymentForm({
   money = 0,
   productData = {},
   redeem = () => {},
-  coupon = () => {},
 }) {
   //引入會員資料hook
   const { auth } = useAuth()
@@ -37,21 +36,20 @@ export default function PaymentForm({
         discountObj = { ...discount, point: '0' }
         break
       case discountState.point == true && discountState.coupon == false:
-        discountObj = { ...discount, coupon: { name: '', value: '0', id: '' } }
+        discountObj = { ...discount, coupon: { name: '', value: '0', id: '0' } }
         break
       case discountState.coupon == false && discountState.coupon == false:
         discountObj = {
           ...discount,
           point: '0',
-          coupon: { name: '', value: '0', id: '' },
+          coupon: { name: '', value: '0', id: '0' },
         }
         break
       default:
         break
     }
-    console.log(discountObj)
+
     let newPoint = pointData - discountObj.point
-    console.log(newPoint)
     let result = {
       ...data,
       money: money,
@@ -59,8 +57,9 @@ export default function PaymentForm({
       redeem: redeem(),
       discount: discountObj,
       newPoint: newPoint,
+      userID: auth.user.id,
     }
-    fetch('http://localhost:3005/api/payment-line-pay', {
+    fetch(`http://localhost:3005/api/payment/${data.paymentType}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -71,7 +70,9 @@ export default function PaymentForm({
         return response.json()
       })
       .then((response) => {
-        window.location.replace(response.url)
+        if (response.url) {
+          window.location.replace(response.url)
+        }
       })
       .catch((err) => {
         console.log(err)
@@ -102,7 +103,6 @@ export default function PaymentForm({
           id: e.target.options[e.target.selectedIndex].id,
         },
       }
-      console.log(e.target.options[e.target.selectedIndex].id)
       setDiscount(setConnectionData)
       return
     }
@@ -184,10 +184,9 @@ export default function PaymentForm({
   }
   const [couponData, setCouponData] = useState([])
   const [pointData, setPointData] = useState(0)
-  console.log(pointData)
   //拿取會員的優惠券及點數資料
   useEffect(() => {
-    fetch('http://localhost:3005/api/payment/number', {
+    fetch('http://localhost:3005/api/payment-data/number', {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
@@ -196,7 +195,6 @@ export default function PaymentForm({
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log()
         let point = Number(response.data.point[0].point)
         setPointData(point)
         setCouponData(response.data.coupon)
