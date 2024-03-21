@@ -6,20 +6,19 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCart } from '@/hooks/use-cart'
 
-
 export default function Detail() {
-  //引入鉤子 
+  //引入鉤子
   const { addItem, items } = useCart()
   const router = useRouter()
 
-  const [eventInfo, setEventInfo] = useState([]);
-  const [ticketInfo, setTicketInfo] = useState([]);
+  const [eventInfo, setEventInfo] = useState([])
+  const [ticketInfo, setTicketInfo] = useState([])
 
   //設售票期間的日曆狀態
-  const [sellStartDate, setSellStartDate] = useState('');
-  const [sellEndDate, setSellEndDate] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [sellStartDate, setSellStartDate] = useState('')
+  const [sellEndDate, setSellEndDate] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
 
   const [sellTime, setSellTime] = useState('')
 
@@ -27,7 +26,7 @@ export default function Detail() {
   const [selectDate, setSelectDate] = useState('')
   const [selectTime, setSelectTime] = useState('')
   const [all, setAll] = useState([])
-  console.log(selectDate);
+  console.log(selectDate)
 
   //接受list來的id 並且fetch相對應的活動資料(包含票卷資料庫)
   //因list以id當key，後續可同步修改為pid當key?
@@ -37,23 +36,23 @@ export default function Detail() {
       const data = await res.json()
       // console.log('Received data:', data)
       setEventInfo(data.data.posts) //轉換成eventInfo
-      setTicketInfo(data.data.posts.map(event => ({ ...event, qty: 1 }))) //轉換成ticketInfo並添加qty
-      console.log(ticketInfo);
+      setTicketInfo(data.data.posts.map((event) => ({ ...event, qty: 1 }))) //轉換成ticketInfo並添加qty
+      console.log(ticketInfo)
 
-      const startDate = data?.data.posts[0].start_date;
+      const startDate = data?.data.posts[0].start_date
       setStartDate(startDate)
       setEndDate(data?.data.posts[0].end_date)
 
       setSellStartDate(data?.data.posts[0].sell_start_date)
       setSellEndDate(data?.data.posts[0].sell_end_date)
 
-      let date3, time3;
+      let date3, time3
       if (startDate.includes('T')) {
-        [date3, time3] = startDate.split('T');
-        time3 = time3.substring(0, 5);
+        ;[date3, time3] = startDate.split('T')
+        time3 = time3.substring(0, 5)
       }
       setSellTime(time3)
-     
+
       // getAll(ticketInfo,selectDate)
     } catch (e) {
       console.log(e)
@@ -62,7 +61,6 @@ export default function Detail() {
 
   // console.log(ticketInfo);
 
-
   //回傳fetch到的資料
   useEffect(() => {
     if (router.isReady) {
@@ -70,61 +68,58 @@ export default function Detail() {
       console.log('PID', pid)
       getProducts(pid)
     }
-    
   }, [router.isReady])
 
   useEffect(() => {
     if (ticketInfo && selectDate) {
-      getAll(ticketInfo, selectDate);
+      getAll(ticketInfo, selectDate)
     }
-  }, [ticketInfo, selectDate]);
+  }, [ticketInfo, selectDate])
 
-  const getAll = (ticketInfo,selectDate) => {
-    console.log(selectDate);
+  const getAll = (ticketInfo, selectDate) => {
+    console.log(selectDate)
     // 使用 Date 物件來解析原始日期字串
-    const date = new Date(selectDate);
+    const date = new Date(selectDate)
     // 取得年、月、日資訊
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear()
+    const month = (date.getMonth() + 1).toString().padStart(2, '0')
+    const day = date.getDate().toString().padStart(2, '0')
 
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = `${year}-${month}-${day}`
     // 印出結果
     // console.log(formattedDate); // 輸出：2023-06-02
-    console.log(selectTime);
+    console.log(selectTime)
 
-    const holdingTime = `${formattedDate} ${selectTime}`;
-    console.log(holdingTime);
+    const holdingTime = `${formattedDate} ${selectTime}`
+    console.log(holdingTime)
     setAll([
       {
-        "id": ticketInfo[0].id,
-        "merchantId": ticketInfo[0].merchat_id,
-        "eventTypeId": ticketInfo[0].event_type_id,
-        "eventName": ticketInfo[0].event_name,
-        "holdingTime": holdingTime,//*
-        "images": ticketInfo[0].banner,
-        "ticketName": ticketInfo[0].option_name,
-        "price": ticketInfo[0].price,
-        "qty": ticketInfo[0].qty,//*
-        "eventId": ticketInfo[0].event_id
-      }
-    ]);
+        id: ticketInfo[0].id,
+        merchantId: ticketInfo[0].merchat_id,
+        eventTypeId: ticketInfo[0].event_type_id,
+        eventName: ticketInfo[0].event_name,
+        holdingTime: holdingTime, //*
+        images: ticketInfo[0].banner,
+        ticketName: ticketInfo[0].option_name,
+        price: ticketInfo[0].price,
+        qty: ticketInfo[0].qty, //*
+        eventId: ticketInfo[0].event_id,
+      },
+    ])
   }
 
-console.log(all);
+  console.log(all)
 
   // 假設初始狀態是未選擇
-  const [selected, setSelected] = useState(false);
-
+  const [selected, setSelected] = useState(false)
 
   const handleSelection = (v) => {
-    setSelected(!selected)  // 切換選擇狀態
+    setSelected(!selected) // 切換選擇狀態
   }
 
   const handleTime = () => {
-    setSelectTime(sellTime);
-  };
-
+    setSelectTime(sellTime)
+  }
 
   const handleDecrease = (items, id) => {
     const newItems = ticketInfo.map((v) => {
@@ -144,7 +139,6 @@ console.log(all);
       } else {
         return v
       }
-
     })
     setTicketInfo(newItems)
     // const newItem = {...item, qty: qty}
@@ -152,13 +146,8 @@ console.log(all);
     // setEventInfo([...eventInfo, newItem])
   }
 
-
-
-
-
   return (
     <>
-
       <>
         <section>
           <div className=" d-flex p-4 d-none d-xxl-inline-flex">
@@ -200,8 +189,9 @@ console.log(all);
 
           <div>
             <img
-              src={`/images/product/list/${eventInfo[0]?.banner?.split(',')[0]
-                }`}
+              src={`/images/product/list/${
+                eventInfo[0]?.banner?.split(',')[0]
+              }`}
               className="object-fit-cover"
               alt=""
             />
@@ -213,7 +203,8 @@ console.log(all);
               <section className="title">
                 <div
                   key={eventInfo.id}
-                  className="d-flex align-items-center justify-content-between mt-3">
+                  className="d-flex align-items-center justify-content-between mt-3"
+                >
                   <h5 className="border-5 border-start border-primary px-2">
                     {eventInfo.event_name}
                   </h5>
@@ -226,9 +217,7 @@ console.log(all);
                   </button>
                 </div>
                 <div>
-                  <h3 className="my-4">
-                    {eventInfo.event_name}
-                  </h3>
+                  <h3 className="my-4">{eventInfo.event_name}</h3>
                   <h6 className="text-normal-gray-light">
                     <i className="bi bi-calendar me-2 d-none d-xxl-inline-flex" />
                     {/* {dateStart}~{dateEnd} */}
@@ -239,9 +228,7 @@ console.log(all);
                     <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" />
                     {eventInfo.place}
                   </h6>
-                  <p className="mx-4 text-secondary-02">
-                    {eventInfo.address}
-                  </p>
+                  <p className="mx-4 text-secondary-02">{eventInfo.address}</p>
                   <hr className="d-none d-xxl-block" />
                 </div>
                 <div className="d-flex text-normal-gray-light">
@@ -270,8 +257,15 @@ console.log(all);
                     <div key={i}>
                       <div className="row seat1 mt-3">
                         <h4 className="col-lg-9 col-sm-6">{v.option_name}</h4>
-                        <h4 className="col-lg-2 col-sm-4">NT$ {parseInt(v.price).toLocaleString()}</h4>
-                        <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={() => { handleSelection(v) }}>
+                        <h4 className="col-lg-2 col-sm-4">
+                          NT$ {parseInt(v.price).toLocaleString()}
+                        </h4>
+                        <button
+                          className="store col-lg-1 col-sm-2 btn btn-primary-deep"
+                          onClick={() => {
+                            handleSelection(v)
+                          }}
+                        >
                           {selected ? '已選擇' : '選擇'}
                         </button>
                         {selected && (
@@ -298,12 +292,14 @@ console.log(all);
                                   <Calendar
                                     sellStartDate={startDate}
                                     sellEndDate={endDate}
-                                    setSelectDate={setSelectDate} />
+                                    setSelectDate={setSelectDate}
+                                  />
                                 </div>
                               </div>
                               <div>
                                 <h5 className="mb-5">選擇時間</h5>
-                                <button className="store fs-5 p-2 btn btn-primary-deep"
+                                <button
+                                  className="store fs-5 p-2 btn btn-primary-deep"
                                   onClick={handleTime}
                                 >
                                   {sellTime}
@@ -313,32 +309,38 @@ console.log(all);
                                   <i
                                     type="button"
                                     className="bi bi-dash-circle me-2 icon"
-                                    onClick={() => { handleDecrease(ticketInfo, v.id) }}
+                                    onClick={() => {
+                                      handleDecrease(ticketInfo, v.id)
+                                    }}
                                   />
-                                  <h5 className="px-3 py-2 bg-dark rounded">{v.qty}</h5>
+                                  <h5 className="px-3 py-2 bg-dark rounded">
+                                    {v.qty}
+                                  </h5>
                                   <i
                                     type="button"
                                     className="bi bi-plus-circle ms-2 icon"
-                                    onClick={() => { handleIncrease(ticketInfo, v.id) }}
+                                    onClick={() => {
+                                      handleIncrease(ticketInfo, v.id)
+                                    }}
                                   />
                                 </div>
                                 <div className="d-flex my-5">
                                   <h5 className="">總金額</h5>
-                                  <h4 className="dollar">NT$ {(v.price) * v.qty
-                                  }</h4>
+                                  <h4 className="dollar">
+                                    NT$ {v.price * v.qty}
+                                  </h4>
                                 </div>
                                 <div className="d-flex justify-content-end mb-3">
-                                  <Link href={`/cart`}>
-                                    <button className="store fs-5 me-2 p-2 btn btn-primary-deep"
-                                      onClick={() => {
-                                        console.log(v)
-                                        addItem(all[0])
-                                        console.log(all)
-                                      }}
-                                    >
-                                      加入購物車
-                                    </button>
-                                  </Link>
+                                  <button
+                                    className="store fs-5 me-2 p-2 btn btn-primary-deep"
+                                    onClick={() => {
+                                      console.log(v)
+                                      addItem(all[0])
+                                      console.log(all)
+                                    }}
+                                  >
+                                    加入購物車
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -349,7 +351,6 @@ console.log(all);
                   )
                 })}
               </section>
-
 
               <section className="row">
                 <div className="left col-lg-8 col-sm-12">
@@ -369,7 +370,9 @@ console.log(all);
                     src="/images/product/detail/info-1.png"
                     alt=""
                   />
-                  <p className="py-3 d-none d-xxl-block">YOASOBI 將在台北開唱！</p>
+                  <p className="py-3 d-none d-xxl-block">
+                    YOASOBI 將在台北開唱！
+                  </p>
                   <img
                     className="mt-3 object-fit-cover d-none d-xxl-block"
                     src="/images/product/detail/info-2.png"
@@ -383,7 +386,9 @@ console.log(all);
                     src="/images/product/detail/info-3.png"
                     alt=""
                   />
-                  <p className="py-3 d-none d-xxl-block">出道後的第二次台灣巡迴</p>
+                  <p className="py-3 d-none d-xxl-block">
+                    出道後的第二次台灣巡迴
+                  </p>
                 </div>
                 <div className="right d-none d-xxl-block col-3">
                   <div className="row seat1 mt-3">
@@ -397,17 +402,29 @@ console.log(all);
                       活動介紹
                     </h5>
                   </a>
-                  <a href="#eventIntro2" type="button" className="d-flex align-items-center mt-3">
+                  <a
+                    href="#eventIntro2"
+                    type="button"
+                    className="d-flex align-items-center mt-3"
+                  >
                     <h5 className="border-5 border-start border-primary px-2 text-white">
                       購買須知
                     </h5>
                   </a>
-                  <a href="#eventIntro3" type="button" className="d-flex align-items-center mt-3">
+                  <a
+                    href="#eventIntro3"
+                    type="button"
+                    className="d-flex align-items-center mt-3"
+                  >
                     <h5 className="border-5 border-start border-primary px-2 text-white">
                       使用方式
                     </h5>
                   </a>
-                  <a href="#eventIntro4" type="button" className="d-flex align-items-center mt-3">
+                  <a
+                    href="#eventIntro4"
+                    type="button"
+                    className="d-flex align-items-center mt-3"
+                  >
                     <h5 className="border-5 border-start border-primary px-2 text-white">
                       活動評價
                     </h5>
@@ -416,7 +433,10 @@ console.log(all);
               </section>
               <section className="left col-lg-8 col-sm-12">
                 <div className="d-flex align-items-center mt-5">
-                  <h4 id="eventIntro2" className="border-5 border-start border-primary px-2">
+                  <h4
+                    id="eventIntro2"
+                    className="border-5 border-start border-primary px-2"
+                  >
                     購買須知
                   </h4>
                 </div>
@@ -436,7 +456,10 @@ console.log(all);
               </section>
               <section className="left col-lg-8 col-sm-12">
                 <div className="d-flex align-items-center mt-5">
-                  <h4 id="eventIntro3" className="border-5 border-start border-primary px-2">
+                  <h4
+                    id="eventIntro3"
+                    className="border-5 border-start border-primary px-2"
+                  >
                     使用方式
                   </h4>
                 </div>
@@ -448,7 +471,10 @@ console.log(all);
 
               <section className="left col-lg-8 col-sm-12">
                 <div className="d-flex align-items-center mt-5 mb-4">
-                  <h4 id="eventIntro4" className="border-5 border-start border-primary px-2">
+                  <h4
+                    id="eventIntro4"
+                    className="border-5 border-start border-primary px-2"
+                  >
                     活動評價
                   </h4>
                 </div>
@@ -653,7 +679,10 @@ console.log(all);
                     <button type="button" className="btn btn-primary">
                       1
                     </button>
-                    <button type="button" className="btn btn-secondary text-white">
+                    <button
+                      type="button"
+                      className="btn btn-secondary text-white"
+                    >
                       2
                     </button>
                     <button type="button" className="btn btn-secondary">
@@ -751,7 +780,10 @@ console.log(all);
                     >
                       加入購物車
                     </button>
-                    <button type="button" className="btn btn-primary text-white">
+                    <button
+                      type="button"
+                      className="btn btn-primary text-white"
+                    >
                       立即訂購
                     </button>
                   </div>
@@ -761,7 +793,6 @@ console.log(all);
           </main>
         ))}
       </>
-
 
       <style global jsx>
         {`

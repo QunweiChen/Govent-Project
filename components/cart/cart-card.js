@@ -86,7 +86,7 @@ export default function CartCard({
                             />
                             <div className="bg-normal-white rounded-4 product-img">
                               <Image
-                                src="./images/cart/4-03.jpg"
+                                src={`http://localhost:3005/images/banner/${v.images}`}
                                 className=" rounded-start object-fit-cover"
                                 alt="..."
                               />

@@ -10,7 +10,7 @@ const menuItems = [
   {
     id: 1,
     label: '熱門活動',
-    href: '/',
+    href: '/product',
   },
   {
     id: 2,

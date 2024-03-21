@@ -35,7 +35,8 @@ export default function Sidebar(props) {
     }
     setSelectedCategories(newSelectedCategories)
   }
-
+  console.log(selectedRegions)
+  console.log(selectedCategories)
   const handleSelectAll = () => {
     const newSelection = {}
     if (!selectedCategories['所有類型']) {
