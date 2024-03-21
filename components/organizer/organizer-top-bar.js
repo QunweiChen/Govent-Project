@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function OrganizerTopBar({ title = '' }) {
   return (
-    <div className="px-4 py-3 d-flex justify-content-between mb-3">
+    <div className="px-4 py-3 d-flex justify-content-between mb-2">
       <h4 className="m-0">{title}</h4>
       <div>
         <Link href="/">

@@ -1,4 +1,4 @@
-// import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
 import MemberLayout from '@/components/layout/member-layout'
@@ -7,11 +7,31 @@ import LevelType from '@/components/member/member-level-type'
 
 // only redirect to member/login
 export default function MemberLevel() {
-  // const router = useRouter()
-  // // Make sure we're in the browser
-  // if (typeof window !== 'undefined') {
-  //   router.push('/member/login')
-  // }
+  const [userCostTotal, setUserCostTotal] = useState(0)
+
+  useEffect(() => {
+    fetch('http://localhost:3005/api/member/cost', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // 檢查是否有資料並設定到 state 中
+        if (
+          data &&
+          data.data &&
+          data.data.result
+        ) {
+          setUserCostTotal(data.data.result[0].total_sum)
+        } else {
+          console.warn('No data received from the server.')
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error))
+  }, [])
 
   return (
     <>
@@ -27,7 +47,7 @@ export default function MemberLevel() {
               transition={{ duration: 0.4 }}
               className="member-bgc contain"
             >
-              <LevelType />
+              <LevelType total_sum={userCostTotal}/>
             </motion.div>
           </Col>
         </Row>

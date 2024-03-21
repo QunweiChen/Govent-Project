@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import OrganizerSidebar from '@/components/organizer/organizer-sidebar'
 import OrganizerLayout from '@/components/layout/organizer-layout'
-import { Row, Col, Form, Button } from 'react-bootstrap'
+import { Row, Col, Form, Button, Image } from 'react-bootstrap'
 import OrganizerTopBar from '@/components/organizer/organizer-top-bar'
 import 'react-quill/dist/quill.core.css'
 import 'react-quill/dist/quill.snow.css'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 function OrganizerOtptionForm() {
   const router = useRouter()
+  const inputRef = useRef(null)
   const { eid } = router.query
+
+  const [eventInfo, setEventInfo] = useState([])
+  const [finished, setFinished] = useState(false)
+
   const [formNumber, setFormNumber] = useState(1)
   const [optionFormData1, setOptionFormData1] = useState({
     event_id: '',
@@ -37,6 +44,14 @@ function OrganizerOtptionForm() {
     start_time: '',
   })
 
+  const popAlert = (title, text) => {
+    withReactContent(Swal).fire({
+      icon: 'error',
+      title: title,
+      text: text,
+    })
+  }
+
   useEffect(() => {
     if (eid) {
       setOptionFormData1((prevData) => ({
@@ -52,6 +67,23 @@ function OrganizerOtptionForm() {
         event_id: eid,
       }))
     }
+    fetch(`http://localhost:3005/api/organizer/event/${eid}`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // 檢查是否有資料並設定到 state 中
+        if (data && data.data && data.data.result) {
+          setEventInfo(data.data.result[0])
+        } else {
+          console.warn('No data received from the server.')
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error))
   }, [eid])
 
   const handleInputChange1 = (e) => {
@@ -82,6 +114,114 @@ function OrganizerOtptionForm() {
     console.log(optionFormData3)
   }
 
+  const checkUseDateInput1 = (e) => {
+    const { name, value } = e.target
+    const startDate = new Date(eventInfo.start_date)
+    startDate.setHours(startDate.getHours() - 8)
+    const endDate = new Date(eventInfo.end_date)
+    endDate.setHours(endDate.getHours() - 8)
+    if (new Date(value) < startDate) {
+      popAlert('請重新選擇', '不可早於活動開始時間')
+      inputRef.current.blur()
+      setOptionFormData1((prevState) => ({
+        ...prevState,
+        [name]: '',
+      }))
+      return
+    }
+    if (new Date(value) > endDate) {
+      popAlert('請重新選擇', '不可晚於活動結束時間')
+      inputRef.current.blur()
+      setOptionFormData1((prevState) => ({
+        ...prevState,
+        [name]: '',
+      }))
+      return
+    }
+  }
+
+  const checkUseDateInput2 = (e) => {
+    const { name, value } = e.target
+    const startDate = new Date(eventInfo.start_date)
+    startDate.setHours(startDate.getHours() - 8)
+    const endDate = new Date(eventInfo.end_date)
+    endDate.setHours(endDate.getHours() - 8)
+    if (new Date(value) < startDate) {
+      popAlert('請重新選擇', '不可早於活動開始時間')
+      inputRef.current.blur()
+      setOptionFormData2((prevState) => ({
+        ...prevState,
+        [name]: '',
+      }))
+      return
+    }
+    if (new Date(value) > endDate) {
+      popAlert('請重新選擇', '不可晚於活動結束時間')
+      inputRef.current.blur()
+      setOptionFormData2((prevState) => ({
+        ...prevState,
+        [name]: '',
+      }))
+      return
+    }
+  }
+
+  const checkUseDateInput3 = (e) => {
+    const { name, value } = e.target
+    const startDate = new Date(eventInfo.start_date)
+    startDate.setHours(startDate.getHours() - 8)
+    const endDate = new Date(eventInfo.end_date)
+    endDate.setHours(endDate.getHours() - 8)
+    if (new Date(value) < startDate) {
+      popAlert('請重新選擇', '不可早於活動開始時間')
+      inputRef.current.blur()
+      setOptionFormData3((prevState) => ({
+        ...prevState,
+        [name]: '',
+      }))
+      return
+    }
+    if (new Date(value) > endDate) {
+      popAlert('請重新選擇', '不可晚於活動結束時間')
+      inputRef.current.blur()
+      setOptionFormData3((prevState) => ({
+        ...prevState,
+        [name]: '',
+      }))
+      return
+    }
+  }
+
+  const setDate1 = () => {
+    const eventStartTime = new Date(eventInfo.start_date)
+    const formattedStartTime = eventStartTime.toISOString().slice(0, 16)
+
+    setOptionFormData1((prevState) => ({
+      ...prevState,
+      start_time: formattedStartTime,
+    }))
+  }
+
+  const setDate2 = () => {
+    const eventStartTime = new Date(eventInfo.start_date)
+    const formattedStartTime = eventStartTime.toISOString().slice(0, 16)
+
+    setOptionFormData2((prevState) => ({
+      ...prevState,
+      start_time: formattedStartTime,
+    }))
+  }
+
+  const setDate3 = () => {
+    const eventStartTime = new Date(eventInfo.start_date)
+    const formattedStartTime = eventStartTime.toISOString().slice(0, 16)
+
+    setOptionFormData3((prevState) => ({
+      ...prevState,
+      start_time: formattedStartTime,
+    }))
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -100,8 +240,6 @@ function OrganizerOtptionForm() {
       formData.data3 = optionFormData3
     }
 
-    console.log(formData)
-
     try {
       const response = await fetch(
         'http://localhost:3005/api/organizer/add-options',
@@ -118,10 +256,11 @@ function OrganizerOtptionForm() {
 
       const data = await response.json()
       console.log(data)
-      
     } catch (error) {
       console.error('Error sending form data:', error)
     }
+
+    setFinished(true)
   }
 
   return (
@@ -129,90 +268,19 @@ function OrganizerOtptionForm() {
       <div className="d-flex organizer-container">
         <OrganizerSidebar />
         <div className="w-100 bg-bg-gray organizer-main d-flex flex-column">
-          <OrganizerTopBar title="新增活動資訊" />
+          <OrganizerTopBar title="新增活動規格" />
           <div className="d-flex flex-column align-items-center on-main">
-            <h5 className="my-5">活動規格</h5>
-            <div className="w-1200">
-              <Form data-bs-theme="dark" onSubmit={handleSubmit}>
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="ticket-format"
-                >
-                  <div className="bottom-line px-3 py-2 ">規格1</div>
-                  <Row className="px-3 py-2">
-                    <Col sm="6">
-                      <Form.Group className="mb-3" controlId="option_name">
-                        <Form.Label>票卷規格名稱</Form.Label>
-                        <Form.Control
-                          type="text"
-                          placeholder="請填寫規格名稱 EX:1F站票"
-                          name="option_name"
-                          value={optionFormData1.option_name}
-                          onChange={handleInputChange1}
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col sm="6">
-                      <Form.Group className="mb-3" controlId="start_time">
-                        <Form.Label>使用時間</Form.Label>
-                        <Form.Control
-                          type="datetime-local"
-                          name="start_time"
-                          value={optionFormData1.start_time}
-                          onChange={handleInputChange1}
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col sm="6">
-                      <Form.Group className="mb-3" controlId="max_quantity">
-                        <Form.Label>最大販售數量</Form.Label>
-                        <Form.Control
-                          type="number"
-                          placeholder="最大販售數量"
-                          name="max_quantity"
-                          value={optionFormData1.max_quantity}
-                          onChange={handleInputChange1}
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col sm="6">
-                      <Form.Group className="mb-3" controlId="price">
-                        <Form.Label>價格</Form.Label>
-                        <Form.Control
-                          type="number"
-                          placeholder="價格"
-                          name="price"
-                          value={optionFormData1.price}
-                          onChange={handleInputChange1}
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col sm="12">
-                      <Form.Group className="mb-2" controlId="contain">
-                        <Form.Label>規格說明（顯示於顧客票卷中）</Form.Label>
-                        <Form.Control
-                          as="textarea"
-                          rows={5}
-                          placeholder="請填寫規格說明"
-                          name="contain"
-                          value={optionFormData1.contain}
-                          onChange={handleInputChange1}
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </motion.div>
-                {formNumber > 1 && (
+            <div className="w-1200 h-100">
+              {!finished && (
+                <Form data-bs-theme="dark" onSubmit={handleSubmit}>
+                  <h5 className="my-5 text-center">活動規格</h5>
                   <motion.div
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.3 }}
-                    exit={{ y: 20, opacity: 0 }}
                     className="ticket-format"
                   >
-                    <div className="bottom-line px-3 py-2">規格2</div>
+                    <div className="bottom-line px-3 py-2 ">規格1</div>
                     <Row className="px-3 py-2">
                       <Col sm="6">
                         <Form.Group className="mb-3" controlId="option_name">
@@ -221,20 +289,33 @@ function OrganizerOtptionForm() {
                             type="text"
                             placeholder="請填寫規格名稱 EX:1F站票"
                             name="option_name"
-                            value={optionFormData2.option_name}
-                            onChange={handleInputChange2}
+                            value={optionFormData1.option_name}
+                            onChange={handleInputChange1}
+                            required
                           />
                         </Form.Group>
                       </Col>
                       <Col sm="6">
                         <Form.Group className="mb-3" controlId="start_time">
                           <Form.Label>使用時間</Form.Label>
-                          <Form.Control
-                            type="datetime-local"
-                            name="start_time"
-                            value={optionFormData2.start_time}
-                            onChange={handleInputChange2}
-                          />
+                          <div className="d-flex">
+                            <Form.Control
+                              type="datetime-local"
+                              name="start_time"
+                              value={optionFormData1.start_time}
+                              onChange={handleInputChange1}
+                              onBlur={checkUseDateInput1}
+                              ref={inputRef}
+                              required
+                            />
+                            <button
+                              type="button"
+                              className="ms-3 btn btn-normal-gray"
+                              onClick={setDate1}
+                            >
+                              設為活動開始日
+                            </button>
+                          </div>
                         </Form.Group>
                       </Col>
                       <Col sm="6">
@@ -244,8 +325,9 @@ function OrganizerOtptionForm() {
                             type="number"
                             placeholder="最大販售數量"
                             name="max_quantity"
-                            value={optionFormData2.max_quantity}
-                            onChange={handleInputChange2}
+                            value={optionFormData1.max_quantity}
+                            onChange={handleInputChange1}
+                            required
                           />
                         </Form.Group>
                       </Col>
@@ -256,8 +338,9 @@ function OrganizerOtptionForm() {
                             type="number"
                             placeholder="價格"
                             name="price"
-                            value={optionFormData2.price}
-                            onChange={handleInputChange2}
+                            value={optionFormData1.price}
+                            onChange={handleInputChange1}
+                            required
                           />
                         </Form.Group>
                       </Col>
@@ -269,124 +352,284 @@ function OrganizerOtptionForm() {
                             rows={5}
                             placeholder="請填寫規格說明"
                             name="contain"
-                            value={optionFormData2.contain}
-                            onChange={handleInputChange2}
+                            value={optionFormData1.contain}
+                            onChange={handleInputChange1}
+                            required
                           />
                         </Form.Group>
                       </Col>
                     </Row>
                   </motion.div>
-                )}
-                {formNumber > 2 && (
+                  {formNumber > 1 && (
+                    <motion.div
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      exit={{ y: 20, opacity: 0 }}
+                      className="ticket-format"
+                    >
+                      <div className="bottom-line px-3 py-2">規格2</div>
+                      <Row className="px-3 py-2">
+                        <Col sm="6">
+                          <Form.Group className="mb-3" controlId="option_name">
+                            <Form.Label>票卷規格名稱</Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="請填寫規格名稱 EX:1F站票"
+                              name="option_name"
+                              value={optionFormData2.option_name}
+                              onChange={handleInputChange2}
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col sm="6">
+                          <Form.Group className="mb-3" controlId="start_time">
+                            <Form.Label>使用時間</Form.Label>
+                            <div className="d-flex">
+                              <Form.Control
+                                type="datetime-local"
+                                name="start_time"
+                                value={optionFormData2.start_time}
+                                onChange={handleInputChange2}
+                                onBlur={checkUseDateInput2}
+                                ref={inputRef}
+                                required
+                              />
+                              <button
+                                type="button"
+                                className="ms-3 btn btn-normal-gray"
+                                onClick={setDate2}
+                              >
+                                設為活動開始日
+                              </button>
+                            </div>
+                          </Form.Group>
+                        </Col>
+                        <Col sm="6">
+                          <Form.Group className="mb-3" controlId="max_quantity">
+                            <Form.Label>最大販售數量</Form.Label>
+                            <Form.Control
+                              type="number"
+                              placeholder="最大販售數量"
+                              name="max_quantity"
+                              value={optionFormData2.max_quantity}
+                              onChange={handleInputChange2}
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col sm="6">
+                          <Form.Group className="mb-3" controlId="price">
+                            <Form.Label>價格</Form.Label>
+                            <Form.Control
+                              type="number"
+                              placeholder="價格"
+                              name="price"
+                              value={optionFormData2.price}
+                              onChange={handleInputChange2}
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col sm="12">
+                          <Form.Group className="mb-2" controlId="contain">
+                            <Form.Label>
+                              規格說明（顯示於顧客票卷中）
+                            </Form.Label>
+                            <Form.Control
+                              as="textarea"
+                              rows={5}
+                              placeholder="請填寫規格說明"
+                              name="contain"
+                              value={optionFormData2.contain}
+                              onChange={handleInputChange2}
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </motion.div>
+                  )}
+                  {formNumber > 2 && (
+                    <motion.div
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      exit={{ y: 20, opacity: 0 }}
+                      className="ticket-format"
+                    >
+                      <div className="bottom-line px-3 py-2">規格3</div>
+                      <Row className="px-3 py-2">
+                        <Col sm="6">
+                          <Form.Group className="mb-3" controlId="option_name">
+                            <Form.Label>票卷規格名稱</Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="請填寫規格名稱 EX:1F站票"
+                              name="option_name"
+                              value={optionFormData3.option_name}
+                              onChange={handleInputChange3}
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col sm="6">
+                          <Form.Group className="mb-3" controlId="start_time">
+                            <Form.Label>使用時間</Form.Label>
+                            <div className="d-flex">
+                              <Form.Control
+                                type="datetime-local"
+                                name="start_time"
+                                value={optionFormData3.start_time}
+                                onChange={handleInputChange3}
+                                onBlur={checkUseDateInput3}
+                                ref={inputRef}
+                                required
+                              />
+                              <button
+                                type="button"
+                                className="ms-3 btn btn-normal-gray"
+                                onClick={setDate3}
+                              >
+                                設為活動開始日
+                              </button>
+                            </div>
+                          </Form.Group>
+                        </Col>
+                        <Col sm="6">
+                          <Form.Group className="mb-3" controlId="max_quantity">
+                            <Form.Label>最大販售數量</Form.Label>
+                            <Form.Control
+                              type="number"
+                              placeholder="最大販售數量"
+                              name="max_quantity"
+                              value={optionFormData3.max_quantity}
+                              onChange={handleInputChange3}
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col sm="6">
+                          <Form.Group className="mb-3" controlId="price">
+                            <Form.Label>價格</Form.Label>
+                            <Form.Control
+                              type="number"
+                              placeholder="價格"
+                              name="price"
+                              value={optionFormData3.price}
+                              onChange={handleInputChange3}
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col sm="12">
+                          <Form.Group className="mb-2" controlId="contain">
+                            <Form.Label>
+                              規格說明（顯示於顧客票卷中）
+                            </Form.Label>
+                            <Form.Control
+                              as="textarea"
+                              rows={5}
+                              placeholder="請填寫規格說明"
+                              name="contain"
+                              value={optionFormData3.contain}
+                              onChange={handleInputChange3}
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </motion.div>
+                  )}
                   <motion.div
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.3 }}
-                    exit={{ y: 20, opacity: 0 }}
-                    className="ticket-format"
+                    className="button-control d-flex justify-content-between mb-5"
                   >
-                    <div className="bottom-line px-3 py-2">規格3</div>
-                    <Row className="px-3 py-2">
-                      <Col sm="6">
-                        <Form.Group className="mb-3" controlId="option_name">
-                          <Form.Label>票卷規格名稱</Form.Label>
-                          <Form.Control
-                            type="text"
-                            placeholder="請填寫規格名稱 EX:1F站票"
-                            name="option_name"
-                            value={optionFormData3.option_name}
-                            onChange={handleInputChange3}
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col sm="6">
-                        <Form.Group className="mb-3" controlId="start_time">
-                          <Form.Label>使用時間</Form.Label>
-                          <Form.Control
-                            type="datetime-local"
-                            name="start_time"
-                            value={optionFormData3.start_time}
-                            onChange={handleInputChange3}
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col sm="6">
-                        <Form.Group className="mb-3" controlId="max_quantity">
-                          <Form.Label>最大販售數量</Form.Label>
-                          <Form.Control
-                            type="number"
-                            placeholder="最大販售數量"
-                            name="max_quantity"
-                            value={optionFormData3.max_quantity}
-                            onChange={handleInputChange3}
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col sm="6">
-                        <Form.Group className="mb-3" controlId="price">
-                          <Form.Label>價格</Form.Label>
-                          <Form.Control
-                            type="number"
-                            placeholder="價格"
-                            name="price"
-                            value={optionFormData3.price}
-                            onChange={handleInputChange3}
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col sm="12">
-                        <Form.Group className="mb-2" controlId="contain">
-                          <Form.Label>規格說明（顯示於顧客票卷中）</Form.Label>
-                          <Form.Control
-                            as="textarea"
-                            rows={5}
-                            placeholder="請填寫規格說明"
-                            name="contain"
-                            value={optionFormData3.contain}
-                            onChange={handleInputChange3}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
+                    <div>
+                      {eventInfo && eventInfo.start_date && (
+                        <div className="d-flex text-shadow">
+                          <div className="me-3">
+                            <Image
+                              className="rounded-3"
+                              src={`http://localhost:3005/images/banner/${eventInfo.banner}`}
+                              height={85}
+                            />
+                          </div>
+                          <div className="d-flex flex-column justify-content-between">
+                            <h6>{eventInfo.event_name}</h6>
+                            <div>
+                              <p>
+                                活動時間｜{eventInfo.start_date.split('T')[0]}{' '}
+                                {eventInfo.start_date.split('T')[1].slice(0, 5)}{' '}
+                                － {eventInfo.end_date.split('T')[0]}{' '}
+                                {eventInfo.end_date.split('T')[1].slice(0, 5)}
+                              </p>
+                              <p>
+                                售票時間｜
+                                {eventInfo.sell_start_date.split('T')[0]}{' '}
+                                {eventInfo.sell_start_date
+                                  .split('T')[1]
+                                  .slice(0, 5)}{' '}
+                                － {eventInfo.sell_end_date.split('T')[0]}{' '}
+                                {eventInfo.sell_end_date
+                                  .split('T')[1]
+                                  .slice(0, 5)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="d-flex">
+                      <div className="d-flex flex-column justify-content-between me-4">
+                        <Button
+                          onClick={() =>
+                            setFormNumber((prevNumber) =>
+                              Math.min(prevNumber + 1, 3)
+                            )
+                          }
+                          variant="primary-deep"
+                          className={`${formNumber > 2 ? 'disabled' : ''} px-5`}
+                        >
+                          <h6 className="m-0">新增規格</h6>
+                        </Button>
+                        <Button
+                          onClick={() =>
+                            setFormNumber((prevNumber) =>
+                              Math.max(prevNumber - 1, 1)
+                            )
+                          }
+                          variant="primary-deep"
+                          className={`${
+                            formNumber === 1 ? 'disabled' : ''
+                          } px-5`}
+                        >
+                          <h6 className="m-0">刪除規格</h6>
+                        </Button>
+                      </div>
+                      <Button
+                        variant="secondary-01"
+                        className="px-5"
+                        type="sumbit"
+                      >
+                        <h6 className="m-0">提交送出</h6>
+                      </Button>
+                    </div>
                   </motion.div>
-                )}
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="button-control d-flex justify-content-between mb-5"
-                >
-                  <div>
-                    <Button
-                      onClick={() =>
-                        setFormNumber((prevNumber) =>
-                          Math.min(prevNumber + 1, 3)
-                        )
-                      }
-                      variant="primary-deep"
-                      className={`${
-                        formNumber > 2 ? 'disabled' : ''
-                      } px-5 me-3`}
-                    >
-                      <h6 className="m-0">新增規格</h6>
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        setFormNumber((prevNumber) =>
-                          Math.max(prevNumber - 1, 1)
-                        )
-                      }
-                      variant="primary-deep"
-                      className={`${formNumber === 1 ? 'disabled' : ''} px-5`}
-                    >
-                      <h6 className="m-0">刪除規格</h6>
-                    </Button>
-                  </div>
-                  <Button variant="primary-deep" className="px-5" type="sumbit">
-                    <h6 className="m-0">提交送出</h6>
-                  </Button>
-                </motion.div>
-              </Form>
+                </Form>
+              )}
+              {finished && (
+                <div className='d-flex justify-content-center align-items-center h-100'>
+                <div className='text-center'>
+                  <Image src='/success-add-organizer.webp' width={600}/>
+                  <h3>活動申請完成</h3>
+                  <h6>審核約需2-3個工作天，請耐心等候</h6>
+                </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -446,6 +689,9 @@ function OrganizerOtptionForm() {
           .bottom-line {
             background-color: var(--bg-gray-color);
             border-radius: 5px 5px 0 0;
+          }
+          .btn {
+            white-space: nowrap;
           }
         `}
       </style>

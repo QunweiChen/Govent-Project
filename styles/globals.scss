@@ -3,8 +3,9 @@
 // 全站配色 colors
 $primary: #f16e0f;
 $secondary: rgba(41, 41, 40, 0.5);
-$success: #66fd63;
+$success: #3c873b;
 $danger: #ff4136;
+$info: #92e9e4;
 
 // 按鈕圓角邊 button radius
 $border-radius: 0.2em;
@@ -124,16 +125,19 @@ h2 {
 h3 {
   font-size: 36px;
   font-weight: 600;
+  line-height: 1.5;
 }
 
 h4 {
   font-size: 26px;
   font-weight: 600;
+  line-height: 1.5;
 }
 
 h5 {
   font-size: 20px;
   font-weight: 600;
+  line-height: 1.5;
 }
 
 h6 {
@@ -186,6 +190,9 @@ p,
 .bottom-line {
   border-bottom: 1px solid var(--normal-gray-color);
 }
+.right-line {
+  border-right: 1px solid var(--normal-gray-color);
+}
 
 .text-link {
   color: white;
@@ -211,6 +218,20 @@ p,
     color: var(--normal-gray-light-color);
     margin: 0.5em 0.5em 0.3em;
   }
+}
+
+.text-shadow {
+  text-shadow: 0 0 3px black;
+}
+
+.ql-size-small{
+  font-size: 0.75em;
+}
+.ql-size-large{
+  font-size: 1.5em;
+}
+.ql-size-huge{
+  font-size: 2.5em;
 }
 
 // below is test only

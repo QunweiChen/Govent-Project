@@ -4,14 +4,12 @@ import { Row, Col, Form } from 'react-bootstrap'
 import Memberleft from '@/components/member/member-left-bar'
 import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/router'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function MemberSetting() {
-  // const router = useRouter()
-  // // Make sure we're in the browser
-  // if (typeof window !== 'undefined') {
-  //   router.push('/member/login')
-  // }
-
+  const router = useRouter()
+  const { auth } = useAuth()
   const [userData, setUserData] = useState([])
   const [formData, setFormData] = useState({
     id: '',
@@ -25,9 +23,14 @@ export default function MemberSetting() {
   //---------------------------------------------------------------------------------
   // 處理後端api
   //---------------------------------------------------------------------------------
-
   useEffect(() => {
-    fetch('http://localhost:3005/api/member')
+    fetch('http://localhost:3005/api/member', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
       .then((response) => response.json())
       .then((data) => {
         // 檢查是否有資料並設定到 state 中
@@ -78,10 +81,12 @@ export default function MemberSetting() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+        credentials: 'include',
       })
 
       if (response.ok) {
         console.log('User updated successfully!')
+        router.reload()
       } else {
         console.error('Failed to update user.')
       }
@@ -89,18 +94,6 @@ export default function MemberSetting() {
       console.error('Error:', error)
     }
   }
-
-  const setLocalStorage = () => {
-    const userObject = {
-      name: '我是localname',
-      level: '我是local會員',
-      email: '我是local email',
-      avatar: 'http://localhost:3005/images/contain/ct_1709886753648.jpg'
-    }
-
-    // 将对象转换为 JSON 字符串并存储在 localStorage 中
-    localStorage.setItem('user', JSON.stringify(userObject))
-}
 
   return (
     <>
@@ -200,9 +193,6 @@ export default function MemberSetting() {
                   </button>
                 </div>
               </Form>
-              <button className="btn btn-primary" onClick={setLocalStorage}>
-                拿localstorge
-              </button>
             </motion.div>
           </Col>
         </Row>

@@ -46,7 +46,7 @@ const menuItems = [
 export default function MainMenu({ currentRoute = '/' }) {
   return (
     <>
-      <ul className="navbar-nav flex-grow-1 ps-lg-5 ps-xs-0 mx-auto">
+      <ul className="navbar-nav d-flex align-items-center flex-grow-1 ps-lg-5 ps-xs-0 mx-auto">
         {menuItems.map((v) => {
           // 用children判斷是否有下拉選單
           if (!v.children) {
@@ -121,6 +121,9 @@ export default function MainMenu({ currentRoute = '/' }) {
             &:hover{
               background-color: var(--primary-50-color);
             }
+        }
+        .navbar-nav:hover{
+          color: var(--primary-color) !important;
         }
         `}
       </style>

@@ -6,6 +6,8 @@ import Memberleft from '@/components/member/member-left-bar'
 import { motion } from 'framer-motion'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import Tab from 'react-bootstrap/Tab'
+import Tabs from 'react-bootstrap/Tabs'
 
 export default function MemberCoupon() {
   const [coupon, setCoupon] = useState([])
@@ -28,7 +30,13 @@ export default function MemberCoupon() {
   }
 
   const loadData = () => {
-    fetch('http://localhost:3005/api/member/coupon')
+    fetch('http://localhost:3005/api/member/coupon', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    })
       .then((response) => response.json())
       .then((data) => {
         // 檢查是否有資料並設定到 state 中
@@ -61,13 +69,13 @@ export default function MemberCoupon() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ coupon: addCoupon }),
+          credentials: 'include',
         }
       )
 
       if (response.ok) {
         const data = await response.json()
         console.log(data)
-
         successSwal()
       } else {
         const errorData = await response.json()
@@ -77,6 +85,18 @@ export default function MemberCoupon() {
       console.error('Error:', error)
     }
   }
+
+  const expiredData = coupon.filter(data => {
+    const expiresAtDate = new Date(data.expires_at);
+    const currentDate = new Date();
+    return expiresAtDate < currentDate && data.valid === 1;
+  });
+
+  const availableData = coupon.filter(data => {
+    const expiresAtDate = new Date(data.expires_at);
+    const currentDate = new Date();
+    return expiresAtDate > currentDate && data.valid === 1;
+  });
 
   return (
     <>
@@ -112,36 +132,111 @@ export default function MemberCoupon() {
                   </span>
                 </Form>
               </div>
-              <hr className="my-4" />
-              <Row className="gy-3">
-                {coupon.map((data) => (
-                  <Col key={data.id} sm={6}>
-                    <motion.div
-                      initial={{ y: 20, opacity: 0 }}
-                      whileInView={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.4 }}
-                      className="card"
-                    >
-                      <div className="sm-p px-3 py-2">
-                        折扣碼 {data.coupon_code}
-                      </div>
-                      <hr className="my-0" />
-                      <div className="px-3 py-3">
-                        <h3 className="text-primary">
-                          NT${data.discount_valid}
-                        </h3>
-                        <p className="pb-3">最低消費金額 {data.price_min}</p>
-                        <p className="sm-p">{data.coupon_description}</p>
-                      </div>
-                      <hr className="my-0" />
-                      <p className="px-3 py-2">
-                        使用期限：{data.start_at.split('T')[0]} -{' '}
-                        {data.expires_at.split('T')[0]}
-                      </p>
-                    </motion.div>
-                  </Col>
-                ))}
-              </Row>
+              <Tabs defaultActiveKey="available" className="mb-4 mt-2">
+                <Tab eventKey="available" title="可使用">
+                  <Row className="g-3">
+                    {availableData.map((data) => (
+                        <Col key={data.id} sm={6}>
+                          <motion.div
+                            initial={{ y: 20, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.4 }}
+                            className="card"
+                          >
+                            <div className="sm-p px-3 py-2 d-flex justify-content-between">
+                              <div>{data.coupon_name}</div>
+                              <div>{data.coupon_code}</div>
+                            </div>
+                            <hr className="my-0" />
+                            <div className="px-3 py-3">
+                              <h3 className="text-primary">
+                                NT${data.discount_valid}
+                              </h3>
+                              <p className="pb-3">
+                                最低消費金額$ {data.price_min}
+                              </p>
+                              <p className="sm-p">{data.coupon_description}</p>
+                            </div>
+                            <hr className="my-0" />
+                            <p className="px-3 py-2">
+                              使用期限：{data.start_at.split('T')[0]} -{' '}
+                              {data.expires_at.split('T')[0]}
+                            </p>
+                          </motion.div>
+                        </Col>
+                      ))}
+                  </Row>
+                </Tab>
+                <Tab eventKey="uesd" title="已使用">
+                  <Row className='g-3'>
+                  {coupon
+                    .filter(
+                      (data) =>
+                        data.valid === 0
+                    )
+                    .map((data) => (
+                      <Col key={data.id} sm={6}>
+                        <motion.div
+                          initial={{ y: 20, opacity: 0 }}
+                          whileInView={{ y: 0, opacity: 1 }}
+                          transition={{ duration: 0.4 }}
+                          className="card unavailable"
+                        >
+                          <div className="sm-p px-3 py-2 d-flex justify-content-between">
+                            <div>{data.coupon_name}</div>
+                            <div>{data.coupon_code}</div>
+                          </div>
+                          <hr className="my-0" />
+                          <div className="px-3 py-3">
+                            <h3>NT${data.discount_valid}</h3>
+                            <p className="pb-3">
+                              最低消費金額$ {data.price_min}
+                            </p>
+                            <p className="sm-p">{data.coupon_description}</p>
+                          </div>
+                          <hr className="my-0" />
+                          <p className="px-3 py-2">
+                            使用期限：{data.start_at.split('T')[0]} -{' '}
+                            {data.expires_at.split('T')[0]}
+                          </p>
+                        </motion.div>
+                      </Col>
+                    ))}
+                    </Row>
+                </Tab>
+                <Tab eventKey="expired" title="已過期">
+                <Row className='g-3'>
+                  {expiredData.map((data) => (
+                      <Col key={data.id} sm={6}>
+                        <motion.div
+                          initial={{ y: 20, opacity: 0 }}
+                          whileInView={{ y: 0, opacity: 1 }}
+                          transition={{ duration: 0.4 }}
+                          className="card unavailable"
+                        >
+                          <div className="sm-p px-3 py-2 d-flex justify-content-between">
+                            <div>{data.coupon_name}</div>
+                            <div>{data.coupon_code}</div>
+                          </div>
+                          <hr className="my-0" />
+                          <div className="px-3 py-3">
+                            <h3>NT${data.discount_valid}</h3>
+                            <p className="pb-3">
+                              最低消費金額$ {data.price_min}
+                            </p>
+                            <p className="sm-p">{data.coupon_description}</p>
+                          </div>
+                          <hr className="my-0" />
+                          <p className="px-3 py-2">
+                            使用期限：{data.start_at.split('T')[0]} -{' '}
+                            {data.expires_at.split('T')[0]}
+                          </p>
+                        </motion.div>
+                      </Col>
+                    ))}
+                    </Row>
+                </Tab>
+              </Tabs>
             </motion.div>
           </Col>
         </Row>
@@ -169,8 +264,22 @@ export default function MemberCoupon() {
             background-color: var(--bg-gray-light-color);
             border-radius: 10px;
           }
+          .unavailable {
+            opacity: 0.5 !important;
+          }
           body.swal2-height-auto {
             height: 100vh !important;
+          }
+          .nav-tabs,
+          .nav-link,
+          .nav-tabs:active {
+            border-color: #00000000 !important;
+            border-radius: 5px;
+          }
+          .nav-link.active {
+            background-color: var(--primary-color) !important;
+            border-radius: 5px;
+            color: black !important;
           }
         `}
       </style>
