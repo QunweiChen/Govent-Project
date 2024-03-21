@@ -12,8 +12,7 @@ const Carttoolbar = dynamic(() => import('@/components/cart/carttoolbar'), {
 export default function Toolbar({ handleShow }) {
   const { NavbaralcTotalItemstotal } = useCart()
   const { isAuthenticated, signOut, auth } = useAuth()
-  // console.log(auth)
-  // console.log(NavbaralcTotalItemstotal)
+
   const handleSignOut = () => {
     signOut() // Call the sign out method
     // Redirect or perform additional actions after signing out if needed
