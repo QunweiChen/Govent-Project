@@ -195,7 +195,11 @@ export default function Detail() {
 
           <div>
             <img
-              src={`/images/product/list/${
+              // src={`/images/product/list/${
+              //   eventInfo[0]?.banner?.split(',')[0]
+              // }`}
+              //*修改圖片路由至後端 *//
+              src={`http://localhost:3005/images/banner/${
                 eventInfo[0]?.banner?.split(',')[0]
               }`}
               className="object-fit-cover"

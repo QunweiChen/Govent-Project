@@ -15,7 +15,7 @@ import { CiHeart } from 'react-icons/ci'
 //引入components
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
-import FavIcon from '@/components/layout/list-layout/fav-icon-test'
+import FavIcon from '@/components/layout/list-layout/FavIcon'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import Sidebar from '@/components/layout/list-layout/sidebar'
@@ -108,9 +108,16 @@ export default function List() {
         selectedCategories.includes(event.category_name)
       const regionMatch =
         selectedRegions.length === 0 || selectedRegions.includes(event.str)
-      return categoryMatch && regionMatch
+      const searchMatch = event.event_name.toLowerCase().includes(searchWord)
+      return categoryMatch && regionMatch && searchMatch
     })
   }
+
+  useEffect(() => {
+    // 当搜索词、选定的类别或地区变化时，更新筛选后的事件列表
+    const newFilteredEvents = getFilteredEvents()
+    setFilteredEvents(newFilteredEvents)
+  }, [searchWord, selectedCategories, selectedRegions, events]) // 确保在这些依赖项变化时重新筛选
 
   //搜尋
   const handleSearch = (searchWord) => {
@@ -179,6 +186,13 @@ export default function List() {
   const allFilteredEvents = [...newFilteredEvents, ...searchFilteredEvents]
 
   console.log(currentEvents)
+
+  //篩選後引導回首頁
+  useEffect(() => {
+    // 當篩選條件改變時，自動回到第一頁
+    setCurrentPage(1)
+  }, [selectedCategories, selectedRegions, searchWord])
+
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
@@ -222,65 +236,62 @@ export default function List() {
             />
           </div>
           <div className="col">
-            <button
-              className={`btn bg-bg-gray text-white`}
-              style={{
-                right: 5,
-                top: 5,
-              }}
-            >
-              {<CiHeart />}
-            </button>
             <div className="cardList row g-3">
-              {currentEvents.map((v) => (
-                <div key={v.id} className="col-md-4 col-sm-6 ">
-                  <div
-                    href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
-                    className=""
-                    key={v.id}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    {/* <div onClick={()=>{router.push(``)}} */}
-                    <div className="card bg-bg-gray-secondary text-white px-0 no-border">
-                      <figure>
-                        <img
-                          src={`/images/product/list/${
-                            v.banner?.split(',')[0]
-                          }`}
-                          alt=""
-                          className="card-img-top"
-                        />
-                        {/* <FavIcon datas={events} setEvents={handleSetEvents} /> */}
-                        <FavIcon
-                          pid={v.pid}
-                          events={events}
-                          setEvents={setEvents}
-                        />
-                      </figure>
+              {/* {currentEvents.map((v) => ( */}
+              {filteredEvents
+                .slice(indexOfFirstEvent, indexOfLastEvent)
+                .map((v) => (
+                  <div key={v.id} className="col-md-4 col-sm-6 ">
+                    <Link
+                      href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
+                      className=""
+                      key={v.id}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      {/* <div onClick={()=>{router.push(``)}} */}
+                      <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                        <figure>
+                          <img
+                            // src={`/images/product/list/${
+                            //   v.banner?.split(',')[0]
+                            // }`}
+                            src={`http://localhost:3005/images/banner/${
+                              v.banner?.split(',')[0]
+                            }`}
+                            alt=""
+                            className="card-img-top"
+                          />
+                          {/* <FavIcon datas={events} setEvents={handleSetEvents} /> */}
+                          <FavIcon
+                            pid={v.pid}
+                            events={events}
+                            setEvents={setEvents}
+                          />
+                        </figure>
 
-                      <div className="card-body">
-                        <p className=" text-normal-gray-light">
-                          {v.category_name}
-                        </p>
-                        <h5 className="card-title">{v.event_name}</h5>
-                        <div className="">
-                          <h6 className="text-primary-deep">
-                            ${v.price || 0}起
-                          </h6>
-                          <div className="d-flex justify-content-between">
-                            <p className="text-normal-gray-light mb-2">
-                              {v.str}
-                            </p>
-                            <span className="text-normal-gray-light">
-                              {v.start_date.substring(0, 10)}
-                            </span>
+                        <div className="card-body">
+                          <p className=" text-normal-gray-light">
+                            {v.category_name}
+                          </p>
+                          <h5 className="card-title">{v.event_name}</h5>
+                          <div className="">
+                            <h6 className="text-primary-deep">
+                              ${v.price || 0}起
+                            </h6>
+                            <div className="d-flex justify-content-between">
+                              <p className="text-normal-gray-light mb-2">
+                                {v.str}
+                              </p>
+                              <span className="text-normal-gray-light">
+                                {v.start_date.substring(0, 10)}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
 
             <footer className="d-flex justify-content-center m-3">

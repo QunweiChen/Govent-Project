@@ -1,18 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { FaHeart } from 'react-icons/fa6'
 import { CiHeart } from 'react-icons/ci'
 import { useAuth } from '@/hooks/use-auth'
 
-import addFavToDatabase from '@/hooks/use-fav'
-
 /* 寫入資料庫更新為true之後，需要刷新時顯示更新後的狀態，需要包含fav狀態*/
+
 export default function FavIcon({ pid, events, setEvents }) {
   //檢查會員身份
   const { auth } = useAuth()
   // const uid = auth.user.id //抓取登入中的id
   const uid = 1
   // console.log(uid);//確認uid正確
-
   // const handleToggleFav = () => {
   //   event.stopPropagation(); // 这里阻止事件冒泡
   //   const newEvents = events.map((event) => {
@@ -26,22 +24,20 @@ export default function FavIcon({ pid, events, setEvents }) {
   //     handleAddFav(pid, uid) // 傳遞 pid 和 uid
   //   }
   // }
-
   const handleToggleFav = (event) => {
-    event.preventDefault() // 阻止默認行為
-    event.stopPropagation() // 阻止事件冒泡
+    event.stopPropagation() // 这里阻止事件冒泡
 
-    const newEvents = events.map((eventItem) => {
-      if (eventItem.pid === pid) {
-        const updatedEvent = { ...eventItem, fav: !eventItem.fav }
-        if (!eventItem.fav) {
-          handleAddFav(pid, uid)
+    const newEvents = events.map((event) => {
+      if (event.pid === pid) {
+        const updatedEvent = { ...event, fav: !event.fav }
+        if (!event.fav) {
+          handleAddFav(pid, uid) // 如果是添加收藏，执行添加逻辑
         } else {
-          handleRemoveFav(pid, uid)
+          handleRemoveFav(pid, uid) // 如果是取消收藏，执行删除逻辑
         }
         return updatedEvent
       }
-      return eventItem
+      return event
     })
     setEvents(newEvents)
   }
@@ -51,6 +47,7 @@ export default function FavIcon({ pid, events, setEvents }) {
     // event.stopPropagation() //阻止事件冒泡
     try {
       console.log('Adding to favorites:', pid, uid) // 確認請求
+
       // const response = await addFavToDatabase(pid, uid)
       //改為不引入鉤子，直接在下方寫入
       const response = await fetch(
@@ -73,7 +70,7 @@ export default function FavIcon({ pid, events, setEvents }) {
 
   //刪除
   const handleRemoveFav = async (pid, uid) => {
-    // event.stopPropagation() // 阻止事件冒泡
+    event.stopPropagation() // 阻止事件冒泡
     try {
       console.log('Removing from favorites:', pid, uid) // 確認請求
       const response = await fetch(

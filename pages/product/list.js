@@ -101,6 +101,12 @@ export default function List() {
     indexOfLastEvent
   )
 
+  //篩選後引導回首頁
+  useEffect(() => {
+    // 當篩選條件改變時，自動回到第一頁
+    setCurrentPage(1)
+  }, [selectedCategories, selectedRegions, ])
+
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
@@ -151,7 +157,7 @@ export default function List() {
                     <div className="card  stretched-link bg-bg-gray-secondary text-white px-0 no-border">
                       <figure>
                         <img
-                          src={`/images/product/list/${
+                          src={`http://localhost:3005/images/banner/${
                             v.banner?.split(',')[0]
                           }`}
                           alt=""
