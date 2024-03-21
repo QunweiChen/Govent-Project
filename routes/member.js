@@ -216,9 +216,8 @@ router.post('/add-coupon', authenticate, async (req, res) => {
 router.get('/order', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
-      'SELECT user_order.*, event.event_name, event.banner ' +
+      'SELECT user_order.* ' +
         'FROM `user_order` ' +
-        'JOIN `event` ON event.event_id = user_order.event_id ' +
         'WHERE user_order.user_id = ?',
       {
         replacements: [req.user.id],
@@ -237,11 +236,9 @@ router.get('/order/:orderId', authenticate, async (req, res) => {
   try {
     const orderId = req.params.orderId
     const result = await sequelize.query(
-      'SELECT user_order.*, event.event_name, event.banner, event.place, event.address, event.content ,event.merchat_id, organizer.name ' +
+      'SELECT user_order.* ' +
         'FROM `user_order` ' +
-        'JOIN `event` ON event.event_id = user_order.event_id ' +
-        'JOIN `organizer` ON organizer.id = event.merchat_id ' +
-        'WHERE user_order.order_number = :orderId ',
+        'WHERE user_order.order_id = :orderId ',
       {
         type: QueryTypes.SELECT,
         replacements: { orderId: orderId },
