@@ -17,7 +17,9 @@ export default function MemberOrderInfo() {
   const router = useRouter()
   const { oid } = router.query
   const [oidLoaded, setOidLoaded] = useState(false)
-  const [eventInfo, setEventInfo] = useState(0)
+  const [eventInfo, setEventInfo] = useState([])
+  const [eventInfoId, setEventInfoId] = useState(0)
+  const [btnIndex, setBtnIndex] = useState(0)
 
   const [checkUser, setCheckUser] = useState(true)
   const [checkOrderNumber, setCheckOrderNumber] = useState(true)
@@ -43,6 +45,7 @@ export default function MemberOrderInfo() {
           if (data && data.data && data.data.result) {
             setOrder(data.data.result[0])
             setEvents(JSON.parse(data.data.result[0].order_info))
+            setEventInfoId(JSON.parse(data.data.result[0].order_info)[0].eventId)
           } else if (data.message == 403) {
             console.warn('非用戶訂單')
             setCheckUser(false)
@@ -58,24 +61,48 @@ export default function MemberOrderInfo() {
     }
   }, [oid])
 
-  useEffect(() => {
-    fetch(`http://localhost:3005/api/member/ticket/${oid}`)
-      .then((response) => response.json())
-      .then((data) => {
-        // 檢查是否有資料並設定到 state 中
-        if (data && data.data && data.data.result) {
-          console.log('Received data:', data.data.result)
-          setTickets(data.data.result)
-        } else {
-          console.warn('No order data received from the server.')
-        }
-      })
-      .catch((error) => console.error('Error fetching data:', error))
-  }, [])
 
-  useEffect(()=>{
-    console.log(eventInfo)
-  },[eventInfo])
+  const changeEvent = () => {
+    if (eventInfoId !== 0) {
+      fetch(`http://localhost:3005/api/member/order/event/${eventInfoId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data) {
+            setEventInfo(data.data.result[0])
+          }
+        })
+        .catch((error) => {
+          console.error('讀取失敗:', error)
+        })
+    }
+  }
+
+
+  // useEffect(() => {
+  //   fetch(`http://localhost:3005/api/member/ticket/${oid}`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       // 檢查是否有資料並設定到 state 中
+  //       if (data && data.data && data.data.result) {
+  //         console.log('Received data:', data.data.result)
+  //         setTickets(data.data.result)
+  //       } else {
+  //         console.warn('No order data received from the server.')
+  //       }
+  //     })
+  //     .catch((error) => console.error('Error fetching data:', error))
+  // }, [])
+
+  useEffect(() => {
+    changeEvent()
+    console.log(eventInfoId)
+  }, [eventInfoId])
 
   if (!oidLoaded) {
     return <div>Loading...</div>
@@ -137,21 +164,29 @@ export default function MemberOrderInfo() {
                 />
               </Col>
               <Col sm={9}>
-                  <Row className='g-3'>
-                    {events.map((data, index)=>(
-                      <Col key={index} sm="6" className=''>
-                        <div>
-                        <button type='button' className='btn member-bgc event-btn px-4 py-3 w-100' onClick={()=>{setEventInfo(index)}}>
-                        {data.eventName}
+                <Row className="g-3">
+                  {events.map((data, index) => (
+                    <Col key={index} sm="6" className="">
+                      <div>
+                        <button
+                          type="button"
+                          className={`btn member-bgc ${index === btnIndex ? 'active' : ''} event-btn px-4 py-3 w-100`}
+                          onClick={() => {
+                            setEventInfoId(data.eventId)
+                            setBtnIndex(index)
+                          }}
+                        >
+                          {data.eventName}
                         </button>
-                        </div>
-                      </Col>
-                ))}
-                  </Row>  
+                      </div>
+                    </Col>
+                  ))}
+                </Row>
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.4, delay: 0.4 }}
+                  transition={{ duration: 0.3 }}
+                  key={eventInfoId}
                   className="member-bgc mt-3"
                 >
                   <div className="px-2 bottom-line d-flex">
@@ -194,7 +229,7 @@ export default function MemberOrderInfo() {
                         transition={{ duration: 0.4 }}
                         className="order-content"
                       >
-                        <HtmlRenderer htmlContent={order.content} />
+                        <HtmlRenderer htmlContent={eventInfo.content} />
                       </motion.div>
                     )}
                     {tabs === 2 && (
@@ -233,8 +268,8 @@ export default function MemberOrderInfo() {
                                       ／
                                       {ticket
                                         ? ticket.start_time
-                                            .split('T')[1]
-                                            .substring(0, 5)
+                                          .split('T')[1]
+                                          .substring(0, 5)
                                         : ''}
                                     </p>
                                     <p>
@@ -303,10 +338,14 @@ export default function MemberOrderInfo() {
                 width: 100%;
               }
             }
-            .event-btn{
-              &:hover{
-               background-color: var(--primary-color); 
+            .event-btn {
+              border: none;
+              &:hover {
+                background-color: var(--primary-color);
               }
+            }
+            .event-btn.active{
+              background-color: var(--primary-color);
             }
           `}
         </style>
