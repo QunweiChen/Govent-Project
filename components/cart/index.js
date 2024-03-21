@@ -75,9 +75,7 @@ export default function CartIndex() {
             <div className="border-0 cart-card border-bottom border-normal-gray">
               <Row className="my-4">
                 <Col className="text-white d-flex align-items-center">
-                  <Link href="../cart/event-list">
-                    <h4 className="ms-4 text-white">購物車</h4>
-                  </Link>
+                  <h4 className="ms-4 text-white">購物車</h4>
                 </Col>
                 <TodoAll
                   handleToggleSelectedAll={handleToggleSelectedAll}
