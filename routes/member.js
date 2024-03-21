@@ -232,6 +232,25 @@ router.get('/order', authenticate, async function (req, res) {
   }
 })
 
+router.get('/order/event/:eventId', async function (req, res) {
+  const eventId = req.params.eventId
+  console.log(eventId)
+  try {
+    const result = await sequelize.query(
+      'SELECT event.* ' + 'FROM `event` ' + 'WHERE event.event_id = :eventId',
+      {
+        replacements: { eventId: eventId },
+        type: QueryTypes.SELECT,
+      }
+    )
+
+    return res.json({ status: 'success link event', data: { result } })
+  } catch (error) {
+    console.error('Error fetching data:', error)
+    res.status(500).json({ status: 'error', message: 'Failed to fetch data.' })
+  }
+})
+
 router.get('/order/:orderId', authenticate, async (req, res) => {
   try {
     const orderId = req.params.orderId
