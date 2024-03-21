@@ -10,7 +10,7 @@ const menuItems = [
   {
     id: 1,
     label: '熱門活動',
-    href: '/',
+    href: '/product',
   },
   {
     id: 2,
@@ -40,7 +40,7 @@ const menuItems = [
       { id: 37, label: '台東', href: '/member/forget-password' },
       { id: 38, label: '全部列表', href: '/member/forget-password' },
     ],
-  }
+  },
 ]
 
 export default function MainMenu({ currentRoute = '/' }) {
