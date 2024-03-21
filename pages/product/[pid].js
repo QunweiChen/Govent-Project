@@ -11,9 +11,11 @@ export default function Detail() {
   //引入鉤子 
   const { addItem, items } = useCart()
   const router = useRouter()
+  const { query: { pid } } = useRouter()
 
   const [eventInfo, setEventInfo] = useState([]);
   const [ticketInfo, setTicketInfo] = useState([]);
+  const [optionTicket, setOptionTicket] = useState([])
 
   //設售票期間的日曆狀態
   const [sellStartDate, setSellStartDate] = useState('');
@@ -37,7 +39,7 @@ export default function Detail() {
       const data = await res.json()
       // console.log('Received data:', data)
       setEventInfo(data.data.posts) //轉換成eventInfo
-      setTicketInfo(data.data.posts.map(event => ({ ...event, qty: 1 }))) //轉換成ticketInfo並添加qty
+      // setTicketInfo(data.data.posts.map(event => ({ ...event, qty: 1 }))) //轉換成ticketInfo並添加qty
       console.log(ticketInfo);
 
       const startDate = data?.data.posts[0].start_date;
@@ -60,7 +62,7 @@ export default function Detail() {
     }
   }
 
-
+ 
   //回傳fetch到的資料
   useEffect(() => {
     if (router.isReady) {
@@ -77,6 +79,24 @@ export default function Detail() {
     }
   }, [ticketInfo, selectDate]);
 
+
+  const getOptionTickets = async (pid) => {
+    try {
+      const res = await fetch(`http://localhost:3005/api/events/option/${pid}`)
+      const data = await res.json()
+      setTicketInfo(data.data.result.map(event => ({ ...event, qty: 1 })))
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  
+  useEffect(() => {
+    if (pid) {
+      getOptionTickets(pid)
+      console.log(ticketInfo)
+    }
+  }, [pid])
+
   const getAll = (ticketInfo, selectDate) => {
     console.log(selectDate);
     // 使用 Date 物件來解析原始日期字串
@@ -87,7 +107,6 @@ export default function Detail() {
     const day = date.getDate().toString().padStart(2, '0');
 
     const formattedDate = `${year}-${month}-${day}`;
-    // 印出結果
     // console.log(formattedDate); // 輸出：2023-06-02
     console.log(selectTime);
 
@@ -104,7 +123,8 @@ export default function Detail() {
         "ticketName": ticketInfo[0].option_name,
         "price": ticketInfo[0].price,
         "qty": ticketInfo[0].qty,//*
-        "eventId": ticketInfo[0].event_id
+        "eventId": ticketInfo[0].event_id,
+        "eventOptionId": ticketInfo[0].option_id,
       }
     ]);
   }
@@ -198,9 +218,10 @@ export default function Detail() {
           {/* 主頁圖片 */}
           <div>
             <img
-              src={`/images/product/list/${eventInfo[0]?.banner?.split(',')[0]
-                }`}
-              className="object-fit-cover"
+             src={`http://localhost:3005/images/banner/${
+                eventInfo[0]?.banner?.split(',')[0]
+              }`}
+              className="object-fit-cover img-fluid"
               alt=""
             />
           </div>
@@ -234,9 +255,10 @@ export default function Detail() {
                     {eventInfo.start_date.substring(0, 10)}~
                     {eventInfo.end_date.substring(0, 10)}
                   </h6>
-                  {/* 導向 Google 地圖上該地點的頁面。使用 encodeURIComponent() 函數來對地點進行編碼，以確保 URL 的正確性。target="_blank" 和 rel="noopener noreferrer" 屬性用於在新標籤中打開連結。 */}
+                 
                   <h6>
-                    <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" />
+                    <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" /> 
+                    {/* 導向 Google 地圖上該地點的頁面。使用 encodeURIComponent() 函數來對地點進行編碼，以確保 URL 的正確性。target="_blank" 和 rel="noopener noreferrer" 屬性用於在新標籤中打開連結。 */}
                     <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventInfo.place)}`} target="_blank" rel="noopener noreferrer" 
                     className='text-white border-bottom'
                     >
@@ -611,7 +633,7 @@ export default function Detail() {
                   {/* RWD評論 */}
                   <div className="d-block d-xxl-none bg-bg-gray-secondary p-3 my-5 rounded-4">
                     <div className="d-flex my-2 ms-2">
-                      <div>
+                      <div className='image-container'>
                         <img
                           className="avatar rounded-circle bg-normal-white me-4"
                           src="/images/product/detail/25.png"
@@ -784,10 +806,10 @@ export default function Detail() {
             background-color: #151515;
             color: #fff;
           }
+          
 
           .object-fit-cover {
             width: 100%;
-            height: 500px;
             object-fit: cover;
           }
 
