@@ -2,20 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Card from 'react-bootstrap/Card'
 import Link from 'next/link'
-import { useAuth } from '@/hooks/use-auth'
 import { useCart } from '@/hooks/use-cart'
 
 export default function Confirm() {
   const { setCartItems, cartItems, setPay, pay } = useCart()
-  const { auth } = useAuth()
-  console.log(auth)
   const [state, setState] = useState({})
-  console.log(state)
   //付款完成之後會轉到這裡，在使用fetch在確認訂單是否有支付成功
   const router = useRouter()
   //移除使用的優惠券
   function delCoupon(couponID, point) {
-    fetch('http://localhost:3005/api/payment/delete', {
+    fetch('http://localhost:3005/api/payment-data/delete', {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
@@ -33,13 +29,13 @@ export default function Confirm() {
       })
   }
   //寄出訂購成功的email
-  function mail(orderID) {
+  function mail(orderID, tickCode) {
     fetch('http://localhost:3005/api/email/send', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({ orderID }),
+      body: JSON.stringify({ orderID, tickCode }),
     })
       .then((response) => response.json())
       .then((response) => {
@@ -50,40 +46,74 @@ export default function Confirm() {
         console.log(err)
       })
   }
-  function qrCode() {}
+  async function qrCode(orderID) {
+    const data = await fetch(
+      `http://localhost:3005/api/qrcode/data?orderID=${orderID}`,
+      {
+        method: 'GET',
+      }
+    )
+      .then((response) => {
+        return response.json()
+      })
+      .then((response) => {
+        return response.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    console.log(data)
+    let arr = JSON.parse(data[0].order_info)
+    arr.map((e) => {
+      let eventID = e.event_id
+      let ticketName = e.ticketName
+      fetch(`http://localhost:3005/api/qrcode`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ eventID, orderID, ticketName }),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.tickCode)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    })
+    mail(orderID)
+  }
   function handleCheckout() {
-    console.log('清除購物車')
     // 將符合條件的項目從 cartItems 中移除
     // 過濾掉支付清單中的項目
-    console.log(cartItems)
     const updatedcartItems = cartItems
       .filter((item) => !pay.some((p) => p.id === item.id))
       // 如果商家中的票券不為空，則返回該商家
-
       .filter(Boolean) // 去除為空的商家
     // 將更新後的 cartItems 存回 localStorage
-    console.log(updatedcartItems)
     window.localStorage.setItem('cartItems', JSON.stringify(updatedcartItems))
     setCartItems(updatedcartItems)
     setPay([])
   }
   useEffect(() => {
     if (router.isReady) {
-      let transactionId = router.query.transactionId
+      let transactionId = ''
       let orderID = router.query.orderID
+      let url = `http://localhost:3005/api/payment/confirm?transactionId=${transactionId}&orderID=${orderID}`
       let couponID = router.query.couponID
       let point = router.query.point
-      console.log(point)
-      console.log(router.query)
-      fetch(
-        `http://localhost:3005/api/payment-line-pay/confirm?transactionId=${transactionId}&orderID=${orderID}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+      if (router.query.transactionId) {
+        transactionId = router.query.transactionId
+        url = `http://localhost:3005/api/payment/confirm?transactionId=${transactionId}&orderID=${orderID}`
+      }
+
+      fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
         .then((response) => {
           return response.json()
         })
@@ -91,10 +121,8 @@ export default function Confirm() {
           //成功之後將優惠券及點數扣除
           setState(response)
           delCoupon(couponID, point)
-          // qrCode(orderID)
+          qrCode(orderID)
           handleCheckout()
-          mail(orderID)
-          // handleCheckout()
           //如果成功五秒後跳轉回主頁
           setTimeout(() => {
             window.location.replace('http://localhost:3000/')

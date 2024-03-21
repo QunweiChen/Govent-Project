@@ -12,7 +12,6 @@ export default function Payment() {
     point: 0,
     coupon: { name: '', value: 0, id: '' },
   })
-  console.log(discount)
   //點數及優惠券是否被勾選
   const [discountState, setDiscountState] = useState({
     point: false,
@@ -23,16 +22,10 @@ export default function Payment() {
   const [productData, setProductData] = useState([])
   // 從 localStorage 中獲取 MtItems 資料
   const { cartItems } = useCart()
-  // const MtItemsString =
-  //   typeof window !== 'undefined'
-  //     ? window.localStorage.getItem('MtItems')
-  //     : '[]'
-  //轉成物件
   // 過濾出所有符合條件的項目
   const news = cartItems.filter((merchant) => {
     return merchant.checked === true
   })
-  console.log(news)
   //計算總金額
   const TotalPrice = () => {
     let total = 0
