@@ -1,16 +1,39 @@
 import express from 'express'
-const router = express.Router()
 import sequelize from '#configs/db.js'
 import { QueryTypes, DataTypes } from 'sequelize'
-//(finish member favorites/coupon)
-// const { Cart } = sequelize.models
+import authenticate from '##/middlewares/authenticate.js'
+import dotenv from 'dotenv'
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import multer from 'multer'
+import path from 'path'
+import bodyParser from 'body-parser'
+dotenv.config()
 
-router.get('/', async function (req, res) {
+const app = express()
+
+const router = express.Router()
+app.use(express.json())
+
+app.use(bodyParser.json({ limit: '10mb' }))
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
+
+const corsOptions = {
+  origin: 'http://localhost:3000', // Adjust according to your frontend's origin
+  credentials: true, // Allows cookies to be sent across origins
+}
+
+app.use(cors(corsOptions))
+
+// Use cookieParser middleware
+app.use(cookieParser())
+
+router.get('/', authenticate, async function (req, res) {
   // const { Cart } = sequelize.models
-
   try {
     // findAll 是回傳所有資料
-    const posts = await sequelize.query('SELECT * FROM `member` WHERE id = 1', {
+    const posts = await sequelize.query('SELECT * FROM `member` WHERE id = ?', {
+      replacements: [req.user.id], // 使用占位符传递参数
       type: QueryTypes.SELECT,
     })
 
@@ -45,16 +68,17 @@ router.post('/update', async (req, res) => {
   }
 })
 
-router.get('/favorites', async function (req, res) {
+router.get('/favorites', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
       'SELECT collection.id, collection.collection_user_id, collection.collection_activity_id, event.event_name, event.banner, event.start_date, MIN(event_options.price) AS min_price ' +
         'FROM `collection` ' +
         'JOIN `event` ON collection.collection_activity_id = event.event_id ' +
         'JOIN `event_options` ON collection.collection_activity_id = event_options.event_id ' +
-        'WHERE collection.collection_user_id = 1 ' +
+        'WHERE collection.collection_user_id = ? ' +
         'GROUP BY collection.id, collection.collection_user_id, collection.collection_activity_id, event.event_name, event.banner, event.start_date',
       {
+        replacements: [req.user.id],
         type: QueryTypes.SELECT,
       }
     )
@@ -66,14 +90,32 @@ router.get('/favorites', async function (req, res) {
   }
 })
 
-router.get('/coupon', async function (req, res) {
+router.get('/cost', authenticate, async function (req, res) {
+  try {
+    const result = await sequelize.query(
+      'SELECT SUM(total) AS total_sum FROM `user_order` WHERE user_id = ?',
+      {
+        replacements: [req.user.id], // 使用占位符传递参数
+        type: QueryTypes.SELECT,
+      }
+    )
+
+    return res.json({ status: 'success link cost', data: { result } })
+  } catch (error) {
+    console.error('Error fetching data:', error)
+    res.status(500).json({ status: 'error', message: 'Failed to fetch data.' })
+  }
+})
+
+router.get('/coupon', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
       'SELECT member_coupon.*, coupon.* ' +
         'FROM `member_coupon` ' +
         'JOIN `coupon` ON member_coupon.coupon_id = coupon.id ' +
-        'WHERE member_coupon.user_id = 1',
+        'WHERE member_coupon.user_id = ?',
       {
+        replacements: [req.user.id],
         type: QueryTypes.SELECT,
       }
     )
@@ -85,15 +127,13 @@ router.get('/coupon', async function (req, res) {
   }
 })
 
-router.post('/add-coupon', async (req, res) => {
+router.post('/add-coupon', authenticate, async (req, res) => {
   const CouponModel = sequelize.define(
     'Coupon',
     {
       coupon_code: DataTypes.STRING,
-      // 只定义需要的字段，可以根据实际需求添加其他字段
     },
     {
-      // 指定表格名稱
       tableName: 'coupon',
       timestamps: false,
     }
@@ -103,10 +143,12 @@ router.post('/add-coupon', async (req, res) => {
     {
       coupon_id: DataTypes.INTEGER,
       user_id: DataTypes.INTEGER,
-      // 只定义需要的字段，可以根据实际需求添加其他字段
+      valid: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1, // 將 valid 欄位預設為 1
+      },
     },
     {
-      // 指定表格名稱
       tableName: 'member_coupon',
       timestamps: false,
     }
@@ -127,7 +169,7 @@ router.post('/add-coupon', async (req, res) => {
 
     if (existingCoupon) {
       // 找到匹配的记录
-      const memberId = 1 // 你的用户ID
+      const memberId = req.user.id // 你的用户ID
 
       const existingMemberCoupon = await MemberCouponModel.findOne({
         where: {
@@ -171,14 +213,15 @@ router.post('/add-coupon', async (req, res) => {
   }
 })
 
-router.get('/order', async function (req, res) {
+router.get('/order', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
       'SELECT user_order.*, event.event_name, event.banner ' +
         'FROM `user_order` ' +
         'JOIN `event` ON event.event_id = user_order.event_id ' +
-        'WHERE user_order.user_id = 1',
+        'WHERE user_order.user_id = ?',
       {
+        replacements: [req.user.id],
         type: QueryTypes.SELECT,
       }
     )
@@ -190,29 +233,29 @@ router.get('/order', async function (req, res) {
   }
 })
 
-router.get('/order/:orderId', async (req, res) => {
-  const orderId = req.params.orderId
-
+router.get('/order/:orderId', authenticate, async (req, res) => {
   try {
+    const orderId = req.params.orderId
     const result = await sequelize.query(
       'SELECT user_order.*, event.event_name, event.banner, event.place, event.address, event.content ,event.merchat_id, organizer.name ' +
         'FROM `user_order` ' +
         'JOIN `event` ON event.event_id = user_order.event_id ' +
         'JOIN `organizer` ON organizer.id = event.merchat_id ' +
-        'WHERE user_order.order_number = :orderId',
+        'WHERE user_order.order_number = :orderId ',
       {
         type: QueryTypes.SELECT,
         replacements: { orderId: orderId },
       }
     )
-
+    if (result[0].user_id == req.user.id) {
+      res.json({ status: 'success', data: { result } })
+    } else {
+      res.status(403).json({ status: 'error', message: '403' })
+    }
     // 将订单数据发送给前端
-    res.json({ status: 'success', data: { result } })
   } catch (error) {
     console.error('Error fetching order data:', error)
-    res
-      .status(500)
-      .json({ status: 'error', message: 'Failed to fetch order data.' })
+    res.status(500).json({ status: 'error', message: '500' })
   }
 })
 
@@ -240,5 +283,42 @@ router.get('/ticket/:orderId', async (req, res) => {
       .json({ status: 'error', message: 'Failed to fetch order data.' })
   }
 })
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/avatar')
+  },
+  filename: function (req, file, cb) {
+    cb(null, 'avatar_' + Date.now() + path.extname(file.originalname))
+  },
+})
+
+const upload = multer({ storage: storage })
+
+router.post(
+  '/avatar',
+  upload.single('avatar'),
+  authenticate,
+  async (req, res) => {
+    try {
+      console.log(req.file.filename)
+      // 使用 Sequelize 更新用户资料
+      const updateAvatar = await sequelize.query(
+        'UPDATE `member` SET avatar = :avatar WHERE id = :id',
+        {
+          replacements: { avatar: req.file.filename, id: req.user.id },
+          type: QueryTypes.UPDATE,
+        }
+      )
+
+      res.json({ status: 'success', message: { updateAvatar } })
+    } catch (error) {
+      console.error('Error updating user avatar:', error)
+      res
+        .status(500)
+        .json({ status: 'error', message: 'Failed to update user avatar' })
+    }
+  }
+)
 
 export default router
