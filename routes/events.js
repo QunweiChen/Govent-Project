@@ -11,6 +11,7 @@ router.get('/', async function (req, res) {
   const posts = await sequelize.query(
     `
     SELECT event.*, 
+    favorites.*,
     event.event_id AS pid,
     activity_category.id AS category_id,
     activity_category.activity_name AS category_name,
@@ -20,6 +21,7 @@ router.get('/', async function (req, res) {
     INNER JOIN \`activity_category\` 
     ON event.event_type_id = activity_category.id 
     LEFT JOIN \`event_options\` ON event.id = event_options.event_id 
+    LEFT JOIN  \`favorites\` ON event.event_id = favorites.pid
     GROUP BY event.id;`,
     {
       type: QueryTypes.SELECT,
