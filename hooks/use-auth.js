@@ -111,13 +111,12 @@ export const AuthProvider = ({ children }) => {
       method: 'GET',
       credentials: 'include', // To send the cookie with the request
     })
+    if (!response.ok) {
+      throw new Error('Token 認證失敗')
+    }
     const { user } = await response.json()
     setAuth({ isAuthenticated: true, user })
-    // console.log('3')
-    console.log('3', auth)
-
-    // Redirect user after successful login if needed
-    // router.push('/member') // Example redirect
+    console.log({ isAuthenticated: true, user })
     router.push('/')
   }
 
@@ -134,7 +133,7 @@ export const AuthProvider = ({ children }) => {
       '登出出現錯誤', error
     }
   }
-  console.log(auth)
+  // console.log(auth)
   // 伺服器api成功的回應為 { status:'User is authenticated', data:{ user } }
   //   if (res.json.message === 'User is authenticated') {
   //     // 只需要initUserData的定義屬性值
