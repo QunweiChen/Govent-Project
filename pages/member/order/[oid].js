@@ -24,6 +24,8 @@ export default function MemberOrderInfo() {
   const [checkUser, setCheckUser] = useState(true)
   const [checkOrderNumber, setCheckOrderNumber] = useState(true)
 
+  const dateTime = { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
+
   const HtmlRenderer = ({ htmlContent }) => {
     return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
   }
@@ -250,10 +252,9 @@ export default function MemberOrderInfo() {
                             <p className="me-3 tabs sm-p">活動時間</p>
                             <div>
                               {eventInfo.start_date && (
-                                <h6 className="m-0">{eventInfo.start_date.split('T')[0]}{' '}
-                                  {eventInfo.start_date.split('T')[1].slice(0, 5)}{' '}
-                                  － {eventInfo.end_date.split('T')[0]}{' '}
-                                  {eventInfo.end_date.split('T')[1].slice(0, 5)}</h6>
+                                <h6 className="m-0">{new Date(eventInfo.start_date).toLocaleString('zh', dateTime)}
+                                {' － '}
+                                {new Date(eventInfo.end_date).toLocaleString('zh', dateTime)}</h6>
                               )}
                             </div>
                           </div>
@@ -312,9 +313,7 @@ export default function MemberOrderInfo() {
                                 <div className="d-flex flex-column justify-content-between">
                                   <div className="text-normal-gray-light">
                                     <p className="pb-1">
-                                      {ticket.holding_time ? ticket.holding_time.split('T')[0] : ''}
-                                      {' '}
-                                      {ticket.holding_time ? ticket.holding_time.split('T')[1].slice(0,8) : ''}
+                                      {new Date(ticket.holding_time).toLocaleString('zh', dateTime)}
                                     </p>
                                     <p>
                                       {eventInfo.place}｜{eventInfo.address}
