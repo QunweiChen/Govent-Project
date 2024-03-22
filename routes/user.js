@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import authenticate from '##/middlewares/authenticate.js'
+
 dotenv.config()
 
 // Create an express application
@@ -61,10 +62,11 @@ router.post('/signup', async function (req, res, next) {
     //調整地址跟時間到資料庫想要的格式
     const fullAddress = `${county}${township}${address}`
     const createTime = new Date().toISOString().slice(0, 19).replace('T', ' ')
+    const avatar = 'default_user.png'
 
     //新增註冊者資料
     const newUser = await sequelize.query(
-      'INSERT INTO member (username, password, name, gender, birthday, phone, address, create_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO member (username, password, name, gender, birthday, phone, address, create_at, avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       {
         replacements: [
           username,
@@ -75,6 +77,7 @@ router.post('/signup', async function (req, res, next) {
           cellphone,
           fullAddress,
           createTime,
+          avatar,
         ],
         type: QueryTypes.INSERT,
       }
@@ -138,6 +141,64 @@ router.post('/signin', upload.none(), async (req, res) => {
     return res
       .status(500)
       .json({ message: 'An error occurred during authentication' })
+  }
+})
+
+router.post('/googleSignIn', async (req, res) => {
+  const { googleUser } = req.body
+  console.log(googleUser)
+
+  try {
+    let user = await sequelize.query(
+      'SELECT * FROM member WHERE username = :username',
+      {
+        replacements: { username: googleUser.email },
+        type: QueryTypes.SELECT,
+      }
+    )
+
+    if (user.length === 0) {
+      const createTime = new Date().toISOString().slice(0, 19).replace('T', ' ')
+      const avatar = 'default_user.png'
+
+      await sequelize.query(
+        'INSERT INTO member (username, name, create_at, avatar) VALUES (?, ?, ?, ?)',
+        {
+          replacements: [googleUser.email, googleUser.name, createTime, avatar],
+          type: QueryTypes.INSERT,
+        }
+      )
+      user = [
+        {
+          username: googleUser.email,
+          name: googleUser.name,
+          createTime,
+          avatar,
+        },
+      ]
+    }
+
+    const token = await jwt.sign(
+      {
+        id: user[0].id,
+        username: user[0].username,
+        name: user[0].name,
+        avatar: user[0].avatar,
+      },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: '120m' }
+    )
+
+    res.cookie('auth_token', token, {
+      httpOnly: true,
+      secure: true, // use true in production with HTTPS
+      sameSite: 'none',
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    })
+    return res.status(200).json({ message: '登入成功', user: user[0], token })
+  } catch (error) {
+    console.error('認證錯誤', error)
+    return res.status(500).json({ message: '在認證時連線發生錯誤' })
   }
 })
 
