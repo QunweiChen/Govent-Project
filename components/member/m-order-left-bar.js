@@ -4,15 +4,13 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 export default function TicketInfoLeft({
-  banner = '',
-  name = '',
-  organizer = '',
-  place = '',
-  address = '',
-  price = '',
-  coupon_discount = '',
-  points_discount = '',
-  points_rebate = ''
+  order_id='',
+  payment_method='',
+  price='',
+  coupon_discount='',
+  points_discount='',
+  points_rebate='',
+  created_at='',
 }) {
   return (
     <motion.div
@@ -29,23 +27,21 @@ export default function TicketInfoLeft({
         </Link>
       </div>
       <div className="p-4 bottom-line">
-        <div className={`${styles['info-img']}`}>
-          <img src={`http://localhost:3005/images/banner/${banner}`} />
+        <div className='mb-3'>
+          <div className={`${styles['sm-p']} mb-2 sm-p`}>訂單編號</div>
+          <p className="m-0">{order_id}</p>
         </div>
-        <div className="mt-3">
-          <div className={`${styles['sm-p']} mb-2 sm-p`}>活動名稱</div>
-          <h6 className="m-0">{name}</h6>
+        <div>
+          <div className={`${styles['sm-p']} mb-2 sm-p`}>訂單時間</div>
+          {created_at && (
+            <p className="m-0">{created_at.split('T')[0]}{' '}{created_at.split('T')[1].slice(0,8)}</p>
+          )}
         </div>
       </div>
       <div className="p-4 bottom-line">
         <div>
-          <div className={`${styles['sm-p']} mb-1 sm-p`}>主辦單位</div>
-          <h6>{organizer}</h6>
-        </div>
-        <div className="pt-2">
-          <div className={`${styles['sm-p']} mb-1 sm-p`}>活動地點</div>
-          <h6>{place}</h6>
-          <p>{address}</p>
+          <div className={`${styles['sm-p']} mb-2 sm-p`}>付款方式</div>
+          <p className="m-0">{payment_method}</p>
         </div>
       </div>
       <div className="p-4">

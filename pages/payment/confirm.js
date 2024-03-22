@@ -65,22 +65,25 @@ export default function Confirm() {
     console.log(data)
     let arr = JSON.parse(data[0].order_info)
     arr.map((e) => {
-      let eventID = e.event_id
+      let qty = e.qty
+      let eventID = e.eventId
       let ticketName = e.ticketName
-      fetch(`http://localhost:3005/api/qrcode`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ eventID, orderID, ticketName }),
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res.tickCode)
+      for (let i = 0; i < qty; i++) {
+        fetch(`http://localhost:3005/api/qrcode`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ eventID, orderID, ticketName }),
         })
-        .catch((err) => {
-          console.log(err)
-        })
+          .then((res) => res.json())
+          .then((res) => {
+            console.log(res.tickCode)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
     })
     mail(orderID)
   }
