@@ -71,7 +71,7 @@ router.post('/update', async (req, res) => {
 router.get('/favorites', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
-      'SELECT collection.id, collection.collection_user_id, collection.collection_activity_id, event.event_name, event.banner, event.start_date, MIN(event_options.price) AS min_price ' +
+      'SELECT collection.*, event.event_name, event.banner, event.start_date, MIN(event_options.price) AS min_price ' +
         'FROM `collection` ' +
         'JOIN `event` ON collection.collection_activity_id = event.event_id ' +
         'JOIN `event_options` ON collection.collection_activity_id = event_options.event_id ' +
@@ -216,9 +216,8 @@ router.post('/add-coupon', authenticate, async (req, res) => {
 router.get('/order', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
-      'SELECT user_order.*, event.event_name, event.banner ' +
+      'SELECT user_order.* ' +
         'FROM `user_order` ' +
-        'JOIN `event` ON event.event_id = user_order.event_id ' +
         'WHERE user_order.user_id = ?',
       {
         replacements: [req.user.id],
@@ -233,15 +232,32 @@ router.get('/order', authenticate, async function (req, res) {
   }
 })
 
+router.get('/order/event/:eventId', async function (req, res) {
+  const eventId = req.params.eventId
+  console.log(eventId)
+  try {
+    const result = await sequelize.query(
+      'SELECT event.* ' + 'FROM `event` ' + 'WHERE event.event_id = :eventId',
+      {
+        replacements: { eventId: eventId },
+        type: QueryTypes.SELECT,
+      }
+    )
+
+    return res.json({ status: 'success link event', data: { result } })
+  } catch (error) {
+    console.error('Error fetching data:', error)
+    res.status(500).json({ status: 'error', message: 'Failed to fetch data.' })
+  }
+})
+
 router.get('/order/:orderId', authenticate, async (req, res) => {
   try {
     const orderId = req.params.orderId
     const result = await sequelize.query(
-      'SELECT user_order.*, event.event_name, event.banner, event.place, event.address, event.content ,event.merchat_id, organizer.name ' +
+      'SELECT user_order.* ' +
         'FROM `user_order` ' +
-        'JOIN `event` ON event.event_id = user_order.event_id ' +
-        'JOIN `organizer` ON organizer.id = event.merchat_id ' +
-        'WHERE user_order.order_number = :orderId ',
+        'WHERE user_order.order_id = :orderId ',
       {
         type: QueryTypes.SELECT,
         replacements: { orderId: orderId },
@@ -259,12 +275,12 @@ router.get('/order/:orderId', authenticate, async (req, res) => {
   }
 })
 
-router.get('/ticket/:orderId', async (req, res) => {
+router.get('/order/ticket/:orderId', async (req, res) => {
   const orderId = req.params.orderId
 
   try {
     const result = await sequelize.query(
-      'SELECT ticket.*, event_options.option_name, event_options.start_time ' +
+      'SELECT ticket.*, event_options.option_name, event_options.event_id, event_options.contain ' +
         'FROM `ticket` ' +
         'JOIN `event_options` ON ticket.event_option_id = event_options.id ' +
         'WHERE ticket.order_number = :orderId',
