@@ -47,10 +47,7 @@ export default function OrganizerSidebar() {
               <Accordion.Body className="py-1">
                 <ul className="m-0">
                   <li>
-                    <Link href="event-list">前台資訊編輯</Link>
-                  </li>
-                  <li>
-                    <Link href="add-event">帳務資訊</Link>
+                    <Link href="/organizer/setting">前台資訊編輯</Link>
                   </li>
                 </ul>
               </Accordion.Body>

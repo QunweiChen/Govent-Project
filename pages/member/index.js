@@ -57,16 +57,15 @@ export default function MemberIndex() {
   useEffect(() => {
     const interval = setInterval(() => {
       incrementNumber(progressNumber, setProgressNumber, 1, 100)
-    }, 10)
+    }, 3)
 
     return () => clearInterval(interval)
   }, [progressNumber])
 
   useEffect(() => {
-    // 设置一个3秒的定时器
     const timer = setTimeout(() => {
       setIsVisible(true) // 3秒后将 isVisible 设置为 true
-    }, 2000)
+    }, 1200)
 
     return () => clearTimeout(timer)
   }, [])
