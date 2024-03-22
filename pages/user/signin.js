@@ -9,12 +9,14 @@ import ToastContainer2 from '@/components/user/custom-toastify.module.css'
 import { toast } from 'react-toastify'
 import LoadingLayout from '@/components/layout/loading-layout'
 import { useRouter } from 'next/router'
-import { FaUserGroup } from 'react-icons/fa6'
 import { useAuth } from '@/hooks/use-auth'
+import { useGoogleAuth } from '@/hooks/firebase-google-auth'
 
 export default function Signin() {
   const router = useRouter()
+  // handle auth, googleAuth hooks
   const { signIn, setAuth } = useAuth()
+  const { signInWithGoogle } = useGoogleAuth()
 
   // user information
   const [user, setUser] = useState({
@@ -27,6 +29,11 @@ export default function Signin() {
 
   // username checkbox function
   const [rememberusername, setRememberusername] = useState(false)
+
+  // google Signin
+  const handleSignInWithGoogle = async () => {
+    await signInWithGoogle()
+  }
 
   useEffect(() => {
     const storedusername = localStorage.getItem('username')
@@ -116,7 +123,7 @@ export default function Signin() {
             progressClassName="toast-progress"
           />
           <div className="formBackground">
-            <Form onSubmit={handleSubmit} method="post">
+            <Form method="post">
               <div className="px-5 py-5">
                 <div className="text-white">
                   <h4 className="mainTitle-rwd">歡迎回來</h4>
@@ -166,7 +173,8 @@ export default function Signin() {
                         className={`bi ${
                           passwordVisible ? 'bi-eye-fill' : 'bi-eye-slash-fill'
                         } btn text-normal-gray bg-normal-gray-light`}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault()
                           passwordVisible
                             ? setPasswordVisible(false)
                             : setPasswordVisible(true)
@@ -201,6 +209,7 @@ export default function Signin() {
                   <button
                     type="submit"
                     className="btn btn-primary text-white w-100"
+                    onClick={handleSubmit}
                   >
                     登入
                   </button>
@@ -217,11 +226,17 @@ export default function Signin() {
                   <span>OR</span>
                 </div>
                 <div className="d-flex justify-content-between text-white row">
-                  <div className="btn-lg btn btn-outline-light text-white col-5 googleLoginButton">
+                  <button
+                    className="btn-lg btn btn-outline-light text-white col-5 googleLoginButton"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleSignInWithGoogle()
+                    }}
+                  >
                     <div className="sm-p py-1">
                       <i className="bi bi-google me-2"></i>google 登入
                     </div>
-                  </div>
+                  </button>
                   <div className="btn-lg btn btn-outline-light text-white col-5 xLoginButton">
                     <div className="sm-p py-1">
                       <i className="bi bi-twitter-x"></i> 登入
