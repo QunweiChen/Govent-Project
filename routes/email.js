@@ -91,11 +91,14 @@ router.post('/send', function (req, res, next) {
                                     <table border="0" cellspacing="0" cellpadding="0">
                                       <tbody>
                                         <tr>
-                                          <!--[if mso | IE]>
-                                          <td align="center" bgcolor="#005da0" style="color:#ffffff;padding-top:7px;padding-bottom:7px;padding-left:60px;padding-right:60px">
                                             <![endif]--><!--[if !mso]><!---->
-                                          <td align="center" bgcolor="#F16E0F" style="border-radius:4px">
-                                            <!-- <![endif]--><a class="dnd-button" href="http://localhost:3000/" target="_blank" style="color:#ffffff;border-radius:4px;display:inline-block;text-decoration:none;font-size:16px;font-weight:bold;letter-spacing:1px;padding-top:7px;padding-bottom:7px;padding-left:60px;padding-right:60px"><span class="a__text" style="color:#ffffff;text-decoration:none;font-family:'PingFang TC','微軟正黑體','Microsoft JhengHei','Helvetica Neue',Helvetica,Arial,sans-serif">逛商品</span></a>
+                                          <td align="center" bgcolor="#F16E0F" style="border-radius:4px;">
+                                            <!-- <![endif]--><a class="dnd-button" href="http://localhost:3000/member/order/${req.body.orderID}" target="_blank" style="color:#ffffff;border-radius:4px;display:inline-block;text-decoration:none;font-size:16px;font-weight:bold;letter-spacing:1px;padding-top:7px;padding-bottom:7px;padding-left:60px;padding-right:60px"><span class="a__text" style="color:#ffffff;text-decoration:none;font-family:'PingFang TC','微軟正黑體','Microsoft JhengHei','Helvetica Neue',Helvetica,Arial,sans-serif">查看訂單</span></a>
+                                          </td>
+                                          <td style="width:20px;"></td>
+                                            <![endif]--><!--[if !mso]><!---->
+                                          <td align="center" bgcolor="#F16E0F" style="border-radius:4px;">
+                                            <!-- <![endif]--><a class="dnd-button" href="http://localhost:3000/" target="_blank" style="color:#ffffff;border-radius:4px;display:inline-block;text-decoration:none;font-size:16px;font-weight:bold;letter-spacing:1px;padding-top:7px;padding-bottom:7px;padding-left:60px;padding-right:60px"><span class="a__text" style="color:#ffffff;text-decoration:none;font-family:'PingFang TC','微軟正黑體','Microsoft JhengHei','Helvetica Neue',Helvetica,Arial,sans-serif">回主頁</span></a>
                                           </td>
                                         </tr>
                                       </tbody>
