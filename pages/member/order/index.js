@@ -57,9 +57,11 @@ export default function MemberOrder() {
               <hr className="my-4" />
               {orders.map((data, index) => (
                 <div key={data.id} className="event mt-2">
-                  <div className="ticket-number sm-p">
-                    訂單編號 {data.order_id}
-                  </div>
+                  {data.created_at && (
+                    <div className="ticket-number sm-p">
+                    訂單成立時間 {data.created_at.split('T')[0]}{' '}{data.created_at.split('T')[1].slice(0, 8)}
+                    </div>
+                  )}
                   <div className="p-3 d-flex">
                     <div className="event-img me-4 d-flex flex-column">
                       <div className="flex-1 main-img">
@@ -99,7 +101,7 @@ export default function MemberOrder() {
                             總金額 ${data.total}
                           </h6>
                           <p className="sm-p">
-                            建立時間 {data.created_at.split('T')[0]}
+                            訂單編號 {data.order_id}
                           </p>
                         </div>
 
