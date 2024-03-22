@@ -426,7 +426,7 @@ useEffect(()=>{
           }
           .update-form{
             .form-control,
-          .form-select {
+            .form-select {
             background-color: var(--bg-gray-light-color);
             border: 1px solid var(--normal-gray-color);
             resize: none;

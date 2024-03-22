@@ -4,13 +4,22 @@ import Memberleft from '@/components/member/member-left-bar'
 import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 export default function MemberFavorites() {
   const [userData, setUserData] = useState([])
 
-  useEffect(() => {
-    fetch('http://localhost:3005/api/member/favorites',
-    {
+  const successSwal = () => {
+    withReactContent(Swal).fire({
+      icon: 'success',
+      title: '刪除成功',
+    })
+    getFavorite()
+  }
+
+  const getFavorite = () => {
+    fetch('http://localhost:3005/api/member/favorites', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -27,11 +36,35 @@ export default function MemberFavorites() {
         }
       })
       .catch((error) => console.error('Error fetching data:', error))
-  }, [])
+  }
 
   useEffect(() => {
-    console.log('user', userData)
-  }, [userData])
+    getFavorite()
+  }, [])
+
+  const delectFavorite = async (eventId) => {
+    console.log(eventId)
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/member/delete/${eventId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        }
+      )
+      successSwal()
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
+  const onClickDelete = (eventId) => {
+    console.log(eventId)
+    delectFavorite(eventId);
+  }
 
   return (
     <>
@@ -50,31 +83,42 @@ export default function MemberFavorites() {
               <h4>我的收藏</h4>
               <hr className="my-4" />
               <div className="mb-4">您已收藏 {userData.length} 項商品</div>
-              {userData.map((data) => (
-                <div key={data.div} className="event p-3 mt-2 d-flex">
+              {userData.map((data, index) => (
+                <div key={index} className="event p-3 mt-2 d-flex">
                   <div className="event-img me-4">
-                  <Link href={`/product/${data.collection_activity_id}`}>
-                    <img
-                      src={`http://localhost:3005/images/banner/${data.banner}`}
-                      alt=""
-                    />
+                    <Link href={`/product/${data.collection_activity_id}`}>
+                      <img
+                        src={`http://localhost:3005/images/banner/${data.banner}`}
+                        alt=""
+                      />
                     </Link>
                   </div>
                   <div className="py-1 content d-flex flex-column justify-content-between">
-                  <Link href={`/product/${data.collection_activity_id}`}>
-                  <h5 className='text-white'>{data.event_name}</h5>
-                  </Link>
+                    <Link href={`/product/${data.collection_activity_id}`}>
+                      <h5 className="text-white">{data.event_name}</h5>
+                    </Link>
                     <div>
-                      <h6 className="text-primary-deep m-0">
-                        ＄{data.min_price} 起
-                      </h6>
+                      
                       <span className="sm-p">
                         {data.start_date.split('T')[0]}
                       </span>
                     </div>
                   </div>
-                  <div className="p-1">
-                    <i className="bi bi-heart-fill text-primary"></i>
+                  <div>
+                    <div
+                      className="p-1 d-flex align-items-center delete-favorite text-primary"
+                      onKeyDown={() => { }}
+                      tabIndex={0}
+                      role="button"
+                      onClick={() => {
+                        onClickDelete(data.collection_activity_id)
+                      }}
+                    >
+                      <i
+                        className="icon bi bi-heart-fill text-primary me-2"
+                      ></i>
+                      <p className='text'>刪除收藏</p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -117,6 +161,27 @@ export default function MemberFavorites() {
               width: 100%;
               height: 100%;
               object-fit: cover;
+            }
+          }
+          .delete-favorite{
+            overflow: hidden;
+            .icon{
+              position: relative;
+              left: 68px;
+              transition: 300ms;
+            }
+            .text{
+              position: relative;
+              left: 68px;
+              transition: 300ms;
+            }
+          }
+          .delete-favorite:hover{
+            .icon{
+              left: 0px;
+            }
+            .text{
+              left: 0px;
             }
           }
         `}
