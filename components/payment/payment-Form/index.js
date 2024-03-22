@@ -98,25 +98,38 @@ export default function PaymentForm({
   //監聽使用者輸入優惠券表單欄位
   function formChange(e) {
     if (e.target.name === 'coupon') {
+      let selectedIndexID = e.target.options[e.target.selectedIndex].id
       let setConnectionData = {
         ...discount,
         coupon: {
           name: e.target.options[e.target.selectedIndex].text,
           value: e.target.value,
-          id: e.target.options[e.target.selectedIndex].id,
+          id: selectedIndexID,
         },
       }
+
       setDiscount(setConnectionData)
       return
     }
     let setConnectionData = { ...discount, [e.target.name]: e.target.value }
-    if (e.target.name == 'point' && e.target.value > pointData) {
-      alert('超過範圍')
-      setConnectionData = { ...discount, [e.target.name]: '0' }
-      setDiscount(setConnectionData)
-      pointInputRef.current.value = ''
-      return
+    if (e.target.name == 'point') {
+      let value = e.target.value
+      if (value < 0) {
+        alert('超過會員點數範圍')
+        setConnectionData = { ...discount, [e.target.name]: '0' }
+        setDiscount(setConnectionData)
+        pointInputRef.current.value = ''
+        return
+      }
+      if (value > pointData) {
+        alert('超過會員點數範圍')
+        setConnectionData = { ...discount, [e.target.name]: '0' }
+        setDiscount(setConnectionData)
+        pointInputRef.current.value = ''
+        return
+      }
     }
+
     setDiscount(setConnectionData)
   }
   //監聽點數及優惠券是否被勾選
@@ -200,7 +213,8 @@ export default function PaymentForm({
       .then((response) => {
         let point = Number(response.data.point[0].point)
         setPointData(point)
-        setCouponData(response.data.coupon)
+        let coupon = response.data.coupon
+        setCouponData(coupon.filter((e) => e.price_min < money))
         return
       })
       .catch((err) => {
@@ -404,6 +418,7 @@ export default function PaymentForm({
                 >
                   <option value="0">選擇優惠券</option>
                   {couponData.map((v, i) => {
+                    console.log()
                     return (
                       <>
                         <option key={i} value={v.discount_valid} id={v.id}>
