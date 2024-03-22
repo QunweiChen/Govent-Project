@@ -6,6 +6,8 @@ import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/hooks/use-auth'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 export default function MemberSetting() {
   const router = useRouter()
@@ -86,7 +88,7 @@ export default function MemberSetting() {
 
       if (response.ok) {
         console.log('User updated successfully!')
-        router.reload()
+        successSwal()
       } else {
         console.error('Failed to update user.')
       }
@@ -94,6 +96,19 @@ export default function MemberSetting() {
       console.error('Error:', error)
     }
   }
+
+  const successSwal = () => {
+    withReactContent(Swal)
+      .fire({
+        icon: 'success',
+        title: '修改成功',
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          router.reload(); // 根據需要使用 router 的相應重新載入方法
+        }
+      });
+  };
 
   return (
     <>
@@ -215,6 +230,9 @@ export default function MemberSetting() {
           }
           .contain {
             padding: 30px 40px;
+          }
+          body.swal2-height-auto {
+            height: 100vh !important;
           }
         `}
       </style>

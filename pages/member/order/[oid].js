@@ -1,7 +1,7 @@
 // import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { Row, Col, Image, Button } from 'react-bootstrap'
+import { Row, Col, Image, Button, Container } from 'react-bootstrap'
 import TicketInfoLeft from '@/components/member/m-order-left-bar'
 import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
@@ -11,11 +11,14 @@ import Link from 'next/link'
 export default function MemberOrderInfo() {
   const [tabs, setTabs] = useState(1)
   const [order, setOrder] = useState([])
+  const [events, setEvents] = useState([])
   const [tickets, setTickets] = useState([])
 
   const router = useRouter()
   const { oid } = router.query
   const [oidLoaded, setOidLoaded] = useState(false)
+  const [eventInfo, setEventInfo] = useState([])
+  const [eventInfoId, setEventInfoId] = useState(0)
 
   const [checkUser, setCheckUser] = useState(true)
   const [checkOrderNumber, setCheckOrderNumber] = useState(true)
@@ -39,8 +42,9 @@ export default function MemberOrderInfo() {
         .then((data) => {
           // 檢查是否有資料並設定到 state 中
           if (data && data.data && data.data.result) {
-            console.log('Received data:', data.data.result)
             setOrder(data.data.result[0])
+            setEvents(JSON.parse(data.data.result[0].order_info))
+            setEventInfoId(JSON.parse(data.data.result[0].order_info)[0].eventId)
           } else if (data.message == 403) {
             console.warn('非用戶訂單')
             setCheckUser(false)
@@ -56,20 +60,48 @@ export default function MemberOrderInfo() {
     }
   }, [oid])
 
-  useEffect(() => {
-    fetch(`http://localhost:3005/api/member/ticket/${oid}`)
+
+  const changeEvent = () => {
+    if (eventInfoId !== 0) {
+      fetch(`http://localhost:3005/api/member/order/event/${eventInfoId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data) {
+            setEventInfo(data.data.result[0])
+          }
+        })
+        .catch((error) => {
+          console.error('讀取失敗:', error)
+        })
+    }
+  }
+
+  const ticketInfo = () => {
+    fetch(`http://localhost:3005/api/member/order/ticket/${oid}`)
       .then((response) => response.json())
       .then((data) => {
         // 檢查是否有資料並設定到 state 中
         if (data && data.data && data.data.result) {
-          console.log('Received data:', data.data.result)
-          setTickets(data.data.result)
+          const filteredTickets = data.data.result.filter(ticket => ticket.event_id === eventInfoId);
+          setTickets(filteredTickets);
         } else {
           console.warn('No order data received from the server.')
         }
       })
       .catch((error) => console.error('Error fetching data:', error))
-  }, [])
+  }
+
+  useEffect(() => {
+    changeEvent()
+    ticketInfo()
+    console.log(eventInfoId)
+  }, [eventInfoId])
 
   if (!oidLoaded) {
     return <div>Loading...</div>
@@ -121,44 +153,38 @@ export default function MemberOrderInfo() {
             <Row data-bs-theme="dark">
               <Col sm={3}>
                 <TicketInfoLeft
-                  banner={order.banner}
-                  name={order.event_name}
-                  organizer={order.name}
-                  place={order.place}
-                  address={order.address}
+                  order_id={order.order_id}
+                  payment_method={order.payment_method}
                   price={order.total}
                   coupon_discount={order.coupon_discount}
                   points_discount={order.points_discount}
                   points_rebate={order.points_rebate}
+                  created_at={order.created_at}
                 />
               </Col>
               <Col sm={9}>
+                <Row className="g-3">
+                  {events.map((data, index) => (
+                    <Col key={index} sm="6" className="">
+                      <div>
+                        <button
+                          type="button"
+                          className={`btn member-bgc ${data.eventId === eventInfoId ? 'active' : ''} event-btn px-4 py-3 w-100`}
+                          onClick={() => {
+                            setEventInfoId(data.eventId)
+                          }}
+                        >
+                          {data.eventName}
+                        </button>
+                      </div>
+                    </Col>
+                  ))}
+                </Row>
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.4, delay: 0.2 }}
-                  className="member-bgc"
-                >
-                  <div className="p-3 px-4 bottom-line">
-                    <h6 className="m-0 text-primary-light">訂購詳情</h6>
-                  </div>
-                  <div className="p-3 px-4">
-                    <p className="pb-2">
-                      <i className="bi bi-person-fill pe-2"></i>訂單編號：
-                      {order.order_number}
-                    </p>
-                    <p>
-                      <i className="bi bi-person-fill pe-2"></i>訂購日期：
-                      {order && order.create_at
-                        ? order.create_at.split('T')[0]
-                        : ''}
-                    </p>
-                  </div>
-                </motion.div>
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.4, delay: 0.4 }}
+                  transition={{ duration: 0.3 }}
+                  key={eventInfoId}
                   className="member-bgc mt-3"
                 >
                   <div className="px-2 bottom-line d-flex">
@@ -190,6 +216,21 @@ export default function MemberOrderInfo() {
                         }
                       }}
                     >
+                      <h6 className="m-0">活動說明</h6>
+                    </div>
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      className={`p-3 ${tabs === 3 ? 'text-primary' : ''}`}
+                      onClick={() => {
+                        setTabs(3)
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setTabs(3)
+                        }
+                      }}
+                    >
                       <h6 className="m-0">票卷資訊</h6>
                     </div>
                   </div>
@@ -199,12 +240,48 @@ export default function MemberOrderInfo() {
                         initial={{ y: 20, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.4 }}
-                        className="order-content"
+                        className="order-content d-flex"
                       >
-                        <HtmlRenderer htmlContent={order.content} />
+                        <Image src={`http://localhost:3005/images/banner/${eventInfo.banner}`} width={300} />
+                        <div className='ms-4'>
+                          <h4 className='mb-3'>{eventInfo.event_name}</h4>
+                          <div className="d-flex align-items-center mb-2">
+                            <p className="me-3 tabs sm-p">活動時間</p>
+                            <div>
+                              {eventInfo.start_date && (
+                                <h6 className="m-0">{eventInfo.start_date.split('T')[0]}{' '}
+                                  {eventInfo.start_date.split('T')[1].slice(0, 5)}{' '}
+                                  － {eventInfo.end_date.split('T')[0]}{' '}
+                                  {eventInfo.end_date.split('T')[1].slice(0, 5)}</h6>
+                              )}
+                            </div>
+                          </div>
+                          <div className="d-flex align-items-center mb-2">
+                            <p className="me-3 tabs sm-p">活動地點</p>
+                            <div>
+                              <h6 className="m-0">{eventInfo.place}</h6>
+                            </div>
+                          </div>
+                          <div className="d-flex align-items-center mb-2">
+                            <p className="me-3 tabs sm-p">活動地址</p>
+                            <div>
+                              <h6 className="m-0">{eventInfo.address}</h6>
+                            </div>
+                          </div>
+                        </div>
                       </motion.div>
                     )}
                     {tabs === 2 && (
+                      <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        whileInView={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.4 }}
+                        className="order-content"
+                      >
+                        <HtmlRenderer htmlContent={eventInfo.content} />
+                      </motion.div>
+                    )}
+                    {tabs === 3 && (
                       <motion.div
                         initial={{ y: 20, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
@@ -226,7 +303,7 @@ export default function MemberOrderInfo() {
                               </div>
                               <div className="d-flex flex-column justify-content-between">
                                 <div>
-                                  <h6>{order.event_name}</h6>
+                                  <p>{eventInfo.event_name}</p>
                                   <h4 className="text-primary-light">
                                     {ticket.option_name}
                                   </h4>
@@ -234,18 +311,12 @@ export default function MemberOrderInfo() {
                                 <div className="d-flex flex-column justify-content-between">
                                   <div className="text-normal-gray-light">
                                     <p className="pb-1">
-                                      {ticket
-                                        ? ticket.start_time.split('T')[0]
-                                        : ''}
-                                      ／
-                                      {ticket
-                                        ? ticket.start_time
-                                            .split('T')[1]
-                                            .substring(0, 5)
-                                        : ''}
+                                      {ticket.holding_time ? ticket.holding_time.split('T')[0] : ''}
+                                      {' '}
+                                      {ticket.holding_time ? ticket.holding_time.split('T')[1].slice(0,8) : ''}
                                     </p>
                                     <p>
-                                      {order.place}｜{order.address}
+                                      {eventInfo.place}｜{eventInfo.address}
                                     </p>
                                   </div>
                                 </div>
@@ -307,8 +378,25 @@ export default function MemberOrderInfo() {
             }
             .order-content {
               img {
-                width: 100%;
+                max-width: 100%;
+                border-radius: 10px;
+                object-fit: cover;
               }
+            }
+            .event-btn {
+              border: none;
+              &:hover {
+                background-color: var(--primary-color);
+              }
+            }
+            .event-btn.active{
+              background-color: var(--primary-color);
+            }
+            .tabs {
+              background-color: var(--bg-gray-color);
+              padding: 7px 10px;
+              border-radius: 5px;
+              color: var(--normal-gray-light-color);
             }
           `}
         </style>

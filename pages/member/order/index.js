@@ -31,6 +31,7 @@ export default function MemberOrder() {
         if (data && data.data && data.data.result) {
           console.log('Received data:', data.data.result)
           setOrders(data.data.result)
+          console.log(orders)
         } else {
           console.warn('No favorites data received from the server.')
         }
@@ -54,28 +55,55 @@ export default function MemberOrder() {
             >
               <h4>我的訂單</h4>
               <hr className="my-4" />
-              {orders.map((data) => (
+              {orders.map((data, index) => (
                 <div key={data.id} className="event mt-2">
                   <div className="ticket-number sm-p">
-                    訂單編號 {data.order_number}
+                    訂單編號 {data.order_id}
                   </div>
                   <div className="p-3 d-flex">
-                    <div className="event-img me-3">
-                      <img
-                        src={`http://localhost:3005/images/banner/${data.banner}`}
-                        alt=""
-                      />
+                    <div className="event-img me-4 d-flex flex-column">
+                      <div className="flex-1 main-img">
+                        <img
+                          src={`http://localhost:3005/images/banner/${
+                            JSON.parse(data.order_info)[0].images
+                          }`}
+                          alt=""
+                          className=""
+                        />
+                      </div>
+                      <div className="d-flex others-imgs">
+                        {JSON.parse(data.order_info).map((event, index) => (
+                          <>
+                            {index > 0 && (
+                              <div key={index} className="other-img">
+                                <img
+                                  src={`http://localhost:3005/images/banner/${event.images}`}
+                                  alt=""
+                                  className=""
+                                />
+                              </div>
+                            )}
+                          </>
+                        ))}
+                      </div>
                     </div>
                     <div className="me-2 content d-flex flex-column justify-content-between">
                       <div>
-                        <h6>{data.event_name}</h6>
-                        <p>建立時間 {data.create_at.split('T')[0]}</p>
+                        {JSON.parse(data.order_info).map((event, index) => (
+                          <h6 key={index}>．{event.eventName}</h6>
+                        ))}
                       </div>
                       <div className="d-flex justify-content-between align-items-end">
-                        <h6 className="text-primary-deep m-0">
-                          總金額 ${data.total}
-                        </h6>
-                        <Link href={`order/${data.order_number}`}>
+                        <div>
+                          <h6 className="text-primary-deep">
+                            總金額 ${data.total}
+                          </h6>
+                          <p className="sm-p">
+                            建立時間 {data.created_at.split('T')[0]}
+                          </p>
+                        </div>
+
+                        <Link href={`order/${data.order_id}`}>
                           <button className="btn btn-primary text-white">
                             查看詳情
                           </button>
@@ -123,17 +151,37 @@ export default function MemberOrder() {
               flex: 1;
             }
           }
+          .flex-1{
+            flex: 1;
+          }
           .event-img {
+            position: relative;
             width: 160px;
-            height: 100px;
-            border-radius: 5px;
-            overflow: hidden;
+            .main-img{
+              max-height: 120px;
+            }
             img {
+              border-radius: 5px;
               width: 100%;
               height: 100%;
               object-fit: cover;
+              box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.75);
             }
-          }
+            .others-imgs {
+             img{
+              margin-top: 10px;
+              height: 50px;
+             }
+                }
+
+            .other-img {
+              flex: 1;
+              margin-right: 10px; /* 添加其他圖像之間的間距 */
+            }
+
+            .other-img:last-child {
+              margin-right: 0; /* 移除最後一個元素的右邊距 */
+            }
         `}
       </style>
     </>

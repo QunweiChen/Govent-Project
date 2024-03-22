@@ -25,7 +25,6 @@ function OrganizerOtptionForm() {
     price: '',
     max_quantity: '',
     contain: '',
-    start_time: '',
   })
   const [optionFormData2, setOptionFormData2] = useState({
     event_id: '',
@@ -33,7 +32,6 @@ function OrganizerOtptionForm() {
     price: '',
     max_quantity: '',
     contain: '',
-    start_time: '',
   })
   const [optionFormData3, setOptionFormData3] = useState({
     event_id: '',
@@ -41,7 +39,6 @@ function OrganizerOtptionForm() {
     price: '',
     max_quantity: '',
     contain: '',
-    start_time: '',
   })
 
   const popAlert = (title, text) => {
@@ -114,113 +111,6 @@ function OrganizerOtptionForm() {
     console.log(optionFormData3)
   }
 
-  const checkUseDateInput1 = (e) => {
-    const { name, value } = e.target
-    const startDate = new Date(eventInfo.start_date)
-    startDate.setHours(startDate.getHours() - 8)
-    const endDate = new Date(eventInfo.end_date)
-    endDate.setHours(endDate.getHours() - 8)
-    if (new Date(value) < startDate) {
-      popAlert('請重新選擇', '不可早於活動開始時間')
-      inputRef.current.blur()
-      setOptionFormData1((prevState) => ({
-        ...prevState,
-        [name]: '',
-      }))
-      return
-    }
-    if (new Date(value) > endDate) {
-      popAlert('請重新選擇', '不可晚於活動結束時間')
-      inputRef.current.blur()
-      setOptionFormData1((prevState) => ({
-        ...prevState,
-        [name]: '',
-      }))
-      return
-    }
-  }
-
-  const checkUseDateInput2 = (e) => {
-    const { name, value } = e.target
-    const startDate = new Date(eventInfo.start_date)
-    startDate.setHours(startDate.getHours() - 8)
-    const endDate = new Date(eventInfo.end_date)
-    endDate.setHours(endDate.getHours() - 8)
-    if (new Date(value) < startDate) {
-      popAlert('請重新選擇', '不可早於活動開始時間')
-      inputRef.current.blur()
-      setOptionFormData2((prevState) => ({
-        ...prevState,
-        [name]: '',
-      }))
-      return
-    }
-    if (new Date(value) > endDate) {
-      popAlert('請重新選擇', '不可晚於活動結束時間')
-      inputRef.current.blur()
-      setOptionFormData2((prevState) => ({
-        ...prevState,
-        [name]: '',
-      }))
-      return
-    }
-  }
-
-  const checkUseDateInput3 = (e) => {
-    const { name, value } = e.target
-    const startDate = new Date(eventInfo.start_date)
-    startDate.setHours(startDate.getHours() - 8)
-    const endDate = new Date(eventInfo.end_date)
-    endDate.setHours(endDate.getHours() - 8)
-    if (new Date(value) < startDate) {
-      popAlert('請重新選擇', '不可早於活動開始時間')
-      inputRef.current.blur()
-      setOptionFormData3((prevState) => ({
-        ...prevState,
-        [name]: '',
-      }))
-      return
-    }
-    if (new Date(value) > endDate) {
-      popAlert('請重新選擇', '不可晚於活動結束時間')
-      inputRef.current.blur()
-      setOptionFormData3((prevState) => ({
-        ...prevState,
-        [name]: '',
-      }))
-      return
-    }
-  }
-
-  const setDate1 = () => {
-    const eventStartTime = new Date(eventInfo.start_date)
-    const formattedStartTime = eventStartTime.toISOString().slice(0, 16)
-
-    setOptionFormData1((prevState) => ({
-      ...prevState,
-      start_time: formattedStartTime,
-    }))
-  }
-
-  const setDate2 = () => {
-    const eventStartTime = new Date(eventInfo.start_date)
-    const formattedStartTime = eventStartTime.toISOString().slice(0, 16)
-
-    setOptionFormData2((prevState) => ({
-      ...prevState,
-      start_time: formattedStartTime,
-    }))
-  }
-
-  const setDate3 = () => {
-    const eventStartTime = new Date(eventInfo.start_date)
-    const formattedStartTime = eventStartTime.toISOString().slice(0, 16)
-
-    setOptionFormData3((prevState) => ({
-      ...prevState,
-      start_time: formattedStartTime,
-    }))
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -282,7 +172,7 @@ function OrganizerOtptionForm() {
                   >
                     <div className="bottom-line px-3 py-2 ">規格1</div>
                     <Row className="px-3 py-2">
-                      <Col sm="6">
+                      <Col sm="12">
                         <Form.Group className="mb-3" controlId="option_name">
                           <Form.Label>票卷規格名稱</Form.Label>
                           <Form.Control
@@ -293,29 +183,6 @@ function OrganizerOtptionForm() {
                             onChange={handleInputChange1}
                             required
                           />
-                        </Form.Group>
-                      </Col>
-                      <Col sm="6">
-                        <Form.Group className="mb-3" controlId="start_time">
-                          <Form.Label>使用時間</Form.Label>
-                          <div className="d-flex">
-                            <Form.Control
-                              type="datetime-local"
-                              name="start_time"
-                              value={optionFormData1.start_time}
-                              onChange={handleInputChange1}
-                              onBlur={checkUseDateInput1}
-                              ref={inputRef}
-                              required
-                            />
-                            <button
-                              type="button"
-                              className="ms-3 btn btn-normal-gray"
-                              onClick={setDate1}
-                            >
-                              設為活動開始日
-                            </button>
-                          </div>
                         </Form.Group>
                       </Col>
                       <Col sm="6">
@@ -370,7 +237,7 @@ function OrganizerOtptionForm() {
                     >
                       <div className="bottom-line px-3 py-2">規格2</div>
                       <Row className="px-3 py-2">
-                        <Col sm="6">
+                        <Col sm="12">
                           <Form.Group className="mb-3" controlId="option_name">
                             <Form.Label>票卷規格名稱</Form.Label>
                             <Form.Control
@@ -381,29 +248,6 @@ function OrganizerOtptionForm() {
                               onChange={handleInputChange2}
                               required
                             />
-                          </Form.Group>
-                        </Col>
-                        <Col sm="6">
-                          <Form.Group className="mb-3" controlId="start_time">
-                            <Form.Label>使用時間</Form.Label>
-                            <div className="d-flex">
-                              <Form.Control
-                                type="datetime-local"
-                                name="start_time"
-                                value={optionFormData2.start_time}
-                                onChange={handleInputChange2}
-                                onBlur={checkUseDateInput2}
-                                ref={inputRef}
-                                required
-                              />
-                              <button
-                                type="button"
-                                className="ms-3 btn btn-normal-gray"
-                                onClick={setDate2}
-                              >
-                                設為活動開始日
-                              </button>
-                            </div>
                           </Form.Group>
                         </Col>
                         <Col sm="6">
@@ -461,7 +305,7 @@ function OrganizerOtptionForm() {
                     >
                       <div className="bottom-line px-3 py-2">規格3</div>
                       <Row className="px-3 py-2">
-                        <Col sm="6">
+                        <Col sm="12">
                           <Form.Group className="mb-3" controlId="option_name">
                             <Form.Label>票卷規格名稱</Form.Label>
                             <Form.Control
@@ -472,29 +316,6 @@ function OrganizerOtptionForm() {
                               onChange={handleInputChange3}
                               required
                             />
-                          </Form.Group>
-                        </Col>
-                        <Col sm="6">
-                          <Form.Group className="mb-3" controlId="start_time">
-                            <Form.Label>使用時間</Form.Label>
-                            <div className="d-flex">
-                              <Form.Control
-                                type="datetime-local"
-                                name="start_time"
-                                value={optionFormData3.start_time}
-                                onChange={handleInputChange3}
-                                onBlur={checkUseDateInput3}
-                                ref={inputRef}
-                                required
-                              />
-                              <button
-                                type="button"
-                                className="ms-3 btn btn-normal-gray"
-                                onClick={setDate3}
-                              >
-                                設為活動開始日
-                              </button>
-                            </div>
                           </Form.Group>
                         </Col>
                         <Col sm="6">

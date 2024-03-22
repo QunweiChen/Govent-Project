@@ -46,7 +46,7 @@ export default function Carttoolbar() {
           </Link>
           <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton className="text-black">
-              <Modal.Title>請先登入會員</Modal.Title>
+              <Modal.Title>請先登入會員才可使用購物車</Modal.Title>
             </Modal.Header>
             <Modal.Body className="text-black">
               <p>

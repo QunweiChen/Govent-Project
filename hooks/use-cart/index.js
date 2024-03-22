@@ -80,6 +80,7 @@ export function CartProvider({
   //添加ok
   const addItem = (item) => {
     // 在新商品對象中添加 checked 屬性
+    console.log(item)
     const newItem = { ...item, checked: false }
 
     // 檢查是否已存在相同的商品，如果是，則執行 increment
