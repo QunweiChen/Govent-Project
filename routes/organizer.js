@@ -178,7 +178,6 @@ router.post('/add-options', async (req, res) => {
       price: DataTypes.INTEGER,
       max_quantity: DataTypes.INTEGER,
       contain: DataTypes.STRING,
-      start_time: DataTypes.DATE,
     },
     {
       // 指定表格名稱
@@ -241,26 +240,30 @@ router.get('/event/order/:eid', async (req, res) => {
         type: QueryTypes.SELECT,
       }
     )
-    let total = 0;
-    let qty = 0;
+    let total = 0
+    let qty = 0
 
-    userOrders.forEach(userOrder => {
-      const orderInfos = JSON.parse(userOrder.order_info);
-      
-      const filteredEvents = orderInfos.filter(orderInfo => orderInfo.eventId == eid);
+    userOrders.forEach((userOrder) => {
+      const orderInfos = JSON.parse(userOrder.order_info)
+
+      const filteredEvents = orderInfos.filter(
+        (orderInfo) => orderInfo.eventId == eid
+      )
       console.log(filteredEvents)
-      filteredEvents.forEach(event => {
-        total += event.price;
-        qty += event.qty;
-      });
-    });
+      filteredEvents.forEach((event) => {
+        total += event.price
+        qty += event.qty
+      })
+    })
 
-    res.json({ status: 'success', data: { total, qty } });
+    res.json({ status: 'success', data: { total, qty } })
   } catch (error) {
-    console.error('Error fetching user order data:', error);
-    res.status(500).json({ status: 'error', message: 'Failed to fetch user order data.' });
+    console.error('Error fetching user order data:', error)
+    res
+      .status(500)
+      .json({ status: 'error', message: 'Failed to fetch user order data.' })
   }
-});
+})
 
 router.get('/event/option/:eid', authenticate, async (req, res) => {
   try {
