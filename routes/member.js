@@ -71,12 +71,10 @@ router.post('/update', async (req, res) => {
 router.get('/favorites', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
-      'SELECT collection.*, event.event_name, event.banner, event.start_date, MIN(event_options.price) AS min_price ' +
+      'SELECT collection.*, event.event_name, event.banner, event.start_date ' +
         'FROM `collection` ' +
         'JOIN `event` ON collection.collection_activity_id = event.event_id ' +
-        'JOIN `event_options` ON collection.collection_activity_id = event_options.event_id ' +
-        'WHERE collection.collection_user_id = ? ' +
-        'GROUP BY collection.id, collection.collection_user_id, collection.collection_activity_id, event.event_name, event.banner, event.start_date',
+        'WHERE collection.collection_user_id = ? ',
       {
         replacements: [req.user.id],
         type: QueryTypes.SELECT,
@@ -87,6 +85,29 @@ router.get('/favorites', authenticate, async function (req, res) {
   } catch (error) {
     console.error('Error fetching data:', error)
     res.status(500).json({ status: 'error', message: 'Failed to fetch data.' })
+  }
+})
+
+router.post('/delete/:eventId', authenticate, async (req, res) => {
+  const eventId = req.params.eventId
+  const user_id = req.user.id
+  console.log(user_id)
+  try {
+    await sequelize.query(
+      'DELETE FROM `collection` WHERE collection_activity_id = :eventId AND collection_user_id = :user_id',
+      {
+        replacements: {
+          eventId: eventId,
+          user_id: user_id,
+        },
+        type: QueryTypes.DELETE,
+      }
+    )
+    res.json({ success: true, message: 'Favorite deleted successfully' })
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: 'Failed to delete favorite' })
   }
 })
 

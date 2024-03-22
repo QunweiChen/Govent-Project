@@ -309,6 +309,45 @@ router.get('/event/ticket/:eid', authenticate, async (req, res) => {
   }
 })
 
+router.post('/update-organizer', authenticate, async (req, res) => {
+  const {
+    organizer_type,
+    name,
+    bank_code,
+    bank_branch,
+    bank_name,
+    amount_number,
+    owner_name,
+    business_invoice,
+  } = req.body
+
+  try {
+    const updateOrganizer = await sequelize.query(
+      'UPDATE `organizer` SET organizer_type = :organizer_type, name = :name, bank_code = :bank_code, bank_branch = :bank_branch, bank_name = :bank_name, amount_number = :amount_number, owner_name = :owner_name, business_invoice = :business_invoice, update_at = :update_at WHERE user_id = :user_id',
+      {
+        replacements: {
+          organizer_type,
+          name,
+          bank_code,
+          bank_branch,
+          bank_name,
+          amount_number,
+          owner_name,
+          business_invoice,
+          update_at: new Date(),
+          user_id: req.user.id,
+        },
+        type: QueryTypes.INSERT,
+      }
+    )
+
+    res.json({ status: 'success', data: { updateOrganizer } })
+  } catch (error) {
+    console.error('Error updating user:', error)
+    res.status(500).json({ status: 'error', message: 'Failed to update user.' })
+  }
+})
+
 router.post('/add-organizer', authenticate, async (req, res) => {
   const {
     organizer_type,
