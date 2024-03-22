@@ -1,10 +1,24 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/router'
 
-
-const CustomEventCard = ({ backgroundImage, title, secondTitle, delay }) => {
+const CustomEventCard = ({
+  backgroundImage,
+  title,
+  secondTitle,
+  delay,
+  handleClick,
+  category,
+}) => {
   const [isHovered, setIsHovered] = useState(false)
+
+  //路由標籤用
+  const router = useRouter()
+  const handleCardClick = (category) => {
+    handleClick(category)
+    router.push(`/product/list/?category=${category}`)
+  }
 
   return (
     <motion.div
@@ -15,6 +29,7 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle, delay }) => {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: delay }}
+      onClick={() => handleCardClick(title)}
     >
       <i
         className={`bi bi-arrow-up-right-circle-fill text-white icon h4 ${
@@ -22,7 +37,7 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle, delay }) => {
         }`}
       ></i>
       <Link
-        href="/product/list/?category=${category}"
+        href={`/product/list/?category=${category}`}
         className={`text-white d-flex flex-column p-4 justify-content-end`}
       >
         <motion.h5

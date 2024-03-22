@@ -153,7 +153,7 @@ export default function Sidebar(props) {
           {City.map((region) => (
             <div
               key={region.id}
-              className="accordion-item bg-bg-gray text-white"
+              className="accordion-item regionColor text-white"
             >
               <h2 className="accordion-header" id={`heading-${region.id}`}>
                 <button
@@ -212,6 +212,12 @@ export default function Sidebar(props) {
           ))}
         </div>
       </div>
+      <style global jsx>{`
+        .regionColor {
+          background-color: #151515;
+          color: #fff;
+        }
+      `}</style>
     </>
   )
 }

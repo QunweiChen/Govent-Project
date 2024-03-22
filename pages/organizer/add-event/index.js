@@ -21,11 +21,13 @@ export default function OrganizerAddEvent() {
         <OrganizerSidebar />
         <div className="w-100 bg-bg-gray organizer-main d-flex flex-column">
           <OrganizerTopBar title="新增活動" />
-          <div className='on-main d-flex flex-column align-items-center justify-content-center'>
+          <div className="on-main d-flex flex-column align-items-center justify-content-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }} className="d-flex flex-column align-items-center justify-content-center">
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="d-flex flex-column align-items-center justify-content-center"
+            >
               <h5 className="mb-4">活動上架規範同意書</h5>
               <div className="p-4 border border-normal-gray rounded-4 terms-container mb-3">
                 <OrganizerTerms />
@@ -38,14 +40,18 @@ export default function OrganizerAddEvent() {
                 onChange={handleCheckboxChange}
                 label={`本人已詳細閱讀，並同意以上條款`}
               />
-              <div
-                className={`mt-3 fake-height`}>
+              <div className={`mt-3 fake-height`}>
                 <Link href="add-event/form">
                   <motion.button
                     initial={{ opacity: 0, x: 30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3 }}
-                    className={`btn btn-primary next-step ${isChecked ? 'checked' : ''}`}><h6 className='m-0'>開始新增</h6></motion.button>
+                    className={`btn btn-primary next-step ${
+                      isChecked ? 'checked' : ''
+                    }`}
+                  >
+                    <h6 className="m-0">開始新增</h6>
+                  </motion.button>
                 </Link>
               </div>
             </motion.div>
@@ -80,14 +86,14 @@ export default function OrganizerAddEvent() {
             height: 500px;
             overflow: scroll;
           }
-          .fake-height{
+          .fake-height {
             height: 50px;
           }
-          .next-step{
+          .next-step {
             display: none;
             transition: 300ms;
           }
-          .next-step.checked{
+          .next-step.checked {
             display: block;
           }
         `}
