@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaHeart } from 'react-icons/fa6';
 import { CiHeart } from 'react-icons/ci';
 import { useAuth } from '@/hooks/use-auth';
+import toast from 'react-hot-toast'
 
 import addFavToDatabase from '@/hooks/use-fav';
 
@@ -16,6 +17,10 @@ export default function FavIcon({ pid, events, setEvents }) {
 
   useEffect(() => {
     const getFav = async () => {
+      if (!uid) {
+        toast.error('會員才能使用!');
+        return; 
+      }
       try {
         // 發送API請求時包含uid作為參數
         const response = await fetch(`http://localhost:3005/api/Fav?uid=${uid}`);
