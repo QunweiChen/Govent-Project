@@ -100,7 +100,7 @@ export default function ProductQueryList() {
     // 設定主分類
     setMainCatIds(existingMainCatIds)
   }, [catIds])
-
+// !!~~~
   useEffect(() => {
     if (router.isReady) {
       // 從router.query得到所有查詢字串參數

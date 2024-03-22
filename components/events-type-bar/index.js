@@ -2,7 +2,16 @@ import React, { useState } from 'react'
 import CustomEventCard from './event-card'
 import { motion } from 'framer-motion'
 
+import Link from 'next/link'
+// import { useHistory } from 'react-router-dom'
+
 export default function EventsTypeBar() {
+  // const history = useHistory()
+  // const handleCategoryClick = () => {
+  //   // 更新 selectedCategories 状态
+  //   setSelectedCategories({ concert: true })
+  //   // history.push('/product/list')
+  // }
   return (
     <>
       <div className="d-flex justify-content-center py-5 mb-5">

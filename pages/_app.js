@@ -11,6 +11,8 @@ import { CartProvider } from '@/hooks/use-cart'
 // 載入認証用context
 import { AuthProvider } from '@/hooks/use-auth'
 import { GoogleAuthAuthProvider } from '@/hooks/firebase-google-auth'
+//類別用context
+import { CategoriesProvider } from '@/hooks/use-categories'
 // 載入動畫context
 import { LoaderProvider } from '@/hooks/use-loader'
 
@@ -33,11 +35,9 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <AuthProvider>
-      <GoogleAuthAuthProvider>
-        <LoaderProvider close={2} CustomLoader={CatLoader}>
-          <CartProvider>{getLayout(<Component {...pageProps} />)}</CartProvider>
-        </LoaderProvider>
-      </GoogleAuthAuthProvider>
+      <LoaderProvider close={2} CustomLoader={CatLoader}>
+        <CartProvider>{getLayout(<Component {...pageProps} />)}</CartProvider>
+      </LoaderProvider>
     </AuthProvider>
   )
 }
