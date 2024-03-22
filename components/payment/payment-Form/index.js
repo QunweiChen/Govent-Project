@@ -31,6 +31,7 @@ export default function PaymentForm({
   } = useForm()
   //結帳之後將資料傳送至後端
   const postSubmit = (data) => {
+    console.log(productData)
     let discountObj = discount
     //判斷是否有勾選優惠或點數折抵
     switch (true) {
