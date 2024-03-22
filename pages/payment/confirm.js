@@ -67,14 +67,20 @@ export default function Confirm() {
     arr.map((e) => {
       let qty = e.qty
       let eventID = e.eventId
-      let ticketName = e.ticketName
+      let eventOptionId = e.eventOptionId
+      let holdingTime = e.holdingTime
       for (let i = 0; i < qty; i++) {
         fetch(`http://localhost:3005/api/qrcode`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ eventID, orderID, ticketName }),
+          body: JSON.stringify({
+            eventID,
+            orderID,
+            eventOptionId,
+            holdingTime,
+          }),
         })
           .then((res) => res.json())
           .then((res) => {

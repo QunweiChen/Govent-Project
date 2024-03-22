@@ -52,7 +52,7 @@ export default function Toolbar({ handleShow }) {
   }, [])
 
   return (
-    <ul className="navbar-nav pe-2 d-flex align-items-center">
+    <ul className="navbar-nav pe-2 d-flex align-items-center justify-content-end w-100">
       <li className="nav-item">
         <Carttoolbar />
       </li>

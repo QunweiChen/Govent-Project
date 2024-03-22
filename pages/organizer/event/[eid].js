@@ -12,6 +12,8 @@ export default function OrganizerEvent() {
   const [eventInfo, setEventInfo] = useState([])
   const [eventOption, setEventOption] = useState([])
   const [eventTicket, setEventTicket] = useState([])
+  const [eventOrderTotal, setEventOrderTotal] = useState(0)
+  const [eventOrderQty, setEventOrderQty] = useState(0)
 
   const [searchKeyword, setSearchKeyword] = useState('')
   const [currentPage, setCurrentPage] = useState(0)
@@ -50,6 +52,25 @@ export default function OrganizerEvent() {
         // 檢查是否有資料並設定到 state 中
         if (data && data.data && data.data.result) {
           setEventOption(data.data.result)
+        } else {
+          console.warn('No data received from the server.')
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error))
+
+      fetch(`http://localhost:3005/api/organizer/event/order/${eid}`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // 檢查是否有資料並設定到 state 中
+        if (data && data.data) {
+          setEventOrderTotal(data.data.total)
+          setEventOrderQty(data.data.qty)
         } else {
           console.warn('No data received from the server.')
         }
@@ -217,30 +238,20 @@ export default function OrganizerEvent() {
                           <div className="control-bgc">
                             <div className="d-flex align-items-center">
                               <p className="m-0 right-line px-3 py-2">
-                                收藏數量
-                              </p>
-                              <h6 className="m-0 flex-1 text-center">555</h6>
-                            </div>
-                          </div>
-                        </Col>
-                        <Col sm="6">
-                          <div className="control-bgc">
-                            <div className="d-flex align-items-center">
-                              <p className="m-0 right-line px-3 py-2">
                                 銷售總數
                               </p>
-                              <h6 className="m-0 flex-1 text-center">2752</h6>
+                              <h6 className="m-0 flex-1 text-center">{eventOrderQty}</h6>
                             </div>
                           </div>
                         </Col>
-                        <Col sm="6">
+                        <Col sm="12">
                           <div className="control-bgc">
                             <div className="d-flex align-items-center">
                               <p className="m-0 right-line px-3 py-2">
                                 總銷售額
                               </p>
                               <h6 className="m-0 flex-1 text-center">
-                                2752556
+                                {eventOrderTotal}
                               </h6>
                             </div>
                           </div>
@@ -333,17 +344,6 @@ export default function OrganizerEvent() {
                                   <h6>最大數量：{option.max_quantity}</h6>
                                 </div>
                                 <h6>售價：{option.price}</h6>
-                                <p>
-                                  使用時間：
-                                  {option.start_time
-                                    ? option.start_time.split('T')[0]
-                                    : ''}{' '}
-                                  {option.start_time
-                                    ? option.start_time
-                                        .split('T')[1]
-                                        .slice(0, 5)
-                                    : ''}{' '}
-                                </p>
                               </div>
                               <div className="px-4 py-3">
                                 <p>{option.contain}</p>
@@ -402,11 +402,11 @@ export default function OrganizerEvent() {
                             <td>{ticket.order_number}</td>
                             <td>{ticket.ticket_code}</td>
                             <td>
-                              {ticket.create_at
-                                ? ticket.create_at.split('T')[0]
+                              {ticket.created_at
+                                ? ticket.created_at.split('T')[0]
                                 : ''}{' '}
-                              {ticket.create_at
-                                ? ticket.create_at.split('T')[1].slice(0, 8)
+                              {ticket.created_at
+                                ? ticket.created_at.split('T')[1].slice(0, 8)
                                 : ''}
                             </td>
                             <td>{ticket.name}</td>
@@ -514,7 +514,7 @@ export default function OrganizerEvent() {
           }
           .content {
             overflow: scroll;
-            max-height: 650px;
+            max-height: 600px;
             img {
               max-width: 100%;
             }

@@ -24,7 +24,7 @@ export default function OrganizerIndex() {
   useEffect(() => {
     const interval = setInterval(() => {
       incrementNumber(progressNumber, setProgressNumber, 1, 100)
-    }, 10)
+    }, 3)
 
     return () => clearInterval(interval)
   }, [progressNumber])
@@ -50,7 +50,7 @@ export default function OrganizerIndex() {
       .catch((error) => console.error('Error fetching data:', error))
     const timer = setTimeout(() => {
       setIsVisible(true)
-    }, 2000)
+    }, 1200)
 
     return () => clearTimeout(timer)
   }, [])

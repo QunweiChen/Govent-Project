@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form'
 import CheckboxInput from '../checkbox-input'
 import Image from 'react-bootstrap/Image'
 import GoventToast from '@/components/toast'
+import MoneyInfo from '@/components/payment/money-info'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '@/hooks/use-auth'
 
@@ -17,6 +18,7 @@ export default function PaymentForm({
   money = 0,
   productData = {},
   redeem = () => {},
+  couponMoney = 0,
 }) {
   //引入會員資料hook
   const { auth } = useAuth()
@@ -29,6 +31,7 @@ export default function PaymentForm({
   } = useForm()
   //結帳之後將資料傳送至後端
   const postSubmit = (data) => {
+    console.log(productData)
     let discountObj = discount
     //判斷是否有勾選優惠或點數折抵
     switch (true) {
@@ -347,13 +350,13 @@ export default function PaymentForm({
           </div>
         </div>
         {/* 折抵方式 */}
-        <div className="points-coupons-container d-flex row mb-3 gx-0">
+        <div className="points-coupons-container d-lg-flex d-block row mb-3 gx-0">
           <div>
             <h5>
               <i className="bi bi-wallet-fill"></i>付款方式
             </h5>
           </div>
-          <div className="point bg-bg-gray-secondary rounded-4  col me-2 py-3 px-4 ">
+          <div className="point bg-bg-gray-secondary rounded-4  col me-lg-2 py-3 px-4 mb-2">
             <div className="point-title  mb-1">
               <CheckboxInput
                 Content={`我要使用點數折抵（目前尚餘${pointData}點）`}
@@ -378,7 +381,7 @@ export default function PaymentForm({
               </div>
             </div>
           </div>
-          <div className="coupon bg-bg-gray-secondary rounded-4 col ms-2 py-3 px-4">
+          <div className="coupon bg-bg-gray-secondary rounded-4 col ms-lg-2 py-3 px-4">
             <div className="point-title d-flex">
               <CheckboxInput
                 Content={'我要使用優惠卷'}
@@ -431,7 +434,7 @@ export default function PaymentForm({
             {/* 輸入信用卡內容 */}
             {radioValue == 'creditCard' && (
               <GoventToast radioValue={radioValue}>
-                <div className="d-flex">
+                <div className="d-lg-flex d-block">
                   <div className="col-md-4 px-2">
                     <label
                       htmlFor="cardNumber"
@@ -464,7 +467,7 @@ export default function PaymentForm({
                   </div>
                   <div className="col-md-4 px-2 ">
                     <Form.Group
-                      className="mb-3 col-md-3 px-2 w-100"
+                      className="mb-3 col-md-3 w-100"
                       controlId="formGroup"
                     >
                       <Form.Label className="form-label sm-p text-normal-gray-light ">
@@ -573,6 +576,17 @@ export default function PaymentForm({
               <Image src="/line-pay/LINE Pay_logo-02.png" />
             </label>
           </div>
+        </div>
+        {/* 訂單金額 手機版 */}
+        <div className="bg-bg-gray-secondary  rounded-4 py-3 px-4  d-lg-none d-block mb-3">
+          <MoneyInfo
+            productData={productData}
+            discount={discount}
+            discountState={discountState}
+            couponMoney={couponMoney}
+            money={money}
+            redeem={redeem}
+          />
         </div>
         {/* 送出資料 */}
         <div className="form-check agree d-flex justify-content-center mb-2 align-items-center">
