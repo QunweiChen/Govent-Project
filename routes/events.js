@@ -20,6 +20,7 @@ router.get('/', async function (req, res) {
     INNER JOIN \`activity_category\` 
     ON event.event_type_id = activity_category.id 
     LEFT JOIN \`event_options\` ON event.id = event_options.event_id 
+    WHERE event.end_date < CURDATE() 
     GROUP BY event.id;`,
     {
       type: QueryTypes.SELECT,
@@ -44,6 +45,7 @@ router.get('/:id', async (req, res) => {
     SELECT event.*,
     activity_category.*,
     event_options.*,
+    favorites.*,
     event.event_id AS pid,
     activity_category.id AS category_id,
     activity_category.activity_name AS category_name,
@@ -53,6 +55,7 @@ router.get('/:id', async (req, res) => {
     INNER JOIN \`activity_category\`
     ON event.event_type_id = activity_category.id
     LEFT JOIN \`event_options\` ON event.event_id = event_options.event_id
+    LEFT JOIN  \`favorites\` ON event.event_id = favorites.pid
     WHERE event.event_id = :eventId
     GROUP BY event.id;
     `,
