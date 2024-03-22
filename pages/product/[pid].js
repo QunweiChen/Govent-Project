@@ -91,10 +91,9 @@ export default function Detail() {
   useEffect(() => {
     if (pid) {
       getOptionTickets(pid)
-      console.log(ticketInfo)
     }
   }, [pid])
-
+  console.log(ticketInfo)
   const getAll = (ticketInfo, selectDate) => {
     console.log(selectDate)
     // 使用 Date 物件來解析原始日期字串

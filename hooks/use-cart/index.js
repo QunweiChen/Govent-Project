@@ -84,7 +84,9 @@ export function CartProvider({
     const newItem = { ...item, checked: false }
 
     // 檢查是否已存在相同的商品，如果是，則執行 increment
-    const foundIndex = cartItems.findIndex((v) => v.id === item.id)
+    const foundIndex = cartItems.findIndex(
+      (v) => v.id === item.id && v.holdingTime === item.holdingTime
+    )
     if (foundIndex > -1) {
       increment(cartItems, item.id)
     } else {

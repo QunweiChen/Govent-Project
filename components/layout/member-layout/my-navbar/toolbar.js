@@ -46,7 +46,7 @@ export default function Toolbar({ handleShow }) {
       .catch((error) => console.error('Error fetching data:', error))
   }, [])
   useEffect(() => {
-    if (auth.isAuthenticated === false) {
+    if (!auth.isAuthenticated && !auth.user) {
       setCartItems([])
     }
   }, [])
