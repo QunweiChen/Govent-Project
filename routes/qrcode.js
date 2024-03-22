@@ -14,7 +14,8 @@ router.post('/', (req, res) => {
   let json = {
     ticket_code: `${body.eventID}-${number}`,
     order_number: body.orderID,
-    event_option_name: body.ticketName,
+    event_option_id: body.eventOptionId,
+    holding_time: body.holdingTime,
   }
   //把產生的資料寫入ticket資料表
   ticket.create(json)

@@ -17,12 +17,12 @@ export default async function (sequelize) {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      event_option_name: {
-        type: DataTypes.STRING,
+      event_option_id: {
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
-      hold_time: {
-        type: DataTypes.STRING,
+      holding_time: {
+        type: DataTypes.DATE,
         allowNull: true,
       },
     },
