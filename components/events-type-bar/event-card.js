@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
+
 const CustomEventCard = ({ backgroundImage, title, secondTitle, delay }) => {
   const [isHovered, setIsHovered] = useState(false)
 
@@ -21,7 +22,7 @@ const CustomEventCard = ({ backgroundImage, title, secondTitle, delay }) => {
         }`}
       ></i>
       <Link
-        href="/"
+        href="/product/list/?category=${category}"
         className={`text-white d-flex flex-column p-4 justify-content-end`}
       >
         <motion.h5
