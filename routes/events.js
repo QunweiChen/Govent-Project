@@ -20,6 +20,7 @@ router.get('/', async function (req, res) {
     INNER JOIN \`activity_category\` 
     ON event.event_type_id = activity_category.id 
     LEFT JOIN \`event_options\` ON event.id = event_options.event_id 
+    WHERE event.end_date < CURDATE() 
     GROUP BY event.id;`,
     {
       type: QueryTypes.SELECT,
