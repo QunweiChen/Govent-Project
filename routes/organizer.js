@@ -178,7 +178,6 @@ router.post('/add-options', async (req, res) => {
       price: DataTypes.INTEGER,
       max_quantity: DataTypes.INTEGER,
       contain: DataTypes.STRING,
-      start_time: DataTypes.DATE,
     },
     {
       // 指定表格名稱
@@ -232,6 +231,40 @@ router.get('/event/:eid', authenticate, async (req, res) => {
   }
 })
 
+router.get('/event/order/:eid', async (req, res) => {
+  const eid = req.params.eid
+  try {
+    const userOrders = await sequelize.query(
+      'SELECT order_info FROM user_order ',
+      {
+        type: QueryTypes.SELECT,
+      }
+    )
+    let total = 0
+    let qty = 0
+
+    userOrders.forEach((userOrder) => {
+      const orderInfos = JSON.parse(userOrder.order_info)
+
+      const filteredEvents = orderInfos.filter(
+        (orderInfo) => orderInfo.eventId == eid
+      )
+      console.log(filteredEvents)
+      filteredEvents.forEach((event) => {
+        total += event.price
+        qty += event.qty
+      })
+    })
+
+    res.json({ status: 'success', data: { total, qty } })
+  } catch (error) {
+    console.error('Error fetching user order data:', error)
+    res
+      .status(500)
+      .json({ status: 'error', message: 'Failed to fetch user order data.' })
+  }
+})
+
 router.get('/event/option/:eid', authenticate, async (req, res) => {
   try {
     const eid = req.params.eid
@@ -256,11 +289,11 @@ router.get('/event/ticket/:eid', authenticate, async (req, res) => {
   try {
     const eid = req.params.eid
     const result = await sequelize.query(
-      'SELECT ticket.* , event_options.event_id, event_options.option_name, event.event_id, user_order.order_number, user_order.user_id, user_order.create_at, member.name ' +
+      'SELECT ticket.* , event_options.event_id, event_options.option_name, event.event_id, user_order.order_id, user_order.user_id, user_order.created_at, member.name ' +
         'FROM `ticket` ' +
         'JOIN `event_options` ON ticket.event_option_id = event_options.id ' +
         'JOIN `event` ON event.event_id = event_options.event_id ' +
-        'JOIN `user_order` ON user_order.order_number = ticket.order_number ' +
+        'JOIN `user_order` ON user_order.order_id = ticket.order_number ' +
         'JOIN `member` ON user_order.user_id = member.id ' +
         'WHERE event.event_id = :eid ',
       {
