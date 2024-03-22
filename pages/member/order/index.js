@@ -62,7 +62,7 @@ export default function MemberOrder() {
                   </div>
                   <div className="p-3 d-flex">
                     <div className="event-img me-4 d-flex flex-column">
-                      <div className="flex-1">
+                      <div className="flex-1 main-img">
                         <img
                           src={`http://localhost:3005/images/banner/${
                             JSON.parse(data.order_info)[0].images
@@ -72,39 +72,37 @@ export default function MemberOrder() {
                         />
                       </div>
                       <div className="d-flex others-imgs">
-                        {JSON.parse(data.order_info).map(
-                          (event, index) => (
-                            <>
-                              {index > 0 && (
-                                <div key={index} className="other-img">
-                                  <img
-                                    src={`http://localhost:3005/images/banner/${event.images}`}
-                                    alt=""
-                                    className=""
-                                  />
-                                </div>
-                              )}
-                            </>
-                          )
-                        )}
+                        {JSON.parse(data.order_info).map((event, index) => (
+                          <>
+                            {index > 0 && (
+                              <div key={index} className="other-img">
+                                <img
+                                  src={`http://localhost:3005/images/banner/${event.images}`}
+                                  alt=""
+                                  className=""
+                                />
+                              </div>
+                            )}
+                          </>
+                        ))}
                       </div>
                     </div>
                     <div className="me-2 content d-flex flex-column justify-content-between">
                       <div>
-                      {JSON.parse(data.order_info).map(
-                          (event, index) => (
-                            <h6 key={index}>．{event.eventName}</h6>
-                          )
-                        )}
+                        {JSON.parse(data.order_info).map((event, index) => (
+                          <h6 key={index}>．{event.eventName}</h6>
+                        ))}
                       </div>
                       <div className="d-flex justify-content-between align-items-end">
                         <div>
-                        <h6 className="text-primary-deep">
-                          總金額 ${data.total}
-                        </h6>
-                        <p className='sm-p'>建立時間 {data.created_at.split('T')[0]}</p>
+                          <h6 className="text-primary-deep">
+                            總金額 ${data.total}
+                          </h6>
+                          <p className="sm-p">
+                            建立時間 {data.created_at.split('T')[0]}
+                          </p>
                         </div>
-                        
+
                         <Link href={`order/${data.order_id}`}>
                           <button className="btn btn-primary text-white">
                             查看詳情
@@ -159,6 +157,9 @@ export default function MemberOrder() {
           .event-img {
             position: relative;
             width: 160px;
+            .main-img{
+              max-height: 120px;
+            }
             img {
               border-radius: 5px;
               width: 100%;
