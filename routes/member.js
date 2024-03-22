@@ -218,7 +218,8 @@ router.get('/order', authenticate, async function (req, res) {
     const result = await sequelize.query(
       'SELECT user_order.* ' +
         'FROM `user_order` ' +
-        'WHERE user_order.user_id = ?',
+        'WHERE user_order.user_id = ? ' +
+        'ORDER BY user_order.id DESC', // 在此添加 ORDER BY 子句,
       {
         replacements: [req.user.id],
         type: QueryTypes.SELECT,
