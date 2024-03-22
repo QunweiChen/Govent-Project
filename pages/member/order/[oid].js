@@ -88,7 +88,7 @@ export default function MemberOrderInfo() {
       .then((data) => {
         // 檢查是否有資料並設定到 state 中
         if (data && data.data && data.data.result) {
-          const filteredTickets = data.data.result.filter(ticket => ticket.event_id === eventInfoId);
+          const filteredTickets = data.data.result.filter(ticket => ticket.event_id == eventInfoId);
           setTickets(filteredTickets);
         } else {
           console.warn('No order data received from the server.')
