@@ -475,7 +475,7 @@ export default function Detail() {
 
             {/* 按鈕 */}
             <div className="d-inline-flex d-xxl-none align-items-center justify-content-center col-12 bg-bg-gray-secondary p-3 rounded-3">
-              <h5 className="col-8">NT$ 3,200 起</h5>
+              <h5 className="col-8">NT$ {minPrice} 起</h5>
               <button
                 className="store fs-6 fw-bold p-2 btn btn-primary col-3"
                 data-bs-toggle="modal"
@@ -485,79 +485,87 @@ export default function Detail() {
               </button>
             </div>
             {/* 彈跳視窗 */}
-            <div
-              className="modal fade"
-              id="exampleModal"
-              tabindex="-1"
-              aria-labelledby="exampleModalLabel"
-              aria-hidden="true"
-            >
-              <div className="modal-dialog">
-                <div className="modal-content bg-bg-gray-secondary">
-                  <div className="modal-header">
-                    <h5 className="modal-title" id="exampleModalLabel">
-                      選擇規格
-                    </h5>
-                    <button
-                      type="button"
-                      className="btn-close"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                    ></button>
-                  </div>
-                  <div className="modal-body">
-                    <div className="d-flex justify-content-between seat1 mt-3">
-                      <h5 className="">1F 站位</h5>
-                      <h5 className="">NT$ 3,200</h5>
-                      <button className="store col-2 btn btn-primary-deep">
-                        選擇
-                      </button>
-                    </div>
-                    <div className="d-flex justify-content-between seat1 my-3">
-                      <h5 className="">2F 座位</h5>
-                      <h5 className="">NT$ 3,200</h5>
-                      <button className="store col-2 btn btn-primary-deep">
-                        選擇
-                      </button>
-                    </div>
-                    <div className="text-center mx-4">
-                      <Calendar />
-                    </div>
-
-                    <br />
-
-                    <div className="d-flex align-items-center justify-content-between mt-3 border border-1 p-2 rounded-4">
-                      <h5 className="ms-2 text-secondary-03">數量</h5>
-                      <div className="d-flex align-items-center">
-                        <i
+            {ticketInfo.map((v, i) => {
+              return (
+                <div
+                  className="modal fade"
+                  id="exampleModal"
+                  tabindex="-1"
+                  aria-labelledby="exampleModalLabel"
+                  aria-hidden="true"
+                >
+                  <div className="modal-dialog">
+                    <div className="modal-content bg-bg-gray-secondary">
+                      <div className="modal-header">
+                        <h5 className="modal-title" id="exampleModalLabel">
+                          選擇規格
+                        </h5>
+                        <button
                           type="button"
-                          className="bi bi-dash-circle me-2 icon"
-                          onClick={handleDecrease}
-                        />
-                        <h5 className="px-3">"哈"</h5>
-                        <i
+                          className="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div className="modal-body">
+                        <div className="d-flex justify-content-between seat1 my-4">
+                          <h5 className="">{v.option_name}</h5>
+                          <h5 className="">NT$ {parseInt(v.price).toLocaleString()}</h5>
+                          <button className="store col-2 btn btn-primary-deep">
+                            選擇
+                          </button>
+                        </div>
+                        {/* <div className="d-flex justify-content-between seat1 my-3">
+                          <h5 className="">2F 座位</h5>
+                          <h5 className="">NT$ 3,200</h5>
+                          <button className="store col-2 btn btn-primary-deep">
+                            選擇
+                          </button>
+                        </div> */}
+                        <div className="text-center mx-4">
+                          <Calendar
+                            sellStartDate={startDate}
+                            sellEndDate={endDate}
+                            setSelectDate={setSelectDate}
+                          />
+                        </div>
+
+                        <br />
+
+                        <div className="d-flex align-items-center justify-content-between mt-3 border border-1 p-2 rounded-4">
+                          <h5 className="ms-2 text-secondary-03">數量</h5>
+                          <div className="d-flex align-items-center">
+                            <i
+                              type="button"
+                              className="bi bi-dash-circle me-2 icon"
+                              onClick={() => { handleDecrease(ticketInfo, v.id) }}
+                            />
+                            <h5 className="px-3">{v.qty}</h5>
+                            <i
+                              type="button"
+                              className="bi bi-plus-circle ms-2 icon me-2"
+                              onClick={() => { handleIncrease(ticketInfo, v.id) }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="modal-footer">
+                        <button
                           type="button"
-                          className="bi bi-plus-circle ms-2 icon me-2"
-                          onClick={handleIncrease}
-                        />
+                          className="btn btn-primary-deep text-white"
+                          data-bs-dismiss="modal"
+                        >
+                          加入購物車
+                        </button>
+                        <button type="button" className="btn btn-primary text-white" data-bs-dismiss="modal">
+                          取消
+                        </button>
                       </div>
                     </div>
                   </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-primary-deep text-white"
-                      data-bs-dismiss="modal"
-                    >
-                      加入購物車
-                    </button>
-                    <button type="button" className="btn btn-primary text-white" data-bs-dismiss="modal">
-                      立即訂購
-                    </button>
-                  </div>
                 </div>
-              </div>
-            </div>
+              )
+            })}
           </main>
         ))}
       </>
@@ -621,10 +629,10 @@ export default function Detail() {
             }
             margin: 40px auto;
           }
-          .avatar {
+          {/* .avatar {
             width: 60px;
             height: 60px;
-          }
+          } */}
           .custom-card {
             border: none;
             background-color: #151515;
