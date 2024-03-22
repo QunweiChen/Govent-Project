@@ -18,7 +18,7 @@ import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
 import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
 import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
-import Sidebar from '@/components/layout/list-layout/sidebar'
+import Sidebar from '@/components/layout/list-layout/sidebar-copy'
 
 //篩選用components
 import FilterBar from '@/components/layout/list-layout/FilterBar'
@@ -67,8 +67,13 @@ export default function List() {
       const categoryMatch =
         selectedCategories.length === 0 ||
         selectedCategories.includes(event.category_name)
+      // const regionMatch =
+      //   selectedRegions.length === 0 || selectedRegions.includes(event.str)
       const regionMatch =
-        selectedRegions.length === 0 || selectedRegions.includes(event.str)
+        !selectedRegions ||
+        selectedRegions.length === 0 ||
+        selectedRegions.includes(event.str)
+
       const searchMatch =
         !searchWord ||
         event.event_name.toLowerCase().includes(searchWord.toLowerCase())

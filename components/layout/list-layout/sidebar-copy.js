@@ -15,45 +15,77 @@ export default function Sidebar(props) {
     '景點門票',
   ]
 
-  // const [setSelectedCategories, selectedCategories] = useCategories()
+  // If useCategories returns { selectedCategories: ..., setSelectedCategories: ... }
+  const { selectedCategories, setSelectedCategories } = useCategories()
 
   // const [selectedCategories, setSelectedCategories] = useState({})
-  const [selectedRegions, setSelectedRegions] = useState([])
+  const [selectedRegions, setSelectedRegions] = useState({})
 
-  // useEffect(() => {
-  //   const selectedCategoriesArray = Object.keys(selectedCategories).filter(
-  //     (category) => selectedCategories[category]
-  //   )
-  //   const selectedRegionsNames = Object.keys(selectedRegions).filter(
-  //     (regionOrCityName) => selectedRegions[regionOrCityName]
-  //   )
+  useEffect(() => {
+    const selectedCategoriesArray = Object.keys(selectedCategories).filter(
+      (category) => selectedCategories[category]
+    )
+    const selectedRegionsNames = Object.keys(selectedRegions).filter(
+      (regionOrCityName) => selectedRegions[regionOrCityName]
+    )
 
-  //   // 回傳選擇的篩選條件給父元素
-  //   props.onFilterChange(selectedCategoriesArray, selectedRegionsNames)
-  // }, [selectedCategories, selectedRegions])
+    // 回傳選擇的篩選條件給父元素
+    props.onFilterChange(selectedCategoriesArray, selectedRegionsNames, props)
+  }, [selectedCategories, selectedRegions, props])
 
+  //路由指定串
   const router = useRouter()
-  const defaultSelectedCategories = { 演唱會: true }
+  // const defaultSelectedCategories = { 演唱會: true }
   const handleOnChange = (category) => {
     const newSelectedCategories = {
       ...selectedCategories,
       [category]: !selectedCategories[category],
     }
-    setSelectedCategories(newSelectedCategories)
-    //查詢用參數
-    // const query = {
-    //   selectedCategories: Object.keys(newSelectedCategories).filter(
-    //     (cat) => newSelectedCategories[cat]
-    //   ),
-    // }
-    // 更新路由查詢
-    // router.push({
-    //   pathname: router.pathname,
-    //   query,
-    // })
-  }
-  // props.onFilterChange(selectedCategories)
+    setSelectedCategories(newSelectedCategories) // Update the local state
 
+    // Update the router query parameters
+    // This should be done after defining newSelectedCategories and ideally, after the state is updated
+    const query = {
+      selectedCategories: Object.keys(newSelectedCategories).filter(
+        (cat) => newSelectedCategories[cat]
+      ),
+    }
+
+    // You might want to perform this routing action after ensuring the state has been updated
+    // However, React state updates are asynchronous, so consider implications for user experience
+    router.push(
+      {
+        pathname: router.pathname,
+        query,
+      },
+      undefined,
+      { shallow: true }
+    ) // Opting for shallow routing to avoid re-running data fetching methods on the page
+
+    // Propagate changes upwards if necessary
+    // This might be redundant or need to be moved into an effect depending on your use case
+    props.onFilterChange(
+      Object.keys(newSelectedCategories).filter(
+        (cat) => newSelectedCategories[cat]
+      )
+    )
+  }
+  useEffect(() => {
+    const query = {
+      selectedCategories: Object.keys(selectedCategories).filter(
+        (cat) => selectedCategories[cat]
+      ),
+    }
+
+    router.push(
+      {
+        pathname: router.pathname,
+        query,
+      },
+      undefined,
+      { shallow: true }
+    )
+  }, [selectedCategories, router])
 
   const handleSelectAll = () => {
     const newSelection = {}
@@ -66,20 +98,6 @@ export default function Sidebar(props) {
     }
     setSelectedCategories(newSelection)
   }
-
-  // const handleRegionCheckboxChange = (regionName, isChecked) => {
-  //   setSelectedRegions((prevState) => ({
-  //     ...prevState,
-  //     [regionName]: isChecked,
-  //   }))
-  // }
-
-  // const handleCityCheckboxChange = (cityName, isChecked) => {
-  //   setSelectedRegions((prevState) => ({
-  //     ...prevState,
-  //     [cityName]: isChecked,
-  //   }))
-  // }
 
   const handleRegionCheckboxChange = (regionName, isChecked) => {
     const region = City.find((r) => r.name === regionName)
