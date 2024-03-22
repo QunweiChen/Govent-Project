@@ -31,8 +31,8 @@ export default function FavIcon({ pid, events, setEvents }) {
     getFav();
   }, [uid]);
 
-  console.log(favorites);
-  console.log(uid);
+  // console.log(favorites);
+  // console.log(uid);
 
   // 渲染出愛心狀態
   const renderFavoriteIcon = (uid, pid) => {
@@ -45,7 +45,7 @@ export default function FavIcon({ pid, events, setEvents }) {
 
   const handleAddFav = async (pid, uid) => {
     try {
-      console.log('Adding to favorites:', pid, uid);
+      // console.log('Adding to favorites:', pid, uid);
       const response = await fetch(
         `http://localhost:3005/api/Fav/${pid}/${uid}`,
         {
@@ -57,7 +57,7 @@ export default function FavIcon({ pid, events, setEvents }) {
         }
       );
       if (response.status === 200) {
-        console.log('Successfully added to favorites');
+        // console.log('Successfully added to favorites');
         setFavorites([...favorites, { pid, uid }]);
       } else {
         console.error('Failed to add to favorites:', response.statusText);
@@ -69,7 +69,7 @@ export default function FavIcon({ pid, events, setEvents }) {
 
   const handleRemoveFav = async (pid, uid) => {
     try {
-      console.log('Removing from favorites:', pid, uid);
+      // console.log('Removing from favorites:', pid, uid);
       const response = await fetch(
         `http://localhost:3005/api/Fav/${pid}/${uid}`,
         {
@@ -81,13 +81,13 @@ export default function FavIcon({ pid, events, setEvents }) {
         }
       );
       if (response.status === 200) {
-        console.log('Successfully removed from favorites');
+        // console.log('Successfully removed from favorites');
         setFavorites(favorites.filter(fav => fav.pid !== pid));
       } else {
-        console.error('Failed to remove from favorites:', response.statusText);
+        // console.error('Failed to remove from favorites:', response.statusText);
       }
     } catch (error) {
-      console.error('Error removing from favorites:', error);
+      // console.error('Error removing from favorites:', error);
     }
   };
 
@@ -110,7 +110,7 @@ export default function FavIcon({ pid, events, setEvents }) {
         setFavorites([...favorites, { pid, uid }]);
       }
     } catch (error) {
-      console.error('Error toggling favorite:', error);
+      // console.error('Error toggling favorite:', error);
     }
   };
 

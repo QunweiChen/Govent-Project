@@ -17,8 +17,8 @@ import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
 import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
-import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
-import Sidebar from '@/components/layout/list-layout/sidebar-copy'
+import NavbarTopRwd from '@/components/layout/list-layout/navbar-top-copy'
+import Sidebar from '@/components/layout/list-layout/sidebar'
 
 //篩選用components
 import FilterBar from '@/components/layout/list-layout/FilterBar'
@@ -132,14 +132,14 @@ export default function List() {
   return (
     <>
       {/* <useEvents> */}
-      <nav className="header container navbar-expand mt-5 w-1200">
+      <nav className="header container navbar-expand mt-5 mb-3 w-1200">
         <h5 className="d-flex justify-content-between">
           <div className="bg-bg-gray-secondary rounded-3">
             <p className="mx-4 my-2">
               目前共有 {filteredEvents?.length} 筆 結果
             </p>
           </div>
-          <section>
+         
             <SearchForm
               searchWord={searchWord}
               onSearch={handleSearch} // 正确传递搜索回调函数
@@ -154,7 +154,6 @@ export default function List() {
               onDate={handleDateEvents}
               onPrice={handlePriceEvents}
             />
-          </section>
         </h5>
       </nav>
       <nav className="header-m">

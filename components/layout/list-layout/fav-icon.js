@@ -1,3 +1,4 @@
+// *老師提供的範例
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { addFav, removeFav } from '@/services/user'

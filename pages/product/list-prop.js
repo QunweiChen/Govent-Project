@@ -63,7 +63,7 @@ export default function List() {
     }
   }, [data])
 
-  console.log(events)
+  // console.log(events)
   const handleSetEvents = (newEvents) => {
     setEvents(newEvents)
   } //傳回收藏函式
@@ -104,14 +104,14 @@ export default function List() {
   //搜尋
   const handleSearch = (searchWord) => {
     if (typeof searchWord !== 'string' || searchWord.length === 0) {
-      console.log('Search keyword is empty')
+      // console.log('Search keyword is empty')
       return events
     } else {
-      console.log('Searching for:', searchWord)
+      // console.log('Searching for:', searchWord)
       const filteredEvents = events.filter((event) => {
         return event.event_name.toLowerCase().includes(searchWord.toLowerCase())
       })
-      console.log('Filtered Events:', filteredEvents)
+      // console.log('Filtered Events:', filteredEvents)
       return filteredEvents
     }
   }
@@ -143,7 +143,7 @@ export default function List() {
   }, [searchWord, selectedCategories, selectedRegions, events]) // 确保在这些依赖项变化时重新筛选
 
   const newFilteredEvents = getFilteredEvents()
-  console.log(newFilteredEvents)
+  // console.log(newFilteredEvents)
 
   // Get current events for pagination
   const indexOfLastEvent = currentPage * postsPerPage
@@ -178,7 +178,7 @@ export default function List() {
   // }, [events, searchWord])
 
   // 现在，我们可以在 filteredEvents 中访问筛选后的事件列表
-  console.log(filteredEvents)
+  // console.log(filteredEvents)
 
   // 通过搜索关键字筛选事件
   const searchFilteredEvents = handleSearch(events, searchWord)
@@ -186,7 +186,7 @@ export default function List() {
   // 获取所有符合筛选条件的事件
   const allFilteredEvents = [...newFilteredEvents, ...searchFilteredEvents]
 
-  console.log(currentEvents)
+  // console.log(currentEvents)
 
   //篩選後引導回首頁
   useEffect(() => {

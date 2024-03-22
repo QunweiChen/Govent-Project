@@ -13,7 +13,7 @@ const SearchForm = ({ onSearch }) => {
   }
 
   return (
-    <div className="ms-auto pe-3 mt-3 mt-lg-2">
+    <div className="ms-auto pe-1 mt-1 mt-lg-0">
       <form
         className="d-flex bg-search-bar rounded"
         role="search"
