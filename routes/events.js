@@ -52,7 +52,7 @@ router.get('/:id', async (req, res) => {
     FROM \`event\`
     INNER JOIN \`activity_category\`
     ON event.event_type_id = activity_category.id
-    LEFT JOIN \`event_options\` ON event.id = event_options.event_id
+    LEFT JOIN \`event_options\` ON event.event_id = event_options.event_id
     WHERE event.event_id = :eventId
     GROUP BY event.id;
     `,
@@ -64,5 +64,25 @@ router.get('/:id', async (req, res) => {
 
   // 標準回傳JSON
   return res.json({ status: 'success', data: { posts } })
+})
+
+//抓取event_option資料
+router.get('/option/:id', async (req, res) => {
+  const id = req.params.id
+  try {
+    const result = await sequelize.query(
+      'SELECT event_options.id AS option_id, event_options.*, event.* FROM `event_options` JOIN event ON event_options.event_id = event.event_id WHERE event_options.event_id = :eventId',
+      {
+        replacements: { eventId: id },
+        type: QueryTypes.SELECT,
+      }
+    )
+
+    return res.json({ status: 'success link favorites', data: { result } })
+  } catch (error) {
+    console.error('Error fetching data:', error)
+    res.status(500).json({ status: 'error', message: 'Failed to fetch data.' })
+  }
+  // 標準回傳JSON
 })
 export default router
