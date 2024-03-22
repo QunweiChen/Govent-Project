@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import CustomEventCard from './event-card'
 import { motion } from 'framer-motion'
-
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 // import { useHistory } from 'react-router-dom'
 
@@ -12,6 +12,10 @@ export default function EventsTypeBar() {
   //   setSelectedCategories({ concert: true })
   //   // history.push('/product/list')
   // }
+  const router = useRouter()
+  const handleClick = (category) => {
+    router.push(`/product/list/?category=${category}`)
+  }
   return (
     <>
       <div className="d-flex justify-content-center py-5 mb-5">
@@ -24,12 +28,14 @@ export default function EventsTypeBar() {
               title="演唱會"
               secondTitle="Concert"
               delay="0.1"
+              onClick={() => handleClick('演唱會')}
             />
             <CustomEventCard
               backgroundImage="/images/events-type/exhibition.jpg"
               title="展覽"
               secondTitle="Exhibition"
               delay="0.2"
+              onClick={() => handleClick('演唱會')}
             />
             <CustomEventCard
               backgroundImage="/images/events-type/popup.jpg"

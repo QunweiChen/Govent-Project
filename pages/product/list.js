@@ -35,7 +35,7 @@ import SearchForm from '@/components/layout/list-layout/search-form'
 
 export default function List() {
   const { data } = useEvents()
-  const { router } = useRouter()
+  const router = useRouter()
 
   const [events, setEvents] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -44,6 +44,7 @@ export default function List() {
   const [selectedRegions, setSelectedRegions] = useState([])
   const [searchWord, setSearchWord] = useState('')
   const [filteredEvents, setFilteredEvents] = useState([])
+  const { query } = router
 
   //增加擴充屬性質(收藏)
   useEffect(() => {
@@ -139,21 +140,21 @@ export default function List() {
               目前共有 {filteredEvents?.length} 筆 結果
             </p>
           </div>
-         
-            <SearchForm
-              searchWord={searchWord}
-              onSearch={handleSearch} // 正确传递搜索回调函数
-            />
 
-            <NavbarTopRwd
-              events={events} //傳原始資料至props
-              setEvents={setEvents} // 将更新事件列表的函数传递给子组件
-              //回調元素
-              onSort={handleSortEvents}
-              onCity={handleCityEvents}
-              onDate={handleDateEvents}
-              onPrice={handlePriceEvents}
-            />
+          <SearchForm
+            searchWord={searchWord}
+            onSearch={handleSearch} // 正确传递搜索回调函数
+          />
+
+          <NavbarTopRwd
+            events={events} //傳原始資料至props
+            setEvents={setEvents} // 将更新事件列表的函数传递给子组件
+            //回調元素
+            onSort={handleSortEvents}
+            onCity={handleCityEvents}
+            onDate={handleDateEvents}
+            onPrice={handlePriceEvents}
+          />
         </h5>
       </nav>
       <nav className="header-m">
@@ -165,6 +166,7 @@ export default function List() {
             <Sidebar
               events={events} //傳原始資料至props
               onFilterChange={handleFilterChange}
+              selectedCategories={selectedCategories}
             />
           </div>
           <div className="col">
