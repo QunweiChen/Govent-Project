@@ -56,7 +56,11 @@ export default function Detail() {
         time3 = time3.substring(0, 5)
       }
       setSellTime(time3)
+      console.log(time3)
+      // console.log(date3)
 
+      //進入前面前先篩入預設值//anne改這
+      setSelectTime(time3)
       // getAll(ticketInfo,selectDate)
     } catch (e) {
       console.log(e)
