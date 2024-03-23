@@ -27,7 +27,7 @@ const CustomEventCard = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: delay }}
       onClick={() => handleCardClick(title)}
     >
@@ -42,7 +42,7 @@ const CustomEventCard = ({
       >
         <motion.h5
           initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 1 }}
           className="mb-0"
         >

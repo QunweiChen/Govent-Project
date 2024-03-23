@@ -25,7 +25,7 @@ export default function EventsBar() {
                     isHovered ? 'active' : ''
                   }`}
                   initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.4 }}
                 >
                   <div>
@@ -34,7 +34,7 @@ export default function EventsBar() {
                   <motion.div
                     className="event-content"
                     initial={{ y: 20, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
+                    animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.4, delay: 0.2 }}
                   >
                     <h6>
@@ -57,7 +57,7 @@ export default function EventsBar() {
                     isHovered ? 'active' : ''
                   }`}
                   initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.4 }}
                 >
                   <div>
@@ -66,7 +66,7 @@ export default function EventsBar() {
                   <motion.div
                     className="event-content"
                     initial={{ y: 20, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
+                    animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.4, delay: 0.2 }}
                   >
                     <h6>
@@ -87,7 +87,7 @@ export default function EventsBar() {
                     isHovered ? 'active' : ''
                   }`}
                   initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.4 }}
                 >
                   <div>
@@ -96,7 +96,7 @@ export default function EventsBar() {
                   <motion.div
                     className="event-content"
                     initial={{ y: 20, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
+                    animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.4, delay: 0.2 }}
                   >
                     <h6>
