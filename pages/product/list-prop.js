@@ -3,12 +3,14 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 // 引入icon
-import { CiHeart } from 'react-icons/ci'
 import { GoSortDesc } from 'react-icons/go'
 import { FaHouse } from 'react-icons/fa6'
 import { FaRegStar } from 'react-icons/fa'
 import { FaTicket } from 'react-icons/fa6'
 import { RxPerson } from 'react-icons/rx'
+//愛心
+import { FaHeart } from 'react-icons/fa6'
+import { CiHeart } from 'react-icons/ci'
 
 //引入components
 import MyFooter from '@/components/layout/default-layout/my-footer'
@@ -30,6 +32,8 @@ import useEvents from '@/hooks/use-event'
 // import event from '@/data/event/event.json'
 // console.log(event)
 
+import SearchForm from '@/components/layout/list-layout/search-form'
+
 export default function List() {
   const { data } = useEvents()
   // 引入路由
@@ -43,19 +47,27 @@ export default function List() {
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
 
-  //增加屬性質
-  const initState = events.map((v, i) => {
-    return { ...v, fav: false }
-  })
+  // useEffect(() => {
+  //   if (data) {
+  //     setEvents(data)
+  //   }
+  // }, [data])
+  // console.log(events)
 
-  const [newEvents, setNewEvents] = useState(initState)
-
+  //增加擴充屬性質(收藏)
   useEffect(() => {
     if (data) {
-      setEvents(data)
+      const initState = data.map((v2, i) => {
+        return { ...v2, fav: false }
+      })
+      setEvents(initState)
     }
   }, [data])
+
   // console.log(events)
+  const handleSetEvents = (newEvents) => {
+    setEvents(newEvents)
+  } //傳回收藏函式
 
   //回調函式
   // 筛选结果状态
@@ -63,32 +75,56 @@ export default function List() {
 
   const [selectedCategories, setSelectedCategories] = useState([])
   const [selectedRegions, setSelectedRegions] = useState([])
+  const [searchWord, setSearchWord] = useState('') // 新增搜索关键字状态
 
-  // 处理升降密排序的回调函数
+  // 升降密排序的回调函数
   const handleSortEvents = (sortedEvents) => {
     setFilteredEvents(sortedEvents)
   }
-  // 处理地区排序的回调函数
+  // 地區排序的回调函数
   const handleCityEvents = (citySortedEvents) => {
     setFilteredEvents(citySortedEvents)
   }
-  // 处理日期排序的回调函数
+  // 日期排序的回调函数
   const handleDateEvents = (dateSortedEvents) => {
     setFilteredEvents(dateSortedEvents)
   }
-  // 处理价格排序的回调函数
+  // 價格排序的回调函数
   const handlePriceEvents = (priceSortedEvents) => {
     setFilteredEvents(priceSortedEvents)
   }
+
   // sidebar回調
   const handleFilterChange = (selectedCategories, selectedRegions) => {
-    console.log('Selected categories:', selectedCategories)
-    console.log('Selected regions:', selectedRegions)
+    // console.log('Selected categories:', selectedCategories)
+    // console.log('Selected regions:', selectedRegions)
     setSelectedCategories(selectedCategories)
     setSelectedRegions(selectedRegions)
   }
 
-  // 根据筛选条件过滤事件
+  //搜尋
+  const handleSearch = (searchWord) => {
+    if (typeof searchWord !== 'string' || searchWord.length === 0) {
+      // console.log('Search keyword is empty')
+      return events
+    } else {
+      // console.log('Searching for:', searchWord)
+      const filteredEvents = events.filter((event) => {
+        return event.event_name.toLowerCase().includes(searchWord.toLowerCase())
+      })
+      // console.log('Filtered Events:', filteredEvents)
+      return filteredEvents
+    }
+  }
+  useEffect(() => {
+    if (searchWord) {
+      // 只傳遞 searchWord 參數
+      const filteredEvents = handleSearch(searchWord)
+      setFilteredEvents(filteredEvents)
+    }
+  }, [events, searchWord])
+
+  //結合類型、地區、搜尋的篩選結果
   const getFilteredEvents = () => {
     return events.filter((event) => {
       const categoryMatch =
@@ -96,11 +132,19 @@ export default function List() {
         selectedCategories.includes(event.category_name)
       const regionMatch =
         selectedRegions.length === 0 || selectedRegions.includes(event.str)
-      return categoryMatch && regionMatch
+      const searchMatch = event.event_name.toLowerCase().includes(searchWord)
+      return categoryMatch && regionMatch && searchMatch
     })
   }
+  // 依照所有的篩選結果更改內容
+  useEffect(() => {
+    // 当搜索词、选定的类别或地区变化时，更新筛选后的事件列表
+    const newFilteredEvents = getFilteredEvents()
+    setFilteredEvents(newFilteredEvents)
+  }, [searchWord, selectedCategories, selectedRegions, events]) // 确保在这些依赖项变化时重新筛选
 
   const newFilteredEvents = getFilteredEvents()
+  // console.log(newFilteredEvents)
 
   // Get current events for pagination
   const indexOfLastEvent = currentPage * postsPerPage
@@ -109,6 +153,47 @@ export default function List() {
     indexOfFirstEvent,
     indexOfLastEvent
   )
+
+  // 關鍵字搜尋
+  // const handleSearch = (searchWord) => {
+  //   if (typeof searchWord !== 'string' || searchWord.length === 0) {
+  //     console.log('Search keyword is empty')
+  //     return events
+  //   } else {
+  //     console.log('Searching for:', searchWord)
+  //     const filteredEventsA = events.filter((event) => {
+  //       return event.event_name.toLowerCase().includes(searchWord.toLowerCase())
+  //     })
+  //     console.log('Filtered Events:', filteredEventsA)
+  //     return filteredEventsA
+  //   }
+  // }
+
+  // 在组件中调用 handleSearch 函数并存储筛选后的事件列表
+  // useEffect(() => {
+  //   if (searchWord) {
+  //     // 只傳遞 searchWord 參數
+  //     const filteredEvents = handleSearch(searchWord)
+  //     setFilteredEvents(filteredEvents)
+  //   }
+  // }, [events, searchWord])
+
+  // 现在，我们可以在 filteredEvents 中访问筛选后的事件列表
+  // console.log(filteredEvents)
+
+  // 通过搜索关键字筛选事件
+  const searchFilteredEvents = handleSearch(events, searchWord)
+
+  // 获取所有符合筛选条件的事件
+  const allFilteredEvents = [...newFilteredEvents, ...searchFilteredEvents]
+
+  // console.log(currentEvents)
+
+  //篩選後引導回首頁
+  useEffect(() => {
+    // 當篩選條件改變時，自動回到第一頁
+    setCurrentPage(1)
+  }, [selectedCategories, selectedRegions, searchWord])
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
@@ -124,6 +209,11 @@ export default function List() {
             </p>
           </div>
           <section>
+            <SearchForm
+              searchWord={searchWord}
+              onSearch={handleSearch} // 正确传递搜索回调函数
+            />
+
             <NavbarTopRwd
               events={events} //傳原始資料至props
               setEvents={setEvents} // 将更新事件列表的函数传递给子组件
@@ -279,7 +369,9 @@ export default function List() {
         figure img {
           width: 268px;
           height: 180px;
-          overflow: hidden;
+           {
+            /* overflow: hidden; */
+          }
           object-fit: cover;
           width: 100%;
         }

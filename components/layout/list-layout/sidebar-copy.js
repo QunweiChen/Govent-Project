@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { useRouter } from 'next/router'
 import City from '@/data/event/str.json'
 import { CategoriesProvider, useCategories } from '@/hooks/use-categories'
-
-import { useRouter } from 'next/router'
 
 export default function Sidebar(props) {
   const categories = [
@@ -16,21 +15,11 @@ export default function Sidebar(props) {
     '景點門票',
   ]
 
-  // const { setSelectedCategories, selectedCategories } = useCategories()//鉤子
+  // If useCategories returns { selectedCategories: ..., setSelectedCategories: ... }
+  const { selectedCategories, setSelectedCategories } = useCategories()
 
-  const [selectedCategories, setSelectedCategories] = useState({})
+  // const [selectedCategories, setSelectedCategories] = useState({})
   const [selectedRegions, setSelectedRegions] = useState({})
-
-  const router = useRouter()
-  useEffect(() => {
-    // 解析 URL 参数
-    const { query } = router
-    // 如果 URL 中包含特定参数，则设置状态
-    if (query.category) {
-      setSelectedCategories({ [query.category]: true })
-      console.log('Selected Categories after setting:', selectedCategories)
-    }
-  }, [router.query])
 
   useEffect(() => {
     const selectedCategoriesArray = Object.keys(selectedCategories).filter(
@@ -41,18 +30,63 @@ export default function Sidebar(props) {
     )
 
     // 回傳選擇的篩選條件給父元素
-    props.onFilterChange(selectedCategoriesArray, selectedRegionsNames)
-  }, [selectedCategories, selectedRegions])
+    props.onFilterChange(selectedCategoriesArray, selectedRegionsNames, props)
+  }, [selectedCategories, selectedRegions, props])
 
+  //路由指定串
+  const router = useRouter()
+  // const defaultSelectedCategories = { 演唱會: true }
   const handleOnChange = (category) => {
     const newSelectedCategories = {
       ...selectedCategories,
       [category]: !selectedCategories[category],
     }
-    setSelectedCategories(newSelectedCategories)
+    setSelectedCategories(newSelectedCategories) // Update the local state
+
+    // Update the router query parameters
+    // This should be done after defining newSelectedCategories and ideally, after the state is updated
+    const query = {
+      selectedCategories: Object.keys(newSelectedCategories).filter(
+        (cat) => newSelectedCategories[cat]
+      ),
+    }
+
+    // You might want to perform this routing action after ensuring the state has been updated
+    // However, React state updates are asynchronous, so consider implications for user experience
+    router.push(
+      {
+        pathname: router.pathname,
+        query,
+      },
+      undefined,
+      { shallow: true }
+    ) // Opting for shallow routing to avoid re-running data fetching methods on the page
+
+    // Propagate changes upwards if necessary
+    // This might be redundant or need to be moved into an effect depending on your use case
+    props.onFilterChange(
+      Object.keys(newSelectedCategories).filter(
+        (cat) => newSelectedCategories[cat]
+      )
+    )
   }
-  console.log(selectedRegions)
-  console.log(selectedCategories)
+  useEffect(() => {
+    const query = {
+      selectedCategories: Object.keys(selectedCategories).filter(
+        (cat) => selectedCategories[cat]
+      ),
+    }
+
+    router.push(
+      {
+        pathname: router.pathname,
+        query,
+      },
+      undefined,
+      { shallow: true }
+    )
+  }, [selectedCategories, router])
+
   const handleSelectAll = () => {
     const newSelection = {}
     if (!selectedCategories['所有類型']) {
@@ -64,20 +98,6 @@ export default function Sidebar(props) {
     }
     setSelectedCategories(newSelection)
   }
-
-  // const handleRegionCheckboxChange = (regionName, isChecked) => {
-  //   setSelectedRegions((prevState) => ({
-  //     ...prevState,
-  //     [regionName]: isChecked,
-  //   }))
-  // }
-
-  // const handleCityCheckboxChange = (cityName, isChecked) => {
-  //   setSelectedRegions((prevState) => ({
-  //     ...prevState,
-  //     [cityName]: isChecked,
-  //   }))
-  // }
 
   const handleRegionCheckboxChange = (regionName, isChecked) => {
     const region = City.find((r) => r.name === regionName)
@@ -153,7 +173,7 @@ export default function Sidebar(props) {
           {City.map((region) => (
             <div
               key={region.id}
-              className="accordion-item regionColor text-white"
+              className="accordion-item bg-bg-gray text-white"
             >
               <h2 className="accordion-header" id={`heading-${region.id}`}>
                 <button
@@ -212,12 +232,6 @@ export default function Sidebar(props) {
           ))}
         </div>
       </div>
-      <style global jsx>{`
-        .regionColor {
-          background-color: #151515;
-          color: #fff;
-        }
-      `}</style>
     </>
   )
 }

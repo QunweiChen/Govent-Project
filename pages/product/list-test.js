@@ -35,7 +35,7 @@ import SearchForm from '@/components/layout/list-layout/search-form'
 
 export default function List() {
   const { data } = useEvents()
-  const router = useRouter()
+  const { router } = useRouter()
 
   const [events, setEvents] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -44,7 +44,6 @@ export default function List() {
   const [selectedRegions, setSelectedRegions] = useState([])
   const [searchWord, setSearchWord] = useState('')
   const [filteredEvents, setFilteredEvents] = useState([])
-  const { query } = router
 
   //增加擴充屬性質(收藏)
   useEffect(() => {
@@ -140,21 +139,21 @@ export default function List() {
               目前共有 {filteredEvents?.length} 筆 結果
             </p>
           </div>
+         
+            <SearchForm
+              searchWord={searchWord}
+              onSearch={handleSearch} // 正确传递搜索回调函数
+            />
 
-          <SearchForm
-            searchWord={searchWord}
-            onSearch={handleSearch} // 正确传递搜索回调函数
-          />
-
-          <NavbarTopRwd
-            events={events} //傳原始資料至props
-            setEvents={setEvents} // 将更新事件列表的函数传递给子组件
-            //回調元素
-            onSort={handleSortEvents}
-            onCity={handleCityEvents}
-            onDate={handleDateEvents}
-            onPrice={handlePriceEvents}
-          />
+            <NavbarTopRwd
+              events={events} //傳原始資料至props
+              setEvents={setEvents} // 将更新事件列表的函数传递给子组件
+              //回調元素
+              onSort={handleSortEvents}
+              onCity={handleCityEvents}
+              onDate={handleDateEvents}
+              onPrice={handlePriceEvents}
+            />
         </h5>
       </nav>
       <nav className="header-m">
@@ -166,7 +165,6 @@ export default function List() {
             <Sidebar
               events={events} //傳原始資料至props
               onFilterChange={handleFilterChange}
-              selectedCategories={selectedCategories}
             />
           </div>
           <div className="col">
@@ -182,15 +180,20 @@ export default function List() {
                       key={v.id}
                       style={{ textDecoration: 'none' }}
                     >
+                      {/* <div onClick={()=>{router.push(``)}} */}
                       <div className="card bg-bg-gray-secondary text-white px-0 no-border">
                         <figure>
                           <img
+                            // src={`/images/product/list/${
+                            //   v.banner?.split(',')[0]
+                            // }`}
                             src={`http://localhost:3005/images/banner/${
                               v.banner?.split(',')[0]
                             }`}
                             alt=""
                             className="card-img-top"
                           />
+                          {/* <FavIcon datas={events} setEvents={handleSetEvents} /> */}
                           <FavIcon
                             pid={v.pid}
                             events={events}
