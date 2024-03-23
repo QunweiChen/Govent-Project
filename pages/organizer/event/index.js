@@ -29,6 +29,9 @@ export default function OrganizerEvent() {
   const [currentPageU, setCurrentPageU] = useState(0)
   const [currentPageE, setCurrentPageE] = useState(0)
 
+  const date = { timeZone: 'Asia/Taipei', year:'numeric' , month: '2-digit', day: '2-digit' }
+  const time = { timeZone: 'Asia/Taipei', hour: '2-digit', minute: '2-digit' }
+
   useEffect(() => {
     fetch('http://localhost:3005/api/organizer/event', {
       method: 'GET',
@@ -231,12 +234,10 @@ export default function OrganizerEvent() {
                                     <div className="d-flex">
                                       <div>
                                         <h6 className="m-0">
-                                          {event.start_date.split('T')[0]}
+                                        {new Date(event.start_date).toLocaleString('zh', date)}
                                         </h6>
                                         <p>
-                                          {event.start_date
-                                            .split('T')[1]
-                                            .slice(0, 5)}
+                                        {new Date(event.start_date).toLocaleString('zh', time)}
                                         </p>
                                       </div>
                                       <div className="mx-3">
@@ -244,12 +245,10 @@ export default function OrganizerEvent() {
                                       </div>
                                       <div>
                                         <h6 className="m-0">
-                                          {event.end_date.split('T')[0]}
+                                        {new Date(event.end_date).toLocaleString('zh', date)}
                                         </h6>
                                         <p>
-                                          {event.end_date
-                                            .split('T')[1]
-                                            .slice(0, 5)}
+                                        {new Date(event.end_date).toLocaleString('zh', time)}
                                         </p>
                                       </div>
                                     </div>
@@ -261,7 +260,7 @@ export default function OrganizerEvent() {
                                 >
                                   <div className="sm-p mb-1">建立時間</div>
                                   <div className="sm-p">
-                                    {event.create_at.split('T')[0]}
+                                    {new Date(event.create_at).toLocaleString('zh', date)}
                                   </div>
                                 </Col>
                                 <Col sm="auto" className="text-center mx-3">
@@ -347,25 +346,21 @@ export default function OrganizerEvent() {
                                     <div className="d-flex">
                                       <div>
                                         <h6 className="m-0">
-                                          {event.start_date.split('T')[0]}
+                                          {new Date(event.start_date).toLocaleString('zh', date)}
                                         </h6>
                                         <p>
-                                          {event.start_date
-                                            .split('T')[1]
-                                            .slice(0, 5)}
+                                        {new Date(event.start_date).toLocaleString('zh', time)}
                                         </p>
                                       </div>
                                       <div className="mx-3">
                                         <h6 className="m-0">－</h6>
                                       </div>
                                       <div>
-                                        <h6 className="m-0">
-                                          {event.end_date.split('T')[0]}
+                                      <h6 className="m-0">
+                                      {new Date(event.end_date).toLocaleString('zh', date)}
                                         </h6>
                                         <p>
-                                          {event.end_date
-                                            .split('T')[1]
-                                            .slice(0, 5)}
+                                        {new Date(event.end_date).toLocaleString('zh', time)}
                                         </p>
                                       </div>
                                     </div>
@@ -377,7 +372,7 @@ export default function OrganizerEvent() {
                                 >
                                   <div className="sm-p mb-1">建立時間</div>
                                   <div className="sm-p">
-                                    {event.create_at.split('T')[0]}
+                                    {new Date(event.create_at).toLocaleString('zh', date)}
                                   </div>
                                 </Col>
                                 <Col sm="auto" className="text-center mx-3">
@@ -460,12 +455,10 @@ export default function OrganizerEvent() {
                                   <div className="d-flex">
                                     <div>
                                       <h6 className="m-0">
-                                        {event.start_date.split('T')[0]}
+                                      {new Date(event.start_date).toLocaleString('zh', date)}
                                       </h6>
                                       <p>
-                                        {event.start_date
-                                          .split('T')[1]
-                                          .slice(0, 5)}
+                                      {new Date(event.start_date).toLocaleString('zh', time)}
                                       </p>
                                     </div>
                                     <div className="mx-3">
@@ -473,12 +466,10 @@ export default function OrganizerEvent() {
                                     </div>
                                     <div>
                                       <h6 className="m-0">
-                                        {event.end_date.split('T')[0]}
+                                      {new Date(event.end_date).toLocaleString('zh', date)}
                                       </h6>
                                       <p>
-                                        {event.end_date
-                                          .split('T')[1]
-                                          .slice(0, 5)}
+                                      {new Date(event.end_date).toLocaleString('zh', time)}
                                       </p>
                                     </div>
                                   </div>
@@ -490,7 +481,7 @@ export default function OrganizerEvent() {
                               >
                                 <div className="sm-p mb-1">建立時間</div>
                                 <div className="sm-p">
-                                  {event.create_at.split('T')[0]}
+                                {new Date(event.create_at).toLocaleString('zh', date)}
                                 </div>
                               </Col>
                               <Col sm="auto" className="text-center mx-3">

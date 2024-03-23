@@ -21,6 +21,9 @@ export default function OrganizerEvent() {
   const router = useRouter()
   const { eid } = router.query
 
+  const date = { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' }
+  const time = { timeZone: 'Asia/Taipei', hour: '2-digit', minute: '2-digit' }
+
   useEffect(() => {
     fetch(`http://localhost:3005/api/organizer/event/${eid}`, {
       method: 'GET',
@@ -34,6 +37,7 @@ export default function OrganizerEvent() {
         // 檢查是否有資料並設定到 state 中
         if (data && data.data && data.data.result) {
           setEventInfo(data.data.result[0])
+          console.log('資料庫撈出來的時間', eventInfo.start_date)
         } else {
           console.warn('No data received from the server.')
         }
@@ -58,7 +62,7 @@ export default function OrganizerEvent() {
       })
       .catch((error) => console.error('Error fetching data:', error))
 
-      fetch(`http://localhost:3005/api/organizer/event/order/${eid}`, {
+    fetch(`http://localhost:3005/api/organizer/event/order/${eid}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
@@ -156,7 +160,7 @@ export default function OrganizerEvent() {
                 onClick={() => {
                   setPage(1)
                 }}
-                onKeyDown={() => {}}
+                onKeyDown={() => { }}
                 role="button"
                 tabIndex={0}
               >
@@ -170,7 +174,7 @@ export default function OrganizerEvent() {
                 onClick={() => {
                   setPage(2)
                 }}
-                onKeyDown={() => {}}
+                onKeyDown={() => { }}
                 role="button"
                 tabIndex={0}
               >
@@ -196,9 +200,9 @@ export default function OrganizerEvent() {
                 key={page}
               >
                 {eventInfo &&
-                eventInfo.start_date &&
-                eventInfo.end_date &&
-                eventOption ? (
+                  eventInfo.start_date &&
+                  eventInfo.end_date &&
+                  eventOption ? (
                   <Row className="gx-5">
                     <Col sm="5">
                       <Row className="g-3">
@@ -225,11 +229,11 @@ export default function OrganizerEvent() {
                               </p>
                               <h6 className="m-0 flex-1 text-center">
                                 {eventInfo.valid === 1 &&
-                                new Date(eventInfo.end_date) > new Date()
+                                  new Date(eventInfo.end_date) > new Date()
                                   ? '上架中'
                                   : eventInfo.valid === 0
-                                  ? '審核中'
-                                  : '已過期'}
+                                    ? '審核中'
+                                    : '已過期'}
                               </h6>
                             </div>
                           </div>
@@ -291,23 +295,21 @@ export default function OrganizerEvent() {
                             <div className="d-flex align-items-center mb-3">
                               <p className="me-3 tabs">活動時間</p>
                               <h6 className="m-0">
-                                {eventInfo.start_date.split('T')[0]}{' '}
-                                {eventInfo.start_date.split('T')[1].slice(0, 5)}{' '}
-                                － {eventInfo.end_date.split('T')[0]}{' '}
-                                {eventInfo.end_date.split('T')[1].slice(0, 5)}
+                                {new Date(eventInfo.start_date).toLocaleString('zh', date)}{' '}
+                                {new Date(eventInfo.start_date).toLocaleString('zh', time)}{' '}
+                                － {' '}
+                                {new Date(eventInfo.end_date).toLocaleString('zh', date)}{' '}
+                                {new Date(eventInfo.end_date).toLocaleString('zh', time)}{' '}
                               </h6>
                             </div>
                             <div className="d-flex align-items-center">
                               <p className="me-3 tabs">售票時間</p>
                               <h6 className="m-0">
-                                {eventInfo.sell_start_date.split('T')[0]}{' '}
-                                {eventInfo.sell_start_date
-                                  .split('T')[1]
-                                  .slice(0, 5)}{' '}
-                                － {eventInfo.sell_end_date.split('T')[0]}{' '}
-                                {eventInfo.sell_end_date
-                                  .split('T')[1]
-                                  .slice(0, 5)}
+                              {new Date(eventInfo.sell_start_date).toLocaleString('zh', date)}{' '}
+                                {new Date(eventInfo.sell_start_date).toLocaleString('zh', time)}{' '}
+                                － {' '}
+                                {new Date(eventInfo.sell_end_date).toLocaleString('zh', date)}{' '}
+                                {new Date(eventInfo.sell_end_date).toLocaleString('zh', time)}{' '}
                               </h6>
                             </div>
                           </motion.div>
@@ -402,12 +404,7 @@ export default function OrganizerEvent() {
                             <td>{ticket.order_number}</td>
                             <td>{ticket.ticket_code}</td>
                             <td>
-                              {ticket.created_at
-                                ? ticket.created_at.split('T')[0]
-                                : ''}{' '}
-                              {ticket.created_at
-                                ? ticket.created_at.split('T')[1].slice(0, 8)
-                                : ''}
+                            {new Date(ticket.created_at).toLocaleString('zh', date)}
                             </td>
                             <td>{ticket.name}</td>
                             <td>{ticket.option_name}</td>
@@ -421,11 +418,10 @@ export default function OrganizerEvent() {
                     {eventTicket.map((page, index) => (
                       <li key={index} className="list-unstyled mx-1">
                         <button
-                          className={`btn ${
-                            currentPage === index
+                          className={`btn ${currentPage === index
                               ? 'btn-primary'
                               : 'btn-outline-primary'
-                          }`}
+                            }`}
                           onClick={() => setCurrentPage(index)}
                         >
                           {index + 1}
