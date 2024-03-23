@@ -121,9 +121,7 @@ export default function Toolbar({ handleShow }) {
             <li>
               <button
                 className="dropdown-item text-center "
-                onClick={() => {
-                  handleSignOut
-                }}
+                onClick={handleSignOut}
               >
                 登出
               </button>

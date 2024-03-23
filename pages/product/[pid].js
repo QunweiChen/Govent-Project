@@ -60,6 +60,12 @@ export default function Detail() {
         time3 = time3.substring(0, 5)
       }
       setSellTime(time3)
+      console.log(time3)
+      // console.log(date3)
+
+      //進入前面前先篩入預設值//anne改這
+      setSelectTime(time3)
+      // getAll(ticketInfo,selectDate)
     } catch (e) {
       console.log(e)
     }
@@ -281,7 +287,7 @@ export default function Detail() {
                     <i className="bi bi-exclamation-triangle me-2" />
                     禁止取消
                   </h6>
-                  <h6>
+                  <h6 id="eventIntro4">
                     <i className="bi bi-box2 mx-2" />
                     電子票證
                   </h6>
@@ -290,7 +296,7 @@ export default function Detail() {
               </section>
               {/* 活動票券 */}
               <div className="d-flex align-items-center mt-5">
-                <h4 className="border-5 border-start border-primary px-2">
+                <h4  className="border-5 border-start border-primary px-2">
                   選擇方案
                 </h4>
               </div>
@@ -338,7 +344,6 @@ export default function Detail() {
                                 <button
                                   className={`store fs-5 p-2 btn ${isClicked ? 'btn-warning' : 'btn-primary-deep'}`}
                                   onClick={handleTime}
-                                  required
                                 >
                                   {sellTime}
                                 </button>
@@ -369,7 +374,7 @@ export default function Detail() {
                                   </h4>
                                 </div>
                                 <div className="d-flex justify-content-end mb-3">
-                                  <Link href={`/cart`}>
+                                  {/* <Link href={`/cart`}> */}
                                     <button className="store fs-5 me-2 p-2 btn btn-primary-deep"
                                       onClick={() => {
                                         console.log(v)
@@ -379,7 +384,7 @@ export default function Detail() {
                                     >
                                       加入購物車
                                     </button>
-                                  </Link>
+                                  {/* </Link> */}
                                 </div>
                               </div>
                             </div>
@@ -404,10 +409,10 @@ export default function Detail() {
                 {/* right bar */}
                 <div className="right d-none d-xxl-block col-3">
                   <div className="row seat1 mt-3">
-                    <h5 className="col-12 mb-3"> NT$ {minPrice} {minPrice !== maxPrice ? `- ${maxPrice}` : ''}</h5>
-                    <button className="store col-12 btn btn-primary-deep">
+                    <h5 className="col-12 mb-3"> NT$ {minPrice} {minPrice !== maxPrice ? `~ ${maxPrice}` : ''}</h5>
+                    <a href="#eventIntro4" type="button"  className="store col-12 btn btn-primary-deep">
                       立即購買
-                    </button>
+                    </a>
                   </div>
                   <a href="#eventIntro" type="button" className="d-flex align-items-center mt-5">
                     <h5 className="border-5 border-start border-primary px-2 text-white">
@@ -432,15 +437,7 @@ export default function Detail() {
                       使用方式
                     </h5>
                   </a>
-                  <a
-                    href="#eventIntro4"
-                    type="button"
-                    className="d-flex align-items-center mt-3"
-                  >
-                    <h5 className="border-5 border-start border-primary px-2 text-white">
-                      活動評價
-                    </h5>
-                  </a>
+                
                 </div>
               </section>
               {/* 購買須知 */}
@@ -598,6 +595,7 @@ export default function Detail() {
 
           .object-fit-cover {
             width: 100%;
+            height: 500px;
             object-fit: cover;
           }
 
