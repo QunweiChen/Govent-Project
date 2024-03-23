@@ -72,10 +72,10 @@ router.post('/update', async (req, res) => {
 router.get('/favorites', authenticate, async function (req, res) {
   try {
     const result = await sequelize.query(
-      'SELECT collection.*, event.event_name, event.banner, event.start_date ' +
-        'FROM `collection` ' +
-        'JOIN `event` ON collection.collection_activity_id = event.event_id ' +
-        'WHERE collection.collection_user_id = ? ',
+      'SELECT favorites.*, event.event_name, event.banner, event.start_date ' +
+        'FROM `favorites` ' +
+        'JOIN `event` ON favorites.pid = event.event_id ' +
+        'WHERE favorites.uid = ? ',
       {
         replacements: [req.user.id],
         type: QueryTypes.SELECT,
@@ -95,7 +95,7 @@ router.post('/delete/:eventId', authenticate, async (req, res) => {
   console.log(user_id)
   try {
     await sequelize.query(
-      'DELETE FROM `collection` WHERE collection_activity_id = :eventId AND collection_user_id = :user_id',
+      'DELETE FROM `favorites` WHERE pid = :eventId AND uid = :user_id',
       {
         replacements: {
           eventId: eventId,
