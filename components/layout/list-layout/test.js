@@ -1,10 +1,20 @@
 import React from 'react'
+import { FaHeart } from 'react-icons/fa6'
+import { CiHeart } from 'react-icons/ci'
 
 export default function TestPorps(props) {
   // 在适当的地方调用父组件传递的回调函数，并传递数据
   const sendDataToParent = () => {
     const dataToSend = 'Data from child component'
     props.onDataFromChild(dataToSend)
+  }
+
+  const handletoggleFav = (pid) => {
+    const newEvents = props.datas.map((v, i) => {
+      if (v.pid === pid) return { ...v, fav: !v.fav }
+      else return v
+    })
+    props.setEvents(newEvents)
   }
 
   return (
@@ -14,6 +24,12 @@ export default function TestPorps(props) {
         <div key={id}>
           <p className="text-normal-gray-light">{v.category_name}</p>
           <h5 className="card-title">{v.event_name}</h5>
+          <button
+            className="btn text-white"
+            onClick={() => handletoggleFav(v.pid)}
+          >
+            {v.fav ? <FaHeart /> : <CiHeart />}
+          </button>
         </div>
       ))}
       {/* 在适当的地方触发调用父组件传递的回调函数 */}

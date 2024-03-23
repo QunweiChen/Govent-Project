@@ -15,10 +15,9 @@ import { CiHeart } from 'react-icons/ci'
 //引入components
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
-import FavIcon from '@/components/layout/list-layout/fav-icon'
 import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
-import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
+import NavbarTopRwd from '@/components/layout/list-layout/navbar-top-copy'
 import Sidebar from '@/components/layout/list-layout/sidebar'
 
 //篩選用components
@@ -36,47 +35,75 @@ import SearchForm from '@/components/layout/list-layout/search-form'
 
 export default function List() {
   const { data } = useEvents()
-  // 引入路由
   const { router } = useRouter()
-  // console.log(data)
 
-  //活動資料
-  // 1. 從伺服器來的原始資料
   const [events, setEvents] = useState([])
-  // 分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(15)
-
-  // useEffect(() => {
-  //   if (data) {
-  //     setEvents(data)
-  //   }
-  // }, [data])
-  // console.log(events)
+  const [selectedCategories, setSelectedCategories] = useState([])
+  const [selectedRegions, setSelectedRegions] = useState([])
+  const [searchWord, setSearchWord] = useState('')
+  const [filteredEvents, setFilteredEvents] = useState([])
 
   //增加擴充屬性質(收藏)
   useEffect(() => {
     if (data) {
-      const initState = data.map((v2, i) => {
-        return { ...v2, fav: false }
+      const initState = data.map((v, i) => {
+        return { ...v, fav: false }
       })
       setEvents(initState)
     }
   }, [data])
 
-  // console.log(events)
-  const handleSetEvents = (newEvents) => {
-    setEvents(newEvents)
-  } //傳回收藏函式
+  //更新篩選結果
+  useEffect(() => {
+    const newFilteredEvents = getFilteredEvents()
+    setFilteredEvents(newFilteredEvents)
+  }, [searchWord, selectedCategories, selectedRegions, events])
 
-  //回調函式
-  // 筛选结果状态
-  const [filteredEvents, setFilteredEvents] = useState([])
+  //整合類別、地區、搜尋篩選結果
+  const getFilteredEvents = () => {
+    return events.filter((event) => {
+      const categoryMatch =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(event.category_name)
+      // const regionMatch =
+      //   selectedRegions.length === 0 || selectedRegions.includes(event.str)
+      const regionMatch =
+        !selectedRegions ||
+        selectedRegions.length === 0 ||
+        selectedRegions.includes(event.str)
 
-  const [selectedCategories, setSelectedCategories] = useState([])
-  const [selectedRegions, setSelectedRegions] = useState([])
-  const [searchWord, setSearchWord] = useState('') // 新增搜索关键字状态
+      const searchMatch =
+        !searchWord ||
+        event.event_name.toLowerCase().includes(searchWord.toLowerCase())
+      return categoryMatch && regionMatch && searchMatch
+    })
+  }
 
+  // 分頁
+  const indexOfLastEvent = currentPage * postsPerPage
+  const indexOfFirstEvent = indexOfLastEvent - postsPerPage
+  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent)
+
+  const handleFilterChange = (selectedCategories, selectedRegions) => {
+    setSelectedCategories(selectedCategories)
+    setSelectedRegions(selectedRegions)
+    // 當篩選條件改變時，自動回到第一頁
+    setCurrentPage(1)
+  }
+
+  // 在這裡計算分頁數據時使用篩選後的數據
+  const indexOfLastFilteredEvent = currentPage * postsPerPage
+  const indexOfFirstFilteredEvent = indexOfLastFilteredEvent - postsPerPage
+  const currentFilteredEvents = filteredEvents.slice(
+    indexOfFirstFilteredEvent,
+    indexOfLastFilteredEvent
+  )
+
+  const handleSearch = (searchWord) => {
+    setSearchWord(searchWord)
+  }
   // 升降密排序的回调函数
   const handleSortEvents = (sortedEvents) => {
     setFilteredEvents(sortedEvents)
@@ -94,121 +121,25 @@ export default function List() {
     setFilteredEvents(priceSortedEvents)
   }
 
-  // sidebar回調
-  const handleFilterChange = (selectedCategories, selectedRegions) => {
-    // console.log('Selected categories:', selectedCategories)
-    // console.log('Selected regions:', selectedRegions)
-    setSelectedCategories(selectedCategories)
-    setSelectedRegions(selectedRegions)
-  }
-
-  //搜尋
-  const handleSearch = (searchWord) => {
-    if (typeof searchWord !== 'string' || searchWord.length === 0) {
-      // console.log('Search keyword is empty')
-      return events
-    } else {
-      // console.log('Searching for:', searchWord)
-      const filteredEvents = events.filter((event) => {
-        return event.event_name.toLowerCase().includes(searchWord.toLowerCase())
-      })
-      // console.log('Filtered Events:', filteredEvents)
-      return filteredEvents
-    }
-  }
-  useEffect(() => {
-    if (searchWord) {
-      // 只傳遞 searchWord 參數
-      const filteredEvents = handleSearch(searchWord)
-      setFilteredEvents(filteredEvents)
-    }
-  }, [events, searchWord])
-
-  //結合類型、地區、搜尋的篩選結果
-  const getFilteredEvents = () => {
-    return events.filter((event) => {
-      const categoryMatch =
-        selectedCategories.length === 0 ||
-        selectedCategories.includes(event.category_name)
-      const regionMatch =
-        selectedRegions.length === 0 || selectedRegions.includes(event.str)
-      const searchMatch = event.event_name.toLowerCase().includes(searchWord)
-      return categoryMatch && regionMatch && searchMatch
-    })
-  }
-  // 依照所有的篩選結果更改內容
-  useEffect(() => {
-    // 当搜索词、选定的类别或地区变化时，更新筛选后的事件列表
-    const newFilteredEvents = getFilteredEvents()
-    setFilteredEvents(newFilteredEvents)
-  }, [searchWord, selectedCategories, selectedRegions, events]) // 确保在这些依赖项变化时重新筛选
-
-  const newFilteredEvents = getFilteredEvents()
-  // console.log(newFilteredEvents)
-
-  // Get current events for pagination
-  const indexOfLastEvent = currentPage * postsPerPage
-  const indexOfFirstEvent = indexOfLastEvent - postsPerPage
-  const currentEvents = newFilteredEvents.slice(
-    indexOfFirstEvent,
-    indexOfLastEvent
-  )
-
-  // 關鍵字搜尋
-  // const handleSearch = (searchWord) => {
-  //   if (typeof searchWord !== 'string' || searchWord.length === 0) {
-  //     console.log('Search keyword is empty')
-  //     return events
-  //   } else {
-  //     console.log('Searching for:', searchWord)
-  //     const filteredEventsA = events.filter((event) => {
-  //       return event.event_name.toLowerCase().includes(searchWord.toLowerCase())
-  //     })
-  //     console.log('Filtered Events:', filteredEventsA)
-  //     return filteredEventsA
-  //   }
-  // }
-
-  // 在组件中调用 handleSearch 函数并存储筛选后的事件列表
-  // useEffect(() => {
-  //   if (searchWord) {
-  //     // 只傳遞 searchWord 參數
-  //     const filteredEvents = handleSearch(searchWord)
-  //     setFilteredEvents(filteredEvents)
-  //   }
-  // }, [events, searchWord])
-
-  // 现在，我们可以在 filteredEvents 中访问筛选后的事件列表
-  // console.log(filteredEvents)
-
-  // 通过搜索关键字筛选事件
-  const searchFilteredEvents = handleSearch(events, searchWord)
-
-  // 获取所有符合筛选条件的事件
-  const allFilteredEvents = [...newFilteredEvents, ...searchFilteredEvents]
-
-  // console.log(currentEvents)
-
   //篩選後引導回首頁
   useEffect(() => {
     // 當篩選條件改變時，自動回到第一頁
     setCurrentPage(1)
   }, [selectedCategories, selectedRegions, searchWord])
 
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   return (
     <>
       {/* <useEvents> */}
-      <nav className="header container navbar-expand mt-5 w-1200">
+      <nav className="header container navbar-expand mt-5 mb-3 w-1200">
         <h5 className="d-flex justify-content-between">
           <div className="bg-bg-gray-secondary rounded-3">
             <p className="mx-4 my-2">
-              目前共有 {newFilteredEvents?.length} 筆 結果
+              目前共有 {filteredEvents?.length} 筆 結果
             </p>
           </div>
-          <section>
+         
             <SearchForm
               searchWord={searchWord}
               onSearch={handleSearch} // 正确传递搜索回调函数
@@ -223,7 +154,6 @@ export default function List() {
               onDate={handleDateEvents}
               onPrice={handlePriceEvents}
             />
-          </section>
         </h5>
       </nav>
       <nav className="header-m">
@@ -315,9 +245,7 @@ export default function List() {
                   {Array.from(
                     //要用篩選後的數輛計算依據events(全)=>newFilteredEvents(篩選結果)
                     {
-                      length: Math.ceil(
-                        newFilteredEvents?.length / postsPerPage
-                      ),
+                      length: Math.ceil(filteredEvents?.length / postsPerPage),
                     },
                     (_, number) => (
                       <button
@@ -339,7 +267,7 @@ export default function List() {
                     aria-label="next"
                     onClick={() =>
                       currentPage <
-                        Math.ceil(newFilteredEvents?.length / postsPerPage) &&
+                        Math.ceil(filteredEvents?.length / postsPerPage) &&
                       paginate(currentPage + 1)
                     }
                   >

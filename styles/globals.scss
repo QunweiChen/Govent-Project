@@ -6,7 +6,7 @@ $secondary: rgba(41, 41, 40, 0.5);
 $success: #3c873b;
 $danger: #ff4136;
 $info: #92e9e4;
-
+$warning: #16c258;
 // 按鈕圓角邊 button radius
 $border-radius: 0.2em;
 $border-radius-sm: 0.2em;
@@ -224,13 +224,13 @@ p,
   text-shadow: 0 0 3px black;
 }
 
-.ql-size-small{
+.ql-size-small {
   font-size: 0.75em;
 }
-.ql-size-large{
+.ql-size-large {
   font-size: 1.5em;
 }
-.ql-size-huge{
+.ql-size-huge {
   font-size: 2.5em;
 }
 

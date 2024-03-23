@@ -14,7 +14,7 @@ export default function NavbarTopRwdSm(props) {
   //   }
   // }, [data])
   // console.log(events)//OK
-  console.log(props) //OK=>跟父元件的引入標籤做連接
+  // console.log(props) //OK=>跟父元件的引入標籤做連接
   //因為是子元件，把 const pricedEvents = events.map((event) => “events”改為"props"
 
   //升降密元件
@@ -43,7 +43,7 @@ export default function NavbarTopRwdSm(props) {
       ...event,
       // price: event.price !== null ? parseFloat(event.price) : 0,
     }))
-    console.log(processedEvents) //OK
+    // console.log(processedEvents) //OK
     // 执行排序逻辑
     const sortedEvents = [...processedEvents].sort((a, b) => {
       if (sortOrder === 'asc') {
@@ -55,10 +55,10 @@ export default function NavbarTopRwdSm(props) {
 
     // 更新状态
     props.setEvents(sortedEvents)
-    console.log('sortedEvents:', sortedEvents) //檢視是否可以成功排序ＯＫ
+    // console.log('sortedEvents:', sortedEvents) //檢視是否可以成功排序ＯＫ
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
   }
-  console.log(sortOrder) //檢查按鈕狀態OK
+  // console.log(sortOrder) //檢查按鈕狀態OK
 
   //地區排序元件
   function CityButton({ onCity, CityOrder }) {
@@ -116,7 +116,7 @@ export default function NavbarTopRwdSm(props) {
 
     props.setEvents(sortedEvents)
     setCityOrder(cityOrder === 'asc' ? 'desc' : 'asc')
-    console.log('sortedEvents:', sortedEvents) // 检查是否可以成功排序
+    // console.log('sortedEvents:', sortedEvents) // 检查是否可以成功排序
   }
 
   //*日期排序元件
@@ -151,7 +151,7 @@ export default function NavbarTopRwdSm(props) {
     })
     props.setEvents(sortedEvents)
     setDateOrder(dateOrder === 'asc' ? 'desc' : 'asc')
-    console.log('sortedEvents:', sortedEvents) //檢視是否可以成功排序ＯＫ
+    // console.log('sortedEvents:', sortedEvents) //檢視是否可以成功排序ＯＫ
   }
 
   //價格排序元件
@@ -197,7 +197,7 @@ export default function NavbarTopRwdSm(props) {
 
     // 更新状态
     props.setEvents(sortedEvents)
-    console.log('sortedEvents:', sortedEvents) //檢視是否可以成功排序ＯＫ
+    // console.log('sortedEvents:', sortedEvents) //檢視是否可以成功排序ＯＫ
     setPriceOrder(priceOrder === 'asc' ? 'desc' : 'asc')
   }
 
