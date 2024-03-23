@@ -115,8 +115,8 @@ export default function Sidebar(props) {
 
   return (
     <>
-      <div className="upSidebar">
-        <h6>活動種類</h6>
+      <div className="upSidebar mb-4">
+        <h5 className='my-3'>活動種類</h5>
         <div className="form-group">
           <div className="form-check">
             <input
@@ -126,12 +126,12 @@ export default function Sidebar(props) {
               onChange={handleSelectAll}
               id="flexCheckAll"
             />
-            <label className="form-check-label" htmlFor="flexCheckAll">
+            <label className="form-check-label mb-2" htmlFor="flexCheckAll">
               所有類型
             </label>
           </div>
           {categories.map((category, index) => (
-            <div className="form-check" key={index}>
+            <div className="form-check mb-2" key={index}>
               <input
                 className="form-check-input"
                 type="checkbox"
@@ -146,18 +146,18 @@ export default function Sidebar(props) {
           ))}
         </div>
       </div>
-      <hr />
+      <hr className='mb-4'/>
       <div className="downSidebar no-border">
-        <h6>地區</h6>
+        <h5 className='mb-3'>地區</h5>
         <div className="accordion" id="accordionExample">
           {City.map((region) => (
             <div
               key={region.id}
-              className="accordion-item regionColor text-white"
+              className="accordion-item regionColor text-white mb-2"
             >
               <h2 className="accordion-header" id={`heading-${region.id}`}>
                 <button
-                  className="accordion-button p-1 gap-2 bg-bg-gray text-white"
+                  className="accordion-button p-0 gap-2 text-white"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target={`#collapse-${region.id}`}
@@ -166,7 +166,7 @@ export default function Sidebar(props) {
                 >
                   <input
                     type="checkbox"
-                    className="form-check-input"
+                    className="form-check-input m-0"
                     checked={selectedRegions[region.name] || false}
                     onChange={(e) =>
                       handleRegionCheckboxChange(region.name, e.target.checked)
@@ -188,7 +188,7 @@ export default function Sidebar(props) {
               >
                 <div className="accordion-body">
                   {region.cities.map((city) => (
-                    <div key={city.id} className="form-check">
+                    <div key={city.id} className="form-check mb-1">
                       <input
                         className="form-check-input"
                         type="checkbox"
@@ -213,9 +213,21 @@ export default function Sidebar(props) {
         </div>
       </div>
       <style global jsx>{`
+      input{
+        background-color: white;
+      }
         .regionColor {
           background-color: #151515;
           color: #fff;
+        }
+        .accordion-item, .accordion-button{
+          background-color: #00000000 !important;
+        }
+        .accordion-button:focus{
+          box-shadow: none !important;
+        }
+        .collapsed::after {
+          background-image: var(--bs-accordion-btn-active-icon);
         }
       `}</style>
     </>

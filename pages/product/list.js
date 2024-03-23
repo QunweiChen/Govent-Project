@@ -198,20 +198,22 @@ export default function List() {
                           />
                         </figure>
 
-                        <div className="card-body">
-                          <p className=" text-normal-gray-light">
+                        <div className="card-body d-flex flex-column justify-content-between pt-0">
+                          <div>
+                          <p className="text-normal-gray-light sm-p mb-2">
                             {v.category_name}
                           </p>
-                          <h5 className="card-title">{v.event_name}</h5>
-                          <div className="">
-                            <h6 className="text-primary-deep">
-                              ${v.price || 0}起
+                          <h6 className="card-title">{v.event_name}</h6>
+                          </div>
+                          <div>
+                          <h6 className="text-primary-deep">
+                              $ {v.price || 0}起
                             </h6>
                             <div className="d-flex justify-content-between">
-                              <p className="text-normal-gray-light mb-2">
+                              <p className="m-0 sm-p text-normal-gray-light">
                                 {v.str}
                               </p>
-                              <span className="text-normal-gray-light">
+                              <span className="sm-p text-normal-gray-light">
                                 {v.start_date.substring(0, 10)}
                               </span>
                             </div>
@@ -281,12 +283,16 @@ export default function List() {
 
       <style global jsx>{`
         body {
-          background-color: #151515;
           color: #fff;
+          background-color: var(--bg-gray-color);
           border: border-inline;
         }
         .w-1200 {
           max-width: 1200px;
+        }
+        .card{
+          border-radius: 10px;
+          overflow: hidden;
         }
         figure img {
           width: 268px;
@@ -296,10 +302,10 @@ export default function List() {
           }
           object-fit: cover;
           width: 100%;
+          height:
         }
         .cardList i {
-          background-color: #404040;
-          opacity: 0.5;
+          opacity: 0.8;
         }
 
         .test {
