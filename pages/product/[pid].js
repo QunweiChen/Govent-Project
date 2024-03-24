@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import EventsRecommend from '@/components/events-recommend'
 import Calendar from '@/components/product/date'
+import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCart } from '@/hooks/use-cart'
@@ -82,11 +83,7 @@ export default function Detail() {
 
   }, [router.isReady])
 
-  useEffect(() => {
-    if (ticketInfo && selectDate) {
-      getAll(ticketInfo, selectDate)
-    }
-  }, [ticketInfo, selectDate]);
+ 
 
 
   const getOptionTickets = async (pid) => {
@@ -127,6 +124,7 @@ export default function Detail() {
 
     const holdingTime = `${formattedDate} ${selectTime}`;
     console.log(holdingTime);
+    
 
     // 构建一个包含所有票的数组
     const allTickets = ticketInfo.map(ticket => ({
@@ -239,7 +237,7 @@ export default function Detail() {
             />
           </div>
         </section>
-        {/* 主頁活動資訊 */}
+     {/* 主頁活動資訊 */}
         {eventInfo.map((eventInfo) => (
           <main key={eventInfo.id}>
             <div className="wrapper">
@@ -255,7 +253,11 @@ export default function Detail() {
                     type="button"
                     className="store btn btn-primary-deep-50 d-none d-xxl-block"
                   >
-                    <i className="bi bi-heart me-2" />
+                    <FavIcon
+                            pid={eventInfo.pid}
+                            // events={eventInfo}
+                            // setEvents={setEventInfo}
+                          />
                     收藏
                   </button>
                 </div>
@@ -294,7 +296,7 @@ export default function Detail() {
                 </div>
                 <hr />
               </section>
-              {/* 活動票券 */}
+   {/* 票券種類 */}
               <div className="d-flex align-items-center mt-5">
                 <h4  className="border-5 border-start border-primary px-2">
                   選擇方案
@@ -486,8 +488,7 @@ export default function Detail() {
               </section>
             </div>
 
-            {/* RWD  */}
-
+{/* RWD  */}
             {/* 按鈕 */}
             <div className="d-inline-flex d-xxl-none align-items-center justify-content-center col-12 bg-bg-gray-secondary p-3 rounded-3">
               <h5 className="col-8">NT$ {minPrice} 起</h5>
