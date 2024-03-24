@@ -83,6 +83,12 @@ export default function Detail() {
 
   }, [router.isReady])
 
+  useEffect(() => {
+    if (ticketInfo && selectDate) {
+      getAll(ticketInfo, selectDate)
+    }
+  }, [ticketInfo, selectDate])
+
  
 
 
@@ -125,29 +131,47 @@ export default function Detail() {
     const holdingTime = `${formattedDate} ${selectTime}`;
     console.log(holdingTime);
     
-
-    // 构建一个包含所有票的数组
-    const allTickets = ticketInfo.map(ticket => ({
-      "id": ticket.id,
-      "merchantId": ticket.merchat_id,
-      "eventTypeId": ticket.event_type_id,
-      "eventName": ticket.event_name,
-      "holdingTime": holdingTime,
-      "images": ticket.banner,
-      "ticketName": ticket.option_name,
-      "price": ticket.price,
-      "qty": ticket.qty,
-      "eventId": ticket.event_id,
-      "eventOptionId": ticket.option_id,
-    }));
-
-    setAll(allTickets);
+    setAll([
+      {
+        id: ticketInfo[0].id,
+        merchantId: ticketInfo[0].merchat_id,
+        eventTypeId: ticketInfo[0].event_type_id,
+        eventName: ticketInfo[0].event_name,
+        holdingTime: holdingTime, //*
+        images: ticketInfo[0].banner,
+        ticketName: ticketInfo[0].option_name,
+        price: ticketInfo[0].price,
+        qty: ticketInfo[0].qty, //*
+        eventId: ticketInfo[0].event_id,
+        eventOptionId: ticketInfo[0].option_id,
+      },
+    ])
   }
-  console.log(all);
 
-  useEffect(() => {
-    console.log(all);
-  }, [all]);
+  console.log(all)
+
+  //   // 构建一个包含所有票的数组
+  //   const allTickets = ticketInfo.map(ticket => ({
+  //     "id": ticket.id,
+  //     "merchantId": ticket.merchat_id,
+  //     "eventTypeId": ticket.event_type_id,
+  //     "eventName": ticket.event_name,
+  //     "holdingTime": holdingTime,
+  //     "images": ticket.banner,
+  //     "ticketName": ticket.option_name,
+  //     "price": ticket.price,
+  //     "qty": ticket.qty,
+  //     "eventId": ticket.event_id,
+  //     "eventOptionId": ticket.option_id,
+  //   }));
+
+  //   setAll(allTickets);
+  // }
+  // console.log(all);
+
+  // useEffect(() => {
+  //   console.log(all);
+  // }, [all]);
 
   // 假設初始狀態是未選擇
   const [selected, setSelected] = useState(0);
@@ -253,11 +277,11 @@ export default function Detail() {
                     type="button"
                     className="store btn btn-primary-deep-50 d-none d-xxl-block"
                   >
-                    <FavIcon
+                    {/* <FavIcon
                             pid={eventInfo.pid}
                             // events={eventInfo}
                             // setEvents={setEventInfo}
-                          />
+                          /> */}
                     收藏
                   </button>
                 </div>
@@ -381,7 +405,7 @@ export default function Detail() {
                                       onClick={() => {
                                         console.log(v)
                                         addItem(all[0])
-                                        console.log(all[0])
+                                        console.log(all)
                                       }}
                                     >
                                       加入購物車
