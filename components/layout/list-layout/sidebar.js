@@ -30,6 +30,17 @@ export default function Sidebar(props) {
       setSelectedCategories({ [query.category]: true })
       console.log('Selected Categories after setting:', selectedCategories)
     }
+    // else if (query.regionName) {
+    //   setSelectedRegions({ [query.regionName]: true })
+    // }
+    if (query.regionName) {
+      const regionNames = query.regionName.split(',')
+      const newSelectedRegions = {}
+      regionNames.forEach((regionName) => {
+        newSelectedRegions[regionName] = true
+      })
+      setSelectedRegions(newSelectedRegions)
+    }
   }, [router.query])
 
   useEffect(() => {

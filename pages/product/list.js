@@ -85,7 +85,10 @@ export default function List() {
   // 分頁
   const indexOfLastEvent = currentPage * postsPerPage
   const indexOfFirstEvent = indexOfLastEvent - postsPerPage
-  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent)
+  // const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent)
+  const currentEvents = filteredEvents
+    ? filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent)
+    : []
 
   const handleFilterChange = (selectedCategories, selectedRegions) => {
     setSelectedCategories(selectedCategories)
@@ -158,11 +161,14 @@ export default function List() {
             onCity={handleCityEvents}
             onDate={handleDateEvents}
             onPrice={handlePriceEvents}
+            onRecommend={handleRecommendEvents}
           />
         </h5>
       </nav>
       <nav className="header-m ">
         <NavbarTopRwdSm
+          events={events} //傳原始資料至props
+          setEvents={setEvents} //
           onSortEvents={handleSortEvents}
           onCityEvents={handleCityEvents}
           onDateEvents={handleDateEvents}

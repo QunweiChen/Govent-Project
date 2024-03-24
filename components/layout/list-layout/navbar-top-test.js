@@ -1,12 +1,20 @@
 import React, { useState } from 'react'
 
 export default function NavbarTopRwdSm(props) {
-  const [activeButton, setActiveButton] = useState('')
+  const [activeButton, setActiveButton] = useState(0)
+  const [sortactiveButton, setSsrtactiveButton] = useState('')
   const [sortOrder, setSortOrder] = useState('')
   const [cityOrder, setCityOrder] = useState('')
   const [dateOrder, setDateOrder] = useState('')
   const [priceOrder, setPriceOrder] = useState('')
   const [recommendOrder, setRecommendOrder] = useState('')
+
+  const handleClick = (buttonIndex) => {
+    setActiveButton(buttonIndex)
+  }
+  const handleClickChang = () => {
+    setActiveButton(activeButton === 0 ? 1 : 0)
+  }
 
   const cityMap = {
     台北市: 1,
@@ -32,62 +40,54 @@ export default function NavbarTopRwdSm(props) {
 
   // 升降序排序函数
   const sortEvents = (sortingMethod) => {
+    // 不需要再创建 datedEvents 因为我们会直接在 sortedEvents 上操作
     let sortedEvents = [...props.events]
-    const processedEvents = props.events.map((event) => ({
-      ...event,
-      // 假设城市名称存储在属性 str 中
-      cityValue: cityMap[event.str] || 0, // 获取城市对应的数字值，如果城市不存在于映射中，则使用默认值 0
-    }))
-    const datedEvents = props.events.map((event) => ({
-      ...event,
-      date: new Date(event.start_date).getTime(),
-    }))
-    const uidEvents = props.events.map((event) => ({
-      ...event,
-      uid: event.uid !== null ? parseFloat(event.uid) : 0,
-    }))
-    let sortDirection
 
     switch (sortingMethod) {
       case 'date':
-        ;[...datedEvents].sort((a, b) =>
-          dateOrder === 'asc' ? a.date - b.date : b.date - a.date
-        )
+        sortedEvents.sort((a, b) => {
+          // 将日期字符串转换为日期对象进行比较
+          let dateA = new Date(a.start_date).getTime()
+          let dateB = new Date(b.start_date).getTime()
+          return dateOrder === 'asc' ? dateA - dateB : dateB - dateA
+        })
         setDateOrder(dateOrder === 'asc' ? 'desc' : 'asc')
-        sortDirection = dateOrder === 'asc' ? 'desc' : 'asc'
         break
       case 'price':
-        sortedEvents.sort((a, b) =>
-          priceOrder === 'asc' ? a.price - b.price : b.price - a.price
-        )
+        sortedEvents.sort((a, b) => {
+          // 确保price为数字类型，null或不可转换为数字的值视为0
+          let priceA =
+            a.price !== null && !isNaN(a.price) ? parseFloat(a.price) : 0
+          let priceB =
+            b.price !== null && !isNaN(b.price) ? parseFloat(b.price) : 0
+          return priceOrder === 'asc' ? priceA - priceB : priceB - priceA
+        })
         setPriceOrder(priceOrder === 'asc' ? 'desc' : 'asc')
-        sortDirection = priceOrder === 'asc' ? 'desc' : 'asc'
         break
       case 'city':
-        ;[...processedEvents].sort((a, b) =>
-          cityOrder === 'asc'
-            ? a.cityValue - b.cityValue
-            : b.cityValue - a.cityValue
-        )
+        // 直接使用 event.str 进行比较，但需要确保所有事件都有 str 属性
+        sortedEvents.sort((a, b) => {
+          let cityValueA = cityMap[a.str] || 0 // 使用 || 0 确保未定义的城市有默认值
+          let cityValueB = cityMap[b.str] || 0
+          return cityOrder === 'asc'
+            ? cityValueA - cityValueB
+            : cityValueB - cityValueA
+        })
         setCityOrder(cityOrder === 'asc' ? 'desc' : 'asc')
-        sortDirection = cityOrder === 'asc' ? 'desc' : 'asc'
         break
       case 'recommend':
+        // 推荐排序逻辑保持不变
         sortedEvents.sort((a, b) =>
-          recommendOrder === 'asc'
-            ? a.uidEvents - b.uidEvents
-            : b.uidEvents - a.uidEvents
+          recommendOrder === 'asc' ? a.uid - b.uid : b.uid - a.uid
         )
         setRecommendOrder(recommendOrder === 'asc' ? 'desc' : 'asc')
-        sortDirection = recommendOrder === 'asc' ? 'desc' : 'asc'
         break
       default:
         break
     }
 
-    // 更新状态
+    // 更新事件列表
     props.setEvents(sortedEvents)
-    setSortOrder(sortDirection)
   }
 
   // 处理按钮点击事件
@@ -95,17 +95,19 @@ export default function NavbarTopRwdSm(props) {
     setActiveButton(buttonName)
   }
 
+
   // SortButton组件
-  function SortButton({ sortOrder }) {
+  function SortButton({ sortOrder, onSort }) {
+    const handleClick = () => {
+      const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
+      onSort('date', newSortOrder) // 此处传递 'date' 作为默认排序方法
+    }
+
     return (
       <button
-        onClick={() => {
-          setActiveButton('sort')
-          setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
-          sortEvents('sort')
-        }}
+        onClick={handleClick}
         className={`btn no-border rounded-0 text-white ${
-          activeButton === 'sort' ? 'active' : ''
+          sortOrder === 'asc' ? 'asc' : 'desc'
         }`}
       >
         排序方式
@@ -121,70 +123,100 @@ export default function NavbarTopRwdSm(props) {
   // RecommendButton组件
   function RecommendButton({ recommendOrder }) {
     return (
-      <button
-        onClick={() => {
-          handleButtonClick('recommend')
-          sortEvents('recommend')
+      <div
+        style={{
+          borderBottom:
+            activeButton === 0 ? '3px solid #c55708' : '3px solid #151515',
         }}
-        className={`btn ${
-          activeButton === 'recommend' ? 'text-primary-deep' : 'text-white'
-        } pb-0 rounded-0 no-border ${
-          activeButton === 'recommend' ? 'active' : ''
-        }`}
       >
-        推薦
-      </button>
+        <button
+          onClick={() => {
+            handleButtonClick('recommend')
+            sortEvents('recommend')
+            handleClick(0)
+          }}
+          className={`btn ${
+            activeButton === 0 ? 'text-primary-deep' : 'text-white'
+          } pb-0 rounded-0 no-border ${activeButton === 0 ? 'active' : ''}`}
+        >
+          推薦
+        </button>
+      </div>
     )
   }
 
   // CityButton组件
   function CityButton({ cityOrder }) {
     return (
-      <button
-        onClick={() => {
-          handleButtonClick('city')
-          sortEvents('city')
+      <div
+        style={{
+          borderBottom:
+            activeButton === 2 ? '3px solid #c55708' : '3px solid #151515',
         }}
-        className={`btn ${
-          activeButton === 'city' ? 'text-primary-deep' : 'text-white'
-        } pb-0 rounded-0 no-border ${activeButton === 'city' ? 'active' : ''}`}
       >
-        地區
-      </button>
+        <button
+          onClick={() => {
+            handleButtonClick('city')
+            sortEvents('city')
+            handleClick(2)
+          }}
+          className={`btn ${
+            activeButton === 2 ? 'text-primary-deep' : 'text-white'
+          } pb-0 rounded-0 no-border ${activeButton === 2 ? 'active' : ''}`}
+        >
+          地區
+        </button>
+      </div>
     )
   }
 
   // DateButton组件
   function DateButton({ dateOrder }) {
     return (
-      <button
-        onClick={() => {
-          handleButtonClick('date')
-          sortEvents('date')
+      <div
+        style={{
+          borderBottom:
+            activeButton === 1 ? '3px solid #c55708' : '3px solid #151515',
         }}
-        className={`btn ${
-          activeButton === 'date' ? 'text-primary-deep' : 'text-white'
-        } pb-0 rounded-0 no-border ${activeButton === 'date' ? 'active' : ''}`}
       >
-        日期
-      </button>
+        <button
+          onClick={() => {
+            handleButtonClick('date')
+            sortEvents('date')
+            handleClick(1)
+          }}
+          className={`btn ${
+            activeButton === 1 ? 'text-primary-deep' : 'text-white'
+          } pb-0 rounded-0 no-border ${activeButton === 1 ? 'active' : ''}`}
+        >
+          日期
+        </button>
+      </div>
     )
   }
 
   // PriceButton组件
   function PriceButton({ priceOrder }) {
     return (
-      <button
-        onClick={() => {
-          handleButtonClick('price')
-          sortEvents('price')
+      <div
+        style={{
+          borderBottom:
+            activeButton === 3 ? '3px solid #c55708' : '3px solid #151515',
         }}
-        className={`btn ${
-          activeButton === 'price' ? 'text-primary-deep' : 'text-white'
-        } pb-0 rounded-0 no-border ${activeButton === 'price' ? 'active' : ''}`}
       >
-        價格
-      </button>
+        <button
+          onClick={() => {
+            handleButtonClick('price')
+            sortEvents('price')
+            handleClick(3)
+          }}
+          className={`btn ${
+            activeButton === 3 ? 'text-primary-deep' : 'text-white'
+          } pb-0 rounded-0 no-border ${activeButton === 3 ? 'active' : ''}`}
+        >
+          價格
+        </button>
+      </div>
     )
   }
 
@@ -192,22 +224,17 @@ export default function NavbarTopRwdSm(props) {
     <selector className="header-m d-none d-sm-block">
       <section className="d-flex justify-content-between">
         <div className="sort_icon">
-          <SortButton sortOrder={sortOrder} />
+          <SortButton sortOrder={sortOrder} onSort={sortEvents} />
         </div>
 
         <div className="d-flex">
-          <div>
-            <RecommendButton recommendOrder={recommendOrder} />
-          </div>
-          <div>
-            <DateButton dateOrder={dateOrder} />
-          </div>
-          <div>
-            <PriceButton priceOrder={priceOrder} />
-          </div>
-          <div>
-            <CityButton cityOrder={cityOrder} />
-          </div>
+          <RecommendButton recommendOrder={recommendOrder} />
+
+          <DateButton dateOrder={dateOrder} />
+
+          <PriceButton priceOrder={priceOrder} />
+
+          <CityButton cityOrder={cityOrder} />
         </div>
       </section>
     </selector>

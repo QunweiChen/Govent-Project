@@ -31,20 +31,53 @@ const menuItems = [
       { id: 29, label: '景點門票', href: '/product/list/?category=景點門票' },
     ],
   },
-  // {
-  //   id: 3,
-  //   label: '地區',
-  //   href: '/member',
-  //   children: [
-  //     { id: 32, label: '大台北地區', href: '/member/login' },
-  //     { id: 33, label: '桃園', href: '/member/register' },
-  //     { id: 34, label: '台中', href: '/member/forget-password' },
-  //     { id: 35, label: '高雄', href: '/member/forget-password' },
-  //     { id: 36, label: '台南', href: '/member/forget-password' },
-  //     { id: 37, label: '台東', href: '/member/forget-password' },
-  //     { id: 38, label: '全部列表', href: '/member/forget-password' },
-  //   ],
-  // },
+  {
+    id: 3,
+    label: '地區',
+    href: '/member',
+    children: [
+      {
+        id: 32,
+        label: '大台北地區',
+        href: '/product/list?category=&regionName=基隆市,台北市,新北市',
+      },
+      {
+        id: 33,
+        label: '桃園',
+        href: '/product/list?category=&regionName=桃園市',
+      },
+      {
+        id: 34,
+        label: '新竹地區',
+        href: '/product/list?category=&regionName=新竹市,新竹縣',
+      },
+      {
+        id: 35,
+        label: '台中',
+        href: '/product/list?category=&regionName=台中市',
+      },
+      {
+        id: 36,
+        label: '嘉義',
+        href: '/product/list?category=&regionName=嘉義縣,嘉義市',
+      },
+      {
+        id: 37,
+        label: '台南',
+        href: '/product/list?category=&regionName=台南市',
+      },
+      {
+        id: 38,
+        label: '高雄',
+        href: '/product/list?category=&regionName=高雄市',
+      },
+      {
+        id: 39,
+        label: '花蓮',
+        href: '/product/list?category=&regionName=花蓮縣',
+      },
+    ],
+  },
 ]
 
 export default function MainMenu({ currentRoute = '/' }) {
