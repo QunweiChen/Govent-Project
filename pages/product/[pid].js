@@ -6,6 +6,8 @@ import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCart } from '@/hooks/use-cart'
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 export default function Detail() {
   //引入鉤子
@@ -15,6 +17,8 @@ export default function Detail() {
   const HtmlRenderer = ({ htmlContent }) => {
     return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
   };
+
+  const MySwal = withReactContent(Swal);
 
   const [eventInfo, setEventInfo] = useState([]);
   const [ticketInfo, setTicketInfo] = useState([]);
@@ -89,7 +93,7 @@ export default function Detail() {
     }
   }, [ticketInfo, selectDate])
 
- 
+
 
 
   const getOptionTickets = async (pid) => {
@@ -130,48 +134,28 @@ export default function Detail() {
 
     const holdingTime = `${formattedDate} ${selectTime}`;
     console.log(holdingTime);
-    
-    setAll([
-      {
-        id: ticketInfo[0].id,
-        merchantId: ticketInfo[0].merchat_id,
-        eventTypeId: ticketInfo[0].event_type_id,
-        eventName: ticketInfo[0].event_name,
-        holdingTime: holdingTime, //*
-        images: ticketInfo[0].banner,
-        ticketName: ticketInfo[0].option_name,
-        price: ticketInfo[0].price,
-        qty: ticketInfo[0].qty, //*
-        eventId: ticketInfo[0].event_id,
-        eventOptionId: ticketInfo[0].option_id,
-      },
-    ])
+
+    let allTickets = [];
+
+    for (let i = 0; i < ticketInfo.length; i++) {
+      let ticket = ticketInfo[i];
+      allTickets.push({
+        id: ticket.id,
+        merchantId: ticket.merchat_id,
+        eventTypeId: ticket.event_type_id,
+        eventName: ticket.event_name,
+        holdingTime: holdingTime,
+        images: ticket.banner,
+        ticketName: ticket.option_name,
+        price: ticket.price,
+        qty: ticket.qty,
+        eventId: ticket.event_id,
+        eventOptionId: ticket.option_id,
+      });
+    }
+
+    setAll(allTickets);
   }
-
-  console.log(all)
-
-  //   // 构建一个包含所有票的数组
-  //   const allTickets = ticketInfo.map(ticket => ({
-  //     "id": ticket.id,
-  //     "merchantId": ticket.merchat_id,
-  //     "eventTypeId": ticket.event_type_id,
-  //     "eventName": ticket.event_name,
-  //     "holdingTime": holdingTime,
-  //     "images": ticket.banner,
-  //     "ticketName": ticket.option_name,
-  //     "price": ticket.price,
-  //     "qty": ticket.qty,
-  //     "eventId": ticket.event_id,
-  //     "eventOptionId": ticket.option_id,
-  //   }));
-
-  //   setAll(allTickets);
-  // }
-  // console.log(all);
-
-  // useEffect(() => {
-  //   console.log(all);
-  // }, [all]);
 
   // 假設初始狀態是未選擇
   const [selected, setSelected] = useState(0);
@@ -261,7 +245,7 @@ export default function Detail() {
             />
           </div>
         </section>
-     {/* 主頁活動資訊 */}
+        {/* 主頁活動資訊 */}
         {eventInfo.map((eventInfo) => (
           <main key={eventInfo.id}>
             <div className="wrapper">
@@ -320,9 +304,9 @@ export default function Detail() {
                 </div>
                 <hr />
               </section>
-   {/* 票券種類 */}
+              {/* 票券種類 */}
               <div className="d-flex align-items-center mt-5">
-                <h4  className="border-5 border-start border-primary px-2">
+                <h4 className="border-5 border-start border-primary px-2">
                   選擇方案
                 </h4>
               </div>
@@ -401,15 +385,18 @@ export default function Detail() {
                                 </div>
                                 <div className="d-flex justify-content-end mb-3">
                                   {/* <Link href={`/cart`}> */}
-                                    <button className="store fs-5 me-2 p-2 btn btn-primary-deep"
-                                      onClick={() => {
-                                        console.log(v)
-                                        addItem(all[0])
-                                        console.log(all)
-                                      }}
-                                    >
-                                      加入購物車
-                                    </button>
+                                  <button className="store fs-5 me-2 p-2 btn btn-primary-deep"
+                                    onClick={() => {
+                                      addItem(all[i])
+                                      MySwal.fire({
+                                        icon: 'success',
+                                        title: '已成功加入購物車',
+                                      })
+                                  
+                                    }}
+                                  >
+                                    加入購物車
+                                  </button>
                                   {/* </Link> */}
                                 </div>
                               </div>
@@ -436,7 +423,7 @@ export default function Detail() {
                 <div className="right d-none d-xxl-block col-3">
                   <div className="row seat1 mt-3">
                     <h5 className="col-12 mb-3"> NT$ {minPrice} {minPrice !== maxPrice ? `~ ${maxPrice}` : ''}</h5>
-                    <a href="#eventIntro4" type="button"  className="store col-12 btn btn-primary-deep">
+                    <a href="#eventIntro4" type="button" className="store col-12 btn btn-primary-deep">
                       立即購買
                     </a>
                   </div>
@@ -463,7 +450,7 @@ export default function Detail() {
                       使用方式
                     </h5>
                   </a>
-                
+
                 </div>
               </section>
               {/* 購買須知 */}
@@ -512,7 +499,7 @@ export default function Detail() {
               </section>
             </div>
 
-{/* RWD  */}
+            {/* RWD  */}
             {/* 按鈕 */}
             <div className="d-inline-flex d-xxl-none align-items-center justify-content-center col-12 bg-bg-gray-secondary p-3 rounded-3">
               <h5 className="col-8">NT$ {minPrice} 起</h5>
