@@ -112,7 +112,7 @@ export default function NavbarTopRwdSm(props) {
       >
         排序方式
         <i
-          className={`bi ${
+          className={`bi ms-2 ${
             sortOrder === 'asc' ? 'bi-sort-down' : 'bi-sort-up'
           } btn-primary-deep`}
         ></i>
@@ -137,7 +137,7 @@ export default function NavbarTopRwdSm(props) {
           }}
           className={`btn ${
             activeButton === 0 ? 'text-primary-deep' : 'text-white'
-          } pb-0 rounded-0 no-border ${activeButton === 0 ? 'active' : ''}`}
+          } px-3 rounded-0 no-border ${activeButton === 0 ? 'active' : ''}`}
         >
           推薦
         </button>
@@ -162,7 +162,7 @@ export default function NavbarTopRwdSm(props) {
           }}
           className={`btn ${
             activeButton === 2 ? 'text-primary-deep' : 'text-white'
-          } pb-0 rounded-0 no-border ${activeButton === 2 ? 'active' : ''}`}
+          } px-3 rounded-0 no-border ${activeButton === 2 ? 'active' : ''}`}
         >
           地區
         </button>
@@ -187,7 +187,7 @@ export default function NavbarTopRwdSm(props) {
           }}
           className={`btn ${
             activeButton === 1 ? 'text-primary-deep' : 'text-white'
-          } pb-0 rounded-0 no-border ${activeButton === 1 ? 'active' : ''}`}
+          } px-3 rounded-0 no-border ${activeButton === 1 ? 'active' : ''}`}
         >
           日期
         </button>
@@ -212,7 +212,7 @@ export default function NavbarTopRwdSm(props) {
           }}
           className={`btn ${
             activeButton === 3 ? 'text-primary-deep' : 'text-white'
-          } pb-0 rounded-0 no-border ${activeButton === 3 ? 'active' : ''}`}
+          } px-3 rounded-0 no-border ${activeButton === 3 ? 'active' : ''}`}
         >
           價格
         </button>

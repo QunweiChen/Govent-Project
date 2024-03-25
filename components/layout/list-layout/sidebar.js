@@ -127,7 +127,7 @@ export default function Sidebar(props) {
   return (
     <>
       <div className="upSidebar mb-4">
-        <h5 className='my-3'>活動種類</h5>
+        <h5 className='mb-3'>活動種類</h5>
         <div className="form-group">
           <div className="form-check">
             <input

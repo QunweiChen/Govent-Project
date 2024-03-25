@@ -424,7 +424,7 @@ export default function Detail() {
                                     }}
                                   />
                                 </div>
-                                <div className="d-flex mt-5">
+                                <div className="d-flex mt-5 mb-4">
                                   <h5 className="">總金額</h5>
                                   <h4 className="dollar">
                                     NT$ {v.price * v.qty}
@@ -432,9 +432,9 @@ export default function Detail() {
                                 </div>
 
                                 {!auth.isAuthenticated ? (
-                                  <div className="d-flex justify-content-end mb-3">
+                                  <div className="d-flex justify-content-end">
                                     <button
-                                      className="store fs-5 me-2 p-2 btn btn-primary-deep"
+                                      className="store fs-5 p-2 btn btn-primary-deep"
                                       onClick={() => {
                                         if (!isLoggedIn) {
                                           // 如果用户未登录，显示 Modal
@@ -483,7 +483,7 @@ export default function Detail() {
                                     </Modal>
                                   </div>
                                 ) : (
-                                  <div className="d-flex justify-content-end mb-3">
+                                  <div className="d-flex justify-content-end">
                                     <button
                                       className="store fs-5 me-2 p-2 btn btn-primary-deep"
                                       onClick={() => {
