@@ -3,14 +3,15 @@ import ProductInfo from '@/components/payment/product-info/index.js'
 import DefaultLayout from '@/components/layout/default-layout'
 import PaymentForm from '@/components/payment/payment-Form'
 import { useCart } from '@/hooks/use-cart'
-import { useAuth } from '@/hooks/use-auth'
 import MoneyInfo from '@/components/payment/money-info'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function Payment() {
   const { auth } = useAuth()
 
   //總金額
   const [money, setMoney] = useState(0)
+  console.log(money)
   //點數及優惠券的值
   const [discount, setDiscount] = useState({
     point: 0,
@@ -93,6 +94,7 @@ export default function Payment() {
   //初始化設定
   useEffect(() => {
     setMoney(TotalPrice())
+
     if (!auth.isAuthenticated) {
       window.location.replace('http://localhost:3000')
     }
