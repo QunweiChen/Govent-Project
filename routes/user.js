@@ -64,10 +64,11 @@ router.post('/signup', async function (req, res, next) {
     const fullAddress = `${county}${township}${address}`
     const createTime = new Date().toISOString().slice(0, 19).replace('T', ' ')
     const avatar = 'default_user.png'
+    const point = 0
 
     //新增註冊者資料
     const newUser = await sequelize.query(
-      'INSERT INTO member (username, password, name, gender, birthday, phone, address, create_at, avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO member (username, password, name, gender, birthday, phone, address, create_at, avatar, point) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       {
         replacements: [
           username,
@@ -79,6 +80,7 @@ router.post('/signup', async function (req, res, next) {
           fullAddress,
           createTime,
           avatar,
+          point,
         ],
         type: QueryTypes.INSERT,
       }
