@@ -132,6 +132,7 @@ export default function CartCard({
                                   className="btn"
                                   onClick={() => {
                                     incrementOne(cartItems, v.id)
+                                    console.log(v)
                                   }}
                                 >
                                   <i className="bi bi-plus-circle text-white"></i>
@@ -149,7 +150,7 @@ export default function CartCard({
                                 type="button"
                                 className="p btn d-flex justify-content-center align-items-center text-white text-nowrap"
                                 data-bs-toggle="modal"
-                                data-bs-target="#delete"
+                                data-bs-target={`#delete-${v.id}`}
                               >
                                 <i className="bi bi-trash-fill text-primary-light me-1"></i>
                                 刪除
@@ -161,7 +162,7 @@ export default function CartCard({
                       {/* 吐司 */}
                       <div
                         className="modal fade"
-                        id="delete"
+                        id={`delete-${v.id}`}
                         data-bs-backdrop="static"
                         data-bs-keyboard="false"
                         tabindex="-1"
@@ -198,6 +199,8 @@ export default function CartCard({
                                 data-bs-dismiss="modal"
                                 onClick={() => {
                                   setTimeout(() => {
+                                    // console.log(v)
+                                    // console.log(v.id)
                                     removeItem(cartItems, v.id)
                                   }, 650)
                                 }}
