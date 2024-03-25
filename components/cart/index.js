@@ -162,6 +162,11 @@ export default function CartIndex() {
       </Modal>
       <style global jsx>
         {`
+          .myToast {
+            /* Styles for the toast */
+            background-color: #232323 !important;
+            color: #c55708 !important;
+          }
           body {
             background-color: #151515;
           }
@@ -191,6 +196,7 @@ export default function CartIndex() {
           .cart-logo {
             width: 160px;
           }
+
           @media screen and (max-width: 576px) {
             .truncatetext {
               overflow: hidden;

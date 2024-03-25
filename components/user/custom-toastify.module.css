@@ -7,6 +7,11 @@
   background-color: #232323 !important;
   color: #c55708 !important;
 }
+.myToastcart {
+  /* Styles for the toast */
+  background-color: #4d4d4d !important;
+  color: #c55708 !important;
+}
 
 .my-toast-body {
   /* Styles for the toast body */

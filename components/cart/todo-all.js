@@ -1,5 +1,6 @@
 import React from 'react'
 import Col from 'react-bootstrap/Col'
+import toastStyle from '@/components/user/custom-toastify.module.css'
 
 export default function TodoAll({
   handleToggleSelectedAll = () => {},
@@ -47,8 +48,8 @@ export default function TodoAll({
         aria-hidden="true"
       >
         <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header ">
+          <div className={`${toastStyle.myToastcart} modal-content`}>
+            <div className="modal-header border-0">
               <h6 className="modal-title" id="staticBackdropLabel">
                 是否清空所有購物車內容?
               </h6>
