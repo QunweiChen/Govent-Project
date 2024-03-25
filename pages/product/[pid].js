@@ -9,6 +9,11 @@ import { useCart } from '@/hooks/use-cart'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { motion } from 'framer-motion'
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
+import { useAuth } from '@/hooks/use-auth'
+
+
 
 export default function Detail() {
   //引入鉤子
@@ -18,8 +23,14 @@ export default function Detail() {
     query: { pid },
   } = useRouter()
   const HtmlRenderer = ({ htmlContent }) => {
-    return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-  }
+    return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+  };
+
+  const [show, setShow] = useState(false)
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+  const { auth } = useAuth()
+
 
   const MySwal = withReactContent(Swal)
 
@@ -203,6 +214,8 @@ export default function Detail() {
     })
     setTicketInfo(newItems)
   }
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <>
@@ -414,20 +427,49 @@ export default function Detail() {
                                     NT$ {v.price * v.qty}
                                   </h4>
                                 </div>
-                                <div className="d-flex align-items-end justify-content-end add-category">
-                                  <button
-                                    className="store fs-5 p-2 px-4 btn btn-primary-deep"
-                                    onClick={() => {
-                                      addItem(all[0])
-                                      MySwal.fire({
-                                        icon: 'success',
-                                        title: '已成功加入購物車',
-                                      })
-                                    }}
-                                  >
-                                    加入購物車
-                                  </button>
-                                </div>
+
+                                {auth.isAuthenticated || !isLoggedIn ? (
+                                  <div className="d-flex justify-content-end mb-3">
+                                    <button className="store fs-5 me-2 p-2 btn btn-primary-deep"
+                                      onClick={() => {
+                                        if (!isLoggedIn) {
+                                          // 如果用户未登录，显示 Modal
+                                          handleShow();
+                                        } else {
+                                          // 如果用户已登录，将商品加入购物车
+                                          addItem(all[0]);
+                                          MySwal.fire({
+                                            icon: 'success',
+                                            title: '已成功加入購物車',
+                                          });
+                                        }
+                                      }}
+                                    >
+                                      加入購物車
+                                    </button>
+                                    <Modal show={show} onHide={handleClose}>
+                                      <Modal.Header closeButton className="text-black">
+                                        <Modal.Title>請先登錄會員才可使用購物車</Modal.Title>
+                                      </Modal.Header>
+                                      <Modal.Body className="text-black">
+                                        <p>
+                                          没有註冊會員?
+                                          <Link href="/user/signup">
+                                            <span className="text-primary"> 前往註冊</span>
+                                          </Link>
+                                        </p>
+                                      </Modal.Body>
+                                      <Modal.Footer>
+                                        <Link href="/user/signin">
+                                          <Button variant="primary" className="text-white">
+                                            已有會員登錄
+                                          </Button>
+                                        </Link>
+                                      </Modal.Footer>
+                                    </Modal>
+                                  </div>
+                                ) : null}
+
                               </div>
                             </div>
                           </>
@@ -437,7 +479,6 @@ export default function Detail() {
                   )
                 })}
               </section>
-
               <section className="row">
                 {/* left bar */}
                 <div className="left col-lg-8 col-sm-12">
@@ -630,25 +671,49 @@ export default function Detail() {
                               </div>
                               <br />
                               <div className="modal-footer">
-                                <button
-                                  type="button"
-                                  className="btn btn-primary-deep text-white"
-                                  data-bs-dismiss="modal"
-                                  onClick={() => {
-                                    addItem(all[0])
-                                    MySwal.fire({
-                                      icon: 'success',
-                                      title: '已成功加入購物車',
-                                    })
-                                  }}
-                                >
-                                  加入購物車
-                                </button>
-                                <button
-                                  type="button"
-                                  className="btn btn-primary text-white"
-                                  data-bs-dismiss="modal"
-                                >
+                              {auth.isAuthenticated || !isLoggedIn ? (
+                                  <div className="">
+                                    <button className="btn btn-primary-deep text-white"
+                                      onClick={() => {
+                                        if (!isLoggedIn) {
+                                          // 如果用户未登录，显示 Modal
+                                          handleShow();
+                                        } else {
+                                          // 如果用户已登录，将商品加入购物车
+                                          addItem(all[0]);
+                                          MySwal.fire({
+                                            icon: 'success',
+                                            title: '已成功加入購物車',
+                                          });
+                                        }
+                                      }}
+                                    >
+                                      加入購物車
+                                    </button>
+                                    <Modal show={show} onHide={handleClose}>
+                                      <Modal.Header closeButton className="text-black">
+                                        <Modal.Title>請先登錄會員才可使用購物車</Modal.Title>
+                                      </Modal.Header>
+                                      <Modal.Body className="text-black">
+                                        <p>
+                                          没有註冊會員?
+                                          <Link href="/user/signup">
+                                            <span className="text-primary"> 前往註冊</span>
+                                          </Link>
+                                        </p>
+                                      </Modal.Body>
+                                      <Modal.Footer>
+                                        <Link href="/user/signin">
+                                          <Button variant="primary" className="text-white">
+                                            已有會員登錄
+                                          </Button>
+                                        </Link>
+                                      </Modal.Footer>
+                                    </Modal>
+                                  </div>
+                                ) : null}
+
+                                <button type="button" className="btn btn-primary text-white" data-bs-dismiss="modal">
                                   取消
                                 </button>
                               </div>
@@ -671,9 +736,10 @@ export default function Detail() {
             background-color: #151515;
             color: #fff;
           }
-
+          
           .object-fit-cover {
             width: 100%;
+            height: 550px;
             object-fit: cover;
             border-radius: 10px;
           }
