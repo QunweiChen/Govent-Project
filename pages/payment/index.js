@@ -87,7 +87,7 @@ export default function Payment() {
         break
     }
     if (TotalMoney <= 0) {
-      alert('小於0')
+      alert('金額不可為負數')
     }
   }, [discount, discountState])
 

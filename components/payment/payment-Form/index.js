@@ -55,7 +55,7 @@ export default function PaymentForm({
         break
     }
 
-    let newPoint = pointData - discountObj.point
+    let newPoint = pointData - discountObj.point + redeem()
     let result = {
       ...data,
       money: money,
