@@ -49,7 +49,7 @@ export default function NavbarTopRwdSm(props) {
           // 将日期字符串转换为日期对象进行比较
           let dateA = new Date(a.start_date).getTime()
           let dateB = new Date(b.start_date).getTime()
-          return dateOrder === 'asc' ? dateA - dateB : dateB - dateA
+          return dateOrder === 'asc' ? dateB - dateA : dateA - dateB
         })
         setDateOrder(dateOrder === 'asc' ? 'desc' : 'asc')
         break
@@ -60,7 +60,7 @@ export default function NavbarTopRwdSm(props) {
             a.price !== null && !isNaN(a.price) ? parseFloat(a.price) : 0
           let priceB =
             b.price !== null && !isNaN(b.price) ? parseFloat(b.price) : 0
-          return priceOrder === 'asc' ? priceA - priceB : priceB - priceA
+          return priceOrder === 'asc' ? priceB - priceA : priceA - priceB
         })
         setPriceOrder(priceOrder === 'asc' ? 'desc' : 'asc')
         break
@@ -70,8 +70,8 @@ export default function NavbarTopRwdSm(props) {
           let cityValueA = cityMap[a.str] || 0 // 使用 || 0 确保未定义的城市有默认值
           let cityValueB = cityMap[b.str] || 0
           return cityOrder === 'asc'
-            ? cityValueA - cityValueB
-            : cityValueB - cityValueA
+            ? cityValueB - cityValueA
+            : cityValueA - cityValueB
         })
         setCityOrder(cityOrder === 'asc' ? 'desc' : 'asc')
         break
@@ -94,7 +94,6 @@ export default function NavbarTopRwdSm(props) {
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName)
   }
-
 
   // SortButton组件
   function SortButton({ sortOrder, onSort }) {
