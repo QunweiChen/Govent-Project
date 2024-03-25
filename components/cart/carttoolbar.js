@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import { useCart } from '@/hooks/use-cart'
 import { useAuth } from '@/hooks/use-auth'
+import toastStyle from '@/components/user/custom-toastify.module.css'
 
 export default function Carttoolbar() {
   const { NavbaralcTotalItemstotal } = useCart()
@@ -45,22 +46,20 @@ export default function Carttoolbar() {
             <p className="d-none d-md-inline d-lg-none"> 購物車</p>
           </Link>
           <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton className="text-black">
-              <Modal.Title>請先登入會員才可使用購物車</Modal.Title>
+            <Modal.Header closeButton className={toastStyle.myToast}>
+              <Modal.Title className="text-white">
+                請先登入會員才可使用購物車
+                <p className="text-white mt-2">
+                  沒有註冊會員?
+                  <Link href="/user/signup">
+                    <span className={toastStyle.myToast}> 前往註冊</span>
+                  </Link>
+                </p>
+              </Modal.Title>
             </Modal.Header>
-            <Modal.Body className="text-black">
-              <p>
-                沒有註冊會員?
-                <Link href="/user/signup">
-                  <span className="text-primary"> 前往註冊</span>
-                </Link>
-              </p>
-            </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer className={`${toastStyle.myToast} border-0`}>
               <Link href="/user/signin">
-                <Button variant="primary" className="text-white">
-                  已有會員登入
-                </Button>
+                <Button variant="primary">已有會員登入</Button>
               </Link>
             </Modal.Footer>
           </Modal>

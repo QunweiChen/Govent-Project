@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'react-bootstrap/Image'
-
+import toastStyle from '@/components/user/custom-toastify.module.css'
 import { Modal } from 'react-bootstrap'
 
 export default function CartCard({
@@ -170,8 +170,11 @@ export default function CartCard({
                         aria-hidden="true"
                       >
                         <div className="modal-dialog modal-dialog-centered">
-                          <div className="modal-content">
-                            <div className="modal-header ">
+                          <div
+                            // className=""
+                            className={`${toastStyle.myToastcart} modal-content`}
+                          >
+                            <div className="modal-header border-0">
                               <h6
                                 className="modal-title"
                                 id="staticBackdropLabel"
