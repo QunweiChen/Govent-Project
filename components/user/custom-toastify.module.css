@@ -1,7 +1,13 @@
-.Toastify__toast {
-  background-color: #404040; /* Example: Change to Bootstrap's primary color */
-  color: #ff4136;
+.my-toast-container {
+  /* Styles for the toast container */
 }
-.Toastify__close-button {
-  color: #ff4136;
+
+.myToast {
+  /* Styles for the toast */
+  background-color: #232323 !important;
+  color: #c55708 !important;
+}
+
+.my-toast-body {
+  /* Styles for the toast body */
 }

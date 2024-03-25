@@ -117,7 +117,9 @@ export const AuthProvider = ({ children }) => {
     const { user } = await response.json()
     setAuth({ isAuthenticated: true, user })
     console.log({ isAuthenticated: true, user })
-    router.push('/')
+    setTimeout(() => {
+      router.push('/')
+    }, 5000)
   }
 
   // Sign out action
@@ -128,7 +130,9 @@ export const AuthProvider = ({ children }) => {
         credentials: 'include',
       })
       setAuth({ isAuthenticated: false, user: null })
-      router.push('/user/signin')
+      setTimeout(() => {
+        router.push('/')
+      }, 3000)
     } catch (error) {
       '登出出現錯誤', error
     }
