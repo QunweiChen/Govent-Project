@@ -258,7 +258,7 @@ router.post('/forgetPasswordEmail', async (req, res) => {
 
   //將驗證碼存入資料庫
   const insertCode = await sequelize.query(
-    'INSERT INTO ResetPassword (username, resetPasswordCode) VALUES (:email, :verificationCode)',
+    'INSERT INTO resetpassword (username, resetPasswordCode) VALUES (:email, :verificationCode)',
     {
       replacements: { email, verificationCode },
       type: QueryTypes.INSERT,
@@ -398,7 +398,7 @@ router.post('/validateResetCode', async (req, res) => {
 
   // 檢查是否有此 email
   const user = await sequelize.query(
-    'SELECT * FROM ResetPassword WHERE username = :username AND resetPasswordCode = :code',
+    'SELECT * FROM resetpassword WHERE username = :username AND resetPasswordCode = :code',
     {
       replacements: { username: email, code },
       type: QueryTypes.SELECT,
