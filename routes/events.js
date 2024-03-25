@@ -22,6 +22,7 @@ router.get('/', async function (req, res) {
     ON event.event_type_id = activity_category.id 
     LEFT JOIN \`event_options\` ON event.id = event_options.event_id 
     LEFT JOIN  \`favorites\` ON event.event_id = favorites.pid
+    WHERE event.end_date > CURDATE() 
     GROUP BY event.id;`,
     {
       type: QueryTypes.SELECT,
