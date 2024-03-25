@@ -8,17 +8,17 @@ const chunk = (arr, size) =>
   )
 
 
-export default function Calendar({ events, sellStartDate , sellEndDate = '' , setSelectDate}) {
+export default function Calendar({ events, sellStartDate, sellEndDate = '', setSelectDate }) {
 
 
-//時區問題(自動+8小時):創建一個新物件 sellStartDateObj，以 `sellStartDate` 作為參數。使用 `setHours` 將 `sellStartDateObj` 的小時數設定為當前小時數減 8。
+  //時區問題(自動+8小時):創建一個新物件 sellStartDateObj，以 `sellStartDate` 作為參數。使用 `setHours` 將 `sellStartDateObj` 的小時數設定為當前小時數減 8。
   let sellStartDateObj = new Date(sellStartDate);
-  sellStartDate= sellStartDateObj.setHours(sellStartDateObj.getHours() - 8);
+  sellStartDate = sellStartDateObj.setHours(sellStartDateObj.getHours() - 8);
 
   let sellEndDateObj = new Date(sellEndDate);
-  sellEndDate= sellEndDateObj.setHours(sellEndDateObj.getHours() - 8);
+  sellEndDate = sellEndDateObj.setHours(sellEndDateObj.getHours() - 8);
 
-  
+
   // 一開始未選中日期
   const [myDate, setMyDate] = useState(0)
 
@@ -64,38 +64,39 @@ export default function Calendar({ events, sellStartDate , sellEndDate = '' , se
   const allData = [...emptyData, ...valueData]
   //------ 以下準備呈現在網頁上
   const allDataChunks = chunk(allData, 7)
- // console.log('allDataChunks', allDataChunks);
-  
+  // console.log('allDataChunks', allDataChunks);
 
-// 新增狀態來存取年份和月份
-const [year, setYear] = useState(now.getFullYear());
-const [month, setMonth] = useState(now.getMonth() + 1);
 
-useEffect(() => {
-  const date = new Date(sellStartDate);
-  setYear(date.getFullYear());
-  setMonth(date.getMonth() + 1);
-}, [sellStartDate]);
+  // 新增狀態來存取年份和月份
+  const [year, setYear] = useState(now.getFullYear());
+  const [month, setMonth] = useState(now.getMonth() + 1);
 
-// 在按鈕的 onClick 事件更新年份和月份
-const LeftBtn = () => {
-  if (month === 1) {
-    setYear(year - 1);
-    setMonth(12);
-  } else {
-    setMonth(month - 1);
-  }
-};
+  useEffect(() => {
+    const date = new Date(sellStartDate);
+    setYear(date.getFullYear());
+    setMonth(date.getMonth() + 1);
+  }, [sellStartDate]);
 
-const RightBtn = () => {
-  if (month === 12) {
-    setYear(year + 1);
-    setMonth(1);
-  } else {
-    setMonth(month + 1);
-  }
-};
+  // // 在按鈕的 onClick 事件更新年份和月份
+  // const LeftBtn = () => {
+  //   if (month === 1) {
+  //     setYear(year - 1);
+  //     setMonth(12);
+  //   } else {
+  //     setMonth(month - 1);
+  //   }
+  // };
 
+  // const RightBtn = () => {
+  //   if (month === 12) {
+  //     setYear(year + 1);
+  //     setMonth(1);
+  //   } else {
+  //     setMonth(month + 1);
+  //   }
+  // };
+
+  const [selectedIdx, setSelectedIdx] = useState(null);
 
   return (
     <>
@@ -104,13 +105,13 @@ const RightBtn = () => {
           <h5 id="yearAndMonth" className="col-4">{`${year}`}</h5>
           <h5 id="yearAndMonth" className="col-4">{`${month}月`}</h5>
           <div className="d-flex pb-1">
-            <button className="leftBtn" 
+            <button className="leftBtn"
             // onClick={LeftBtn}
             >
               <i className="bi bi-caret-left-fill"></i>
             </button>
             <div className="month"></div>
-            <button className="rightBtn" 
+            <button className="rightBtn"
             // onClick={RightBtn}
             >
               <i className="bi bi-caret-right-fill"></i>
@@ -128,9 +129,9 @@ const RightBtn = () => {
           </thead>
 
           <tbody id="data">
-            
+
             {allDataChunks.map((v, i) => {
-              {/* console.log("v",v) */}
+              {/* console.log("v",v) */ }
 
               return (
                 <tr key={i}>
@@ -141,9 +142,9 @@ const RightBtn = () => {
                     sellStartDateObj.setHours(0, 0, 0, 0);
                     const sellEndDateObj = new Date(sellEndDate);
                     sellEndDateObj.setHours(0, 0, 0, 0);
-                    const currentDate = new Date(nowY, nowM -1, item);
+                    const currentDate = new Date(nowY, nowM - 1, item);
                     currentDate.setHours(0, 0, 0, 0);
-                    
+
                     const isSelectable = currentDate >= sellStartDateObj && currentDate <= sellEndDateObj;
                     {/* console.log("sellStartDate:", sellStartDateObj);
                     console.log("sellEndDate:",sellEndDateObj);
@@ -151,17 +152,15 @@ const RightBtn = () => {
                     console.log("isSelectable",isSelectable); */}
 
                     return (
+                      
                       <td
                         key={idx}
                         onClick={() => {
-                          if (item) setMyDate(item)
                           setSelectDate(`${currentDate}`)
-                          console.log("currentDate",currentDate);
-                          console.log(myDate, item);
+                          setSelectedIdx(idx);
+                          console.log("currentDate", currentDate);
                         }}
-                        className={`${isSelectable ? 'selectable' : ''} ${
-                        myDate === item ? 'chosen-date' : ''
-                      }`}
+                        className={`${isSelectable ? (selectedIdx === idx ? 'selected' : 'selectable') : ''}`}
                         style={isSelectable ? { cursor: 'pointer' } : { cursor: 'default' }}
                         role="presentation"
                       >
@@ -172,27 +171,6 @@ const RightBtn = () => {
                 </tr>
               )
             })}
-            {/* {allDataChunks.map((v, i) => {
-              return (
-                <tr key={i}>
-                  {v.map((item, idx) => (
-                    <td
-                      key={idx}
-                      onClick={() => {
-                        if (item) setMyDate(item)
-                      }}
-                      className={`${nowD === item ? 'today' : ''} ${
-                        myDate === item ? 'chosen-date' : ''
-                      }`}
-                      style={{ cursor: 'pointer' }}
-                      role="presentation"
-                    >
-                      {item}
-                    </td>
-                  ))}
-                </tr>
-              )
-            })} */}
           </tbody>
         </table>
       </div>
@@ -201,6 +179,10 @@ const RightBtn = () => {
           .selectable {
             background-color: #ff6600;
           }
+
+          .selected {
+            background-color: GoldenRod }
+
           .calendar {
             padding-top: 5px;
             background-color: #323232;
@@ -222,10 +204,6 @@ const RightBtn = () => {
 
           .today {
             background-color: DarkOrange;
-          }
-
-          .chosen-date {
-            background-color: coral;
           }
 
           .leftBtn {
