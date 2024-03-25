@@ -109,6 +109,10 @@ export default function Confirm() {
     if (router.isReady) {
       let transactionId = ''
       let orderID = router.query.orderID
+      if (!orderID) {
+        window.location.replace('http://localhost:3000/')
+        return
+      }
       let url = `http://localhost:3005/api/payment/confirm?transactionId=${transactionId}&orderID=${orderID}`
       let couponID = router.query.couponID
       let point = router.query.point

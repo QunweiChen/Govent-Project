@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import ProductInfo from '@/components/payment/product-info/index.js'
 import DefaultLayout from '@/components/layout/default-layout'
 import PaymentForm from '@/components/payment/payment-Form'
 import { useCart } from '@/hooks/use-cart'
 import MoneyInfo from '@/components/payment/money-info'
-import { useAuth } from '@/hooks/use-auth'
 
 export default function Payment() {
-  const { auth } = useAuth()
-
   //總金額
   const [money, setMoney] = useState(0)
   console.log(money)
@@ -91,16 +88,13 @@ export default function Payment() {
         break
     }
   }, [discount, discountState])
+
   //初始化設定
   useEffect(() => {
-    setMoney(TotalPrice())
-
-    if (!auth.isAuthenticated) {
-      window.location.replace('http://localhost:3000')
-    }
-  }, [])
-  useEffect(() => {
+    let TotalMoney = TotalPrice()
+    setMoney(TotalMoney)
     setProductData(news)
+    console.log(money)
   }, [])
   return (
     <>
@@ -121,6 +115,7 @@ export default function Payment() {
             redeem={redeem}
             coupon={coupon}
             couponMoney={couponMoney}
+            TotalPrice={TotalPrice}
           />
         </div>
         {/* 金額資訊 */}

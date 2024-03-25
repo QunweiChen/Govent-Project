@@ -19,8 +19,8 @@ export default function PaymentForm({
   productData = {},
   redeem = () => {},
   couponMoney = 0,
+  TotalPrice = () => {},
 }) {
-  console.log(money)
   //引入會員資料hook
   const { auth } = useAuth()
   //使用react-hook-form套件檢查form表單
@@ -108,12 +108,12 @@ export default function PaymentForm({
           id: selectedIndexID,
         },
       }
-
       setDiscount(setConnectionData)
       return
     }
-    let setConnectionData = { ...discount, [e.target.name]: e.target.value }
+
     if (e.target.name == 'point') {
+      let setConnectionData = { ...discount, [e.target.name]: e.target.value }
       let value = e.target.value
       if (value < 0) {
         alert('超過會員點數範圍')
@@ -129,9 +129,9 @@ export default function PaymentForm({
         pointInputRef.current.value = ''
         return
       }
+      setDiscount(setConnectionData)
+      return
     }
-
-    setDiscount(setConnectionData)
   }
   //監聽點數及優惠券是否被勾選
   const pointInputRef = useRef(null)
@@ -203,6 +203,7 @@ export default function PaymentForm({
   const [pointData, setPointData] = useState(0)
   //拿取會員的優惠券及點數資料
   useEffect(() => {
+    console.log(money)
     fetch('http://localhost:3005/api/payment-data/number', {
       method: 'GET',
       headers: {
@@ -212,6 +213,7 @@ export default function PaymentForm({
     })
       .then((response) => response.json())
       .then((response) => {
+        let money = TotalPrice()
         let point = Number(response.data.point[0].point)
         setPointData(point)
         let coupon = response.data.coupon
@@ -222,7 +224,7 @@ export default function PaymentForm({
       .catch((err) => {
         console.log(err)
       })
-  }, [money])
+  }, [])
 
   return (
     <>

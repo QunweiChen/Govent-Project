@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 export default function MoneyInfo({
   productData,
@@ -8,7 +8,6 @@ export default function MoneyInfo({
   money,
   redeem = () => {},
 }) {
-  console.log(money)
   return (
     <div
       className="bg-bg-gray-secondary  rounded-4 py-3 px-4 sticky-top"
