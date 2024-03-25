@@ -457,7 +457,10 @@ export default function PaymentForm({
               name="paymentType"
               id="creditCard"
               value="creditCard"
-              {...register('paymentType', { onChange: changeValue })}
+              {...register('paymentType', {
+                required: true,
+                onChange: changeValue,
+              })}
             />
             <label className="form-check-label" htmlFor="creditCard">
               信用卡 / 簽帳金融卡
@@ -601,12 +604,20 @@ export default function PaymentForm({
               name="paymentType"
               id="LinePay"
               value="line-pay"
-              {...register('paymentType', { onChange: changeValue })}
+              {...register('paymentType', {
+                required: true,
+                onChange: changeValue,
+              })}
             />
             <label className="form-check-label" htmlFor="LinePay">
               <Image src="/line-pay/LINE Pay_logo-02.png" />
             </label>
           </div>
+          {errors.paymentType && (
+            <p role="alert" className="text-danger pt-1">
+              請選擇付款方式
+            </p>
+          )}
         </div>
         {/* 訂單金額 手機版 */}
         <div className="bg-bg-gray-secondary  rounded-4 py-3 px-4  d-lg-none d-block mb-3">
