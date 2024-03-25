@@ -160,33 +160,6 @@ export default function CartIndex() {
           <Modal.Header closeButton>請勾選要結帳的票券</Modal.Header>
         </Modal.Body>
       </Modal>
-
-      {/* 判斷登入
-      <div
-        className="modal show"
-        style={{ display: 'block', position: 'initial' }}
-      >
-        <Modal.Dialog>
-          <Modal.Header closeButton>
-            <Modal.Title>請先登入會員</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            <p>
-              是否有註冊會員?
-              <Link href="">
-                <span className="text-primary"> 前往註冊會員</span>
-              </Link>
-            </p>
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button variant="primary" className="text-white">
-              已有會員-登入
-            </Button>
-          </Modal.Footer>
-        </Modal.Dialog>
-      </div> */}
       <style global jsx>
         {`
           body {
