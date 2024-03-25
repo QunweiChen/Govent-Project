@@ -12,15 +12,15 @@ router.get('/', async function (req, res) {
     `
     SELECT event.*, 
     favorites.*,
+    event_options.*,
     event.event_id AS pid,
     activity_category.id AS category_id,
     activity_category.activity_name AS category_name,
-    event_options.event_id AS event_options_id,
-    event_options.price 
+    event_options.event_id AS event_options_id
     FROM \`event\` 
     INNER JOIN \`activity_category\` 
     ON event.event_type_id = activity_category.id 
-    LEFT JOIN \`event_options\` ON event.id = event_options.event_id 
+    LEFT JOIN \`event_options\` ON event.event_id = event_options.event_id 
     LEFT JOIN  \`favorites\` ON event.event_id = favorites.pid
     WHERE event.end_date > CURDATE() 
     GROUP BY event.id;`,
