@@ -65,6 +65,7 @@ export default function PaymentForm({
       newPoint: newPoint,
       userID: auth.user.id,
     }
+    console.log(data.paymentType)
     fetch(`http://localhost:3005/api/payment/${data.paymentType}`, {
       method: 'POST',
       headers: {
@@ -73,9 +74,15 @@ export default function PaymentForm({
       body: JSON.stringify(result),
     })
       .then((response) => {
+        console.log(response)
         return response.json()
       })
       .then((response) => {
+        if (response.html) {
+          let formString = response.html
+          document.body.insertAdjacentHTML('afterend', formString)
+          document.getElementById('_form_aiochk').submit()
+        }
         if (response.url) {
           window.location.replace(response.url)
         }
@@ -448,8 +455,9 @@ export default function PaymentForm({
             </div>
           </div>
         </div>
-        {/* 信用卡 */}
+        {/* 付款方式 */}
         <div className="payment-type  py-3 px-4 rounded-4 mb-4 bg-bg-gray-secondary">
+          {/* 信用卡 */}
           <div className="form-check mb-4">
             <input
               className="form-check-input"
@@ -611,6 +619,23 @@ export default function PaymentForm({
             />
             <label className="form-check-label" htmlFor="LinePay">
               <Image src="/line-pay/LINE Pay_logo-02.png" />
+            </label>
+          </div>
+          {/* ECpay */}
+          <div className="form-check mb-4">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="paymentType"
+              id="ECpay"
+              value="ECpay"
+              {...register('paymentType', {
+                required: true,
+                onChange: changeValue,
+              })}
+            />
+            <label className="form-check-label" htmlFor="ECpay">
+              <Image src="/ECpay/ECpay.png" />
             </label>
           </div>
           {errors.paymentType && (

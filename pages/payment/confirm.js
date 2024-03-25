@@ -138,7 +138,6 @@ export default function Confirm() {
           delCoupon(couponID, point)
           qrCode(orderID)
           handleCheckout()
-          //如果成功五秒後跳轉回主頁
           return response
         })
         .catch((err) => {
@@ -147,14 +146,6 @@ export default function Confirm() {
     }
   }, [router.isReady])
 
-  useEffect(() => {
-    const id = setTimeout(() => {
-      window.location.replace('http://localhost:3000/')
-    }, 5000) // 5000 毫秒后执行
-
-    setTime(id)
-    return clearTimeout(time)
-  }, [])
   return (
     <>
       {state.result?.returnCode == '0000' && (
