@@ -22,7 +22,7 @@ export default function Home() {
           <div className={`${styles['image-container']} w-100`}>
             <motion.img
               initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.1 }}
               className="h-100"
               src="/images/index-silder/img_pc_08.png"
@@ -34,7 +34,7 @@ export default function Home() {
             ></div>
             <motion.div
               initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.8 }}
               className="govent-star"
             >
@@ -42,7 +42,7 @@ export default function Home() {
             </motion.div>
             <motion.div
               initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 1 }}
               style={{ rotate }}
               className="bg-rotate"
@@ -55,7 +55,7 @@ export default function Home() {
           >
             <motion.h5
               initial={{ y: 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.2 }}
               className={`px-4 ${styles['secondary-title-start']}`}
             >
@@ -63,14 +63,14 @@ export default function Home() {
             </motion.h5>
             <motion.div
               initial={{ y: 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.4 }}
             >
               <h1>YOASOBI 演唱會2024台北站</h1>
             </motion.div>
             <motion.div
               initial={{ y: 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.6 }}
               className="mt-3"
             >
@@ -87,7 +87,7 @@ export default function Home() {
           <div className={`${styles['image-container']} w-100`}>
             <motion.img
               initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.1 }}
               className="h-100"
               src="/images/index-silder/ive.png"
@@ -99,7 +99,7 @@ export default function Home() {
             ></div>
             <motion.div
               initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.8 }}
               className="govent-star"
             >
@@ -107,7 +107,7 @@ export default function Home() {
             </motion.div>
             <motion.div
               initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 1 }}
               style={{ rotate }}
               className="bg-rotate"
@@ -120,7 +120,7 @@ export default function Home() {
           >
             <motion.h5
               initial={{ y: 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.2 }}
               className={`px-4 ${styles['secondary-title-start']}`}
             >
@@ -128,14 +128,14 @@ export default function Home() {
             </motion.h5>
             <motion.div
               initial={{ y: 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.4 }}
             >
               <h1>‘SHOW WHAT I HAVE’ IN TAIPEI</h1>
             </motion.div>
             <motion.div
               initial={{ y: 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.6 }}
               className="mt-3"
             >
@@ -151,7 +151,7 @@ export default function Home() {
       </Carousel>
       <motion.div
         initial={{ y: 30, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7, delay: 0.3 }}
       >
         <EventsBar />

@@ -105,7 +105,7 @@ export default function List() {
   useEffect(() => {
     // 當篩選條件改變時，自動回到第一頁
     setCurrentPage(1)
-  }, [selectedCategories, selectedRegions, ])
+  }, [selectedCategories, selectedRegions])
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)

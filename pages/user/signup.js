@@ -4,6 +4,9 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import LoadingLayout from '@/components/layout/loading-layout'
 import { useRouter } from 'next/router'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import toastStyle from '@/components/user/custom-toastify.module.css'
 
 export default function Signup() {
   const router = useRouter()
@@ -106,7 +109,10 @@ export default function Signup() {
       .then((data) => {
         // Handle success
         console.log('Success:', data)
-        router.push('/user/signin')
+        toast.success('註冊成功，即將跳轉至登入頁面')
+        setTimeout(() => {
+          router.push('/user/signin')
+        }, 5000)
       })
       .catch((errorResponse) => {
         // Handle HTTP errors
@@ -135,12 +141,12 @@ export default function Signup() {
       <div className="background d-flex justify-content-center">
         <div className="component-all">
           <BackToMainPage />
+          <ToastContainer
+            position="top-center"
+            toastClassName={toastStyle.myToast}
+          />
           <div className="formBackground">
-            <form
-              onSubmit={handleSubmit}
-              // action="http://localhost:3005/user/signup"
-              method="post"
-            >
+            <form onSubmit={handleSubmit} method="post">
               <div className="px-5 py-5">
                 <div className="text-white">
                   <h4 className="mainTitle-rwd">註冊帳號</h4>
@@ -210,7 +216,8 @@ export default function Signup() {
                               ? 'bi-eye-fill'
                               : 'bi-eye-slash-fill'
                           } btn text-normal-gray bg-normal-gray-light`}
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.preventDefault()
                             passwordVisibility
                               ? setPasswordVisible(false)
                               : setPasswordVisible(true)
@@ -468,7 +475,7 @@ export default function Signup() {
             background-image: url(/images/govent-angus/loginPage-BG.jpg);
             background-size: cover;
             background-position: center;
-            height: 100vh;
+            // height: 100vh;
             letter-spacing: 2px;
             input {
               border-radius: 5px;
@@ -491,9 +498,9 @@ export default function Signup() {
             }
           }
           .component-all {
-            margin-top: 200px;
+            margin-top: 150px;
             @media screen and (max-width: 435px){
-              margin-top: 70px;
+              margin-top: 30px;
             }
           }
           .formBackground {
@@ -549,7 +556,8 @@ export default function Signup() {
           }
 
           .goventLogo {
-            margin-top: 135px;
+            margin-top: 150px;
+            margin-bottom: 50px;
             height: 30px;
             @media screen and (max-width: 435px) {
               img {
