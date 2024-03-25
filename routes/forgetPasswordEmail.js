@@ -1,17 +1,49 @@
 import express from 'express'
 import transporter from '#configs/mail.js'
 import 'dotenv/config.js'
+import sequelize from '#configs/db.js'
+import { QueryTypes } from 'sequelize'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const router = express.Router()
 
-/* 寄送email的路由 */
-router.post('/send', function (req, res, next) {
-  // email內容
+//寄送email的路由
+router.post('/forgetPasswordEmail', function (req, res, next) {
+  const { email } = req.body
+
+  // 檢查是否有此 email
+  const user = sequelize.query(
+    'SELECT * FROM member WHERE username = :username',
+    {
+      replacements: { username: email },
+      type: QueryTypes.SELECT,
+    }
+  )
+  if (user.length === 0) {
+    return res
+      .status(404)
+      .json({ status: 'error', message: '此 email 尚未註冊成為會員' })
+  }
+
+  // 設定信件驗證碼格式
+  const verificationCode = Math.floor(100000 + Math.random() * 900000)
+
+  //將驗證碼存入資料庫
+  const insertCode = sequelize.query(
+    'INSERT INTO ResetPassword (username, resetPasswordCode) VALUES (?, ?)',
+    {
+      replacements: { email, verificationCode },
+      type: QueryTypes.INSERT,
+    }
+  )
+
   const mailOptions = {
     from: `<${process.env.SMTP_TO_EMAIL}>`,
-    to: '',
-    subject: 'Govent訂單完成',
-    text: `訂單確認`,
+    to: email,
+    subject: 'Govent 忘記密碼驗證信',
+    text: `你的重設密碼驗證碼是 ${verificationCode}`,
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
       <head>
@@ -54,7 +86,7 @@ router.post('/send', function (req, res, next) {
                               <tr>
                                 <td align="left" >
                                   <h1 style="color:#ffffff;font-size:18px;font-weight:bold;font-family:'PingFang TC','微軟正黑體','Microsoft JhengHei','Helvetica Neue',Helvetica,Arial,sans-serif;padding:0;margin:0;line-height:1.4">
-                                    Govent訂購完成通知
+                                    Govent 重設密碼驗證信
                                   </h1>
                                 </td>
                               </tr>
@@ -71,7 +103,7 @@ router.post('/send', function (req, res, next) {
                               <tr>
                                 <td align="center" >
                                   <h3 style="color:#ffffff;font-size:18px;font-weight:bold;font-family:'PingFang TC','微軟正黑體','Microsoft JhengHei','Helvetica Neue',Helvetica,Arial,sans-serif;padding:0;margin:0;line-height:1.4">
-                                    您的訂單編號 ： ${req.body.orderID}
+                                  你的重設密碼驗證碼是 ${verificationCode}
                                   </h3>
                                 </td>
                               </tr>
