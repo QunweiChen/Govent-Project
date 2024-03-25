@@ -362,9 +362,9 @@ export default function Detail() {
                               </p>
                             </div>
                             <hr className="d-none d-xxl-block" />
-                            <div className="d-flex d-none d-xxl-inline-flex">
-                              <div className="me-5">
-                                <h5 className="mb-5">選擇日期</h5>
+                            <div className="d-flex justify-content-between d-none d-xxl-inline-flex choice-date">
+                              <div className="">
+                                <h5 className="mb-4">選擇日期</h5>
                                 <div className="text-center">
                                   <Calendar
                                     sellStartDate={startDate}
@@ -373,10 +373,11 @@ export default function Detail() {
                                   />
                                 </div>
                               </div>
-                              <div>
-                                <h5 className="mb-5">選擇時間</h5>
+                              <div className='d-flex flex-column'>
+                                <h5 className="mb-4">選擇時間</h5>
+                                <div>
                                 <button
-                                  className={`store fs-5 p-2 btn ${
+                                  className={`store fs-5 p-2 px-4 btn ${
                                     isClicked
                                       ? 'btn-warning'
                                       : 'btn-primary-deep'
@@ -386,7 +387,8 @@ export default function Detail() {
                                 >
                                   {sellTime}
                                 </button>
-                                <h5 className="my-5">數量</h5>
+                                </div>
+                                <h5 className="my-3">數量</h5>
                                 <div className="d-flex align-items-center">
                                   <i
                                     type="button"
@@ -395,7 +397,7 @@ export default function Detail() {
                                       handleDecrease(ticketInfo, v.id)
                                     }}
                                   />
-                                  <h5 className="px-3 py-2 bg-dark rounded">
+                                  <h5 className="px-3 py-2 bg-dark rounded m-0">
                                     {v.qty}
                                   </h5>
                                   <i
@@ -406,15 +408,15 @@ export default function Detail() {
                                     }}
                                   />
                                 </div>
-                                <div className="d-flex my-5">
+                                <div className="d-flex mt-5">
                                   <h5 className="">總金額</h5>
                                   <h4 className="dollar">
                                     NT$ {v.price * v.qty}
                                   </h4>
                                 </div>
-                                <div className="d-flex justify-content-end mb-3">
+                                <div className="d-flex align-items-end justify-content-end add-category">
                                   <button
-                                    className="store fs-5 me-2 p-2 btn btn-primary-deep"
+                                    className="store fs-5 p-2 px-4 btn btn-primary-deep"
                                     onClick={() => {
                                       addItem(all[0])
                                       MySwal.fire({
@@ -719,11 +721,14 @@ export default function Detail() {
             {/* margin: 40px auto; */}
             height: 320px;
           }
-           {
-            /* .avatar {
-            width: 60px;
-            height: 60px;
-          } */
+          .choice-date{
+            padding: 12px;
+            .add-category{
+              flex: 1;
+              button{
+                height: 50px;
+              }
+            }
           }
           .custom-card {
             border: none;

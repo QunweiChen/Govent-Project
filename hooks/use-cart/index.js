@@ -80,7 +80,10 @@ export function CartProvider({
   }
   //添加ok
   const addItem = (item) => {
-    console.log(item);
+    if(!item){
+      console.log('沒有選取');
+      return
+    }
     // 在新商品對象中添加 checked 屬性
     console.log(item)
     const newItem = { ...item, checked: false }
