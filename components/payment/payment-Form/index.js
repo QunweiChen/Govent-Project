@@ -15,11 +15,12 @@ export default function PaymentForm({
   setDiscountState = () => {},
   discount = {},
   discountState = {},
-  money = 0,
+  money,
   productData = {},
   redeem = () => {},
   couponMoney = 0,
 }) {
+  console.log(money)
   //引入會員資料hook
   const { auth } = useAuth()
   //使用react-hook-form套件檢查form表單
@@ -214,13 +215,14 @@ export default function PaymentForm({
         let point = Number(response.data.point[0].point)
         setPointData(point)
         let coupon = response.data.coupon
-        setCouponData(coupon.filter((e) => e.price_min < money))
+        coupon = coupon.filter((e) => e.price_min < money)
+        setCouponData(coupon)
         return
       })
       .catch((err) => {
         console.log(err)
       })
-  }, [])
+  }, [money])
 
   return (
     <>

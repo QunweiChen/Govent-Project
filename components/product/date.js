@@ -96,7 +96,7 @@ export default function Calendar({ events, sellStartDate, sellEndDate = '', setS
   //   }
   // };
 
-  const [selectedIdx, setSelectedIdx] = useState(null);
+  const [selectedIdx, setSelectedIdx] = useState({ rowIdx: null, dateIdx: null });
 
   return (
     <>
@@ -157,12 +157,12 @@ export default function Calendar({ events, sellStartDate, sellEndDate = '', setS
                         key={idx}
                         onClick={() => {
                           setSelectDate(`${currentDate}`)
-                          setSelectedIdx(idx);
+                          setSelectedIdx({ rowIdx: i, dateIdx: idx });
                           console.log("currentDate", currentDate);
                         }}
-                        className={`${isSelectable ? (selectedIdx === idx ? 'selected' : 'selectable') : ''}`}
-                        style={isSelectable ? { cursor: 'pointer' } : { cursor: 'default' }}
-                        role="presentation"
+                        className={`${isSelectable ? (selectedIdx.rowIdx === i && selectedIdx.dateIdx === idx ? 'selected' : 'selectable') : ''}`}
+          style={isSelectable ? { cursor: 'pointer' } : { cursor: 'default' }}
+          role="presentation"
                       >
                         {item}
                       </td>

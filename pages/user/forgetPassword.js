@@ -66,7 +66,7 @@ export default function ForgetPassword() {
         }
       )
 
-      if (!response.ok) throw new Error('Email sending failed')
+      if (!response.ok) throw new Error('此 email 尚未註冊成為會員')
 
       const { code: verificationCode } = await response.json()
       console.log(verificationCode)
