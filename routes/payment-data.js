@@ -45,10 +45,9 @@ router.put('/delete', authenticate, (req, res) => {
   const userID = req.user.id
   const couponID = req.body.couponID
   const point = req.body.point
-  if (couponID == 0) {
-    res.send({ status: 'success', message: '使用者無使用優惠券' })
-    return
-  }
+  console.log(userID)
+  console.log(point)
+
   try {
     sequelize.query(
       'UPDATE `member_coupon` SET `valid`= 0 WHERE `user_id`= :userID && `coupon_id` = :couponID',
@@ -64,6 +63,10 @@ router.put('/delete', authenticate, (req, res) => {
     res.send({ status: 'success', message: '更新成功' })
   } catch (e) {
     res.status(500).json({ status: 'error', message: 'Failed to update user.' })
+  }
+  if (couponID == 0) {
+    res.send({ status: 'success', message: '使用者無使用優惠券' })
+    return
   }
 })
 
