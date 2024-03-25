@@ -20,114 +20,144 @@ export default function EventsBar() {
               onMouseLeave={() => setIsHovered(false)}
             >
               {event === 1 && (
-                <motion.div
-                  className={`show-event d-flex flex-column justify-content-between ${
-                    isHovered ? 'active' : ''
-                  }`}
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <div>
-                    <div className="secondary-title h6">Ed Sheeran</div>
-                  </div>
+                <>
                   <motion.div
-                    className="event-content"
+                    className={`show-event d-flex flex-column justify-content-between ${
+                      isHovered ? 'active' : ''
+                    }`}
                     initial={{ y: 20, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.4, delay: 0.2 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.4 }}
                   >
-                    <h6>
-                      <i className="bi bi-chevron-right pe-2"></i>2024.05.31
-                    </h6>
-                    <h3>Ed Sheeran 紅髮艾德 2024TOUR世界巡迴演唱會</h3>
-                    <hr />
-                    <p>
-                      紅髮艾德 Ed Sheeran
-                      擁有眾多膾炙人口金曲，各項登峰造極的紀錄，今年更是解鎖英國百億串流數，成為史上第一位榮獲「Gold
-                      BRIT Billion Award（全英百億級大賞）」殊榮肯定的歌手！
-                    </p>
+                    <div>
+                      <div className="secondary-title h6">Ed Sheeran</div>
+                    </div>
+                    <motion.div
+                      className="event-content"
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.4, delay: 0.2 }}
+                    >
+                      <h6>
+                        <i className="bi bi-chevron-right pe-2"></i>2024.05.31
+                      </h6>
+                      <h3>Ed Sheeran 紅髮艾德 2024TOUR世界巡迴演唱會</h3>
+                      <hr />
+                      <p>
+                        紅髮艾德 Ed Sheeran
+                        擁有眾多膾炙人口金曲，各項登峰造極的紀錄，今年更是解鎖英國百億串流數，成為史上第一位榮獲「Gold
+                        BRIT Billion Award（全英百億級大賞）」殊榮肯定的歌手！
+                      </p>
+                    </motion.div>
+                    <div className="gradient-overlay"></div>
                   </motion.div>
-                  <div className="gradient-overlay"></div>
-                </motion.div>
+                  <Link
+                    href="/product/45991162"
+                    className={`event-link d-flex justify-content-between text-white ${
+                      isHovered ? '' : 'hide'
+                    }`}
+                  >
+                    <h6 className="m-0">前往詳情</h6>
+                    <i
+                      className={`bi bi-arrow-right text-white icon h5 m-0`}
+                    ></i>
+                  </Link>
+                </>
               )}
               {event === 2 && (
-                <motion.div
-                  className={`show-event d-flex flex-column justify-content-between ${
-                    isHovered ? 'active' : ''
-                  }`}
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <div>
-                    <div className="secondary-title h6">國立台灣美術館</div>
-                  </div>
+                <>
                   <motion.div
-                    className="event-content"
+                    className={`show-event d-flex flex-column justify-content-between ${
+                      isHovered ? 'active' : ''
+                    }`}
                     initial={{ y: 20, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.4, delay: 0.2 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.4 }}
                   >
-                    <h6>
-                      <i className="bi bi-chevron-right pe-2"></i>2024.03.16
-                    </h6>
-                    <h3>目光之外－2024臺灣國際光影藝術節</h3>
-                    <hr />
-                    <p>
-                      「2024臺灣國際光影藝術節」集結四年來所凝聚的展演能量為底蘊，同時回應當下的時代與環境，以「目光之外」為題，邀請國內外９組藝術家提出社會意識的流變與反思，期待透過觀看的過程，引發觀者的自我對話與探討，在光與非光之間，以過往的積累加乘當下的理解，擾動未來的更多可能。
-                    </p>
+                    <div>
+                      <div className="secondary-title h6">國立台灣美術館</div>
+                    </div>
+                    <motion.div
+                      className="event-content"
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.4, delay: 0.2 }}
+                    >
+                      <h6>
+                        <i className="bi bi-chevron-right pe-2"></i>2024.03.16
+                      </h6>
+                      <h3>目光之外－2024臺灣國際光影藝術節</h3>
+                      <hr />
+                      <p>
+                        「2024臺灣國際光影藝術節」集結四年來所凝聚的展演能量為底蘊，同時回應當下的時代與環境，以「目光之外」為題，邀請國內外９組藝術家提出社會意識的流變與反思，期待透過觀看的過程，引發觀者的自我對話與探討，在光與非光之間，以過往的積累加乘當下的理解，擾動未來的更多可能。
+                      </p>
+                    </motion.div>
+                    <div className="gradient-overlay"></div>
                   </motion.div>
-                  <div className="gradient-overlay"></div>
-                </motion.div>
+                  <Link
+                    href="/product/45991162"
+                    className={`event-link d-flex justify-content-between text-white ${
+                      isHovered ? '' : 'hide'
+                    }`}
+                  >
+                    <h6 className="m-0">前往詳情</h6>
+                    <i
+                      className={`bi bi-arrow-right text-white icon h5 m-0`}
+                    ></i>
+                  </Link>
+                </>
               )}
               {event === 3 && (
-                <motion.div
-                  className={`show-event d-flex flex-column justify-content-between ${
-                    isHovered ? 'active' : ''
-                  }`}
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <div>
-                    <div className="secondary-title h6">金馬影展TGHFF</div>
-                  </div>
+                <>
                   <motion.div
-                    className="event-content"
+                    className={`show-event d-flex flex-column justify-content-between ${
+                      isHovered ? 'active' : ''
+                    }`}
                     initial={{ y: 20, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.4, delay: 0.2 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.4 }}
                   >
-                    <h6>
-                      <i className="bi bi-chevron-right pe-2"></i>2024.04.12
-                    </h6>
-                    <h3>2024金馬奇幻影展</h3>
-                    <hr />
-                    <p>
-                      2024金馬奇幻影展焦點導演專題推出美國兄弟檔名導柯恩兄弟的七部早期經典。適逢柯恩兄弟首部劇情長片《血迷宮（導演版）》（Blood
-                      Simple (Director's
-                      Cut)）問世40週年，影展特別邀來4K數位修復導演版本，另外還有被評選為影史百大喜劇的《扶養亞歷桑納》（Raising
-                      Arizona），囊括坎城影展金棕櫚、導演、男主角三項大獎的《巴頓芬克》（Barton
-                      Fink），以及他們首度榮獲奧斯卡的《冰血暴》（Fargo）和Cult片經典《謀殺綠腳趾》（The
-                      Big Lebowski），好看又好聽的《霹靂高手》（O Brother, Where
-                      Art
-                      Thou?），還有影史地位水漲船高的《黑幫龍虎門》（Miller's
-                      Crossing）等精彩作品。
-                    </p>
+                    <div>
+                      <div className="secondary-title h6">金馬影展TGHFF</div>
+                    </div>
+                    <motion.div
+                      className="event-content"
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.4, delay: 0.2 }}
+                    >
+                      <h6>
+                        <i className="bi bi-chevron-right pe-2"></i>2024.04.12
+                      </h6>
+                      <h3>2024金馬奇幻影展</h3>
+                      <hr />
+                      <p>
+                        2024金馬奇幻影展焦點導演專題推出美國兄弟檔名導柯恩兄弟的七部早期經典。適逢柯恩兄弟首部劇情長片《血迷宮（導演版）》（Blood
+                        Simple Director's
+                        Cut）問世40週年，影展特別邀來4K數位修復導演版本，另外還有被評選為影史百大喜劇的《扶養亞歷桑納》（Raising
+                        Arizona），囊括坎城影展金棕櫚、導演、男主角三項大獎的《巴頓芬克》（Barton
+                        Fink），以及他們首度榮獲奧斯卡的《冰血暴》（Fargo）和Cult片經典《謀殺綠腳趾》（The
+                        Big Lebowski），好看又好聽的《霹靂高手》（O Brother,
+                        Where Art
+                        Thou），還有影史地位水漲船高的《黑幫龍虎門》（Miller's
+                        Crossing）等精彩作品。
+                      </p>
+                    </motion.div>
+                    <div className="gradient-overlay"></div>
                   </motion.div>
-                  <div className="gradient-overlay"></div>
-                </motion.div>
+                  <Link
+                    href="/product/45991162"
+                    className={`event-link d-flex justify-content-between text-white ${
+                      isHovered ? '' : 'hide'
+                    }`}
+                  >
+                    <h6 className="m-0">前往詳情</h6>
+                    <i
+                      className={`bi bi-arrow-right text-white icon h5 m-0`}
+                    ></i>
+                  </Link>
+                </>
               )}
-              <Link
-                href="/"
-                className={`event-link d-flex justify-content-between text-white ${
-                  isHovered ? '' : 'hide'
-                }`}
-              >
-                <h6 className="m-0">前往詳情</h6>
-                <i className={`bi bi-arrow-right text-white icon h5 m-0`}></i>
-              </Link>
             </div>
             <div className="other-events d-flex flex-column ms-3">
               <div

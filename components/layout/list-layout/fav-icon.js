@@ -1,7 +1,28 @@
+// *老師提供的範例
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { addFav, removeFav } from '@/services/user'
+//* 獲得會員有加在我的最愛的商品id，回傳為id陣列
+//  */
+// export const getFavs = async () => {
+//   return await axiosInstance.get('/favorites')
+// }
+// /**
+//  * 新增商品id在該會員的我的最愛清單中的
+//  */
+// export const addFav = async (pid) => {
+//   return await axiosInstance.put(`/favorites/${pid}`)
+// }
+// /**
+//  * 移除商品id在該會員的我的最愛清單中的
+//  */
+// export const removeFav = async (pid) => {
+//   return await axiosInstance.delete(`/favorites/${pid}`)
+// }
 import toast from 'react-hot-toast'
+
+import { FaHeart } from "react-icons/fa6";
+import { CiHeart } from 'react-icons/ci'
 
 // 愛心設定
 const Heart = ({ size = 20, color = 'red' }) => (
@@ -14,7 +35,7 @@ const Heart = ({ size = 20, color = 'red' }) => (
   </svg>
 )
 
-export default function FavIcon({id}) {
+export default function FavIcon({ id }) {
   // const [activeButton, setActiveButton] = useState(0)
   // const handleClick = () => {
   //   setActiveButton(activeButton === 0 ? 1 : 0)
@@ -60,7 +81,7 @@ export default function FavIcon({id}) {
       {/* 由favorites狀態決定呈現實心or空心愛愛圖示 */}
       {favorites.includes(id) ? (
         <button
-          className={`btn bg-bg-gray`}
+          className={`btn bg-bg-gray `}
           style={{
             position: 'absolute',
             right: 5,

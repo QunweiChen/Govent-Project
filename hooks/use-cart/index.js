@@ -74,12 +74,13 @@ export function CartProvider({
   //資料庫-用id尋找商家name
   const foundMt = (MtId) => {
     const foundItem = Mt.find((item) => item.id === MtId)
-    console.log(foundItem)
+    // console.log(foundItem)
     const bankName = foundItem?.name
     return bankName
   }
   //添加ok
   const addItem = (item) => {
+    console.log(item);
     // 在新商品對象中添加 checked 屬性
     console.log(item)
     const newItem = { ...item, checked: false }

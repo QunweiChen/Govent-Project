@@ -1,46 +1,192 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { FaHeart } from 'react-icons/fa6'
+import { CiHeart } from 'react-icons/ci'
+import { useAuth } from '@/hooks/use-auth'
+import toast from 'react-hot-toast'
+import { useRouter } from 'next/router'
 
-export default function FavIcon({ handleClick }) {
-  const [heartColor, setHeartColor] = useState('white')
+import addFavToDatabase from '@/hooks/use-fav'
 
-  const handleButtonClick = () => {
-    // 将心形图标的颜色设置为红色
-    setHeartColor('red')
-    // 如果传入了 handleClick 函数，则调用它
-    if (handleClick) {
-      handleClick()
+export default function FavIcon({ pid, events, setEvents }) {
+  //檢查會員身份
+  const { auth } = useAuth()
+  const uid = auth.user?.id //抓取登入中的id
+  // const uid = 10
+
+  //驗證登入狀態
+  const router = useRouter()
+  const [isVisible, setIsVisible] = useState(false)
+
+  //資料庫抓取
+  const [favorites, setFavorites] = useState([])
+
+  // useEffect(() => {
+  //   if (isVisible && !auth.user) {
+  //     toast.error('會員才能使用!')
+  //     router.push('/user/signin')
+  //     return
+  //   }
+  // }, [isVisible, auth.user, router])
+
+  useEffect(() => {
+    const getFav = async () => {
+      // if (!uid) {
+      //   toast.error('會員才能使用!')
+      //   return
+      // }
+      try {
+        // 發送API請求時包含uid作為參數
+        const response = await fetch(`http://localhost:3005/api/Fav?uid=${uid}`)
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        const data = await response.json()
+        setFavorites(data.data ? data.data.posts : [])
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+    getFav()
+  }, [uid])
+
+  //新增會員判定提示
+  // useEffect(() => {
+  //   if (uid && !isVisible) {
+  //     // 只有在用户已登录且 loading 为 false 时才获取收藏数据
+  //     const getFav = async () => {
+  //       try {
+  //         isVisible(true) // 开始加载数据，设置 loading 为 true
+  //         const response = await fetch(
+  //           `http://localhost:3005/api/Fav?uid=${uid}`
+  //         )
+  //         if (!response.ok) {
+  //           throw new Error('Network response was not ok')
+  //         }
+  //         const data = await response.json()
+  //         setFavorites(data.data ? data.data.posts : [])
+  //       } catch (error) {
+  //         console.error('Error fetching data:', error)
+  //       }
+  //     }
+  //     getFav()
+  //   }
+  // }, [uid, isVisible]) // 监听 uid 和 loading 变化
+
+  // console.log(favorites);
+  // console.log(uid);
+
+  // 渲染出愛心狀態
+  const renderFavoriteIcon = (uid, pid) => {
+    if (favorites.some((fav) => fav.uid === uid && fav.pid === pid)) {
+      return <i className="bi bi-heart-fill"></i>
+    } else {
+      return <i className="bi bi-heart"></i>
     }
   }
 
-  // 愛心設定(測試用)
-  const Heart = ({ size = 20, color = 'red' }) => (
-    <svg
-      className="heart"
-      viewBox="0 0 32 29.6"
-      style={{ opacity: 0.8, width: size, fill: color, position: 'relative' }}
-    >
-      <path d="M23.6 0c-3.4 0-6.3 2.7-7.6 5.6C14.7 2.7 11.8 0 8.4 0 3.8 0 0 3.8 0 8.4c0 9.4 9.5 11.9 16 21.2 6.1-9.3 16-12.1 16-21.2C32 3.8 28.2 0 23.6 0z" />
-    </svg>
-  )
+  const handleAddFav = async (pid, uid) => {
+    try {
+      // console.log('Adding to favorites:', pid, uid);
+      const response = await fetch(
+        `http://localhost:3005/api/Fav/${pid}/${uid}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pid }),
+        }
+      )
+      if (response.status === 200) {
+        // console.log('Successfully added to favorites');
+        setFavorites([...favorites, { pid, uid }])
+      } else {
+        console.error('Failed to add to favorites:', response.statusText)
+      }
+    } catch (error) {
+      console.error('Error adding to favorites:', error)
+    }
+  }
+
+  const handleRemoveFav = async (pid, uid) => {
+    try {
+      // console.log('Removing from favorites:', pid, uid);
+      const response = await fetch(
+        `http://localhost:3005/api/Fav/${pid}/${uid}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pid }),
+        }
+      )
+      if (response.status === 200) {
+        // console.log('Successfully removed from favorites');
+        setFavorites(favorites.filter((fav) => fav.pid !== pid))
+      } else {
+        // console.error('Failed to remove from favorites:', response.statusText);
+      }
+    } catch (error) {
+      // console.error('Error removing from favorites:', error);
+    }
+  }
+
+  // 檢查是否為該用戶的收藏
+  const isFavorite = favorites.some((fav) => fav.pid === pid)
+
+  //渲染出愛心狀態
+  const handleToggleFav = async (event) => {
+    // 修改點擊事件處理函數
+    event.preventDefault() // 阻止默認行為
+    event.stopPropagation() // 阻止事件冒泡
+    //點按時新增會員判定提示
+    if (!auth.user) {
+      toast.error('會員才能使用!')
+      router.push('/user/signin')
+      return
+    }
+    try {
+      if (favorites.some((fav) => fav.pid === pid)) {
+        // 如果已經是收藏狀態，則取消收藏
+        await handleRemoveFav(pid, uid)
+        setFavorites(favorites.filter((fav) => fav.pid !== pid))
+      } else {
+        // 如果未收藏，則添加收藏
+        await handleAddFav(pid, uid)
+        setFavorites([...favorites, { pid, uid }])
+      }
+    } catch (error) {
+      // console.error('Error toggling favorite:', error);
+    }
+  }
 
   return (
     <>
-      {/* 收藏用愛心（測試用） */}
       <button
-        className={`btn bg-bg-gray`}
+        className={`btn fav-btn text-white`}
         style={{
           position: 'absolute',
-          right: 5,
-          top: 5,
+          right: 10,
+          top: 10,
+          height: 30,
+          width: 30,
           padding: 0,
           border: 'none',
           background: 'none',
         }}
-        onClick={handleButtonClick} // 设置按钮的点击事件处理函数为 handleButtonClick
+        onClick={handleToggleFav} // 修改為新的點擊事件處理函數
       >
-        <Heart color={heartColor} />
+        {renderFavoriteIcon(uid, pid)} {/* 渲染愛心按鈕的狀態 */}
       </button>
-      {/* <Heart color={heartColor} onClick={handleIconClick} /> */}
+      <style global jsx>
+        {`
+        .fav-btn{
+          border-radius: 8px;
+          background-color: var(--search-bar-color) !important;
+        }
+        `}
+      </style>
     </>
   )
 }

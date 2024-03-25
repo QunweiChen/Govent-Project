@@ -101,7 +101,7 @@ const MyNavbar = () => {
                 className="offcanvas-body"
               >
                 <Menubar currentRoute={currentRoute} />
-                <SearchForm />
+                {/* <SearchForm /> */}
                 <Toolbar currentRoute={currentRoute} handleShow={handleShow} />
               </motion.div>
             </div>

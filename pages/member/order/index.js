@@ -7,11 +7,15 @@ import MemberLayout from '@/components/layout/member-layout'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/hooks/use-auth'
+import { now } from 'lodash'
 
 export default function MemberOrder() {
   const router = useRouter()
   const { auth } = useAuth()
   const [orders, setOrders] = useState([])
+
+  const date = { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' }
+  const time = { timeZone: 'Asia/Taipei', hour: '2-digit', minute: '2-digit' }
 
   useEffect(() => {
     if (!auth.user) {
@@ -59,7 +63,7 @@ export default function MemberOrder() {
                 <div key={data.id} className="event mt-2">
                   {data.created_at && (
                     <div className="ticket-number sm-p">
-                    訂單成立時間 {data.created_at.split('T')[0]}{' '}{data.created_at.split('T')[1].slice(0, 8)}
+                    訂單建立時間：{new Date(data.created_at).toLocaleString('zh', date)} {new Date(data.created_at).toLocaleString('zh', time)}
                     </div>
                   )}
                   <div className="p-3 d-flex">

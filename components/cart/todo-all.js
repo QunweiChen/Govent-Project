@@ -21,14 +21,14 @@ export default function TodoAll({
               }}
               className="checkbox-large form-check-input"
             />
-            <p className="ms-2">全選票券</p>
+            <p className="ms-2 text-nowrap">全選票券</p>
             <button
               type="button"
               className="p btn d-flex justify-content-center align-items-center text-white text-nowrap"
               data-bs-toggle="modal"
               data-bs-target="#deleteall"
             >
-              / <i className="bi bi-trash-fill text-primary-light mx-1"></i>
+              / <i className="bi bi-trash-fill text-primary-light mx-1 "></i>
               清空購物車
             </button>
           </label>

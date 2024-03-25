@@ -25,7 +25,7 @@ export default function MyNavbar() {
     <>
       <header>
         <nav
-          className="navbar navbar-expand-lg fixed-top navbar-light py-3 bg-secondary"
+          className="navbar navbar-expand-lg fixed-top navbar-light py-3 bg-bg-gray"
           data-bs-theme="dark"
         >
           <div className="container width-1200">
@@ -72,7 +72,7 @@ export default function MyNavbar() {
               </div>
               <div className="offcanvas-body">
                 <Menubar currentRoute={currentRoute} />
-                <SearchForm />
+                {/* <SearchForm /> */}
                 <Toolbar currentRoute={currentRoute} handleShow={handleShow} />
               </div>
             </div>

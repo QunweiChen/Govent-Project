@@ -12,6 +12,8 @@ export default function TicketInfoLeft({
   points_rebate='',
   created_at='',
 }) {
+  const dateTime = { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
+
   return (
     <motion.div
       initial={{ y: 20, opacity: 0 }}
@@ -34,7 +36,7 @@ export default function TicketInfoLeft({
         <div>
           <div className={`${styles['sm-p']} mb-2 sm-p`}>訂單時間</div>
           {created_at && (
-            <p className="m-0">{created_at.split('T')[0]}{' '}{created_at.split('T')[1].slice(0,8)}</p>
+            <p className="m-0">{new Date(created_at).toLocaleString('zh', dateTime)}</p>
           )}
         </div>
       </div>

@@ -18,6 +18,8 @@ function OrganizerOtptionForm() {
   const [eventInfo, setEventInfo] = useState([])
   const [finished, setFinished] = useState(false)
 
+  const dateTime = { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
+
   const [formNumber, setFormNumber] = useState(1)
   const [optionFormData1, setOptionFormData1] = useState({
     event_id: '',
@@ -383,21 +385,13 @@ function OrganizerOtptionForm() {
                             <h6>{eventInfo.event_name}</h6>
                             <div>
                               <p>
-                                活動時間｜{eventInfo.start_date.split('T')[0]}{' '}
-                                {eventInfo.start_date.split('T')[1].slice(0, 5)}{' '}
-                                － {eventInfo.end_date.split('T')[0]}{' '}
-                                {eventInfo.end_date.split('T')[1].slice(0, 5)}
+                                活動時間｜{new Date(eventInfo.start_date).toLocaleString('zh', dateTime)}
+                                {' － '}{new Date(eventInfo.end_date).toLocaleString('zh', dateTime)}
                               </p>
                               <p>
                                 售票時間｜
-                                {eventInfo.sell_start_date.split('T')[0]}{' '}
-                                {eventInfo.sell_start_date
-                                  .split('T')[1]
-                                  .slice(0, 5)}{' '}
-                                － {eventInfo.sell_end_date.split('T')[0]}{' '}
-                                {eventInfo.sell_end_date
-                                  .split('T')[1]
-                                  .slice(0, 5)}
+                                {new Date(eventInfo.sell_start_date).toLocaleString('zh', dateTime)}
+                                {' － '}{new Date(eventInfo.sell_end_date).toLocaleString('zh', dateTime)}
                               </p>
                             </div>
                           </div>

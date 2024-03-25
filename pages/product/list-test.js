@@ -17,7 +17,7 @@ import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
 import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
-import NavbarTopRwd from '@/components/layout/list-layout/navbar-top-test'
+import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
 import Sidebar from '@/components/layout/list-layout/sidebar'
 
 //篩選用components
@@ -35,7 +35,7 @@ import SearchForm from '@/components/layout/list-layout/search-form'
 
 export default function List() {
   const { data } = useEvents()
-  const router = useRouter()
+  const { router } = useRouter()
 
   const [events, setEvents] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -44,7 +44,6 @@ export default function List() {
   const [selectedRegions, setSelectedRegions] = useState([])
   const [searchWord, setSearchWord] = useState('')
   const [filteredEvents, setFilteredEvents] = useState([])
-  const { query } = router
 
   //增加擴充屬性質(收藏)
   useEffect(() => {
@@ -85,10 +84,7 @@ export default function List() {
   // 分頁
   const indexOfLastEvent = currentPage * postsPerPage
   const indexOfFirstEvent = indexOfLastEvent - postsPerPage
-  // const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent)
-  const currentEvents = filteredEvents
-    ? filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent)
-    : []
+  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent)
 
   const handleFilterChange = (selectedCategories, selectedRegions) => {
     setSelectedCategories(selectedCategories)
@@ -124,10 +120,6 @@ export default function List() {
   const handlePriceEvents = (priceSortedEvents) => {
     setFilteredEvents(priceSortedEvents)
   }
-  // 推薦排序的回调函数
-  const handleRecommendEvents = (recommendSortedEvents) => {
-    setFilteredEvents(recommendSortedEvents)
-  }
 
   //篩選後引導回首頁
   useEffect(() => {
@@ -147,34 +139,25 @@ export default function List() {
               目前共有 {filteredEvents?.length} 筆 結果
             </p>
           </div>
+         
+            <SearchForm
+              searchWord={searchWord}
+              onSearch={handleSearch} // 正确传递搜索回调函数
+            />
 
-          <SearchForm
-            searchWord={searchWord}
-            onSearch={handleSearch} // 正确传递搜索回调函数
-          />
-
-          <NavbarTopRwd
-            events={events} //傳原始資料至props
-            setEvents={setEvents} // 将更新事件列表的函数传递给子组件
-            //回調元素
-            onSort={handleSortEvents}
-            onCity={handleCityEvents}
-            onDate={handleDateEvents}
-            onPrice={handlePriceEvents}
-            onRecommend={handleRecommendEvents}
-          />
+            <NavbarTopRwd
+              events={events} //傳原始資料至props
+              setEvents={setEvents} // 将更新事件列表的函数传递给子组件
+              //回調元素
+              onSort={handleSortEvents}
+              onCity={handleCityEvents}
+              onDate={handleDateEvents}
+              onPrice={handlePriceEvents}
+            />
         </h5>
       </nav>
-      <nav className="header-m ">
-        <NavbarTopRwdSm
-          events={events} //傳原始資料至props
-          setEvents={setEvents} //
-          onSortEvents={handleSortEvents}
-          onCityEvents={handleCityEvents}
-          onDateEvents={handleDateEvents}
-          onPriceEvents={handlePriceEvents}
-          onRecommendEvents={handleRecommendEvents}
-        />
+      <nav className="header-m">
+        <NavbarTopRwdSm />
       </nav>
       <main className="container w-1200">
         <div className="row">
@@ -182,7 +165,6 @@ export default function List() {
             <Sidebar
               events={events} //傳原始資料至props
               onFilterChange={handleFilterChange}
-              selectedCategories={selectedCategories}
             />
           </div>
           <div className="col">
@@ -191,22 +173,27 @@ export default function List() {
               {filteredEvents
                 .slice(indexOfFirstEvent, indexOfLastEvent)
                 .map((v) => (
-                  <div key={v.pid} className="col-md-4 col-sm-6 ">
+                  <div key={v.id} className="col-md-4 col-sm-6 ">
                     <Link
                       href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
                       className=""
-                      key={v.pid}
+                      key={v.id}
                       style={{ textDecoration: 'none' }}
                     >
+                      {/* <div onClick={()=>{router.push(``)}} */}
                       <div className="card bg-bg-gray-secondary text-white px-0 no-border">
                         <figure>
                           <img
+                            // src={`/images/product/list/${
+                            //   v.banner?.split(',')[0]
+                            // }`}
                             src={`http://localhost:3005/images/banner/${
                               v.banner?.split(',')[0]
                             }`}
                             alt=""
                             className="card-img-top"
                           />
+                          {/* <FavIcon datas={events} setEvents={handleSetEvents} /> */}
                           <FavIcon
                             pid={v.pid}
                             events={events}
@@ -214,22 +201,20 @@ export default function List() {
                           />
                         </figure>
 
-                        <div className="card-body d-flex flex-column justify-content-between pt-0">
-                          <div>
-                          <p className="text-normal-gray-light sm-p mb-2">
+                        <div className="card-body">
+                          <p className=" text-normal-gray-light">
                             {v.category_name}
                           </p>
-                          <h6 className="card-title">{v.event_name}</h6>
-                          </div>
-                          <div>
-                          <h6 className="text-primary-deep">
-                              $ {v.price || 0}起
+                          <h5 className="card-title">{v.event_name}</h5>
+                          <div className="">
+                            <h6 className="text-primary-deep">
+                              ${v.price || 0}起
                             </h6>
                             <div className="d-flex justify-content-between">
-                              <p className="m-0 sm-p text-normal-gray-light">
+                              <p className="text-normal-gray-light mb-2">
                                 {v.str}
                               </p>
-                              <span className="sm-p text-normal-gray-light">
+                              <span className="text-normal-gray-light">
                                 {v.start_date.substring(0, 10)}
                               </span>
                             </div>
@@ -299,16 +284,12 @@ export default function List() {
 
       <style global jsx>{`
         body {
+          background-color: #151515;
           color: #fff;
-          background-color: var(--bg-gray-color);
           border: border-inline;
         }
         .w-1200 {
           max-width: 1200px;
-        }
-        .card{
-          border-radius: 10px;
-          overflow: hidden;
         }
         figure img {
           width: 268px;
@@ -318,10 +299,10 @@ export default function List() {
           }
           object-fit: cover;
           width: 100%;
-          height:
         }
         .cardList i {
-          opacity: 0.8;
+          background-color: #404040;
+          opacity: 0.5;
         }
 
         .test {
