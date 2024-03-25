@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react'
 
 // 申請的google api key
@@ -21,12 +21,15 @@ export class SingleMapDetail extends Component {
     selectedPlace: {},
   }
 
-  onMarkerClick = (props, marker, e) =>
+  onMarkerClick = (props, marker, e) =>{
+   console.log('onMarkerClick', marker, e)
+
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
       showingInfoWindow: true,
     })
+  }
 
   onMapClicked = (props) => {
     if (this.state.showingInfoWindow) {
@@ -103,8 +106,25 @@ export class SingleMapDetail extends Component {
         }}
         onClick={this.onMapClicked}
         onReady={this.onMapReady}
-      >
-        <Marker
+      >{this.props.landmarks.map((landmark, index) => {
+            return <Marker key={index}
+              onClick={this.onMarkerClick}
+              name={'物件位置'}
+              position={{ lat:landmark.lat, lng: landmark.lng }}
+            >
+              <InfoWindow
+                marker={this.state.activeMarker}
+                visible={this.state.showingInfoWindow}
+              >
+                <div>
+                  <h1>{landmark.title}</h1>
+                  <p>{landmark.content}</p>
+                </div>
+              </InfoWindow>
+            </Marker>
+          })
+        }
+        {/* <Marker
           onClick={this.onMarkerClick}
           name={'物件位置'}
           position={{ lat: this.props.lat, lng: this.props.lng }}
@@ -117,7 +137,7 @@ export class SingleMapDetail extends Component {
             <h1>{this.props.infoTitle}</h1>
             <p>{this.props.infoContent}</p>
           </div>
-        </InfoWindow>
+        </InfoWindow> */}
       </Map>
     )
   }

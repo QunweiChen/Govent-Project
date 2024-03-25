@@ -78,9 +78,9 @@ export default function FavIcon({ pid, events, setEvents }) {
   // 渲染出愛心狀態
   const renderFavoriteIcon = (uid, pid) => {
     if (favorites.some((fav) => fav.uid === uid && fav.pid === pid)) {
-      return <FaHeart />
+      return <i className="bi bi-heart-fill"></i>
     } else {
-      return <CiHeart />
+      return <i className="bi bi-heart"></i>
     }
   }
 
@@ -164,13 +164,13 @@ export default function FavIcon({ pid, events, setEvents }) {
   return (
     <>
       <button
-        className={`btn bg-bg-gray text-white`}
+        className={`btn fav-btn text-white`}
         style={{
           position: 'absolute',
-          right: 5,
-          top: 5,
-          height: 25,
-          width: 25,
+          right: 10,
+          top: 10,
+          height: 30,
+          width: 30,
           padding: 0,
           border: 'none',
           background: 'none',
@@ -179,6 +179,14 @@ export default function FavIcon({ pid, events, setEvents }) {
       >
         {renderFavoriteIcon(uid, pid)} {/* 渲染愛心按鈕的狀態 */}
       </button>
+      <style global jsx>
+        {`
+        .fav-btn{
+          border-radius: 8px;
+          background-color: var(--search-bar-color) !important;
+        }
+        `}
+      </style>
     </>
   )
 }

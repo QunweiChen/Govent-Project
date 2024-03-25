@@ -15,7 +15,7 @@ export default function EventsRecommend() {
                 <Card className="custom-card text-white bg-bg-gray">
                   <Card.Img
                     variant="top"
-                    src="./images/product/list/6-17.jpg"
+                    src="../images/product/list/6-17.jpg"
                     style={{
                       objectFit: 'cover',
                       width: '100%',
@@ -37,7 +37,7 @@ export default function EventsRecommend() {
                 <Card className="custom-card text-white bg-bg-gray">
                   <Card.Img
                     variant="top"
-                    src="./images/product/list/2-02.jpg"
+                    src="../images/product/list/2-02.jpg"
                     style={{
                       objectFit: 'cover',
                       width: '100%',
@@ -61,7 +61,7 @@ export default function EventsRecommend() {
                 <Card className="custom-card text-white bg-bg-gray">
                   <Card.Img
                     variant="top"
-                    src="./images/product/list/5-03.jpg"
+                    src="../images/product/list/5-03.jpg"
                     style={{
                       objectFit: 'cover',
                       width: '100%',
@@ -85,7 +85,7 @@ export default function EventsRecommend() {
                 <Card className="custom-card text-white bg-bg-gray">
                   <Card.Img
                     variant="top"
-                    src="./images/product/list/1-01.jpg"
+                    src="../images/product/list/1-01.jpg"
                     style={{
                       objectFit: 'cover',
                       width: '100%',
