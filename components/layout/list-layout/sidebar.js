@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import City from '@/data/event/str.json'
 import { CategoriesProvider, useCategories } from '@/hooks/use-categories'
 
+import { useRouter } from 'next/router'
+
 export default function Sidebar(props) {
   const categories = [
     '演唱會',
@@ -14,10 +16,21 @@ export default function Sidebar(props) {
     '景點門票',
   ]
 
-  const { setSelectedCategories, selectedCategories } = useCategories()
+  // const { setSelectedCategories, selectedCategories } = useCategories()//鉤子
 
-  // const [selectedCategories, setSelectedCategories] = useState({})
+  const [selectedCategories, setSelectedCategories] = useState({})
   const [selectedRegions, setSelectedRegions] = useState({})
+
+  const router = useRouter()
+  useEffect(() => {
+    // 解析 URL 参数
+    const { query } = router
+    // 如果 URL 中包含特定参数，则设置状态
+    if (query.category) {
+      setSelectedCategories({ [query.category]: true })
+      console.log('Selected Categories after setting:', selectedCategories)
+    }
+  }, [router.query])
 
   useEffect(() => {
     const selectedCategoriesArray = Object.keys(selectedCategories).filter(
@@ -140,7 +153,7 @@ export default function Sidebar(props) {
           {City.map((region) => (
             <div
               key={region.id}
-              className="accordion-item bg-bg-gray text-white"
+              className="accordion-item regionColor text-white"
             >
               <h2 className="accordion-header" id={`heading-${region.id}`}>
                 <button
@@ -199,6 +212,12 @@ export default function Sidebar(props) {
           ))}
         </div>
       </div>
+      <style global jsx>{`
+        .regionColor {
+          background-color: #151515;
+          color: #fff;
+        }
+      `}</style>
     </>
   )
 }

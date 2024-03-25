@@ -3,14 +3,13 @@ import PasswordVisibility from '@/components/user/passwordVisibility'
 import React, { useState, useEffect } from 'react'
 import { Form } from 'react-bootstrap'
 import Link from 'next/link'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import ToastContainer2 from '@/components/user/custom-toastify.module.css'
-import { toast } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
+import toastStyle from '@/components/user/custom-toastify.module.css'
 import LoadingLayout from '@/components/layout/loading-layout'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/hooks/use-auth'
 import { useGoogleAuth } from '@/hooks/firebase-google-auth'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Signin() {
   const router = useRouter()
@@ -33,6 +32,7 @@ export default function Signin() {
   // google Signin
   const handleSignInWithGoogle = async () => {
     await signInWithGoogle()
+    toast.success('google 登入成功，將自動跳轉至首頁')
   }
 
   useEffect(() => {
@@ -78,6 +78,7 @@ export default function Signin() {
 
       const data = await response.json()
       signIn(data.user)
+      toast.success('登入成功，將自動跳轉至首頁')
       // console.log(data.user)
       // router.push('/')
     } catch (error) {
@@ -118,9 +119,8 @@ export default function Signin() {
         <div className="component-all">
           <BackToMainPage />
           <ToastContainer
-            toastClassName="dark-toast"
-            bodyClassName="toast-body"
-            progressClassName="toast-progress"
+            position="top-center"
+            toastClassName={toastStyle.myToast}
           />
           <div className="formBackground">
             <Form method="post">
@@ -257,7 +257,7 @@ export default function Signin() {
             background-image: url(/images/govent-angus/loginPage-BG.jpg);
             background-size: cover;
             background-position: center;
-            height: 100vh;
+            // height: 100vh;
             letter-spacing: 2px;
             input {
               border-radius: 5px;
@@ -276,7 +276,7 @@ export default function Signin() {
             }
           }
           .component-all {
-            margin-top: 200px;
+            margin-top: 150px;
           }
           .formBackground {
             border-radius: 10px;
@@ -320,7 +320,8 @@ export default function Signin() {
           }
 
           .goventLogo {
-            margin-top: 135px;
+            margin-top: 150px;
+            margin-bottom: 50px;
             height: 30px;
             @media screen and (max-width: 435px) {
               img {
