@@ -12,5 +12,8 @@
     "editor.defaultFormatter": "mtxr.sqltools"
   },
   "javascript.preferences.importModuleSpecifierEnding": "js",
-  "typescript.preferences.importModuleSpecifierEnding": "js"
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "cSpell.words": [
+    "qrcode"
+  ]
 }
