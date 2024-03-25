@@ -63,7 +63,9 @@ export const GoogleAuthAuthProvider = ({ children }) => {
       signIn(userData)
       setGoogleAuth({ isAuthenticated: true, user: userData, token })
       console.log({ isAuthenticated: true, user: userData, token })
-      router.push('/')
+      setTimeout(() => {
+        router.push('/')
+      }, 3000)
       // Handle the response data here
       // For example, you might want to set some state with the data
     } catch (error) {

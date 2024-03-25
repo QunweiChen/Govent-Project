@@ -86,7 +86,7 @@ export default function MemberFavorites() {
               {userData.map((data, index) => (
                 <div key={index} className="event p-3 mt-2 d-flex">
                   <div className="event-img me-4">
-                    <Link href={`/product/${data.collection_activity_id}`}>
+                    <Link href={`/product/${data.pid}`}>
                       <img
                         src={`http://localhost:3005/images/banner/${data.banner}`}
                         alt=""
@@ -94,7 +94,7 @@ export default function MemberFavorites() {
                     </Link>
                   </div>
                   <div className="py-1 content d-flex flex-column justify-content-between">
-                    <Link href={`/product/${data.collection_activity_id}`}>
+                    <Link href={`/product/${data.pid}`}>
                       <h5 className="text-white">{data.event_name}</h5>
                     </Link>
                     <div>
@@ -111,7 +111,7 @@ export default function MemberFavorites() {
                       tabIndex={0}
                       role="button"
                       onClick={() => {
-                        onClickDelete(data.collection_activity_id)
+                        onClickDelete(data.pid)
                       }}
                     >
                       <i
