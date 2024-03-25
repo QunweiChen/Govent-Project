@@ -238,66 +238,61 @@ export default function List() {
           </div>
           <div className="col">
             <div className="cardList row g-3">
-              {currentEvents.map((v) => (
-                <div key={v.id} className="col-md-4 col-sm-6 ">
-                  <Link
-                    href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
-                    href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
-                    className="col-md-4 col-sm-6"
-                    key={v.id}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    {/* <div onClick={()=>{router.push(``)}} */}
-                    <div className="card  stretched-link bg-bg-gray-secondary text-white px-0 no-border">
-                      <figure>
-                        <img
-                          src={`/images/product/list/${
-                            v.banner?.split(',')[0]
-                          }`}
-                          src={`/images/product/list/${
-                            v.banner?.split(',')[0]
-                          }`}
-                          alt=""
-                          className="card-img-top"
-                        />
-                      </figure>
-                      <button
-                        className={`btn bg-bg-gray`}
-                        style={{
-                          position: 'absolute',
-                          right: 5,
-                          top: 5,
-                          padding: 0,
-                          border: 'none',
-                          background: 'none',
-                        }}
-                      >
-                        <FavIcon />
-                        {/* <FavFcon/> */}
-                      </button>
-                      <div className="card-body">
-                        <p className=" text-normal-gray-light">
-                          {v.category_name}
-                        </p>
-                        <h5 className="card-title">{v.event_name}</h5>
-                        <div className="">
-                          <h6 className="text-primary-deep">
-                            ${v.price || 0}起
-                          </h6>
-                          <div className="d-flex justify-content-between">
-                            <p className="text-normal-gray-light mb-2">
-                              {v.str}
-                            </p>
-                            <span className="text-normal-gray-light">
-                              {v.start_date.substring(0, 10)}
-                            </span>
+              {/* {currentEvents.map((v) => ( */}
+              {filteredEvents
+                .slice(indexOfFirstEvent, indexOfLastEvent)
+                .map((v) => (
+                  <div key={v.id} className="col-md-4 col-sm-6 ">
+                    <Link
+                      href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
+                      className=""
+                      key={v.id}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      {/* <div onClick={()=>{router.push(``)}} */}
+                      <div className="card bg-bg-gray-secondary text-white px-0 no-border">
+                        <figure>
+                          <img
+                            // src={`/images/product/list/${
+                            //   v.banner?.split(',')[0]
+                            // }`}
+                            src={`http://localhost:3005/images/banner/${
+                              v.banner?.split(',')[0]
+                            }`}
+                            alt=""
+                            className="card-img-top"
+                          />
+                          {/* <FavIcon datas={events} setEvents={handleSetEvents} /> */}
+                          <FavIcon
+                            pid={v.pid}
+                            events={events}
+                            setEvents={setEvents}
+                          />
+                        </figure>
+
+                        <div className="card-body">
+                          <p className=" text-normal-gray-light">
+                            {v.category_name}
+                          </p>
+                          <h5 className="card-title">{v.event_name}</h5>
+                          <div className="">
+                            <h6 className="text-primary-deep">
+                              ${v.price || 0}起
+                            </h6>
+                            <div className="d-flex justify-content-between">
+                              <p className="text-normal-gray-light mb-2">
+                                {v.str}
+                              </p>
+                              <span className="text-normal-gray-light">
+                                {v.start_date.substring(0, 10)}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                </div>
-              ))}
+                    </Link>
+                  </div>
+                ))}
             </div>
 
             <footer className="d-flex justify-content-center m-3">

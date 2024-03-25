@@ -2,21 +2,32 @@ import React, { useState, useEffect } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import EventsRecommend from '@/components/events-recommend'
 import Calendar from '@/components/product/date'
+import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCart } from '@/hooks/use-cart'
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import { motion } from 'framer-motion'
+
 
 export default function Detail() {
   //引入鉤子
   const { addItem, items } = useCart()
   const router = useRouter()
-  const {
-    query: { pid },
-  } = useRouter()
+  const { query: { pid } } = useRouter()
+  const HtmlRenderer = ({ htmlContent }) => {
+    return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+  };
 
-  const [eventInfo, setEventInfo] = useState([])
-  const [ticketInfo, setTicketInfo] = useState([])
+  const MySwal = withReactContent(Swal);
+
+  const [eventInfo, setEventInfo] = useState([]);
+  const [ticketInfo, setTicketInfo] = useState([]);
   const [optionTicket, setOptionTicket] = useState([])
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [isClicked, setIsClicked] = useState(false);
 
   //設售票期間的日曆狀態
   const [sellStartDate, setSellStartDate] = useState('')
@@ -41,7 +52,6 @@ export default function Detail() {
       // console.log('Received data:', data)
       setEventInfo(data.data.posts) //轉換成eventInfo
       // setTicketInfo(data.data.posts.map(event => ({ ...event, qty: 1 }))) //轉換成ticketInfo並添加qty
-      console.log(ticketInfo)
 
       const startDate = data?.data.posts[0].start_date
       setStartDate(startDate)
@@ -57,15 +67,15 @@ export default function Detail() {
       }
       setSellTime(time3)
       console.log(time3)
-      // console.log(date3)
+
 
       //進入前面前先篩入預設值//anne改這
       setSelectTime(time3)
-      // getAll(ticketInfo,selectDate)
     } catch (e) {
       console.log(e)
     }
   }
+
 
   //回傳fetch到的資料
   useEffect(() => {
@@ -74,6 +84,7 @@ export default function Detail() {
       console.log('PID', pid)
       getProducts(pid)
     }
+
   }, [router.isReady])
 
   useEffect(() => {
@@ -82,11 +93,21 @@ export default function Detail() {
     }
   }, [ticketInfo, selectDate])
 
+
+
+
   const getOptionTickets = async (pid) => {
     try {
       const res = await fetch(`http://localhost:3005/api/events/option/${pid}`)
       const data = await res.json()
-      setTicketInfo(data.data.result.map((event) => ({ ...event, qty: 1 })))
+      setTicketInfo(data.data.result.map(event => ({ ...event, qty: 1 })))
+
+      let prices = data.data.result.map(post => post.price);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+
+      setMinPrice(minPrice);
+      setMaxPrice(maxPrice);
     } catch (e) {
       console.log(e)
     }
@@ -95,11 +116,12 @@ export default function Detail() {
   useEffect(() => {
     if (pid) {
       getOptionTickets(pid)
+      console.log(ticketInfo)
     }
   }, [pid])
-  console.log(ticketInfo)
+
   const getAll = (ticketInfo, selectDate) => {
-    console.log(selectDate)
+    console.log(selectDate);
     // 使用 Date 物件來解析原始日期字串
     const date = new Date(selectDate)
     // 取得年、月、日資訊
@@ -107,12 +129,33 @@ export default function Detail() {
     const month = (date.getMonth() + 1).toString().padStart(2, '0')
     const day = date.getDate().toString().padStart(2, '0')
 
-    const formattedDate = `${year}-${month}-${day}`
-    // console.log(formattedDate); // 輸出：2023-06-02
-    console.log(selectTime)
+    const formattedDate = `${year}-${month}-${day}`;
+    console.log(selectTime);
 
-    const holdingTime = `${formattedDate} ${selectTime}`
-    console.log(holdingTime)
+    const holdingTime = `${formattedDate} ${selectTime}`;
+    console.log(holdingTime);
+
+    //   let allTickets = [];
+
+    //   for (let i = 0; i < ticketInfo.length; i++) {
+    //     let ticket = ticketInfo[i];
+    //     allTickets.push({
+    //       id: ticket.id,
+    //       merchantId: ticket.merchat_id,
+    //       eventTypeId: ticket.event_type_id,
+    //       eventName: ticket.event_name,
+    //       holdingTime: holdingTime,
+    //       images: ticket.banner,
+    //       ticketName: ticket.option_name,
+    //       price: ticket.price,
+    //       qty: ticket.qty,
+    //       eventId: ticket.event_id,
+    //       eventOptionId: ticket.option_id,
+    //     });
+    //   }
+
+    //   setAll(allTickets);
+    // }
     setAll([
       {
         id: ticketInfo[0].id,
@@ -132,16 +175,21 @@ export default function Detail() {
 
   console.log(all)
 
-  // 假設初始狀態是未選擇
-  const [selected, setSelected] = useState(false)
 
-  const handleSelection = (v) => {
-    setSelected(!selected) // 切換選擇狀態
+  // 假設初始狀態是未選擇
+  const [selected, setSelected] = useState(0);
+
+
+  const handleSelection = (index) => {
+    setSelected(index)  // 切換選擇狀態
+    console.log(selected)
   }
 
   const handleTime = () => {
-    setSelectTime(sellTime)
-  }
+    setIsClicked(true);
+    setSelectTime(sellTime);
+  };
+
 
   const handleDecrease = (items, id) => {
     const newItems = ticketInfo.map((v) => {
@@ -153,7 +201,6 @@ export default function Detail() {
     })
     setTicketInfo(newItems)
   }
-
   const handleIncrease = (items, id) => {
     const newItems = ticketInfo.map((v) => {
       if (id === v.id) {
@@ -163,45 +210,45 @@ export default function Detail() {
       }
     })
     setTicketInfo(newItems)
-    // const newItem = {...item, qty: qty}
-    // const newItems = {...items}
-    // setEventInfo([...eventInfo, newItem])
   }
 
   return (
     <>
       <>
         <section>
-          <div className=" d-flex p-4 d-none d-xxl-inline-flex">
-            <p>
-              首頁 <i className="bi bi-chevron-right"></i>
-            </p>
-            <p>
-              演唱會 <i className="bi bi-chevron-right"></i>
-            </p>
-            <p className="text-primary-light">
-              YOASOBI 演唱會 <i className="bi bi-chevron-right"></i>
-            </p>
-          </div>
+
+          {eventInfo.map((eventInfo) => (
+            <div className=" d-flex p-4 d-none d-xxl-inline-flex">
+              <p>
+                首頁 <i className="bi bi-chevron-right"></i>
+              </p>
+              <p>
+                {eventInfo.activity_name}<i className="bi bi-chevron-right"></i>
+              </p>
+              <p className="text-primary-light">
+                {eventInfo.event_name} <i className="bi bi-chevron-right"></i>
+              </p>
+
+            </div>))}
           {/* RWD 主頁按鈕 */}
           <div>
             <div className="position-relative">
               <div className="d-flex justify-content-between d-block d-xxl-none">
                 <Link href="/product/list">
                   <button className="nav-btn opacity-50 position-absolute top-0 start-0">
-                    <i className="bi bi-arrow-left text-normal-gray-light"></i>
+                    <i className="bi bi-arrow-left "></i>
                   </button>
                 </Link>
 
                 <div className="position-absolute top-0 end-0">
                   <Link href="">
                     <button className="nav-btn opacity-50">
-                      <i className="bi bi-heart text-normal-gray-light"></i>
+                      <i className="bi bi-heart "></i>
                     </button>
                   </Link>
                   <Link href="/cart/">
                     <button className="nav-btn opacity-50">
-                      <i className="bi bi-cart3 text-normal-gray-light"></i>
+                      <i className="bi bi-cart3 "></i>
                     </button>
                   </Link>
                 </div>
@@ -211,15 +258,14 @@ export default function Detail() {
           {/* 主頁圖片 */}
           <div>
             <img
-              src={`http://localhost:3005/images/banner/${
-                eventInfo[0]?.banner?.split(',')[0]
-              }`}
-              className="object-fit-cover img-fluid"
+              src={`http://localhost:3005/images/banner/${eventInfo[0]?.banner?.split(',')[0]
+                }`}
+              className="object-fit-cover"
               alt=""
             />
           </div>
         </section>
-        {/* 主頁活動資訊 */}
+        {/* 活動資訊 */}
         {eventInfo.map((eventInfo) => (
           <main key={eventInfo.id}>
             <div className="wrapper">
@@ -231,19 +277,22 @@ export default function Detail() {
                   <h5 className="border-5 border-start border-primary px-2">
                     {eventInfo.event_name}
                   </h5>
-                  <button
+                  {/* <button
                     type="button"
                     className="store btn btn-primary-deep-50 d-none d-xxl-block"
                   >
-                    <i className="bi bi-heart me-2" />
+                    <FavIcon
+                      pid={pid}
+                      events={eventInfo[0]}
+                      setEvents={setEventInfo[0]}
+                    />
                     收藏
-                  </button>
+                  </button> */}
                 </div>
                 <div>
                   <h3 className="my-4">{eventInfo.event_name}</h3>
                   <h6 className="text-normal-gray-light">
                     <i className="bi bi-calendar me-2 d-none d-xxl-inline-flex" />
-                    {/* {dateStart}~{dateEnd} */}
                     {eventInfo.start_date.substring(0, 10)}~
                     {eventInfo.end_date.substring(0, 10)}
                   </h6>
@@ -251,19 +300,16 @@ export default function Detail() {
                   <h6>
                     <i className="bi bi-geo-alt me-2 d-none d-xxl-inline-flex" />
                     {/* 導向 Google 地圖上該地點的頁面。使用 encodeURIComponent() 函數來對地點進行編碼，以確保 URL 的正確性。target="_blank" 和 rel="noopener noreferrer" 屬性用於在新標籤中打開連結。 */}
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                        eventInfo.place
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white border-bottom"
+                    <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventInfo.place)}`} target="_blank" rel="noopener noreferrer"
+                      className='text-white border-bottom'
                     >
                       {eventInfo.place}
                     </a>
                   </h6>
 
-                  <p className="mx-4 text-secondary-02">{eventInfo.address}</p>
+                  <p className="mx-4 text-secondary-02">
+                    {eventInfo.address}
+                  </p>
                   <hr className="d-none d-xxl-block" />
                 </div>
                 <div className="d-flex text-normal-gray-light">
@@ -271,39 +317,31 @@ export default function Detail() {
                     <i className="bi bi-exclamation-triangle me-2" />
                     禁止取消
                   </h6>
-                  <h6>
+                  <h6 id="eventIntro4">
                     <i className="bi bi-box2 mx-2" />
                     電子票證
                   </h6>
                 </div>
                 <hr />
               </section>
-              {/* 活動票券 */}
+
               <div className="d-flex align-items-center mt-5">
                 <h4 className="border-5 border-start border-primary px-2">
                   選擇方案
                 </h4>
               </div>
-
-              {/* map跑出來 */}
+              {/* 票券種類 */}{/* map跑出來 */}
               <section>
                 {ticketInfo.map((v, i) => {
                   return (
                     <div key={i}>
                       <div className="row seat1 mt-3">
                         <h4 className="col-lg-9 col-sm-6">{v.option_name}</h4>
-                        <h4 className="col-lg-2 col-sm-4">
-                          NT$ {parseInt(v.price).toLocaleString()}
-                        </h4>
-                        <button
-                          className="store col-lg-1 col-sm-2 btn btn-primary-deep"
-                          onClick={() => {
-                            handleSelection(v)
-                          }}
-                        >
-                          {selected ? '已選擇' : '選擇'}
+                        <h4 className="col-lg-2 col-sm-4">NT$ {parseInt(v.price).toLocaleString()}</h4>
+                        <button className="store col-lg-1 col-sm-2 btn btn-primary-deep" onClick={() => { handleSelection(i) }}>
+                          {selected == i ? '已選擇' : '選擇'}
                         </button>
-                        {selected && (
+                        {selected == i && (
                           <>
                             <div className="d-flex mt-4 d-none d-xxl-inline-flex">
                               <h5 className="me-5">憑證兌換期限</h5>
@@ -334,7 +372,7 @@ export default function Detail() {
                               <div>
                                 <h5 className="mb-5">選擇時間</h5>
                                 <button
-                                  className="store fs-5 p-2 btn btn-primary-deep"
+                                  className={`store fs-5 p-2 btn ${isClicked ? 'btn-warning' : 'btn-primary-deep'}`}
                                   onClick={handleTime}
                                 >
                                   {sellTime}
@@ -366,12 +404,14 @@ export default function Detail() {
                                   </h4>
                                 </div>
                                 <div className="d-flex justify-content-end mb-3">
-                                  <button
-                                    className="store fs-5 me-2 p-2 btn btn-primary-deep"
+                                  <button className="store fs-5 me-2 p-2 btn btn-primary-deep"
                                     onClick={() => {
-                                      console.log(v)
                                       addItem(all[0])
-                                      console.log(all)
+                                      MySwal.fire({
+                                        icon: 'success',
+                                        title: '已成功加入購物車',
+                                      })
+
                                     }}
                                   >
                                     加入購物車
@@ -391,59 +431,21 @@ export default function Detail() {
                 {/* left bar */}
                 <div className="left col-lg-8 col-sm-12">
                   <div className="d-flex align-items-center mt-5">
-                    <h4
-                      id="eventIntro"
-                      className="border-5 border-start border-primary px-2"
-                    >
+                    <h4 id="eventIntro" className="border-5 border-start border-primary px-2">
                       活動介紹
                     </h4>
                   </div>
-                  <p className="my-3">
-                    {/* 由Ayase與ikura組成、出道曲「夜に駆ける」日前突破十億次串流播放的日本超人氣樂團YOASOBI，於官方社群平台宣佈展開首個海外巡迴演唱會！根據官方公佈的行程，YOASOBI
-                  2023年12月初將分別登場演出，而專場演唱會台北站的時間則定在
-                  2024年1月21日舉辦，更多詳細演場會資訊將陸續公布，粉絲們記得密切鎖定！ */}
-                    {eventInfo.content}
-                  </p>
-                  <img
-                    className="mt-3 object-fit-cover"
-                    src="/images/product/detail/info-1.png"
-                    alt=""
-                  />
-                  <p className="py-3 d-none d-xxl-block">
-                    YOASOBI 將在台北開唱！
-                  </p>
-                  <img
-                    className="mt-3 object-fit-cover d-none d-xxl-block"
-                    src="/images/product/detail/info-2.png"
-                    alt=""
-                  />
-                  <p className="py-3 d-none d-xxl-block">
-                    成為在日本最熱門話題 紅遍亞洲
-                  </p>
-                  <img
-                    className="mt-3 object-fit-cover d-none d-xxl-block"
-                    src="/images/product/detail/info-3.png"
-                    alt=""
-                  />
-                  <p className="py-3 d-none d-xxl-block">
-                    出道後的第二次台灣巡迴
-                  </p>
+                  <HtmlRenderer htmlContent={eventInfo.content} />
                 </div>
                 {/* right bar */}
                 <div className="right d-none d-xxl-block col-3">
                   <div className="row seat1 mt-3">
-                    <h5 className="col-12 mb-3">
-                      NT$ {parseInt(eventInfo.price).toLocaleString()} - 3200
-                    </h5>
-                    <button className="store col-12 btn btn-primary-deep">
+                    <h5 className="col-12 mb-3"> NT$ {minPrice} {minPrice !== maxPrice ? `~ ${maxPrice}` : ''}</h5>
+                    <a href="#eventIntro4" type="button" className="store col-12 btn btn-primary-deep">
                       立即購買
-                    </button>
+                    </a>
                   </div>
-                  <a
-                    href="#eventIntro"
-                    type="button"
-                    className="d-flex align-items-center mt-5"
-                  >
+                  <a href="#eventIntro" type="button" className="d-flex align-items-center mt-5">
                     <h5 className="border-5 border-start border-primary px-2 text-white">
                       活動介紹
                     </h5>
@@ -466,15 +468,7 @@ export default function Detail() {
                       使用方式
                     </h5>
                   </a>
-                  <a
-                    href="#eventIntro4"
-                    type="button"
-                    className="d-flex align-items-center mt-3"
-                  >
-                    <h5 className="border-5 border-start border-primary px-2 text-white">
-                      活動評價
-                    </h5>
-                  </a>
+
                 </div>
               </section>
               {/* 購買須知 */}
@@ -516,249 +510,24 @@ export default function Detail() {
                   入場專用QRCODE將會寄送到您的會員email，或請至會員中心＞訂單＞票卷內點擊出示使用。
                 </p>
               </section>
-              {/* 評論 */}
-              <section className="left col-lg-8 col-sm-12">
-                <div className="d-flex align-items-center mt-5 mb-4">
-                  <h4
-                    id="eventIntro4"
-                    className="border-5 border-start border-primary px-2"
-                  >
-                    活動評價
-                  </h4>
-                </div>
-                <div className="d-flex justify-content-between">
-                  <div className="d-flex ms-4">
-                    <h5 className="store p-3 bg-primary-deep ">4.0</h5>
-                    <div className="ms-3">
-                      <div className="mb-2">
-                        <i className="bi bi-star-fill text-primary"></i>
-                        <i className="bi bi-star-fill text-primary ms-2"></i>
-                        <i className="bi bi-star-fill text-primary ms-2"></i>
-                        <i className="bi bi-star-fill text-primary ms-2"></i>
-                        <i className="bi bi-star-fill ms-2"></i>
-                      </div>
-                      <h6>1,273則評價</h6>
-                    </div>
-                  </div>
-                  <div className="dropdown">
-                    <button
-                      className="btn btn-secondary p-2 border-white text-white dropdown-toggle"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      推薦
-                    </button>
-                    <ul className="dropdown-menu bg-normal-gray">
-                      <li>
-                        <a className="dropdown-item text-secondary-03" href="#">
-                          最新評分
-                        </a>
-                      </li>
-                      <li>
-                        <a className="dropdown-item text-secondary-03" href="#">
-                          最高評分
-                        </a>
-                      </li>
-                      <li>
-                        <a className="dropdown-item text-secondary-03" href="#">
-                          最低評分
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <hr className="d-none d-xxl-block" />
-
-                <div>
-                  <div className="d-flex my-5 ms-4 d-none d-xxl-inline-flex">
-                    <div>
-                      <img
-                        className="avatar rounded-circle bg-normal-white me-4"
-                        src="/images/product/detail/25.png"
-                        alt=""
-                      />
-                    </div>
-                    <div>
-                      <div className="d-flex">
-                        <h5>王小鴨</h5>
-                        <button className="text-normal-black bg-secondary-01 rounded-4 ms-3 px-3">
-                          金鴨會員
-                        </button>
-                      </div>
-                      <div className="d-flex align-items-center mt-2 ">
-                        <div className="mb-2">
-                          <i className="bi bi-star-fill text-primary"></i>
-                          <i className="bi bi-star-fill text-primary ms-2"></i>
-                          <i className="bi bi-star-fill text-primary ms-2"></i>
-                          <i className="bi bi-star-fill text-primary ms-2"></i>
-                          <i className="bi bi-star-fill ms-2"></i>
-                        </div>
-                        <p className="ms-4">2023/12/29</p>
-                      </div>
-                      <div className="bg-bg-gray-secondary p-4 rounded-3">
-                        <h6 className="fw-bold pb-2">方便又快速的入場方式</h6>
-                        <p className="pb-2">
-                          高空居高臨下非常壯觀，白天可以看得很清楚很遠，夜景看城市燈火通明，像是在飛機上看下來一樣美麗。
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <hr className="d-none d-xxl-block" />
-                  <div className="d-flex my-5 ms-4 d-none d-xxl-inline-flex">
-                    <div>
-                      <img
-                        className="avatar rounded-circle bg-normal-white me-4"
-                        src="/images/product/detail/25.png"
-                        alt=""
-                      />
-                    </div>
-                    <div>
-                      <div className="d-flex">
-                        <h5>王小鴨</h5>
-                        <button className="text-normal-black bg-secondary-01 rounded-4 ms-3 px-3">
-                          金鴨會員
-                        </button>
-                      </div>
-                      <div className="d-flex align-items-center mt-2">
-                        <div className="mb-2">
-                          <i className="bi bi-star-fill text-primary"></i>
-                          <i className="bi bi-star-fill text-primary ms-2"></i>
-                          <i className="bi bi-star-fill text-primary ms-2"></i>
-                          <i className="bi bi-star-fill text-primary ms-2"></i>
-                          <i className="bi bi-star-fill ms-2"></i>
-                        </div>
-                        <p className="ms-4">2023/12/29</p>
-                      </div>
-                      <div className="bg-bg-gray-secondary p-4 rounded-3">
-                        <h6 className="fw-bold pb-2">方便又快速的入場方式</h6>
-                        <p className="pb-2">
-                          高空居高臨下非常壯觀，白天可以看得很清楚很遠，夜景看城市燈火通明，像是在飛機上看下來一樣美麗。
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <hr className="d-none d-xxl-block" />
-
-                  <div className="d-flex my-5 ms-4 d-none d-xxl-inline-flex">
-                    <div>
-                      <img
-                        className="avatar rounded-circle bg-normal-white me-4"
-                        src="/images/product/detail/25.png"
-                        alt=""
-                      />
-                    </div>
-                    <div>
-                      <div className="d-flex">
-                        <h5>王小鴨</h5>
-                        <button className="text-normal-black bg-secondary-01 rounded-4 ms-3 px-3">
-                          金鴨會員
-                        </button>
-                      </div>
-                      <div className="d-flex align-items-center mt-2">
-                        <div className="mb-2">
-                          <i className="bi bi-star-fill text-primary"></i>
-                          <i className="bi bi-star-fill text-primary ms-2"></i>
-                          <i className="bi bi-star-fill text-primary ms-2"></i>
-                          <i className="bi bi-star-fill text-primary ms-2"></i>
-                          <i className="bi bi-star-fill ms-2"></i>
-                        </div>
-                        <p className="ms-4">2023/12/29</p>
-                      </div>
-                      <div className="bg-bg-gray-secondary p-4 rounded-3">
-                        <h6 className="fw-bold pb-2">方便又快速的入場方式</h6>
-                        <p className="pb-2">
-                          高空居高臨下非常壯觀，白天可以看得很清楚很遠，夜景看城市燈火通明，像是在飛機上看下來一樣美麗。
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  {/* RWD評論 */}
-                  <div className="d-block d-xxl-none bg-bg-gray-secondary p-3 my-5 rounded-4">
-                    <div className="d-flex my-2 ms-2">
-                      <div className="image-container">
-                        <img
-                          className="avatar rounded-circle bg-normal-white me-4"
-                          src="/images/product/detail/25.png"
-                          alt=""
-                        />
-                      </div>
-                      <div>
-                        <div className="d-flex">
-                          <h5>王小鴨</h5>
-                          <button className="text-normal-black bg-secondary-01 rounded-4 ms-3 px-3">
-                            金鴨會員
-                          </button>
-                        </div>
-                        <div className="d-flex align-items-center mt-2 justify-content-between">
-                          <div className="mb-2">
-                            <i className="bi bi-star-fill text-primary"></i>
-                            <i className="bi bi-star-fill text-primary ms-2"></i>
-                            <i className="bi bi-star-fill text-primary ms-2"></i>
-                            <i className="bi bi-star-fill text-primary ms-2"></i>
-                            <i className="bi bi-star-fill ms-2"></i>
-                          </div>
-                          <p>2023/12/29</p>
-                        </div>
-                        <div className="">
-                          <h6 className="fw-bold py-2">方便又快速的入場方式</h6>
-                          <p className="pb-2">
-                            高空居高臨下非常壯觀，白天可以看得很清楚很遠，夜景看城市燈火通明，像是在飛機上看下來一樣美麗。
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <button className="bg-bg-gray-secondary p-2 rounded-3 text-white border-normal-white col-12">
-                      更多評論
-                    </button>
-                  </div>
-                </div>
-
-                {/* 評論頁碼 */}
-                <div
-                  className="btn-toolbar justify-content-center mt-5 pt-4"
-                  role="toolbar"
-                  aria-label="Toolbar with button groups"
-                >
-                  <div
-                    className="btn-group d-none d-xxl-inline-flex"
-                    role="group"
-                    aria-label="group"
-                  >
-                    <button type="button" className="btn btn-primary">
-                      1
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary text-white"
-                    >
-                      2
-                    </button>
-                    <button type="button" className="btn btn-secondary">
-                      3
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-normal-gray"
-                      aria-label="next"
-                    >
-                      &raquo;
-                    </button>
-                  </div>
-                </div>
-              </section>
 
               {/* 推薦活動 */}
               <section className="d-none d-xxl-inline-flex">
-                <EventsRecommend />
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.4 }}
+                  className=""
+                >
+                  <EventsRecommend />
+                </motion.div>
               </section>
             </div>
 
             {/* RWD  */}
-
             {/* 按鈕 */}
             <div className="d-inline-flex d-xxl-none align-items-center justify-content-center col-12 bg-bg-gray-secondary p-3 rounded-3">
-              <h5 className="col-8">NT$ 3,200 起</h5>
+              <h5 className="col-8">NT$ {minPrice} 起</h5>
               <button
                 className="store fs-6 fw-bold p-2 btn btn-primary col-3"
                 data-bs-toggle="modal"
@@ -768,6 +537,7 @@ export default function Detail() {
               </button>
             </div>
             {/* 彈跳視窗 */}
+
             <div
               className="modal fade"
               id="exampleModal"
@@ -788,64 +558,78 @@ export default function Detail() {
                       aria-label="Close"
                     ></button>
                   </div>
-                  <div className="modal-body">
-                    <div className="d-flex justify-content-between seat1 mt-3">
-                      <h5 className="">1F 站位</h5>
-                      <h5 className="">NT$ 3,200</h5>
-                      <button className="store col-2 btn btn-primary-deep">
-                        選擇
-                      </button>
-                    </div>
-                    <div className="d-flex justify-content-between seat1 my-3">
-                      <h5 className="">2F 座位</h5>
-                      <h5 className="">NT$ 3,200</h5>
-                      <button className="store col-2 btn btn-primary-deep">
-                        選擇
-                      </button>
-                    </div>
-                    <div className="text-center mx-4">
-                      <Calendar />
-                    </div>
+                  {ticketInfo.map((v, i) => {
+                    return (
+                      <div key={i}>
+                        <div className="modal-body">
+                          <div className="d-flex justify-content-between seat1 my-4">
+                            <h5 className="">{v.option_name}</h5>
+                            <h5 className="">NT$ {parseInt(v.price).toLocaleString()}</h5>
+                            <button className="store col-2 btn btn-primary-deep" onClick={() => { handleSelection(i) }}>
+                              {selected == i ? '已選擇' : '選擇'}
+                            </button>
+                          </div>
 
-                    <br />
 
-                    <div className="d-flex align-items-center justify-content-between mt-3 border border-1 p-2 rounded-4">
-                      <h5 className="ms-2 text-secondary-03">數量</h5>
-                      <div className="d-flex align-items-center">
-                        <i
-                          type="button"
-                          className="bi bi-dash-circle me-2 icon"
-                          onClick={handleDecrease}
-                        />
-                        <h5 className="px-3">"哈"</h5>
-                        <i
-                          type="button"
-                          className="bi bi-plus-circle ms-2 icon me-2"
-                          onClick={handleIncrease}
-                        />
+                          {selected == i && (
+                            <>
+                              <div className="text-center mx-4">
+                                <Calendar
+                                  sellStartDate={startDate}
+                                  sellEndDate={endDate}
+                                  setSelectDate={setSelectDate}
+                                />
+                              </div>
+
+
+                              <div className="d-flex align-items-center justify-content-between mt-3 border border-1 p-2 rounded-4">
+                                <h5 className="ms-2 mt-2 text-secondary-03">數量</h5>
+                                <div className="d-flex align-items-center">
+                                  <i
+                                    type="button"
+                                    className="bi bi-dash-circle me-2 icon"
+                                    onClick={() => { handleDecrease(ticketInfo, v.id) }}
+                                  />
+                                  <h5 className="px-3 mt-2">{v.qty}</h5>
+                                  <i
+                                    type="button"
+                                    className="bi bi-plus-circle ms-2 icon me-2"
+                                    onClick={() => { handleIncrease(ticketInfo, v.id) }}
+                                  />
+                                </div>
+                              </div>
+                              <br />
+                              <div className="modal-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-primary-deep text-white"
+                                  data-bs-dismiss="modal"
+                                  onClick={() => {
+                                    addItem(all[0])
+                                    MySwal.fire({
+                                      icon: 'success',
+                                      title: '已成功加入購物車',
+                                    })
+                                  }}
+                                >
+                                  加入購物車
+                                </button>
+                                <button type="button" className="btn btn-primary text-white" data-bs-dismiss="modal">
+                                  取消
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        </div>
+
                       </div>
-                    </div>
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-primary-deep text-white"
-                      data-bs-dismiss="modal"
-                    >
-                      加入購物車
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-primary text-white"
-                      data-bs-dismiss="modal"
-                    >
-                      立即訂購
-                    </button>
-                  </div>
+                    )
+                  })}
                 </div>
               </div>
             </div>
           </main>
+
         ))}
       </>
 
@@ -855,9 +639,11 @@ export default function Detail() {
             background-color: #151515;
             color: #fff;
           }
+          
 
           .object-fit-cover {
             width: 100%;
+            {/* height: 500px; */}
             object-fit: cover;
           }
 
@@ -879,12 +665,11 @@ export default function Detail() {
             padding: 15px;
             border-radius: 10px;
           }
-           {
-            /* .cost {
-            padding-top: 100px;
-            margin-bottom: 50px;
-          } */
-          }
+       
+          .btn-warning{
+            background-color: GoldenRod 
+            }
+       
 
           .dollar {
             margin-left: 430px;
@@ -907,10 +692,10 @@ export default function Detail() {
             }
             margin: 40px auto;
           }
-          .avatar {
+          {/* .avatar {
             width: 60px;
             height: 60px;
-          }
+          } */}
           .custom-card {
             border: none;
             background-color: #151515;
