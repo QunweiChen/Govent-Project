@@ -12,8 +12,7 @@ import { motion } from 'framer-motion'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { useAuth } from '@/hooks/use-auth'
-
-
+import toastStyle from '@/components/user/custom-toastify.module.css'
 
 export default function Detail() {
   //引入鉤子
@@ -23,14 +22,13 @@ export default function Detail() {
     query: { pid },
   } = useRouter()
   const HtmlRenderer = ({ htmlContent }) => {
-    return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
-  };
+    return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+  }
 
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
   const { auth } = useAuth()
-
 
   const MySwal = withReactContent(Swal)
 
@@ -53,7 +51,7 @@ export default function Detail() {
   const [selectDate, setSelectDate] = useState('')
   const [selectTime, setSelectTime] = useState('')
   const [all, setAll] = useState([])
-  console.log(selectDate)
+  // console.log(selectDate)
 
   //接受list來的id 並且fetch相對應的活動資料(包含票卷資料庫)
   //因list以id當key，後續可同步修改為pid當key?
@@ -122,7 +120,7 @@ export default function Detail() {
   useEffect(() => {
     if (pid) {
       getOptionTickets(pid)
-      console.log(ticketInfo)
+      // console.log(ticketInfo)
     }
   }, [pid])
 
@@ -179,7 +177,7 @@ export default function Detail() {
     ])
   }
 
-  console.log(all)
+  // console.log(all)
 
   // 假設初始狀態是未選擇
   const [selected, setSelected] = useState(0)
@@ -215,7 +213,7 @@ export default function Detail() {
     setTicketInfo(newItems)
   }
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   return (
     <>
@@ -386,20 +384,20 @@ export default function Detail() {
                                   />
                                 </div>
                               </div>
-                              <div className='d-flex flex-column'>
+                              <div className="d-flex flex-column">
                                 <h5 className="mb-4">選擇時間</h5>
                                 <div>
-                                <button
-                                  className={`store fs-5 p-2 px-4 btn ${
-                                    isClicked
-                                      ? 'btn-warning'
-                                      : 'btn-primary-deep'
-                                  }`}
-                                  onClick={handleTime}
-                                  required
-                                >
-                                  {sellTime}
-                                </button>
+                                  <button
+                                    className={`store fs-5 p-2 px-4 btn ${
+                                      isClicked
+                                        ? 'btn-warning'
+                                        : 'btn-primary-deep'
+                                    }`}
+                                    onClick={handleTime}
+                                    required
+                                  >
+                                    {sellTime}
+                                  </button>
                                 </div>
                                 <h5 className="my-3">數量</h5>
                                 <div className="d-flex align-items-center">
@@ -428,48 +426,74 @@ export default function Detail() {
                                   </h4>
                                 </div>
 
-                                {auth.isAuthenticated || !isLoggedIn ? (
+                                {!auth.isAuthenticated ? (
                                   <div className="d-flex justify-content-end mb-3">
-                                    <button className="store fs-5 me-2 p-2 btn btn-primary-deep"
+                                    <button
+                                      className="store fs-5 me-2 p-2 btn btn-primary-deep"
                                       onClick={() => {
                                         if (!isLoggedIn) {
                                           // 如果用户未登录，显示 Modal
-                                          handleShow();
+                                          handleShow()
                                         } else {
                                           // 如果用户已登录，将商品加入购物车
-                                          addItem(all[0]);
+                                          addItem(all[0])
                                           MySwal.fire({
                                             icon: 'success',
                                             title: '已成功加入購物車',
-                                          });
+                                          })
                                         }
                                       }}
                                     >
                                       加入購物車
                                     </button>
                                     <Modal show={show} onHide={handleClose}>
-                                      <Modal.Header closeButton className="text-black">
-                                        <Modal.Title>請先登錄會員才可使用購物車</Modal.Title>
+                                      <Modal.Header
+                                        closeButton
+                                        className={toastStyle.myToast}
+                                      >
+                                        <Modal.Title className="text-white">
+                                          請先登入會員才可使用購物車
+                                          <p className="text-white mt-2">
+                                            沒有註冊會員?
+                                            <Link href="/user/signup">
+                                              <span
+                                                className={toastStyle.myToast}
+                                              >
+                                                {' '}
+                                                前往註冊
+                                              </span>
+                                            </Link>
+                                          </p>
+                                        </Modal.Title>
                                       </Modal.Header>
-                                      <Modal.Body className="text-black">
-                                        <p>
-                                          没有註冊會員?
-                                          <Link href="/user/signup">
-                                            <span className="text-primary"> 前往註冊</span>
-                                          </Link>
-                                        </p>
-                                      </Modal.Body>
-                                      <Modal.Footer>
+                                      <Modal.Footer
+                                        className={`${toastStyle.myToast} border-0`}
+                                      >
                                         <Link href="/user/signin">
-                                          <Button variant="primary" className="text-white">
-                                            已有會員登錄
+                                          <Button variant="primary">
+                                            已有會員登入
                                           </Button>
                                         </Link>
                                       </Modal.Footer>
                                     </Modal>
                                   </div>
-                                ) : null}
-
+                                ) : (
+                                  <div className="d-flex justify-content-end mb-3">
+                                    <button
+                                      className="store fs-5 me-2 p-2 btn btn-primary-deep"
+                                      onClick={() => {
+                                        // 如果用户已登录，将商品加入购物车
+                                        addItem(all[0])
+                                        MySwal.fire({
+                                          icon: 'success',
+                                          title: '已成功加入購物車',
+                                        })
+                                      }}
+                                    >
+                                      加入購物車
+                                    </button>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </>
@@ -492,38 +516,38 @@ export default function Detail() {
                   </div>
                   <HtmlRenderer htmlContent={eventInfo.content} />
                   <div className="d-flex align-items-center mt-5">
-                  <h4
-                    id="eventIntro2"
-                    className="border-5 border-start border-primary px-2"
-                  >
-                    購買須知
-                  </h4>
-                </div>
-                <p className="lh-lg mt-4">
-                  1.本次活動購票進場採實名制，每位會員帳號限購2張票券。
-                  <br />
-                  2.若購買1張票券，該張票券填寫的參加者姓名須為購票會員帳號姓名，若購買2張票券，其中1張票券填寫的參加者姓名須為購票會員帳號姓名，請於購票前先至「會員專區」→「個人資料」確認會員姓名是否與會員本人證件姓名相符且完整填寫，恕不接受購票中及購票後修改，若經查核購票當下的「會員姓名」與填寫的「參加者姓名」無一符合者，主辦單位及遠大售票有權取消該會員於此活動購買之全數票券。若因事後修改會員資料，經核對後與購票當下資訊不符合者，主辦單位及遠大售票有權取消該會員於此活動購買之全數票券。(以上紅字部分為10/27新增實名制規定)
-                  <br />
-                  3.一個證件號僅能購買一張票券，請勿將個人資料提供給他人，以免影響自身購買權益。
-                  <br />
-                  4.系統列印票券時，將帶入購票頁面填寫的參加者資料，請確實填寫每位參加者的「身分證姓名」及「身分證證字號」，外籍人士請填寫「護照姓名」及「護照號碼」，購票時請務必確認每張票券對應之參加者資料填寫正確，以免影響入場權益。
-                  <br />
-                  5.實名制票券的參加者「姓名」及「證件字號」如填寫有誤將不接受任何形式變更資料，僅接受退票期限內申請退票，請務必確認再進行結帳。
-                  <br />
-                  6.詳細實施規則請見購票頁面說明，並建議提前加入會員，於「會員專區」→「個人資料」→「信用卡資訊」登錄信用卡完成驗證手續，以便進行購票流程。
-                </p>
-                <div className="d-flex align-items-center mt-5">
-                  <h4
-                    id="eventIntro3"
-                    className="border-5 border-start border-primary px-2"
-                  >
-                    使用方式
-                  </h4>
-                </div>
-                <p className="my-4">
-                  <i className="bi bi-dot" />
-                  入場專用QRCODE將會寄送到您的會員email，或請至會員中心＞訂單＞票卷內點擊出示使用。
-                </p>
+                    <h4
+                      id="eventIntro2"
+                      className="border-5 border-start border-primary px-2"
+                    >
+                      購買須知
+                    </h4>
+                  </div>
+                  <p className="lh-lg mt-4">
+                    1.本次活動購票進場採實名制，每位會員帳號限購2張票券。
+                    <br />
+                    2.若購買1張票券，該張票券填寫的參加者姓名須為購票會員帳號姓名，若購買2張票券，其中1張票券填寫的參加者姓名須為購票會員帳號姓名，請於購票前先至「會員專區」→「個人資料」確認會員姓名是否與會員本人證件姓名相符且完整填寫，恕不接受購票中及購票後修改，若經查核購票當下的「會員姓名」與填寫的「參加者姓名」無一符合者，主辦單位及遠大售票有權取消該會員於此活動購買之全數票券。若因事後修改會員資料，經核對後與購票當下資訊不符合者，主辦單位及遠大售票有權取消該會員於此活動購買之全數票券。(以上紅字部分為10/27新增實名制規定)
+                    <br />
+                    3.一個證件號僅能購買一張票券，請勿將個人資料提供給他人，以免影響自身購買權益。
+                    <br />
+                    4.系統列印票券時，將帶入購票頁面填寫的參加者資料，請確實填寫每位參加者的「身分證姓名」及「身分證證字號」，外籍人士請填寫「護照姓名」及「護照號碼」，購票時請務必確認每張票券對應之參加者資料填寫正確，以免影響入場權益。
+                    <br />
+                    5.實名制票券的參加者「姓名」及「證件字號」如填寫有誤將不接受任何形式變更資料，僅接受退票期限內申請退票，請務必確認再進行結帳。
+                    <br />
+                    6.詳細實施規則請見購票頁面說明，並建議提前加入會員，於「會員專區」→「個人資料」→「信用卡資訊」登錄信用卡完成驗證手續，以便進行購票流程。
+                  </p>
+                  <div className="d-flex align-items-center mt-5">
+                    <h4
+                      id="eventIntro3"
+                      className="border-5 border-start border-primary px-2"
+                    >
+                      使用方式
+                    </h4>
+                  </div>
+                  <p className="my-4">
+                    <i className="bi bi-dot" />
+                    入場專用QRCODE將會寄送到您的會員email，或請至會員中心＞訂單＞票卷內點擊出示使用。
+                  </p>
                 </div>
                 {/* right bar */}
                 <div className="right d-none d-xxl-block col-4 pt-4 ps-5">
@@ -671,41 +695,52 @@ export default function Detail() {
                               </div>
                               <br />
                               <div className="modal-footer">
-                              {auth.isAuthenticated || !isLoggedIn ? (
+                                {auth.isAuthenticated || !isLoggedIn ? (
                                   <div className="">
-                                    <button className="btn btn-primary-deep text-white"
+                                    <button
+                                      className="btn btn-primary-deep text-white"
                                       onClick={() => {
                                         if (!isLoggedIn) {
                                           // 如果用户未登录，显示 Modal
-                                          handleShow();
+                                          handleShow()
                                         } else {
                                           // 如果用户已登录，将商品加入购物车
-                                          addItem(all[0]);
+                                          addItem(all[0])
                                           MySwal.fire({
                                             icon: 'success',
                                             title: '已成功加入購物車',
-                                          });
+                                          })
                                         }
                                       }}
                                     >
                                       加入購物車
                                     </button>
                                     <Modal show={show} onHide={handleClose}>
-                                      <Modal.Header closeButton className="text-black">
-                                        <Modal.Title>請先登錄會員才可使用購物車</Modal.Title>
+                                      <Modal.Header
+                                        closeButton
+                                        className={toastStyle.myToast}
+                                      >
+                                        <Modal.Title className="text-white">
+                                          請先登入會員才可使用購物車
+                                          <p className="text-white mt-2">
+                                            沒有註冊會員?
+                                            <Link href="/user/signup">
+                                              <span
+                                                className={toastStyle.myToast}
+                                              >
+                                                {' '}
+                                                前往註冊
+                                              </span>
+                                            </Link>
+                                          </p>
+                                        </Modal.Title>
                                       </Modal.Header>
-                                      <Modal.Body className="text-black">
-                                        <p>
-                                          没有註冊會員?
-                                          <Link href="/user/signup">
-                                            <span className="text-primary"> 前往註冊</span>
-                                          </Link>
-                                        </p>
-                                      </Modal.Body>
-                                      <Modal.Footer>
+                                      <Modal.Footer
+                                        className={`${toastStyle.myToast} border-0`}
+                                      >
                                         <Link href="/user/signin">
-                                          <Button variant="primary" className="text-white">
-                                            已有會員登錄
+                                          <Button variant="primary">
+                                            已有會員登入
                                           </Button>
                                         </Link>
                                       </Modal.Footer>
@@ -713,7 +748,11 @@ export default function Detail() {
                                   </div>
                                 ) : null}
 
-                                <button type="button" className="btn btn-primary text-white" data-bs-dismiss="modal">
+                                <button
+                                  type="button"
+                                  className="btn btn-primary text-white"
+                                  data-bs-dismiss="modal"
+                                >
                                   取消
                                 </button>
                               </div>
@@ -736,7 +775,7 @@ export default function Detail() {
             background-color: #151515;
             color: #fff;
           }
-          
+
           .object-fit-cover {
             width: 100%;
             height: 550px;
@@ -777,21 +816,23 @@ export default function Detail() {
             margin-left: 300px;
           }
           .left {
-             img{
+            img {
               max-width: 100%;
-             }
+            }
           }
           .right {
             position: sticky;
             top: 100px;
-            {/* margin: 40px auto; */}
+             {
+              /* margin: 40px auto; */
+            }
             height: 320px;
           }
-          .choice-date{
+          .choice-date {
             padding: 12px;
-            .add-category{
+            .add-category {
               flex: 1;
-              button{
+              button {
                 height: 50px;
               }
             }
