@@ -8,6 +8,8 @@ import { useRouter } from 'next/router'
 import { useCart } from '@/hooks/use-cart'
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { motion } from 'framer-motion'
+
 
 export default function Detail() {
   //引入鉤子
@@ -50,7 +52,6 @@ export default function Detail() {
       // console.log('Received data:', data)
       setEventInfo(data.data.posts) //轉換成eventInfo
       // setTicketInfo(data.data.posts.map(event => ({ ...event, qty: 1 }))) //轉換成ticketInfo並添加qty
-      console.log(ticketInfo);
 
       const startDate = data?.data.posts[0].start_date
       setStartDate(startDate)
@@ -66,11 +67,10 @@ export default function Detail() {
       }
       setSellTime(time3)
       console.log(time3)
-      // console.log(date3)
+
 
       //進入前面前先篩入預設值//anne改這
       setSelectTime(time3)
-      // getAll(ticketInfo,selectDate)
     } catch (e) {
       console.log(e)
     }
@@ -135,27 +135,46 @@ export default function Detail() {
     const holdingTime = `${formattedDate} ${selectTime}`;
     console.log(holdingTime);
 
-    let allTickets = [];
+    //   let allTickets = [];
 
-    for (let i = 0; i < ticketInfo.length; i++) {
-      let ticket = ticketInfo[i];
-      allTickets.push({
-        id: ticket.id,
-        merchantId: ticket.merchat_id,
-        eventTypeId: ticket.event_type_id,
-        eventName: ticket.event_name,
-        holdingTime: holdingTime,
-        images: ticket.banner,
-        ticketName: ticket.option_name,
-        price: ticket.price,
-        qty: ticket.qty,
-        eventId: ticket.event_id,
-        eventOptionId: ticket.option_id,
-      });
-    }
+    //   for (let i = 0; i < ticketInfo.length; i++) {
+    //     let ticket = ticketInfo[i];
+    //     allTickets.push({
+    //       id: ticket.id,
+    //       merchantId: ticket.merchat_id,
+    //       eventTypeId: ticket.event_type_id,
+    //       eventName: ticket.event_name,
+    //       holdingTime: holdingTime,
+    //       images: ticket.banner,
+    //       ticketName: ticket.option_name,
+    //       price: ticket.price,
+    //       qty: ticket.qty,
+    //       eventId: ticket.event_id,
+    //       eventOptionId: ticket.option_id,
+    //     });
+    //   }
 
-    setAll(allTickets);
+    //   setAll(allTickets);
+    // }
+    setAll([
+      {
+        id: ticketInfo[0].id,
+        merchantId: ticketInfo[0].merchat_id,
+        eventTypeId: ticketInfo[0].event_type_id,
+        eventName: ticketInfo[0].event_name,
+        holdingTime: holdingTime, //*
+        images: ticketInfo[0].banner,
+        ticketName: ticketInfo[0].option_name,
+        price: ticketInfo[0].price,
+        qty: ticketInfo[0].qty, //*
+        eventId: ticketInfo[0].event_id,
+        eventOptionId: ticketInfo[0].option_id,
+      },
+    ])
   }
+
+  console.log(all)
+
 
   // 假設初始狀態是未選擇
   const [selected, setSelected] = useState(0);
@@ -197,6 +216,7 @@ export default function Detail() {
     <>
       <>
         <section>
+
           {eventInfo.map((eventInfo) => (
             <div className=" d-flex p-4 d-none d-xxl-inline-flex">
               <p>
@@ -216,19 +236,19 @@ export default function Detail() {
               <div className="d-flex justify-content-between d-block d-xxl-none">
                 <Link href="/product/list">
                   <button className="nav-btn opacity-50 position-absolute top-0 start-0">
-                    <i className="bi bi-arrow-left text-normal-gray-light"></i>
+                    <i className="bi bi-arrow-left "></i>
                   </button>
                 </Link>
 
                 <div className="position-absolute top-0 end-0">
                   <Link href="">
                     <button className="nav-btn opacity-50">
-                      <i className="bi bi-heart text-normal-gray-light"></i>
+                      <i className="bi bi-heart "></i>
                     </button>
                   </Link>
                   <Link href="/cart/">
                     <button className="nav-btn opacity-50">
-                      <i className="bi bi-cart3 text-normal-gray-light"></i>
+                      <i className="bi bi-cart3 "></i>
                     </button>
                   </Link>
                 </div>
@@ -240,12 +260,12 @@ export default function Detail() {
             <img
               src={`http://localhost:3005/images/banner/${eventInfo[0]?.banner?.split(',')[0]
                 }`}
-              className="object-fit-cover img-fluid"
+              className="object-fit-cover"
               alt=""
             />
           </div>
         </section>
-        {/* 主頁活動資訊 */}
+        {/* 活動資訊 */}
         {eventInfo.map((eventInfo) => (
           <main key={eventInfo.id}>
             <div className="wrapper">
@@ -257,17 +277,17 @@ export default function Detail() {
                   <h5 className="border-5 border-start border-primary px-2">
                     {eventInfo.event_name}
                   </h5>
-                  <button
+                  {/* <button
                     type="button"
                     className="store btn btn-primary-deep-50 d-none d-xxl-block"
                   >
-                    {/* <FavIcon
-                            pid={eventInfo.pid}
-                            // events={eventInfo}
-                            // setEvents={setEventInfo}
-                          /> */}
+                    <FavIcon
+                      pid={pid}
+                      events={eventInfo[0]}
+                      setEvents={setEventInfo[0]}
+                    />
                     收藏
-                  </button>
+                  </button> */}
                 </div>
                 <div>
                   <h3 className="my-4">{eventInfo.event_name}</h3>
@@ -304,13 +324,13 @@ export default function Detail() {
                 </div>
                 <hr />
               </section>
-              {/* 票券種類 */}
+
               <div className="d-flex align-items-center mt-5">
                 <h4 className="border-5 border-start border-primary px-2">
                   選擇方案
                 </h4>
               </div>
-              {/* map跑出來 */}
+              {/* 票券種類 */}{/* map跑出來 */}
               <section>
                 {ticketInfo.map((v, i) => {
                   return (
@@ -384,20 +404,18 @@ export default function Detail() {
                                   </h4>
                                 </div>
                                 <div className="d-flex justify-content-end mb-3">
-                                  {/* <Link href={`/cart`}> */}
                                   <button className="store fs-5 me-2 p-2 btn btn-primary-deep"
                                     onClick={() => {
-                                      addItem(all[i])
+                                      addItem(all[0])
                                       MySwal.fire({
                                         icon: 'success',
                                         title: '已成功加入購物車',
                                       })
-                                  
+
                                     }}
                                   >
                                     加入購物車
                                   </button>
-                                  {/* </Link> */}
                                 </div>
                               </div>
                             </div>
@@ -495,7 +513,14 @@ export default function Detail() {
 
               {/* 推薦活動 */}
               <section className="d-none d-xxl-inline-flex">
-                <EventsRecommend />
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.4 }}
+                  className=""
+                >
+                  <EventsRecommend />
+                </motion.div>
               </section>
             </div>
 
@@ -512,88 +537,99 @@ export default function Detail() {
               </button>
             </div>
             {/* 彈跳視窗 */}
-            {ticketInfo.map((v, i) => {
-              return (
-                <div
-                  className="modal fade"
-                  id="exampleModal"
-                  tabindex="-1"
-                  aria-labelledby="exampleModalLabel"
-                  aria-hidden="true"
-                >
-                  <div className="modal-dialog">
-                    <div className="modal-content bg-bg-gray-secondary">
-                      <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">
-                          選擇規格
-                        </h5>
-                        <button
-                          type="button"
-                          className="btn-close"
-                          data-bs-dismiss="modal"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-                      <div className="modal-body">
-                        <div className="d-flex justify-content-between seat1 my-4">
-                          <h5 className="">{v.option_name}</h5>
-                          <h5 className="">NT$ {parseInt(v.price).toLocaleString()}</h5>
-                          <button className="store col-2 btn btn-primary-deep">
-                            選擇
-                          </button>
-                        </div>
-                        {/* <div className="d-flex justify-content-between seat1 my-3">
-                          <h5 className="">2F 座位</h5>
-                          <h5 className="">NT$ 3,200</h5>
-                          <button className="store col-2 btn btn-primary-deep">
-                            選擇
-                          </button>
-                        </div> */}
-                        <div className="text-center mx-4">
-                          <Calendar
-                            sellStartDate={startDate}
-                            sellEndDate={endDate}
-                            setSelectDate={setSelectDate}
-                          />
-                        </div>
 
-                        <br />
-
-                        <div className="d-flex align-items-center justify-content-between mt-3 border border-1 p-2 rounded-4">
-                          <h5 className="ms-2 text-secondary-03">數量</h5>
-                          <div className="d-flex align-items-center">
-                            <i
-                              type="button"
-                              className="bi bi-dash-circle me-2 icon"
-                              onClick={() => { handleDecrease(ticketInfo, v.id) }}
-                            />
-                            <h5 className="px-3">{v.qty}</h5>
-                            <i
-                              type="button"
-                              className="bi bi-plus-circle ms-2 icon me-2"
-                              onClick={() => { handleIncrease(ticketInfo, v.id) }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="modal-footer">
-                        <button
-                          type="button"
-                          className="btn btn-primary-deep text-white"
-                          data-bs-dismiss="modal"
-                        >
-                          加入購物車
-                        </button>
-                        <button type="button" className="btn btn-primary text-white" data-bs-dismiss="modal">
-                          取消
-                        </button>
-                      </div>
-                    </div>
+            <div
+              className="modal fade"
+              id="exampleModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div className="modal-dialog">
+                <div className="modal-content bg-bg-gray-secondary">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="exampleModalLabel">
+                      選擇規格
+                    </h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
                   </div>
+                  {ticketInfo.map((v, i) => {
+                    return (
+                      <div key={i}>
+                        <div className="modal-body">
+                          <div className="d-flex justify-content-between seat1 my-4">
+                            <h5 className="">{v.option_name}</h5>
+                            <h5 className="">NT$ {parseInt(v.price).toLocaleString()}</h5>
+                            <button className="store col-2 btn btn-primary-deep" onClick={() => { handleSelection(i) }}>
+                              {selected == i ? '已選擇' : '選擇'}
+                            </button>
+                          </div>
+
+
+                          {selected == i && (
+                            <>
+                              <div className="text-center mx-4">
+                                <Calendar
+                                  sellStartDate={startDate}
+                                  sellEndDate={endDate}
+                                  setSelectDate={setSelectDate}
+                                />
+                              </div>
+
+
+                              <div className="d-flex align-items-center justify-content-between mt-3 border border-1 p-2 rounded-4">
+                                <h5 className="ms-2 mt-2 text-secondary-03">數量</h5>
+                                <div className="d-flex align-items-center">
+                                  <i
+                                    type="button"
+                                    className="bi bi-dash-circle me-2 icon"
+                                    onClick={() => { handleDecrease(ticketInfo, v.id) }}
+                                  />
+                                  <h5 className="px-3 mt-2">{v.qty}</h5>
+                                  <i
+                                    type="button"
+                                    className="bi bi-plus-circle ms-2 icon me-2"
+                                    onClick={() => { handleIncrease(ticketInfo, v.id) }}
+                                  />
+                                </div>
+                              </div>
+                              <br />
+                              <div className="modal-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-primary-deep text-white"
+                                  data-bs-dismiss="modal"
+                                  onClick={() => {
+                                    addItem(all[0])
+                                    MySwal.fire({
+                                      icon: 'success',
+                                      title: '已成功加入購物車',
+                                    })
+                                  }}
+                                >
+                                  加入購物車
+                                </button>
+                                <button type="button" className="btn btn-primary text-white" data-bs-dismiss="modal">
+                                  取消
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        </div>
+
+                      </div>
+                    )
+                  })}
                 </div>
-              )
-            })}
+              </div>
+            </div>
           </main>
+
         ))}
       </>
 
@@ -607,7 +643,7 @@ export default function Detail() {
 
           .object-fit-cover {
             width: 100%;
-            height: 500px;
+            {/* height: 500px; */}
             object-fit: cover;
           }
 
