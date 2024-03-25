@@ -7,6 +7,7 @@ import { useCart } from '@/hooks/use-cart'
 export default function Confirm() {
   const { setCartItems, cartItems, setPay, pay } = useCart()
   const [state, setState] = useState({})
+  const [time, setTime] = useState(null)
   //付款完成之後會轉到這裡，在使用fetch在確認訂單是否有支付成功
   const router = useRouter()
   //移除使用的優惠券
@@ -105,6 +106,7 @@ export default function Confirm() {
     setCartItems(updatedcartItems)
     setPay([])
   }
+
   useEffect(() => {
     if (router.isReady) {
       let transactionId = ''
@@ -137,9 +139,6 @@ export default function Confirm() {
           qrCode(orderID)
           handleCheckout()
           //如果成功五秒後跳轉回主頁
-          setTimeout(() => {
-            window.location.replace('http://localhost:3000/')
-          }, 5000)
           return response
         })
         .catch((err) => {
@@ -148,6 +147,14 @@ export default function Confirm() {
     }
   }, [router.isReady])
 
+  useEffect(() => {
+    const id = setTimeout(() => {
+      window.location.replace('http://localhost:3000/')
+    }, 5000) // 5000 毫秒后执行
+
+    setTime(id)
+    return clearTimeout(time)
+  }, [])
   return (
     <>
       {state.result?.returnCode == '0000' && (

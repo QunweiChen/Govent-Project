@@ -63,7 +63,6 @@ export default function Payment() {
   //監聽是否有輸入優惠券或折抵金額
   useEffect(() => {
     let TotalMoney = TotalPrice()
-    let result = 0
     switch (true) {
       case discountState.coupon == false && discountState.point == true:
         TotalMoney = TotalMoney - discount.point
@@ -83,9 +82,12 @@ export default function Payment() {
         }
         break
       case discountState.point == true && discountState.coupon == true:
-        result = TotalMoney - coupon() - discount.point
-        setMoney(result)
+        TotalMoney = TotalMoney - coupon() - discount.point
+        setMoney(TotalMoney)
         break
+    }
+    if (TotalMoney <= 0) {
+      alert('小於0')
     }
   }, [discount, discountState])
 
@@ -116,6 +118,7 @@ export default function Payment() {
             coupon={coupon}
             couponMoney={couponMoney}
             TotalPrice={TotalPrice}
+            setMoney={setMoney}
           />
         </div>
         {/* 金額資訊 */}

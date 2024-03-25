@@ -20,7 +20,9 @@ export default function PaymentForm({
   redeem = () => {},
   couponMoney = 0,
   TotalPrice = () => {},
+  setMoney = () => {},
 }) {
+  console.log(discount)
   //引入會員資料hook
   const { auth } = useAuth()
   //使用react-hook-form套件檢查form表單
@@ -115,14 +117,7 @@ export default function PaymentForm({
     if (e.target.name == 'point') {
       let setConnectionData = { ...discount, [e.target.name]: e.target.value }
       let value = e.target.value
-      if (value < 0) {
-        alert('超過會員點數範圍')
-        setConnectionData = { ...discount, [e.target.name]: '0' }
-        setDiscount(setConnectionData)
-        pointInputRef.current.value = ''
-        return
-      }
-      if (value > pointData) {
+      if (value < 0 || value > pointData) {
         alert('超過會員點數範圍')
         setConnectionData = { ...discount, [e.target.name]: '0' }
         setDiscount(setConnectionData)
@@ -130,6 +125,7 @@ export default function PaymentForm({
         return
       }
       setDiscount(setConnectionData)
+
       return
     }
   }
@@ -201,6 +197,7 @@ export default function PaymentForm({
   }
   const [couponData, setCouponData] = useState([])
   const [pointData, setPointData] = useState(0)
+  console.log(couponData)
   //拿取會員的優惠券及點數資料
   useEffect(() => {
     console.log(money)
@@ -217,7 +214,9 @@ export default function PaymentForm({
         let point = Number(response.data.point[0].point)
         setPointData(point)
         let coupon = response.data.coupon
+        console.log(coupon)
         coupon = coupon.filter((e) => e.price_min < money)
+        console.log(coupon)
         setCouponData(coupon)
         return
       })
@@ -225,7 +224,20 @@ export default function PaymentForm({
         console.log(err)
       })
   }, [])
-
+  useEffect(() => {
+    console.log(money)
+    if (money <= 0) {
+      let discountObj = {
+        ...discount,
+        point: '0',
+        coupon: { name: '', value: '0', id: '0' },
+      }
+      pointInputRef.current.value = ''
+      couponInputRef.current.value = 0
+      setDiscount(discountObj)
+      setMoney(TotalPrice())
+    }
+  }, [money])
   return (
     <>
       <Form onSubmit={handleSubmit(postSubmit)} method="post">
