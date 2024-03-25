@@ -17,7 +17,7 @@ import MyFooter from '@/components/layout/default-layout/my-footer'
 import NavbarBottomRwdSm from '@/components/layout/list-layout/navbar-bottom-sm'
 import FavIcon from '@/components/layout/list-layout/fav-icon-test'
 import NavbarTopRwdSm from '@/components/layout/list-layout/navbar-top-sm'
-import NavbarTopRwd from '@/components/layout/list-layout/navbar-top'
+import NavbarTopRwd from '@/components/layout/list-layout/navbar-top-test'
 import Sidebar from '@/components/layout/list-layout/sidebar'
 
 //篩選用components
@@ -85,7 +85,10 @@ export default function List() {
   // 分頁
   const indexOfLastEvent = currentPage * postsPerPage
   const indexOfFirstEvent = indexOfLastEvent - postsPerPage
-  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent)
+  // const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent)
+  const currentEvents = filteredEvents
+    ? filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent)
+    : []
 
   const handleFilterChange = (selectedCategories, selectedRegions) => {
     setSelectedCategories(selectedCategories)
@@ -121,6 +124,10 @@ export default function List() {
   const handlePriceEvents = (priceSortedEvents) => {
     setFilteredEvents(priceSortedEvents)
   }
+  // 推薦排序的回调函数
+  const handleRecommendEvents = (recommendSortedEvents) => {
+    setFilteredEvents(recommendSortedEvents)
+  }
 
   //篩選後引導回首頁
   useEffect(() => {
@@ -154,11 +161,20 @@ export default function List() {
             onCity={handleCityEvents}
             onDate={handleDateEvents}
             onPrice={handlePriceEvents}
+            onRecommend={handleRecommendEvents}
           />
         </h5>
       </nav>
-      <nav className="header-m">
-        <NavbarTopRwdSm />
+      <nav className="header-m ">
+        <NavbarTopRwdSm
+          events={events} //傳原始資料至props
+          setEvents={setEvents} //
+          onSortEvents={handleSortEvents}
+          onCityEvents={handleCityEvents}
+          onDateEvents={handleDateEvents}
+          onPriceEvents={handlePriceEvents}
+          onRecommendEvents={handleRecommendEvents}
+        />
       </nav>
       <main className="container w-1200">
         <div className="row">
@@ -175,11 +191,11 @@ export default function List() {
               {filteredEvents
                 .slice(indexOfFirstEvent, indexOfLastEvent)
                 .map((v) => (
-                  <div key={v.id} className="col-md-4 col-sm-6 ">
+                  <div key={v.pid} className="col-md-4 col-sm-6 ">
                     <Link
                       href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
                       className=""
-                      key={v.id}
+                      key={v.pid}
                       style={{ textDecoration: 'none' }}
                     >
                       <div className="card bg-bg-gray-secondary text-white px-0 no-border">

@@ -20,8 +20,12 @@ export default function TestPorps(props) {
   }
 
   const router = useRouter()
-  const handleClick = (category) => {
-    router.push(`/product/list/?category=${category}`)
+  const handleClick = (category, regionNames) => {
+    const regions = Array.isArray(regionNames) ? regionNames : [regionNames]
+    const formattedRegionNames = regions.join(',')
+    router.push(
+      `/product/list/?category=${category}&regionName=${formattedRegionNames}`
+    )
   }
 
   return (
@@ -38,7 +42,10 @@ export default function TestPorps(props) {
       <button onClick={() => handleClick('課程講座')}>課程講座</button>
       <button onClick={() => handleClick('體育賽事')}>體育賽事</button>
       <button onClick={() => handleClick('景點門票')}>景點門票</button>
-
+      <button onClick={() => handleClick('', '台北市')}>台北市</button>
+      <button onClick={() => handleClick('', ['台北市', '新北市', '桃園市'])}>
+        台北市 & 新北市
+      </button>
       {props.datas.map((v, id) => (
         <div key={id}>
           <p className="text-normal-gray-light">{v.category_name}</p>
