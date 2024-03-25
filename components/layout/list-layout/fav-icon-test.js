@@ -4,10 +4,18 @@ import { CiHeart } from 'react-icons/ci'
 import { useAuth } from '@/hooks/use-auth'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import Modal from 'react-bootstrap/Modal'
+import toastStyle from '@/components/user/custom-toastify.module.css'
+import Button from 'react-bootstrap/Button'
+import Link from 'next/link'
 
 import addFavToDatabase from '@/hooks/use-fav'
 
 export default function FavIcon({ pid, events, setEvents }) {
+  const [isVisible, setIsVisible] = useState(false)
+  const [show, setShow] = useState(false)
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
   //檢查會員身份
   const { auth } = useAuth()
   const uid = auth.user?.id //抓取登入中的id
@@ -15,7 +23,6 @@ export default function FavIcon({ pid, events, setEvents }) {
 
   //驗證登入狀態
   const router = useRouter()
-  const [isVisible, setIsVisible] = useState(false)
 
   //資料庫抓取
   const [favorites, setFavorites] = useState([])
@@ -133,7 +140,7 @@ export default function FavIcon({ pid, events, setEvents }) {
   }
 
   // 檢查是否為該用戶的收藏
-  const isFavorite = favorites.some((fav) => fav.pid === pid)
+  // const isFavorite = favorites.some((fav) => fav.pid === pid)
 
   //渲染出愛心狀態
   const handleToggleFav = async (event) => {
@@ -143,8 +150,8 @@ export default function FavIcon({ pid, events, setEvents }) {
     //點按時新增會員判定提示
     if (!auth.user) {
       toast.error('會員才能使用!')
-      router.push('/user/signin')
-      return
+      // router.push('/user/signin')
+      return handleShow()
     }
     try {
       if (favorites.some((fav) => fav.pid === pid)) {
@@ -179,12 +186,30 @@ export default function FavIcon({ pid, events, setEvents }) {
       >
         {renderFavoriteIcon(uid, pid)} {/* 渲染愛心按鈕的狀態 */}
       </button>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton className={toastStyle.myToast}>
+          <Modal.Title className="text-white">
+            請先登入會員才可使用收藏功能
+            <p className="text-white mt-2">
+              沒有註冊會員?
+              <Link href="/user/signup">
+                <span className={toastStyle.myToast}> 前往註冊</span>
+              </Link>
+            </p>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Footer className={`${toastStyle.myToast} border-0`}>
+          <Link href="/user/signin">
+            <Button variant="primary">已有會員登入</Button>
+          </Link>
+        </Modal.Footer>
+      </Modal>
       <style global jsx>
         {`
-        .fav-btn{
-          border-radius: 8px;
-          background-color: var(--search-bar-color) !important;
-        }
+          .fav-btn {
+            border-radius: 8px;
+            background-color: var(--search-bar-color) !important;
+          }
         `}
       </style>
     </>
