@@ -244,11 +244,11 @@ export default function Detail() {
                 </Link>
 
                 <div className="position-absolute top-0 end-0">
-                  <Link href="">
+                  {/* <Link href="">
                     <button className="nav-btn opacity-50">
                       <i className="bi bi-heart "></i>
                     </button>
-                  </Link>
+                  </Link> */}
                   <Link href="/cart/">
                     <button className="nav-btn opacity-50">
                       <i className="bi bi-cart3 "></i>
@@ -284,14 +284,19 @@ export default function Detail() {
                   {/* <button
                     type="button"
                     className="store btn btn-primary-deep-50 d-none d-xxl-block"
+                  > */}
+                  <div
+                    style={{
+                      position: 'relative',
+                    }}
                   >
                     <FavIcon
-                      pid={pid}
+                      pid={eventInfo.pid}
                       events={eventInfo[0]}
                       setEvents={setEventInfo[0]}
                     />
-                    收藏
-                  </button> */}
+                  </div>
+                  {/* </button> */}
                 </div>
                 <div>
                   <h3 className="my-4">{eventInfo.event_name}</h3>

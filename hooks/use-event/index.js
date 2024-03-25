@@ -6,7 +6,6 @@ export default function useEvents() {
   const [error, setError] = useState()
   const [loading, setLoading] = useState(true)
 
-
   useEffect(() => {
     const fetchData = async () => {
       fetch('http://localhost:3005/api/events')
