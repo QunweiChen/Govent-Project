@@ -248,7 +248,7 @@ export default function CartCard({
         onHide={() => setShowModal(false)} // 点击模态框外部或关闭按钮时关闭模态框
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className={`${toastStyle.myToastcart}`}>
           <Modal.Title
             id="example-modal-sizes-title-lg"
             className="h4 text-primary"
@@ -256,7 +256,9 @@ export default function CartCard({
             注意!
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body closeButton>請勾選需購買的票券</Modal.Body>
+        <Modal.Body closeButton className={`${toastStyle.myToastcart} `}>
+          請勾選需購買的票券
+        </Modal.Body>
       </Modal>
     </>
   )
