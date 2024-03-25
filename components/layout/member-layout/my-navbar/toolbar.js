@@ -19,6 +19,7 @@ export default function Toolbar({ handleShow }) {
   const handleSignOut = () => {
     signOut() // Call the sign out method
     // Redirect or perform additional actions after signing out if needed
+    setCartItems([])
   }
 
   useEffect(() => {
@@ -45,11 +46,11 @@ export default function Toolbar({ handleShow }) {
       })
       .catch((error) => console.error('Error fetching data:', error))
   }, [])
-  useEffect(() => {
-    if (!auth.isAuthenticated && !auth.user) {
-      setCartItems([])
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!auth.isAuthenticated && !auth.user) {
+  //     setCartItems([])
+  //   }
+  // }, [])
 
   return (
     <ul className="navbar-nav pe-2 d-flex align-items-center justify-content-end w-100">

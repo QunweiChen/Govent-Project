@@ -74,6 +74,7 @@ export function CartProvider({
   //資料庫-用id尋找商家name
   const foundMt = (MtId) => {
     const foundItem = Mt.find((item) => item.id === MtId)
+    // console.log(foundItem)
     const bankName = foundItem?.name
     return bankName
   }
