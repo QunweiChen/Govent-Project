@@ -78,9 +78,9 @@ export default function FavIcon({ pid, events, setEvents }) {
   // 渲染出愛心狀態
   const renderFavoriteIcon = (uid, pid) => {
     if (favorites.some((fav) => fav.uid === uid && fav.pid === pid)) {
-      return <i className="bi bi-heart"></i>
-    } else {
       return <i className="bi bi-heart-fill"></i>
+    } else {
+      return <i className="bi bi-heart"></i>
     }
   }
 
