@@ -7,7 +7,6 @@ import { useCart } from '@/hooks/use-cart'
 export default function Confirm() {
   const { setCartItems, cartItems, setPay, pay } = useCart()
   const [state, setState] = useState({})
-  const [time, setTime] = useState(null)
   //付款完成之後會轉到這裡，在使用fetch在確認訂單是否有支付成功
   const router = useRouter()
   //移除使用的優惠券
@@ -153,7 +152,7 @@ export default function Confirm() {
           <Card.Header>完成付款</Card.Header>
           <Card.Body>
             <Card.Title>您的訂單編號為</Card.Title>
-            <Card.Text>{state.result.info.orderId}</Card.Text>
+            <Card.Text className="mb-3">{state.result.info.orderId}</Card.Text>
             <Link
               className="btn btn-primary"
               href={'http://localhost:3000/'}
@@ -162,7 +161,6 @@ export default function Confirm() {
               回到主頁
             </Link>
           </Card.Body>
-          <Card.Footer className="text-muted">五秒後返為主頁</Card.Footer>
         </Card>
       )}
       <style global jsx>
