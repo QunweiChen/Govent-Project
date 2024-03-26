@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { motion } from 'framer-motion'
 
 // 引入icon
 import { GoSortDesc } from 'react-icons/go'
@@ -140,7 +141,7 @@ export default function List() {
   return (
     <>
       {/* <useEvents> */}
-      <nav className="header container navbar-expand mt-5 mb-3 w-1200">
+      <nav className="header container navbar-expand mt-5 mb-4 w-1200">
         <h5 className="d-flex justify-content-between">
           <div className="bg-bg-gray-secondary rounded-3">
             <p className="mx-4 my-2">
@@ -148,11 +149,7 @@ export default function List() {
             </p>
           </div>
 
-          <SearchForm
-            searchWord={searchWord}
-            onSearch={handleSearch} // 正确传递搜索回调函数
-          />
-
+          <div className='flex-1 d-flex justify-content-between ms-4'>
           <NavbarTopRwd
             events={events} //傳原始資料至props
             setEvents={setEvents} // 将更新事件列表的函数传递给子组件
@@ -163,9 +160,15 @@ export default function List() {
             onPrice={handlePriceEvents}
             onRecommend={handleRecommendEvents}
           />
+          <SearchForm
+            searchWord={searchWord}
+            onSearch={handleSearch} // 正确传递搜索回调函数
+          />
+
+          </div>
         </h5>
       </nav>
-      <nav className="header-m ">
+      <nav className="header-m">
         <NavbarTopRwdSm
           events={events} //傳原始資料至props
           setEvents={setEvents} //
@@ -186,12 +189,21 @@ export default function List() {
             />
           </div>
           <div className="col">
-            <div className="cardList row g-3">
+            <motion.div
+            initial={{ y: 0, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.1 }}
+          key={selectedRegions}
+            className="cardList row g-3">
               {/* {currentEvents.map((v) => ( */}
               {filteredEvents
                 .slice(indexOfFirstEvent, indexOfLastEvent)
-                .map((v) => (
-                  <div key={v.pid} className="col-md-4 col-sm-6 ">
+                .map((v, index) => (
+                  <motion.div key={v.pid} className="col-md-4 col-sm-6"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.3, delay: index*0.1 }}
+                  >
                     <Link
                       href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
                       className=""
@@ -237,9 +249,9 @@ export default function List() {
                         </div>
                       </div>
                     </Link>
-                  </div>
+                  </motion.div>
                 ))}
-            </div>
+            </motion.div>
 
             <footer className="d-flex justify-content-center m-3">
               <div
@@ -302,6 +314,9 @@ export default function List() {
           color: #fff;
           background-color: var(--bg-gray-color);
           border: border-inline;
+          .flex-1{
+            flex:1;
+          }
         }
         .w-1200 {
           max-width: 1200px;
