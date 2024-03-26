@@ -190,7 +190,7 @@ export default function NavbarTopRwdSm(props) {
 
   return (
     <>
-      <section className="header d-sm-none d-block  bg-normal-gray-deep ">
+      <section className="header d-sm-none d-block ">
         <CityButton onCity={props.onCityEvents} CityOrder={cityOrder} />
 
         {/* <button
