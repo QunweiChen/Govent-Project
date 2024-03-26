@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 // import Dropdown from 'react-bootstrap/Dropdown'
 
+
 export default function NavbarTopRwdSm(props) {
-  const [activeButton, setActiveButton] = useState(0)
+  const [activeButton, setActiveButton] = useState(2)
 
   // const [activeButton2, setSelectedOption] = useState(0)
   const handleClick = (buttonIndex) => {

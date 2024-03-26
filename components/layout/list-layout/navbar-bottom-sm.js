@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 export default function NavbarBottomRwdSm() {
-  const [activeButton, setActiveButton] = useState(0)
+  const [activeButton, setActiveButton] = useState(2)
   const handleClick = (buttonIndex) => {
     setActiveButton(buttonIndex)
   }
@@ -41,7 +41,7 @@ export default function NavbarBottomRwdSm() {
             onClick={() => handleClick(2)}
           >
             <i class="bi bi-ticket-perforated fs-1"></i>
-            <div className="sm-p">我的票券</div>
+            <div className="sm-p">票券</div>
           </button>
           <button
             className={`col-3 btn ${
