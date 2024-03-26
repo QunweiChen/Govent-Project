@@ -14,12 +14,13 @@ export default function ProductInfo({ productData = {} }) {
           >
             <div
               className="product-image pe-3 col-auto d-none d-lg-block"
-              style={{ height: '100px' }}
+              style={{ height: '100px', width: '200px' }}
             >
               <Image
                 src={`http://localhost:3005/images/banner/${v.images}`}
                 alt=""
-                className="rounded-3 overflow-hidden  h-100"
+                className="rounded-3 w-100 h-100"
+                style={{ objectFit: 'cover' }}
               />
             </div>
             <div className="product-content col-auto d-flex flex-column justify-content-between">

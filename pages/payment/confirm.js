@@ -105,10 +105,15 @@ export default function Confirm() {
     setCartItems(updatedcartItems)
     setPay([])
   }
+
   useEffect(() => {
     if (router.isReady) {
       let transactionId = ''
       let orderID = router.query.orderID
+      if (!orderID) {
+        window.location.replace('http://localhost:3000/')
+        return
+      }
       let url = `http://localhost:3005/api/payment/confirm?transactionId=${transactionId}&orderID=${orderID}`
       let couponID = router.query.couponID
       let point = router.query.point
@@ -132,10 +137,6 @@ export default function Confirm() {
           delCoupon(couponID, point)
           qrCode(orderID)
           handleCheckout()
-          //如果成功五秒後跳轉回主頁
-          setTimeout(() => {
-            window.location.replace('http://localhost:3000/')
-          }, 5000)
           return response
         })
         .catch((err) => {
@@ -151,7 +152,7 @@ export default function Confirm() {
           <Card.Header>完成付款</Card.Header>
           <Card.Body>
             <Card.Title>您的訂單編號為</Card.Title>
-            <Card.Text>{state.result.info.orderId}</Card.Text>
+            <Card.Text className="mb-3">{state.result.info.orderId}</Card.Text>
             <Link
               className="btn btn-primary"
               href={'http://localhost:3000/'}
@@ -160,7 +161,6 @@ export default function Confirm() {
               回到主頁
             </Link>
           </Card.Body>
-          <Card.Footer className="text-muted">五秒後返為主頁</Card.Footer>
         </Card>
       )}
       <style global jsx>

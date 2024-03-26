@@ -19,8 +19,10 @@ export default function PaymentForm({
   productData = {},
   redeem = () => {},
   couponMoney = 0,
+  TotalPrice = () => {},
+  setMoney = () => {},
 }) {
-  console.log(money)
+  console.log(discount)
   //引入會員資料hook
   const { auth } = useAuth()
   //使用react-hook-form套件檢查form表單
@@ -53,7 +55,7 @@ export default function PaymentForm({
         break
     }
 
-    let newPoint = pointData - discountObj.point
+    let newPoint = pointData - discountObj.point + redeem()
     let result = {
       ...data,
       money: money,
@@ -63,6 +65,7 @@ export default function PaymentForm({
       newPoint: newPoint,
       userID: auth.user.id,
     }
+    console.log(data.paymentType)
     fetch(`http://localhost:3005/api/payment/${data.paymentType}`, {
       method: 'POST',
       headers: {
@@ -71,9 +74,15 @@ export default function PaymentForm({
       body: JSON.stringify(result),
     })
       .then((response) => {
+        console.log(response)
         return response.json()
       })
       .then((response) => {
+        if (response.html) {
+          let formString = response.html
+          document.body.insertAdjacentHTML('afterend', formString)
+          document.getElementById('_form_aiochk').submit()
+        }
         if (response.url) {
           window.location.replace(response.url)
         }
@@ -108,30 +117,24 @@ export default function PaymentForm({
           id: selectedIndexID,
         },
       }
-
       setDiscount(setConnectionData)
       return
     }
-    let setConnectionData = { ...discount, [e.target.name]: e.target.value }
-    if (e.target.name == 'point') {
-      let value = e.target.value
-      if (value < 0) {
-        alert('超過會員點數範圍')
-        setConnectionData = { ...discount, [e.target.name]: '0' }
-        setDiscount(setConnectionData)
-        pointInputRef.current.value = ''
-        return
-      }
-      if (value > pointData) {
-        alert('超過會員點數範圍')
-        setConnectionData = { ...discount, [e.target.name]: '0' }
-        setDiscount(setConnectionData)
-        pointInputRef.current.value = ''
-        return
-      }
-    }
 
-    setDiscount(setConnectionData)
+    if (e.target.name == 'point') {
+      let setConnectionData = { ...discount, [e.target.name]: e.target.value }
+      let value = e.target.value
+      if (value < 0 || value > pointData) {
+        alert('超過會員點數範圍')
+        setConnectionData = { ...discount, [e.target.name]: '0' }
+        setDiscount(setConnectionData)
+        pointInputRef.current.value = ''
+        return
+      }
+      setDiscount(setConnectionData)
+
+      return
+    }
   }
   //監聽點數及優惠券是否被勾選
   const pointInputRef = useRef(null)
@@ -201,8 +204,10 @@ export default function PaymentForm({
   }
   const [couponData, setCouponData] = useState([])
   const [pointData, setPointData] = useState(0)
+  console.log(couponData)
   //拿取會員的優惠券及點數資料
   useEffect(() => {
+    console.log(money)
     fetch('http://localhost:3005/api/payment-data/number', {
       method: 'GET',
       headers: {
@@ -212,18 +217,34 @@ export default function PaymentForm({
     })
       .then((response) => response.json())
       .then((response) => {
+        let money = TotalPrice()
         let point = Number(response.data.point[0].point)
         setPointData(point)
         let coupon = response.data.coupon
+        console.log(coupon)
         coupon = coupon.filter((e) => e.price_min < money)
+        console.log(coupon)
         setCouponData(coupon)
         return
       })
       .catch((err) => {
         console.log(err)
       })
+  }, [])
+  useEffect(() => {
+    console.log(money)
+    if (money <= 0) {
+      let discountObj = {
+        ...discount,
+        point: '0',
+        coupon: { name: '', value: '0', id: '0' },
+      }
+      pointInputRef.current.value = ''
+      couponInputRef.current.value = 0
+      setDiscount(discountObj)
+      setMoney(TotalPrice())
+    }
   }, [money])
-
   return (
     <>
       <Form onSubmit={handleSubmit(postSubmit)} method="post">
@@ -434,8 +455,9 @@ export default function PaymentForm({
             </div>
           </div>
         </div>
-        {/* 信用卡 */}
+        {/* 付款方式 */}
         <div className="payment-type  py-3 px-4 rounded-4 mb-4 bg-bg-gray-secondary">
+          {/* 信用卡 */}
           <div className="form-check mb-4">
             <input
               className="form-check-input"
@@ -443,7 +465,10 @@ export default function PaymentForm({
               name="paymentType"
               id="creditCard"
               value="creditCard"
-              {...register('paymentType', { onChange: changeValue })}
+              {...register('paymentType', {
+                required: true,
+                onChange: changeValue,
+              })}
             />
             <label className="form-check-label" htmlFor="creditCard">
               信用卡 / 簽帳金融卡
@@ -587,12 +612,37 @@ export default function PaymentForm({
               name="paymentType"
               id="LinePay"
               value="line-pay"
-              {...register('paymentType', { onChange: changeValue })}
+              {...register('paymentType', {
+                required: true,
+                onChange: changeValue,
+              })}
             />
             <label className="form-check-label" htmlFor="LinePay">
               <Image src="/line-pay/LINE Pay_logo-02.png" />
             </label>
           </div>
+          {/* ECpay */}
+          <div className="form-check mb-4">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="paymentType"
+              id="ECpay"
+              value="ECpay"
+              {...register('paymentType', {
+                required: true,
+                onChange: changeValue,
+              })}
+            />
+            <label className="form-check-label" htmlFor="ECpay">
+              <Image src="/ECpay/ECpay.png" />
+            </label>
+          </div>
+          {errors.paymentType && (
+            <p role="alert" className="text-danger pt-1">
+              請選擇付款方式
+            </p>
+          )}
         </div>
         {/* 訂單金額 手機版 */}
         <div className="bg-bg-gray-secondary  rounded-4 py-3 px-4  d-lg-none d-block mb-3">
