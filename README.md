@@ -29,3 +29,7 @@ Database: MySQL <br/>
  
 ## 使用方法<br/>
 Import "Govent.sql" into the database, then use "npm -f" install and "npm run dev" to start the server.<br/>
+
+
+**相關圖片及文字僅供專案開發練習使用，無盈利。** <br/>
+**Related images and text are for project development practice only, with no commercial intent.**
