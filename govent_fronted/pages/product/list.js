@@ -136,7 +136,16 @@ export default function List() {
     setCurrentPage(1)
   }, [selectedCategories, selectedRegions, searchWord])
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+  
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  // const paginate = (pageNumber) => {
+  //   setCurrentPage(pageNumber);
+  //   window.scrollTo(0, 0); // 滾動到頁面最上方
+  // }
+  
 
   return (
     <>
@@ -149,22 +158,21 @@ export default function List() {
             </p>
           </div>
 
-          <div className='flex-1 d-flex justify-content-between ms-4'>
-          <NavbarTopRwd
-            events={events} //傳原始資料至props
-            setEvents={setEvents} // 将更新事件列表的函数传递给子组件
-            //回調元素
-            onSort={handleSortEvents}
-            onCity={handleCityEvents}
-            onDate={handleDateEvents}
-            onPrice={handlePriceEvents}
-            onRecommend={handleRecommendEvents}
-          />
-          <SearchForm
-            searchWord={searchWord}
-            onSearch={handleSearch} // 正确传递搜索回调函数
-          />
-
+          <div className="flex-1 d-flex justify-content-between ms-4">
+            <NavbarTopRwd
+              events={events} //傳原始資料至props
+              setEvents={setEvents} // 将更新事件列表的函数传递给子组件
+              //回調元素
+              onSort={handleSortEvents}
+              onCity={handleCityEvents}
+              onDate={handleDateEvents}
+              onPrice={handlePriceEvents}
+              onRecommend={handleRecommendEvents}
+            />
+            <SearchForm
+              searchWord={searchWord}
+              onSearch={handleSearch} // 正确传递搜索回调函数
+            />
           </div>
         </h5>
       </nav>
@@ -190,19 +198,22 @@ export default function List() {
           </div>
           <div className="col">
             <motion.div
-            initial={{ y: 0, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.1 }}
-          key={selectedRegions}
-            className="cardList row g-3">
+              initial={{ y: 0, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.1 }}
+              key={selectedRegions}
+              className="cardList row g-3"
+            >
               {/* {currentEvents.map((v) => ( */}
               {filteredEvents
                 .slice(indexOfFirstEvent, indexOfLastEvent)
                 .map((v, index) => (
-                  <motion.div key={v.pid} className="col-md-4 col-sm-6"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.3, delay: index*0.1 }}
+                  <motion.div
+                    key={v.pid}
+                    className="col-md-4 col-sm-6"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
                   >
                     <Link
                       href={`/product/${v.pid}`} //以防混亂，只有路由使用pid引導
@@ -228,13 +239,13 @@ export default function List() {
 
                         <div className="card-body d-flex flex-column justify-content-between pt-0">
                           <div>
-                          <p className="text-normal-gray-light sm-p mb-2">
-                            {v.category_name}
-                          </p>
-                          <h6 className="card-title">{v.event_name}</h6>
+                            <p className="text-normal-gray-light sm-p mb-2">
+                              {v.category_name}
+                            </p>
+                            <h6 className="card-title">{v.event_name}</h6>
                           </div>
                           <div>
-                          <h6 className="text-primary-deep">
+                            <h6 className="text-primary-deep">
                               $ {v.price || 0}起
                             </h6>
                             <div className="d-flex justify-content-between">
@@ -314,14 +325,14 @@ export default function List() {
           color: #fff;
           background-color: var(--bg-gray-color);
           border: border-inline;
-          .flex-1{
-            flex:1;
+          .flex-1 {
+            flex: 1;
           }
         }
         .w-1200 {
           max-width: 1200px;
         }
-        .card{
+        .card {
           border-radius: 10px;
           overflow: hidden;
         }
@@ -333,7 +344,7 @@ export default function List() {
           }
           object-fit: cover;
           width: 100%;
-          height:
+          height: ;
         }
         .cardList i {
           opacity: 0.8;
